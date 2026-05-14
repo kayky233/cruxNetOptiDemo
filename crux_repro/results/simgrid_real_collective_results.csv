@@ -1,0 +1,5 @@
+scheduler,makespan_s,avg_jct_s,avg_comm_s,useful_gpu_fraction,jobs,ranks,rounds,hosts,gpus_per_host
+random_same,107.579156,75.983440,72.602627,0.076816,12,8,4,8,4
+random_intensity,107.579114,75.983246,72.605020,0.076816,12,8,4,8,4
+crux_no_compress,42.549674,33.352556,28.113329,0.194215,12,8,4,8,4
+crux,42.549674,33.352556,28.113329,0.194215,12,8,4,8,4

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="460" viewBox="0 0 900 460">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="450.0" y="28.0" font-family="Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#1f2937">Extreme Congestion</text>
+<line x1="78" y1="378" x2="870" y2="378" stroke="#334155"/>
+<line x1="78" y1="54" x2="78" y2="378" stroke="#334155"/>
+<text x="18.0" y="230.0" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="middle" fill="#1f2937">GPU util gain</text>
+<line x1="78" y1="378.0" x2="870" y2="378.0" stroke="#e5e7eb"/>
+<text x="68.0" y="382.0" font-family="Arial, sans-serif" font-size="11" font-weight="400" text-anchor="end" fill="#1f2937">0%</text>
+<line x1="78" y1="313.2" x2="870" y2="313.2" stroke="#e5e7eb"/>
+<text x="68.0" y="317.2" font-family="Arial, sans-serif" font-size="11" font-weight="400" text-anchor="end" fill="#1f2937">8%</text>
+<line x1="78" y1="248.4" x2="870" y2="248.4" stroke="#e5e7eb"/>
+<text x="68.0" y="252.4" font-family="Arial, sans-serif" font-size="11" font-weight="400" text-anchor="end" fill="#1f2937">15%</text>
+<line x1="78" y1="183.6" x2="870" y2="183.6" stroke="#e5e7eb"/>
+<text x="68.0" y="187.6" font-family="Arial, sans-serif" font-size="11" font-weight="400" text-anchor="end" fill="#1f2937">23%</text>
+<line x1="78" y1="118.8" x2="870" y2="118.8" stroke="#e5e7eb"/>
+<text x="68.0" y="122.8" font-family="Arial, sans-serif" font-size="11" font-weight="400" text-anchor="end" fill="#1f2937">30%</text>
+<line x1="78" y1="54.0" x2="870" y2="54.0" stroke="#e5e7eb"/>
+<text x="68.0" y="58.0" font-family="Arial, sans-serif" font-size="11" font-weight="400" text-anchor="end" fill="#1f2937">38%</text>
+<text x="276.0" y="418.0" font-family="Arial, sans-serif" font-size="11" font-weight="400" text-anchor="middle" fill="#1f2937">48/8</text>
+<rect x="231.0" y="296.3" width="27.0" height="81.7" rx="3" fill="#0ea5e9"/>
+<text x="244.5" y="292.3" font-family="Arial, sans-serif" font-size="9" font-weight="400" text-anchor="middle" fill="#1f2937">9.6</text>
+<rect x="261.0" y="153.5" width="27.0" height="224.5" rx="3" fill="#ef4444"/>
+<text x="274.5" y="149.5" font-family="Arial, sans-serif" font-size="9" font-weight="400" text-anchor="middle" fill="#1f2937">26.3</text>
+<rect x="291.0" y="103.4" width="27.0" height="274.6" rx="3" fill="#22c55e"/>
+<text x="304.5" y="99.4" font-family="Arial, sans-serif" font-size="9" font-weight="400" text-anchor="middle" fill="#1f2937">32.1</text>
+<text x="672.0" y="418.0" font-family="Arial, sans-serif" font-size="11" font-weight="400" text-anchor="middle" fill="#1f2937">64/12</text>
+<rect x="627.0" y="310.6" width="27.0" height="67.4" rx="3" fill="#0ea5e9"/>
+<text x="640.5" y="306.6" font-family="Arial, sans-serif" font-size="9" font-weight="400" text-anchor="middle" fill="#1f2937">7.9</text>
+<rect x="657.0" y="184.8" width="27.0" height="193.2" rx="3" fill="#ef4444"/>
+<text x="670.5" y="180.8" font-family="Arial, sans-serif" font-size="9" font-weight="400" text-anchor="middle" fill="#1f2937">22.6</text>
+<rect x="687.0" y="141.9" width="27.0" height="236.1" rx="3" fill="#22c55e"/>
+<text x="700.5" y="137.9" font-family="Arial, sans-serif" font-size="9" font-weight="400" text-anchor="middle" fill="#1f2937">27.6</text>
+<rect x="88" y="56" width="14" height="14" rx="2" fill="#0ea5e9"/>
+<text x="108.0" y="68.0" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#1f2937">priority-only</text>
+<rect x="273" y="56" width="14" height="14" rx="2" fill="#ef4444"/>
+<text x="293.0" y="68.0" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#1f2937">crux</text>
+<rect x="458" y="56" width="14" height="14" rx="2" fill="#22c55e"/>
+<text x="478.0" y="68.0" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#1f2937">crux no compress</text>
+</svg>

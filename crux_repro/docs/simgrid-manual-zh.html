@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SimGrid 4.1 中文使用手册（完整版 v2）</title>
+<style>
+  :root{--bg:#f8f9fa;--sbg:#1a1a2e;--stx:#c8c8d4;--shov:#e94560;--txt:#2d2d3a;--hd:#16213e;--cbg:#f0f0f5;--bd:#e0e0e8;--lnk:#0f3460;--tstripe:#f5f5fa;--nb:#fff8e6;--nbbd:#f0c040}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC",sans-serif;background:var(--bg);color:var(--txt);line-height:1.7;display:flex}
+  nav{width:310px;min-width:310px;height:100vh;position:sticky;top:0;background:var(--sbg);color:var(--stx);overflow-y:auto;padding:20px 0;font-size:12.5px;z-index:10}
+  nav h2{color:#fff;font-size:16px;padding:0 18px 12px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:4px}
+  nav h2 small{display:block;font-size:10px;color:#888;font-weight:400;margin-top:1px}
+  nav .sec{color:#999;font-size:10px;text-transform:uppercase;letter-spacing:1px;padding:14px 18px 5px;font-weight:700}
+  nav a{display:block;color:var(--stx);text-decoration:none;padding:3px 18px;transition:.1s}
+  nav a:hover{color:var(--shov);background:rgba(233,69,96,.06)}
+  nav .sub{padding-left:30px;font-size:11.5px;color:#aaa}
+  nav .sub2{padding-left:42px;font-size:11px;color:#999}
+  main{flex:1;max-width:980px;padding:32px 44px 80px;overflow-x:hidden}
+  h1{font-size:27px;color:var(--hd);margin-bottom:4px}
+  h2{font-size:21px;color:var(--hd);margin:40px 0 12px;padding-bottom:6px;border-bottom:2px solid var(--bd)}
+  h3{font-size:17px;color:var(--hd);margin:26px 0 8px}
+  h4{font-size:14.5px;color:#555;margin:18px 0 6px}
+  p{margin:7px 0}
+  a{color:var(--lnk)}
+  ul,ol{margin:5px 0 5px 20px}
+  li{margin:2px 0}
+  pre{background:var(--cbg);border:1px solid var(--bd);border-radius:5px;padding:10px 14px;overflow-x:auto;font-size:12px;line-height:1.45;margin:8px 0}
+  code{font-family:"SF Mono","Fira Code",monospace;font-size:12px;background:var(--cbg);padding:1px 4px;border-radius:2px}
+  pre code{background:none;padding:0}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:12.5px}
+  th,td{border:1px solid var(--bd);padding:6px 9px;text-align:left}
+  th{background:var(--cbg);font-weight:600}
+  tr:nth-child(even){background:var(--tstripe)}
+  blockquote{border-left:3px solid var(--nbbd);background:var(--nb);margin:12px 0;padding:8px 14px;border-radius:0 4px 4px 0;font-size:12.5px}
+  blockquote p{margin:2px 0}
+  hr{border:none;border-top:1px solid var(--bd);margin:32px 0}
+  nav::-webkit-scrollbar{width:4px}
+  nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px}
+  .tag{display:inline-block;background:var(--shov);color:#fff;font-size:9px;padding:1px 5px;border-radius:2px;margin-left:5px;vertical-align:middle}
+  @media(max-width:768px){body{flex-direction:column}nav{width:100%;min-width:100%;height:auto;position:relative;padding:12px}main{padding:16px 14px 40px}}
+</style>
+</head>
+<body>
+
+<nav>
+<h2>SimGrid 4.1<small>中文手册 · 完整版 v2</small></h2>
+<span class="sec">教程</span>
+<a href="#tut-algo">1. 模拟分布式算法</a>
+<a href="#tut-mc" class="sub">2. 模型检验教程</a>
+<a href="#smpi">3. SMPI: 模拟 MPI</a>
+<span class="sec">用户手册</span>
+<a href="#intro">简介</a>
+<a href="#install" class="sub">安装</a>
+<a href="#start" class="sub">创建项目</a>
+<a href="#platform">平台描述</a>
+<a href="#platform-cpp" class="sub">C++ 平台</a>
+<a href="#platform-examples" class="sub">拓扑示例</a>
+<a href="#platform-xml" class="sub">XML 参考</a>
+<a href="#s4u">S4U 接口</a>
+<a href="#models">性能模型</a>
+<a href="#plugins">插件系统</a>
+<a href="#config">配置</a>
+<a href="#deploy">部署</a>
+<a href="#outcomes">模拟输出</a>
+<span class="sec">附录</span>
+<a href="#glossary">概念速查</a>
+<a href="#local">本地环境</a>
+</nav>
+
+<main>
+
+<h1>SimGrid 4.1 中文使用手册（完整版 v2）</h1>
+<p>原文: <a href="https://simgrid.org/doc/latest/">simgrid.org/doc/latest/</a> | 翻译: 2026-05-14 | 覆盖官网全部主要章节</p>
+<blockquote><p>SimGrid 是一个分布式应用模拟器开发框架。本手册对 SimGrid 4.1 官方文档进行完整中文本地化。</p></blockquote>
+
+<!-- ===== TUTORIAL: ALGORITHMS ===== -->
+<hr><h2 id="tut-algo">教程 1：模拟分布式算法</h2>
+
+<p>通过 <strong>Master/Workers</strong> 示例走通完整 SimGrid 模拟流程。两类 Actor：master 分发任务，worker 执行。默认轮询调度。</p>
+
+<h4>Master</h4>
+<pre><code>static void master(std::vector&lt;std::string&gt; args) {
+  long tasks_count = std::stol(args[1]);
+  double compute_cost = std::stod(args[2]);
+  long communication_cost = std::stol(args[3]);
+  std::vector&lt;sg4::Mailbox*&gt; workers;
+  for (unsigned int i = 4; i &lt; args.size(); i++)
+    workers.push_back(sg4::Mailbox::by_name(args[i]));
+  for (int i = 0; i &lt; tasks_count; i++)
+    workers[i % workers.size()]-&gt;put(new double(compute_cost), communication_cost);
+  for (auto* m : workers) m-&gt;put(new double(-1.0), 0);  // 终止信号
+}</code></pre>
+
+<h4>Worker</h4>
+<pre><code>static void worker(std::vector&lt;std::string&gt; args) {
+  sg4::Mailbox* mailbox = sg4::Mailbox::by_name(sg4::this_actor::get_host()-&gt;get_name());
+  double cost;
+  do { auto msg = mailbox-&gt;get_unique&lt;double&gt;(); cost = *msg;
+       if (cost &gt; 0) sg4::this_actor::execute(cost);
+  } while (cost &gt; 0);
+}</code></pre>
+
+<h4>main + 运行</h4>
+<pre><code>int main(int argc, char* argv[]) {
+  sg4::Engine e(&amp;argc, argv);
+  e.register_function("master", &amp;master);
+  e.register_function("worker", &amp;worker);
+  e.load_platform(argv[1]); e.load_deployment(argv[2]); e.run();
+}</code></pre>
+
+<h4>平台文件</h4>
+<pre><code>&lt;zone id="zone0" routing="Full"&gt;
+  &lt;host id="Tremblay" speed="98.095Mf"/&gt;
+  &lt;link id="6" bandwidth="41.28MBps" latency="59.904us"/&gt;
+  &lt;route src="Tremblay" dst="Fafard"&gt;&lt;link_ctn id="6"/&gt;&lt;/route&gt;
+&lt;/zone&gt;</code></pre>
+
+<h4>部署文件</h4>
+<pre><code>&lt;actor host="Tremblay" function="master"&gt;
+  &lt;argument value="20"/&gt;&lt;argument value="50000000"/&gt;&lt;argument value="1000000"/&gt;
+  &lt;argument value="Tremblay"/&gt;&lt;argument value="Jupiter"/&gt;
+&lt;/actor&gt;
+&lt;actor host="Tremblay" function="worker"/&gt;</code></pre>
+
+<h3>5 个实验练习</h3>
+<table>
+<tr><th>Lab</th><th>目标</th><th>关键技术</th></tr>
+<tr><td>1</td><td>简化部署（黄页模式）</td><td>worker ID 替代 hostname</td></tr>
+<tr><td>2</td><td>使用整个平台</td><td><code>Engine::get_all_hosts()</code> 自动发现 + <code>Actor::create()</code></td></tr>
+<tr><td>3</td><td>固定实验时长</td><td><code>Engine::get_clock()</code>；<code>Actor::kill()</code>；日志级别控制</td></tr>
+<tr><td>4</td><td>What-if 分析</td><td><code>set_speed_profile()</code>、<code>set_bandwidth_profile()</code>、故障异常处理</td></tr>
+<tr><td>5</td><td>竞争应用</td><td>多 master 并发；<code>set_tracing_category()</code>；R 语言可视化</td></tr>
+</table>
+
+<!-- ===== MODEL CHECKING TUTORIAL ===== -->
+<hr><h2 id="tut-mc">教程 2：形式化验证与模型检验</h2>
+
+<p><strong>Mc SimGrid</strong> 是嵌入 SimGrid 的全功能模型检验器（model checker），可穷举探索分布式程序的所有可能执行路径，发现死锁、断言失败、竞态条件等 bug。</p>
+
+<h3>核心概念</h3>
+<ul>
+<li><strong>软件模型检验</strong>：不依赖数学建模，直接把程序本身当作模型来验证</li>
+<li><strong>无状态模型检验</strong>：通过 UNIX fork 穷举所有执行分支</li>
+<li><strong>DPOR（动态偏序约简）</strong>：减少需探索的冗余路径</li>
+<li><strong>关键转换（Critical Transition）</strong>：从此步之后所有执行都走向 bug</li>
+<li>时间在模型检验模式下变为离散的步骤（无性能时间）</li>
+</ul>
+
+<h3>两种观测方案</h3>
+<table>
+<tr><th>方案</th><th>可观测事件</th><th>适用</th></tr>
+<tr><td><strong>sthread</strong>（LD_PRELOAD 注入）</td><td>pthread 操作、互斥锁、信号量等</td><td>多线程 C/C++ 程序</td></tr>
+<tr><td><strong>SMPI</strong></td><td>MPI 通信操作</td><td>MPI 程序</td></tr>
+<tr><td><strong>mclang</strong>（v4.1+，编译器插桩）</td><td>内存读写事件，检测数据竞态</td><td>多线程程序</td></tr>
+</table>
+
+<h3>运行方式</h3>
+<pre><code># 多线程程序（sthread 注入）
+simgrid-mc --sthread ./my_program
+
+# MPI 程序
+smpirun -wrapper simgrid-mc -np 4 -platform p.xml ./my_mpi_program
+
+# 重放出错的执行路径（获取详细回溯）
+./my_program --cfg=model-check/replay:'1;2;1;1;2;4;1;1;3;1'</code></pre>
+
+<h3>示例 1：哲学家就餐死锁</h3>
+<p>5 个哲学家、5 把叉子——如果所有哲学家同时拿起左手叉子，死锁。常规运行 10000 次也很难触发。用 <code>simgrid-mc --sthread</code> 运行，<strong>0.1 秒内</strong>就检测到死锁，并输出完整执行路径和关键转换点。</p>
+
+<h3>示例 2：数据竞态检测</h3>
+<pre><code># 用 mclang 编译（自动插桩内存访问）
+mclang plusplus.c -o plusplus -g
+# 输出: Successfully instrumented 4 read operations and 3 writes operations
+
+# 模型检验
+simgrid-mc --sthread ./plusplus
+# 检测到: datarace at location 0x... between actor 2 and 3
+# First operation was a WRITE, Second was a READ — both at plusplus.c:8</code></pre>
+
+<h3>示例 3：非确定性消息接收（S4U/MPI）</h3>
+<p>Server 假设收到的最后一条消息来自 client 3。模型检验器发现消息顺序是不确定的——取决于链路速度，任何顺序都可能。通过穷举探索找出导致断言失败的执行路径。</p>
+
+<h3>关键配置</h3>
+<table>
+<tr><th>配置项</th><th>说明</th></tr>
+<tr><td><code>model-check/reduction</code></td><td>dpor（默认）/ sdpor / odpor / none</td></tr>
+<tr><td><code>model-check/max-depth</code></td><td>最大探索深度（默认 1000）</td></tr>
+<tr><td><code>model-check/timeout</code></td><td>软超时（秒）</td></tr>
+<tr><td><code>model-check/replay</code></td><td>重放指定执行路径</td></tr>
+<tr><td><code>model-check/dot-output</code></td><td>输出 Graphviz dot 文件</td></tr>
+</table>
+
+<h3>局限性</h3>
+<ul><li>只观测已插桩的事件（MPI/线程/内存），不观测磁盘 I/O 和普通通信</li><li>状态空间随 Actor 数和事件数指数增长——需精简验证程序</li><li>时间为离散步骤，无法评估性能</li></ul>
+
+<!-- ===== SMPI ===== -->
+<hr><h2 id="smpi">SMPI：模拟 MPI 应用</h2>
+<p>运行<strong>未修改的 MPI 程序</strong>（C/C++/Fortran）。用 <code>smpicc</code> 替代 <code>mpicc</code>，<code>smpirun</code> 替代 <code>mpirun</code>——主要区别是多一个平台文件。</p>
+
+<h3>编译运行</h3>
+<pre><code>smpicc prog.c -o prog       # C
+smpicxx prog.cpp -o prog     # C++
+smpirun -hostfile h.txt -platform p.xml ./prog
+cmake -DMPI_C_COMPILER=/opt/simgrid/bin/smpicc .</code></pre>
+
+<h3>全局变量私有化</h3>
+<p>默认 <strong>dlopen</strong> 方式（多次加载可执行文件，快）。可选 <strong>mmap</strong>（慢但更通用）。用 <code>--cfg=smpi/privatization:no|dlopen|mmap</code> 控制。</p>
+
+<h3>115 种集合操作算法</h3>
+<pre><code>--cfg=smpi/coll-selector:ompi     # OpenMPI 选择逻辑
+--cfg=smpi/coll-selector:mpich    # MPICH
+--cfg=smpi/alltoall:ring          # 手动指定算法
+smpirun --help-coll               # 查看全部</code></pre>
+<table>
+<tr><th>操作</th><th>部分算法</th></tr>
+<tr><td>Alltoall</td><td>bruck, 2dmesh, 3dmesh, rdb, pair, ring, basic_linear</td></tr>
+<tr><td>Allreduce</td><td>lr, rab1, rab2, rdb, smp_binomial, redbcast</td></tr>
+<tr><td>Bcast</td><td>binomial_tree, flattree, NTSB, scatter_LR_allgather</td></tr>
+<tr><td>Reduce</td><td>binomial, flat_tree, rab, ompi_chain</td></tr>
+</table>
+
+<h3>调试与分析</h3>
+<pre><code>smpirun -wrapper "gdb --args" --cfg=contexts/factory:thread ... ./prog   # GDB
+smpirun -wrapper valgrind ... ./prog     # Valgrind
+smpirun -analyze ... ./prog              # 性能瓶颈分析</code></pre>
+
+<h3>扩展性优化</h3>
+<ul><li><code>SMPI_SHARED_MALLOC</code>：所有 rank 共享内存（非数据依赖场景）</li><li><code>SMPI_SAMPLE_LOCAL/GLOBAL</code>：计算循环采样执行</li></ul>
+
+<h3>混合 S4U + MPI</h3>
+<pre><code>SMPI_app_instance_register("my_mpi", my_mpi_main, 4);
+e.run();
+// 或直接启动
+SMPI_app_instance_start("my_mpi", my_mpi_main, {h1, h2, h3, h4});</code></pre>
+
+<!-- ===== INTRO ===== -->
+<hr><h2 id="intro">简介</h2>
+<p>SimGrid 是一个<strong>分布式应用在分布式平台上执行的模拟器开发框架</strong>。</p>
+<h4>四大用途</h4>
+<ol><li><strong>方案对比</strong>：不需真实硬件</li><li><strong>平台协同设计</strong>：修改平台文件远比搭真实平台容易</li><li><strong>调试真实应用</strong>：可复现的"全知视角"</li><li><strong>形式化验证</strong>：穷举执行路径找 bug</li></ol>
+<h4>项目组成</h4>
+<table>
+<tr><th>组件</th><th>说明</th></tr>
+<tr><td>应用</td><td>C++/Python/C API 或 MPI 程序</td></tr>
+<tr><td>模拟平台</td><td>XML/C++ 硬件描述，支持动态行为</td></tr>
+<tr><td>部署</td><td>Actor → Host 映射</td></tr>
+<tr><td>平台模型</td><td>核心：<strong>精确建模并发通信的网络竞争</strong></td></tr>
+</table>
+<h4>局限性</h4>
+<ul><li>专注分布式系统，不适用实时多线程</li><li>不支持 5G/LoRa</li><li>抽象掉 L2/L3 缓存、内核调度器</li></ul>
+<h4>成功案例</h4>
+<ul><li>3,000+ 论文引用</li><li>Tibidabo ARM 集群建前就用 SimGrid 预测加速比</li><li>调试 BigDFT、StarPU、TomP2P</li></ul>
+
+<!-- ===== INSTALL ===== -->
+<hr><h2 id="install">安装 SimGrid</h2>
+<pre><code># Debian/Ubuntu
+apt install libsimgrid-dev      # C/C++
+apt install python3-simgrid     # Python
+# macOS
+brew install simgrid</code></pre>
+<h4>从源码编译</h4>
+<pre><code>tar xf simgrid-4-XX.tar.gz &amp;&amp; cd simgrid-*
+cmake -DCMAKE_INSTALL_PREFIX=/opt/simgrid -GNinja .
+ninja &amp;&amp; sudo ninja install
+# 树外编译: mkdir build &amp;&amp; cd build &amp;&amp; cmake .. &amp;&amp; make</code></pre>
+<h4>关键编译选项</h4>
+<table>
+<tr><th>选项</th><th>默认</th><th>说明</th></tr>
+<tr><td><code>enable_smpi</code></td><td>ON</td><td>MPI 模拟</td></tr>
+<tr><td><code>enable_model-checking</code></td><td>ON</td><td>模型检验</td></tr>
+<tr><td><code>enable_ns3</code></td><td>OFF</td><td>ns-3 网络模型</td></tr>
+<tr><td><code>enable_python</code></td><td>自动</td><td>Python 绑定<span class="tag">macOS arm64 有兼容问题</span></td></tr>
+</table>
+
+<!-- ===== START ===== -->
+<hr><h2 id="start">创建自己的项目</h2>
+<blockquote><p>不建议修改 SimGrid 源码，应创建独立项目。</p></blockquote>
+<p>推荐克隆 <a href="https://framagit.org/simgrid/simgrid-template-s4u">simgrid-template-s4u</a>。</p>
+<pre><code># CMake
+cmake_minimum_required(VERSION 3.12)
+project(MySim)
+set(CMAKE_CXX_STANDARD 17)
+find_package(SimGrid REQUIRED)
+include_directories(${SimGrid_INCLUDE_DIR})
+add_executable(my_sim main.cpp)
+target_link_libraries(my_sim ${SimGrid_LIBRARY})
+
+# Makefile
+SIMGRID_INSTALL_PATH=/opt/simgrid
+mysim: mysim.o util.o
+	$(CC) -L$(SIMGRID_INSTALL_PATH)/lib/ $^ -lsimgrid -o $@</code></pre>
+<h4>故障排查</h4>
+<table>
+<tr><th>问题</th><th>解决</th></tr>
+<tr><td><code>libsimgrid.so: cannot open</code></td><td><code>LD_LIBRARY_PATH=/opt/simgrid/lib</code>（macOS: <code>DYLD_LIBRARY_PATH</code>）</td></tr>
+<tr><td>大量 undefined reference</td><td>同上</td></tr>
+<tr><td>少数 undefined reference</td><td><code>ldd</code>/<code>otool -L</code> 排查旧版</td></tr>
+</table>
+
+<!-- ===== PLATFORM ===== -->
+<hr><h2 id="platform">描述模拟平台</h2>
+<p>平台用 <strong>XML</strong>（或 C++）描述。基本元素：<code>&lt;host&gt;</code>（<code>speed="1Gf" core="4"</code>）、<code>&lt;link&gt;</code>（<code>bandwidth="125MBps" latency="100us"</code>）、<code>&lt;route&gt;</code>。</p>
+<h4>最小示例</h4>
+<pre><code>&lt;zone id="AS5-4" routing="Full"&gt;
+  &lt;host id="host0" speed="1Gf"/&gt;&lt;host id="host1" speed="2Gf"/&gt;
+  &lt;link id="link0" bandwidth="125MBps" latency="100us"/&gt;
+  &lt;route src="host0" dst="host1"&gt;&lt;link_ctn id="link0"/&gt;&lt;/route&gt;
+&lt;/zone&gt;</code></pre>
+<h4>NetZone 路由模型</h4>
+<table>
+<tr><th>模型</th><th>说明</th></tr>
+<tr><td>Full</td><td>显式声明所有 route</td></tr>
+<tr><td>Floyd / Dijkstra</td><td>自动最短路径</td></tr>
+<tr><td>Cluster</td><td>集群拓扑快捷方式</td></tr>
+<tr><td>FatTree</td><td>Fat-Tree 拓扑</td></tr>
+<tr><td>Star</td><td>星型拓扑</td></tr>
+<tr><td>WIFI</td><td>WiFi 网络</td></tr>
+<tr><td>Torus</td><td>环面拓扑</td></tr>
+<tr><td>Dragonfly</td><td>蜻蜓拓扑</td></tr>
+</table>
+<h4>动态场景</h4>
+<pre><code>&lt;prop id="availability_file" value="trace.txt"/&gt;   &lt;!-- 带宽变化 --&gt;
+&lt;prop id="state_file" value="state_trace.txt"/&gt;       &lt;!-- 故障恢复 --&gt;</code></pre>
+
+<!-- ===== C++ PLATFORM ===== -->
+<hr><h2 id="platform-cpp">C++ 平台定义</h2>
+<p>当 XML 不够灵活时（如 Fat-Tree 叶子需嵌入 CPU+GPU+内部总线），用 C++ 直接构建。</p>
+<pre><code>NetZone* zone = Engine::get_instance()-&gt;get_netzone_root()-&gt;add_netzone_star("z");
+Link* l = zone-&gt;add_link("l","125MBps")-&gt;set_latency("24us")-&gt;seal();
+Host* h = zone-&gt;add_host("h","1Gf")-&gt;seal();
+zone-&gt;add_route(h, nullptr, {{l, LinkInRoute::Direction::UP}}); zone-&gt;seal();</code></pre>
+<h4>Split-Duplex 链路</h4>
+<pre><code>auto* link = zone-&gt;add_split_duplex_link("1","125MBps")-&gt;set_latency("24us")-&gt;seal();
+zone-&gt;add_route(S1, C1, nullptr, nullptr, {{link, LinkInRoute::Direction::UP}});</code></pre>
+<h4>Fat-Tree + 复杂叶子节点</h4>
+<pre><code>root-&gt;add_netzone_fatTree("bob", root, 2, {4,4}, {1,2}, {1,2},
+    "100Mbps","50us", Link::SharingPolicy::SPLITDUPLEX)
+  -&gt;set_netzone_cb(create_hostzone)   // 每个叶子 = CPU + GPU + 内部总线
+  -&gt;set_loopback_cb(create_loopback)
+  -&gt;seal();</code></pre>
+
+<!-- ===== PLATFORM EXAMPLES ===== -->
+<hr><h2 id="platform-examples">常见拓扑示例</h2>
+<h4>集群 (Cluster)</h4>
+<pre><code>&lt;cluster id="my_cluster" prefix="node-" radical="0-15" suffix=".simgrid.org"
+  speed="1Gf" bw="125MBps" lat="50us" topology="FAT_TREE"
+  topo_parameters="2;4,4;1,2;1,2" loopback_bw="100MBps" loopback_lat="0"/&gt;</code></pre>
+<h4>Torus</h4>
+<pre><code>&lt;cluster id="torus" prefix="node-" radical="0-63" suffix=".org"
+  speed="1Gf" bw="125MBps" lat="50us" topology="TORUS" topo_parameters="4,4,4"/&gt;</code></pre>
+<h4>Dragonfly</h4>
+<pre><code>&lt;cluster id="dfly" prefix="n-" radical="0-95" suffix=".org"
+  speed="1Gf" bw="125MBps" lat="50us" topology="DRAGONFLY"
+  topo_parameters="4;4,4;2;2"/&gt;</code></pre>
+<h4>星型 + 全连接混合</h4>
+<pre><code>&lt;zone id="root" routing="Full"&gt;
+  &lt;zone id="star1" routing="Star"&gt;...&lt;/zone&gt;
+  &lt;zone id="star2" routing="Star"&gt;...&lt;/zone&gt;
+  &lt;link id="backbone" bandwidth="10GBps" latency="100us"/&gt;
+  &lt;zoneRoute src="star1" dst="star2" gw_src="r1" gw_dst="r2"&gt;
+    &lt;link_ctn id="backbone"/&gt;
+  &lt;/zoneRoute&gt;
+&lt;/zone&gt;</code></pre>
+
+<!-- ===== XML REFERENCE ===== -->
+<hr><h2 id="platform-xml">XML 平台参考</h2>
+<h4>Host 属性</h4>
+<table>
+<tr><th>属性</th><th>说明</th><th>示例</th></tr>
+<tr><td><code>id</code></td><td>主机名（必需）</td><td><code>"node0"</code></td></tr>
+<tr><td><code>speed</code></td><td>计算速度（flops/s）</td><td><code>"1Gf"</code></td></tr>
+<tr><td><code>core</code></td><td>核心数（默认 1）</td><td><code>"4"</code></td></tr>
+<tr><td><code>pstate</code></td><td>DVFS 性能级别</td><td><code>"0.0"</code></td></tr>
+</table>
+<h4>Link 属性</h4>
+<table>
+<tr><th>属性</th><th>说明</th><th>示例</th></tr>
+<tr><td><code>id</code></td><td>链路名（必需）</td><td><code>"link0"</code></td></tr>
+<tr><td><code>bandwidth</code></td><td>带宽</td><td><code>"125MBps"</code></td></tr>
+<tr><td><code>latency</code></td><td>延迟</td><td><code>"100us"</code></td></tr>
+<tr><td><code>sharing_policy</code></td><td>共享策略</td><td><code>SHARED</code> / <code>FATPIPE</code> / <code>SPLITDUPLEX</code></td></tr>
+</table>
+<h4>Route 属性</h4>
+<table>
+<tr><th>属性</th><th>说明</th></tr>
+<tr><td><code>src</code></td><td>源主机/区域</td></tr>
+<tr><td><code>dst</code></td><td>目标主机/区域</td></tr>
+<tr><td><code>symmetrical</code></td><td>是否对称（默认 YES）</td></tr>
+</table>
+<h4>Disk 属性</h4>
+<table>
+<tr><th>属性</th><th>说明</th></tr>
+<tr><td><code>id</code></td><td>磁盘名（必需）</td></tr>
+<tr><td><code>read_bw</code> / <code>write_bw</code></td><td>读写带宽</td></tr>
+<tr><td><code>size</code></td><td>磁盘容量</td></tr>
+</table>
+<h4>单位速查</h4>
+<p><code>f</code>=flops, <code>kf</code>=1e3, <code>Mf</code>=1e6, <code>Gf</code>=1e9, <code>Tf</code>=1e12 |
+<code>bps</code>, <code>Bps</code>, <code>kBps</code>, <code>MBps</code>, <code>GBps</code> |
+<code>us</code>, <code>ms</code>, <code>s</code>, <code>m</code>, <code>h</code></p>
+
+<!-- ===== S4U ===== -->
+<hr><h2 id="s4u">S4U 接口指南</h2>
+<p>S4U 是 SimGrid 的现代 C++ 接口，从 v3.33 起是主接口。Actor → Activity（Exec/Comm/Io）→ Resource（Host/Link/Disk）。</p>
+<table>
+<tr><th>概念</th><th>类</th><th>说明</th></tr>
+<tr><td>执行流</td><td><code>Actor</code></td><td>模拟中独立执行单元</td></tr>
+<tr><td>引擎</td><td><code>Engine</code></td><td>全局单例</td></tr>
+<tr><td>通信汇聚</td><td><code>Mailbox</code></td><td>名字匹配 send/recv，不涉及网络延迟</td></tr>
+</table>
+<h4>Mailbox 通信</h4>
+<pre><code>Mailbox::put(data, size);                       // 阻塞
+CommPtr c = Mailbox::put_async(data, size);     // 异步
+c-&gt;wait(); c-&gt;test(); c-&gt;wait_for(5.0);
+Comm::sendto(src, dst, data, size);             // 直接通信</code></pre>
+<h4>常用 API</h4>
+<pre><code>// Engine: e.load_platform("p.xml"); e.register_actor("f", func); e.run();
+// Actor: a = Actor::create("n", host, func); a-&gt;suspend(); a-&gt;kill();
+// Host:  h = Host::by_name("h0"); h-&gt;get_speed(); h-&gt;turn_off();
+// this_actor::sleep_for(10); this_actor::execute(1e9);
+// ActivitySet: set.push(c1); set.push(c2); auto done = set.wait_any();</code></pre>
+<p><strong>内存管理</strong>: RAII + <code>boost::intrusive_ptr</code>。</p>
+
+<!-- ===== MODELS ===== -->
+<hr><h2 id="models">性能模型</h2>
+<table>
+<tr><th>资源</th><th>模型</th></tr>
+<tr><td>网络</td><td>LV08（默认）、CM02、SMPI、IB、Constant、Raw、ns-3</td></tr>
+<tr><td>CPU</td><td>Cas01（时间=计算量/速度）</td></tr>
+<tr><td>磁盘</td><td>S19</td></tr>
+</table>
+<h4>网络模型对比</h4>
+<table>
+<tr><th>模型</th><th>特点</th><th>适用</th></tr>
+<tr><td><strong>LV08</strong></td><td>TCP窗口+慢启动(×13.01)+ACK竞争+bf=0.97+wS=20537</td><td>通用TCP</td></tr>
+<tr><td><strong>CM02</strong></td><td>仅TCP窗口，可解释性强</td><td>简单TCP</td></tr>
+<tr><td><strong>SMPI</strong></td><td>分段校正+eager/rendezvous+115种集合算法</td><td>MPI</td></tr>
+<tr><td><strong>Constant</strong></td><td>固定1秒</td><td>抽象算法</td></tr>
+<tr><td><strong>Raw</strong></td><td>简单公平共享</td><td>PCIe总线</td></tr>
+</table>
+<h4>LV08 详解</h4>
+<p>latency-factor=13.01（慢启动）、bandwidth-factor=0.97（TCP头开销）、weight-S=20537（RTT不公平性）、cross-traffic=0.05（ACK反向占用5%带宽）。A→B 100kB/1Mbps/10ms: 简单模型 0.81s → LV08 <strong>0.996s</strong></p>
+<h4>校准</h4>
+<p>真实平台基准测试 → 测量不同消息大小延迟 → 计算校正因子 → 验证误差。</p>
+
+<!-- ===== PLUGINS ===== -->
+<hr><h2 id="plugins">插件系统</h2>
+<p>SimGrid 的插件机制允许<strong>不修改源码</strong>扩展框架。通过 <code>--cfg=plugin:name</code> 激活。</p>
+<h4>内置插件</h4>
+<table>
+<tr><th>插件</th><th>功能</th><th>激活</th></tr>
+<tr><td><strong>Host Energy</strong></td><td>CPU 能耗建模（Idle / Epsilon / AllCores / Off 四级分段线性模型，支持 DVFS）</td><td><code>plugin:host_energy</code></td></tr>
+<tr><td><strong>Link Energy</strong></td><td>网络链路能耗（功耗与流量负载线性相关）</td><td><code>plugin:link_energy</code></td></tr>
+<tr><td><strong>WiFi Energy</strong></td><td>WiFi 链路能耗</td><td><code>plugin:wifi_energy</code></td></tr>
+<tr><td><strong>Host Load</strong></td><td>CPU 负载监控（计算利用率、空闲时间、flops 统计）</td><td><code>plugin:host_load</code></td></tr>
+<tr><td><strong>File System</strong></td><td>文件系统模拟（文件读写、远程复制/移动、seek 定位）</td><td>代码调用 <code>sg_storage_file_system_init()</code></td></tr>
+<tr><td><strong>Battery</strong></td><td>电池模拟（充放电、SoC/SoH 衰减、负载管理、Handler 回调）</td><td>代码创建</td></tr>
+<tr><td><strong>Solar Panel</strong></td><td>太阳能板模拟（P = 面积 × 转换效率 × 太阳辐照度）</td><td>代码创建</td></tr>
+<tr><td><strong>Chiller</strong></td><td>机房制冷模拟（温度模型、冷却效率、功率阈值）</td><td>代码创建</td></tr>
+</table>
+<h4>Host Energy 配置</h4>
+<pre><code>&lt;host id="HostA" speed="100.0Mf" core="4"&gt;
+  &lt;prop id="wattage_per_state" value="100.0:120.0:200.0"/&gt;
+  &lt;prop id="wattage_off" value="10"/&gt;
+&lt;/host&gt;
+# Idle=100W, Epsilon=120W, AllCores=200W, Off=10W
+# 负载与功耗线性插值: 1核=140W, 2核=160W, 3核=180W, 4核=200W</code></pre>
+<h4>编写自定义插件</h4>
+<pre><code>// 1. 定义扩展类（包含 EXTENSION_ID）
+class MyPlugin { static xbt::Extension&lt;Host, MyPlugin&gt; EXTENSION_ID; };
+
+// 2. 在 init 函数中注册扩展 + 绑定信号回调
+sg_host_energy_plugin_init() {
+  Host::extension_create&lt;MyPlugin&gt;();
+  Host::on_creation_cb([](Host&amp; h) { /* ... */ });
+  Exec::on_completion_cb([](Exec const&amp; e) { /* ... */ });
+}</code></pre>
+<h4>可用信号（Signals）</h4>
+<p><strong>Actor</strong>: on_creation, on_suspend, on_resume, on_sleep, on_wake_up, on_termination, on_destruction<br>
+<strong>Engine</strong>: on_platform_creation, on_time_advance, on_simulation_end, on_deadlock<br>
+<strong>Host</strong>: on_creation, on_destruction, on_onoff, on_speed_change<br>
+<strong>Link</strong>: on_creation, on_destruction, on_onoff, on_bandwidth_change, on_communication_state_change<br>
+<strong>Activity</strong>: on_start, on_suspend, on_resume, on_completion<br>
+<strong>Comm</strong>: on_send, on_recv<br>
+<strong>VirtualMachine</strong>: on_start, on_started, on_suspend, on_resume, on_migration_start, on_migration_end</p>
+
+<!-- ===== CONFIG ===== -->
+<hr><h2 id="config">配置 SimGrid</h2>
+<pre><code># 三种方式
+./my_sim --cfg=network/model:SMPI                          # 命令行
+&lt;config&gt;&lt;prop id="network/model" value="SMPI"/&gt;&lt;/config&gt;   # 平台文件
+Engine::set_config("network/model:SMPI");                  # 代码</code></pre>
+<h4>核心配置</h4>
+<table>
+<tr><th>配置项</th><th>默认</th><th>说明</th></tr>
+<tr><td><code>network/model</code></td><td>LV08</td><td>LV08/CM02/SMPI/IB/Constant/Raw/ns-3</td></tr>
+<tr><td><code>network/latency-factor</code></td><td>13.01</td><td>可分段</td></tr>
+<tr><td><code>network/bandwidth-factor</code></td><td>0.97</td><td>可分段</td></tr>
+<tr><td><code>network/weight-S</code></td><td>20537</td><td>0=公平共享</td></tr>
+<tr><td><code>network/TCP-gamma</code></td><td>4194304</td><td>0=禁用TCP窗口</td></tr>
+<tr><td><code>contexts/factory</code></td><td>raw</td><td>raw/boost/thread</td></tr>
+<tr><td><code>contexts/stack-size</code></td><td>8192 KiB</td><td>每actor栈</td></tr>
+<tr><td><code>contexts/nthreads</code></td><td>1</td><td>并行线程数</td></tr>
+<tr><td><code>smpi/host-speed</code></td><td>20kf</td><td><code>auto</code> 自动测算</td></tr>
+<tr><td><code>smpi/privatization</code></td><td>dlopen</td><td>no/dlopen/mmap</td></tr>
+<tr><td><code>smpi/coll-selector</code></td><td>naive</td><td>naive/ompi/mpich/mvapich2</td></tr>
+</table>
+<h4>常用组合</h4>
+<pre><code># HPC MPI: --cfg=network/model:SMPI --cfg=smpi/host-speed:auto
+# 调试:    --cfg=contexts/factory:thread --log=root.thresh:debug
+# 高性能:  --cfg=contexts/stack-size:128 --cfg=contexts/guard-size:0
+# 能耗:    --cfg=plugin:host_energy --cfg=plugin:link_energy</code></pre>
+
+<!-- ===== DEPLOY ===== -->
+<hr><h2 id="deploy">部署应用</h2>
+<pre><code>&lt;platform version="4.1"&gt;
+  &lt;actor host="host1" function="alice"/&gt;
+  &lt;actor host="host2" function="bob"&gt;
+    &lt;argument value="3"/&gt;&lt;argument value="3000"/&gt;
+  &lt;/actor&gt;
+  &lt;actor host="host3" function="carol" start_time="10" kill_time="100" on_failure="RESTART"&gt;
+    &lt;argument value="42"/&gt;
+    &lt;prop id="SomeProp" value="SomeValue"/&gt;
+  &lt;/actor&gt;
+&lt;/platform&gt;</code></pre>
+<p>或代码中：<code>Actor::create("alice", Host::by_name("h1"), func);</code></p>
+
+<!-- ===== OUTCOMES ===== -->
+<hr><h2 id="outcomes">模拟输出</h2>
+<h4>文本日志（Log4J 风格）</h4>
+<pre><code>--log=root.thresh:error              # 只显示error+
+--log=root.fmt:%m                    # 只显示消息
+--log=root.app:file:mylogfile        # 输出到文件
+XBT_INFO("start"); XBT_DEBUG("Actor %s", name);  # 代码中</code></pre>
+<p>格式: <code>%r</code>=时间 <code>%a</code>=Actor <code>%h</code>=主机 <code>%p</code>=优先级 <code>%m</code>=消息 <code>%F:%L</code>=位置</p>
+<h4>信号（自定义日志）</h4>
+<pre><code>Comm::on_completion_cb([](auto const&amp; c) {
+  XBT_INFO("Comm %s→%s done", c.get_sender()-&gt;get_cname(), c.get_receiver()-&gt;get_cname());
+});</code></pre>
+<h4>追踪</h4>
+<pre><code>--cfg=tracing:yes --cfg=tracing/uncategorized:yes   # 基础
+--cfg=tracing:yes --cfg=tracing/categorized:yes     # 分类
+smpirun -trace ...                                   # SMPI</code></pre>
+
+<!-- ===== GLOSSARY ===== -->
+<hr><h2 id="glossary">关键概念速查</h2>
+<table>
+<tr><th>英文</th><th>中文</th><th>含义</th></tr>
+<tr><td>Host</td><td>主机</td><td>模拟计算节点</td></tr>
+<tr><td>Link</td><td>链路</td><td>网络连接</td></tr>
+<tr><td>Actor</td><td>执行体</td><td>并发执行单元</td></tr>
+<tr><td>Mailbox</td><td>邮箱</td><td>通信匹配通道</td></tr>
+<tr><td>Platform</td><td>平台</td><td>Host/Link/Route 集合</td></tr>
+<tr><td>Deployment</td><td>部署</td><td>Actor→Host 映射</td></tr>
+<tr><td>NetZone</td><td>网络区域</td><td>平台子区域</td></tr>
+<tr><td>S4U</td><td>—</td><td>现代 C++ API</td></tr>
+<tr><td>SMPI</td><td>—</td><td>MPI 模拟层</td></tr>
+<tr><td>LMM</td><td>线性最大最小</td><td>性能模型基础算法</td></tr>
+<tr><td>DPOR</td><td>动态偏序约简</td><td>模型检验状态空间约简</td></tr>
+<tr><td>sthread</td><td>—</td><td>LD_PRELOAD 注入的线程观测库</td></tr>
+</table>
+
+<!-- ===== LOCAL ===== -->
+<hr><h2 id="local">本地环境备忘</h2>
+<table>
+<tr><th>项目</th><th>路径</th></tr>
+<tr><td>SimGrid 安装</td><td><code>.../.simgrid_install</code></td></tr>
+<tr><td>C++ 模拟入口</td><td><code>crux_repro/simgrid_real/collective_sim.cpp</code></td></tr>
+<tr><td>Python 模拟</td><td><code>crux_repro/crux_sim.py</code></td></tr>
+</table>
+<pre><code># 构建
+cd .../net &amp;&amp; MAMBA_ROOT_PREFIX=.../.mamba .../micromamba run -p .../.simgrid_env \
+  .../crux_repro/simgrid_real/build.sh
+# 运行
+DYLD_LIBRARY_PATH=.../.simgrid_install/lib:.../.simgrid_env/lib \
+  .../crux_repro/simgrid_real/run_all.sh</code></pre>
+<blockquote><p><strong>macOS arm64 注意</strong>: Python binding (pybind11) 有编译兼容问题。替代：C++ S4U + 独立 Python 脚本。</p></blockquote>
+
+<hr>
+<p style="text-align:center;color:#999;font-size:11px;margin-top:36px">
+  SimGrid 4.1 中文使用手册 · 完整版 v2 · 2026-05-14 ·
+  <a href="https://simgrid.org/doc/latest/">官网原文</a>
+</p>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,5 @@
+scheduler,workload,makespan_s,avg_jct_s,avg_comm_s,useful_gpu_fraction,jobs,ranks,rounds,hosts,gpus_per_host
+random_same,trace,225.703244,96.897525,67.944532,0.198016,12,8,3,8,4
+random_intensity,trace,225.733324,96.955651,68.009968,0.197989,12,8,3,8,4
+crux_no_compress,trace,225.703244,96.897525,67.944532,0.198016,12,8,3,8,4
+crux,trace,225.657074,97.152252,68.183041,0.198056,12,8,3,8,4

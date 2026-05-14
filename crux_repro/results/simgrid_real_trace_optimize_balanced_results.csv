@@ -1,0 +1,5 @@
+scheduler,workload,placement_mode,placement_objective,makespan_s,avg_jct_s,avg_comm_s,useful_gpu_fraction,jobs,ranks,rounds,hosts,gpus_per_host
+random_same,trace,optimize,balanced,95.304878,52.951767,31.636873,0.468945,12,8,3,8,4
+random_intensity,trace,optimize,balanced,94.997117,52.844093,31.537560,0.470465,12,8,3,8,4
+crux_no_compress,trace,optimize,balanced,83.170629,44.970076,22.123563,0.537362,12,8,3,8,4
+crux,trace,optimize,balanced,83.984699,45.073839,22.290678,0.532154,12,8,3,8,4
