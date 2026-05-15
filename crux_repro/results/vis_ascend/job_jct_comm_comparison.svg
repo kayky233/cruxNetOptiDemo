@@ -1,0 +1,2320 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1000.640625pt" height="367.44pt" viewBox="0 0 1000.640625 367.44" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-05-15T12:42:19.999682</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.9.4, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 367.44 
+L 1000.640625 367.44 
+L 1000.640625 -0 
+L 0 -0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 39.820625 345.8 
+L 494.840625 345.8 
+L 494.840625 88.68 
+L 39.820625 88.68 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 60.503352 345.8 
+L 72.877634 345.8 
+L 72.877634 129.42311 
+L 60.503352 129.42311 
+z
+" clip-path="url(#p49bb0113b5)" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 95.858442 345.8 
+L 108.232723 345.8 
+L 108.232723 113.772249 
+L 95.858442 113.772249 
+z
+" clip-path="url(#p49bb0113b5)" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 131.213531 345.8 
+L 143.587812 345.8 
+L 143.587812 278.987588 
+L 131.213531 278.987588 
+z
+" clip-path="url(#p49bb0113b5)" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 166.56862 345.8 
+L 178.942902 345.8 
+L 178.942902 121.584013 
+L 166.56862 121.584013 
+z
+" clip-path="url(#p49bb0113b5)" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 201.92371 345.8 
+L 214.297991 345.8 
+L 214.297991 115.152405 
+L 201.92371 115.152405 
+z
+" clip-path="url(#p49bb0113b5)" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 237.278799 345.8 
+L 249.65308 345.8 
+L 249.65308 255.632428 
+L 237.278799 255.632428 
+z
+" clip-path="url(#p49bb0113b5)" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 272.633888 345.8 
+L 285.00817 345.8 
+L 285.00817 110.167853 
+L 272.633888 110.167853 
+z
+" clip-path="url(#p49bb0113b5)" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 307.988978 345.8 
+L 320.363259 345.8 
+L 320.363259 109.149792 
+L 307.988978 109.149792 
+z
+" clip-path="url(#p49bb0113b5)" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 343.344067 345.8 
+L 355.718348 345.8 
+L 355.718348 245.877014 
+L 343.344067 245.877014 
+z
+" clip-path="url(#p49bb0113b5)" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 378.699156 345.8 
+L 391.073438 345.8 
+L 391.073438 106.823056 
+L 378.699156 106.823056 
+z
+" clip-path="url(#p49bb0113b5)" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 414.054246 345.8 
+L 426.428527 345.8 
+L 426.428527 103.13943 
+L 414.054246 103.13943 
+z
+" clip-path="url(#p49bb0113b5)" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 449.409335 345.8 
+L 461.783616 345.8 
+L 461.783616 248.009911 
+L 449.409335 248.009911 
+z
+" clip-path="url(#p49bb0113b5)" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 72.877634 345.8 
+L 85.251915 345.8 
+L 85.251915 327.578599 
+L 72.877634 327.578599 
+z
+" clip-path="url(#p49bb0113b5)" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_16">
+    <path d="M 108.232723 345.8 
+L 120.607004 345.8 
+L 120.607004 109.866729 
+L 108.232723 109.866729 
+z
+" clip-path="url(#p49bb0113b5)" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_17">
+    <path d="M 143.587812 345.8 
+L 155.962094 345.8 
+L 155.962094 268.849682 
+L 143.587812 268.849682 
+z
+" clip-path="url(#p49bb0113b5)" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_18">
+    <path d="M 178.942902 345.8 
+L 191.317183 345.8 
+L 191.317183 327.706953 
+L 178.942902 327.706953 
+z
+" clip-path="url(#p49bb0113b5)" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_19">
+    <path d="M 214.297991 345.8 
+L 226.672272 345.8 
+L 226.672272 327.422514 
+L 214.297991 327.422514 
+z
+" clip-path="url(#p49bb0113b5)" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_20">
+    <path d="M 249.65308 345.8 
+L 262.027362 345.8 
+L 262.027362 244.620977 
+L 249.65308 244.620977 
+z
+" clip-path="url(#p49bb0113b5)" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_21">
+    <path d="M 285.00817 345.8 
+L 297.382451 345.8 
+L 297.382451 324.567356 
+L 285.00817 324.567356 
+z
+" clip-path="url(#p49bb0113b5)" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_22">
+    <path d="M 320.363259 345.8 
+L 332.73754 345.8 
+L 332.73754 100.92381 
+L 320.363259 100.92381 
+z
+" clip-path="url(#p49bb0113b5)" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_23">
+    <path d="M 355.718348 345.8 
+L 368.09263 345.8 
+L 368.09263 231.88769 
+L 355.718348 231.88769 
+z
+" clip-path="url(#p49bb0113b5)" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_24">
+    <path d="M 391.073438 345.8 
+L 403.447719 345.8 
+L 403.447719 324.786945 
+L 391.073438 324.786945 
+z
+" clip-path="url(#p49bb0113b5)" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_25">
+    <path d="M 426.428527 345.8 
+L 438.802808 345.8 
+L 438.802808 324.220036 
+L 426.428527 324.220036 
+z
+" clip-path="url(#p49bb0113b5)" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_26">
+    <path d="M 461.783616 345.8 
+L 474.157898 345.8 
+L 474.157898 248.035156 
+L 461.783616 248.035156 
+z
+" clip-path="url(#p49bb0113b5)" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <defs>
+       <path id="m9e6b95138f" d="M 0 0 
+L 0 3.5 
+" style="stroke: #000000; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m9e6b95138f" x="72.877634" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <!-- 0 -->
+      <g transform="translate(70.661384 359.1675) scale(0.08 -0.08)">
+       <defs>
+        <path id="STHeiti-30" d="M 1747 269 
+Q 1005 269 605 880 
+Q 205 1491 205 2681 
+Q 205 3872 605 4483 
+Q 1005 5094 1741 5094 
+Q 2477 5094 2909 4470 
+Q 3341 3846 3341 2681 
+Q 3341 1517 2905 893 
+Q 2470 269 1747 269 
+z
+M 1760 4659 
+Q 1229 4659 934 4147 
+Q 640 3635 640 2669 
+Q 640 685 1760 685 
+Q 2304 685 2608 1206 
+Q 2912 1728 2912 2681 
+Q 2912 3635 2598 4147 
+Q 2285 4659 1760 4659 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#STHeiti-30"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2">
+      <g>
+       <use xlink:href="#m9e6b95138f" x="108.232723" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <!-- 1 -->
+      <g transform="translate(106.016473 359.1675) scale(0.08 -0.08)">
+       <defs>
+        <path id="STHeiti-31" d="M 1184 4979 
+L 2086 4979 
+L 2086 384 
+L 1632 384 
+L 1632 4531 
+L 909 4531 
+L 1184 4979 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#STHeiti-31"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3">
+      <g>
+       <use xlink:href="#m9e6b95138f" x="143.587812" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <!-- 2 -->
+      <g transform="translate(141.371562 359.1675) scale(0.08 -0.08)">
+       <defs>
+        <path id="STHeiti-32" d="M 742 3539 
+L 301 3539 
+Q 333 4243 768 4668 
+Q 1203 5094 1820 5094 
+Q 2438 5094 2844 4694 
+Q 3251 4294 3251 3718 
+Q 3251 3290 3024 2925 
+Q 2797 2560 2336 2061 
+L 1190 826 
+L 3315 826 
+L 3315 384 
+L 192 384 
+L 1946 2278 
+Q 2406 2778 2604 3066 
+Q 2803 3354 2803 3725 
+Q 2803 4096 2512 4377 
+Q 2221 4659 1789 4659 
+Q 1357 4659 1072 4368 
+Q 787 4077 742 3539 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#STHeiti-32"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#m9e6b95138f" x="178.942902" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <!-- 3 -->
+      <g transform="translate(176.726652 359.1675) scale(0.08 -0.08)">
+       <defs>
+        <path id="STHeiti-33" d="M 845 3917 
+L 378 3917 
+Q 506 4486 867 4790 
+Q 1229 5094 1750 5094 
+Q 2272 5094 2659 4748 
+Q 3046 4403 3046 3910 
+Q 3046 3315 2458 2970 
+Q 2861 2803 3081 2473 
+Q 3302 2144 3302 1754 
+Q 3302 1146 2857 707 
+Q 2413 269 1734 269 
+Q 1133 269 742 611 
+Q 352 954 224 1613 
+L 672 1613 
+Q 794 1158 1046 937 
+Q 1299 717 1760 717 
+Q 2221 717 2534 1011 
+Q 2848 1306 2848 1741 
+Q 2848 2176 2502 2441 
+Q 2157 2707 1498 2720 
+L 1498 3142 
+Q 1971 3142 2268 3360 
+Q 2566 3578 2566 3901 
+Q 2566 4224 2326 4438 
+Q 2086 4653 1747 4653 
+Q 1408 4653 1200 4470 
+Q 992 4288 845 3917 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#STHeiti-33"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_5">
+      <g>
+       <use xlink:href="#m9e6b95138f" x="214.297991" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <!-- 4 -->
+      <g transform="translate(212.081741 359.1675) scale(0.08 -0.08)">
+       <defs>
+        <path id="STHeiti-34" d="M 2726 5094 
+L 2816 5094 
+L 2816 1894 
+L 3373 1894 
+L 3373 1453 
+L 2816 1453 
+L 2816 384 
+L 2362 384 
+L 2362 1453 
+L 160 1453 
+L 2726 5094 
+z
+M 2362 1894 
+L 2362 3808 
+L 1005 1894 
+L 2362 1894 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#STHeiti-34"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#m9e6b95138f" x="249.65308" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <!-- 5 -->
+      <g transform="translate(247.43683 359.1675) scale(0.08 -0.08)">
+       <defs>
+        <path id="STHeiti-35" d="M 3149 4979 
+L 3149 4544 
+L 1510 4544 
+L 1280 3290 
+Q 1587 3379 1856 3379 
+Q 2458 3379 2861 2953 
+Q 3264 2528 3264 1862 
+Q 3264 1197 2825 733 
+Q 2387 269 1664 269 
+Q 1114 269 726 598 
+Q 339 928 262 1498 
+L 730 1498 
+Q 813 1114 1075 909 
+Q 1338 704 1683 704 
+Q 2138 704 2467 1043 
+Q 2797 1382 2797 1888 
+Q 2797 2349 2509 2646 
+Q 2221 2944 1757 2944 
+Q 1293 2944 730 2701 
+L 1158 4979 
+L 3149 4979 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#STHeiti-35"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_7">
+     <g id="line2d_7">
+      <g>
+       <use xlink:href="#m9e6b95138f" x="285.00817" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <!-- 6 -->
+      <g transform="translate(282.79192 359.1675) scale(0.08 -0.08)">
+       <defs>
+        <path id="STHeiti-36" d="M 2349 5094 
+L 2726 4851 
+L 1485 2970 
+Q 1747 3059 1984 3059 
+Q 2496 3059 2880 2652 
+Q 3264 2246 3264 1660 
+Q 3264 1075 2845 672 
+Q 2426 269 1827 269 
+Q 1229 269 829 678 
+Q 429 1088 429 1677 
+Q 429 1958 537 2256 
+Q 646 2554 954 3014 
+L 2349 5094 
+z
+M 2810 1683 
+Q 2810 2086 2528 2368 
+Q 2246 2650 1843 2650 
+Q 1440 2650 1158 2368 
+Q 877 2086 877 1683 
+Q 877 1280 1161 998 
+Q 1446 717 1843 717 
+Q 2240 717 2525 998 
+Q 2810 1280 2810 1683 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#STHeiti-36"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_8">
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#m9e6b95138f" x="320.363259" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <!-- 7 -->
+      <g transform="translate(318.147009 359.1675) scale(0.08 -0.08)">
+       <defs>
+        <path id="STHeiti-37" d="M 461 4979 
+L 3373 4979 
+L 915 269 
+L 538 461 
+L 2662 4544 
+L 461 4544 
+L 461 4979 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#STHeiti-37"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_9">
+     <g id="line2d_9">
+      <g>
+       <use xlink:href="#m9e6b95138f" x="355.718348" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_9">
+      <!-- 8 -->
+      <g transform="translate(353.502098 359.1675) scale(0.08 -0.08)">
+       <defs>
+        <path id="STHeiti-38" d="M 2458 2906 
+Q 3328 2477 3328 1702 
+Q 3328 1088 2896 678 
+Q 2464 269 1763 269 
+Q 1062 269 640 678 
+Q 218 1088 218 1664 
+Q 218 2470 1107 2906 
+Q 435 3264 435 3898 
+Q 435 4371 828 4732 
+Q 1222 5094 1779 5094 
+Q 2336 5094 2726 4742 
+Q 3117 4390 3117 3885 
+Q 3117 3270 2458 2906 
+z
+M 2656 3904 
+Q 2656 4211 2416 4432 
+Q 2176 4653 1789 4653 
+Q 1402 4653 1152 4432 
+Q 902 4211 902 3897 
+Q 902 3584 1174 3337 
+Q 1446 3091 1792 3091 
+Q 2138 3091 2397 3334 
+Q 2656 3578 2656 3904 
+z
+M 2867 1696 
+Q 2867 2086 2550 2380 
+Q 2234 2675 1782 2675 
+Q 1331 2675 1004 2371 
+Q 678 2067 678 1654 
+Q 678 1242 979 973 
+Q 1280 704 1766 704 
+Q 2253 704 2560 992 
+Q 2867 1280 2867 1696 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#STHeiti-38"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_10">
+     <g id="line2d_10">
+      <g>
+       <use xlink:href="#m9e6b95138f" x="391.073438" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_10">
+      <!-- 9 -->
+      <g transform="translate(388.857188 359.1675) scale(0.08 -0.08)">
+       <defs>
+        <path id="STHeiti-39" d="M 1229 269 
+L 851 512 
+L 2093 2394 
+Q 1850 2310 1613 2310 
+Q 1062 2310 688 2707 
+Q 314 3104 314 3696 
+Q 314 4288 730 4691 
+Q 1146 5094 1750 5094 
+Q 2355 5094 2748 4681 
+Q 3142 4269 3142 3693 
+Q 3142 3373 3011 3049 
+Q 2880 2726 2624 2349 
+L 1229 269 
+z
+M 762 3680 
+Q 762 3277 1043 2995 
+Q 1325 2714 1728 2714 
+Q 2131 2714 2412 2998 
+Q 2694 3283 2694 3680 
+Q 2694 4077 2412 4361 
+Q 2131 4646 1728 4646 
+Q 1325 4646 1043 4364 
+Q 762 4083 762 3680 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#STHeiti-39"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_11">
+     <g id="line2d_11">
+      <g>
+       <use xlink:href="#m9e6b95138f" x="426.428527" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_11">
+      <!-- 10 -->
+      <g transform="translate(421.996027 359.1675) scale(0.08 -0.08)">
+       <use xlink:href="#STHeiti-31"/>
+       <use xlink:href="#STHeiti-30" x="55.399994"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_12">
+     <g id="line2d_12">
+      <g>
+       <use xlink:href="#m9e6b95138f" x="461.783616" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_12">
+      <!-- 11 -->
+      <g transform="translate(457.351116 359.1675) scale(0.08 -0.08)">
+       <use xlink:href="#STHeiti-31"/>
+       <use xlink:href="#STHeiti-31" x="55.399994"/>
+      </g>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_13">
+      <path d="M 39.820625 345.8 
+L 494.840625 345.8 
+" clip-path="url(#p49bb0113b5)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_14">
+      <defs>
+       <path id="m1cce83d159" d="M 0 0 
+L -3.5 0 
+" style="stroke: #000000; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m1cce83d159" x="39.820625" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_13">
+      <!-- 0 -->
+      <g transform="translate(27.28 349.779687) scale(0.1 -0.1)">
+       <use xlink:href="#STHeiti-30"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_15">
+      <path d="M 39.820625 296.318561 
+L 494.840625 296.318561 
+" clip-path="url(#p49bb0113b5)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_16">
+      <g>
+       <use xlink:href="#m1cce83d159" x="39.820625" y="296.318561" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_14">
+      <!-- 5 -->
+      <g transform="translate(27.28 300.298248) scale(0.1 -0.1)">
+       <use xlink:href="#STHeiti-35"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_17">
+      <path d="M 39.820625 246.837122 
+L 494.840625 246.837122 
+" clip-path="url(#p49bb0113b5)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_18">
+      <g>
+       <use xlink:href="#m1cce83d159" x="39.820625" y="246.837122" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_15">
+      <!-- 10 -->
+      <g transform="translate(21.739375 250.816809) scale(0.1 -0.1)">
+       <use xlink:href="#STHeiti-31"/>
+       <use xlink:href="#STHeiti-30" x="55.399994"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_19">
+      <path d="M 39.820625 197.355683 
+L 494.840625 197.355683 
+" clip-path="url(#p49bb0113b5)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_20">
+      <g>
+       <use xlink:href="#m1cce83d159" x="39.820625" y="197.355683" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_16">
+      <!-- 15 -->
+      <g transform="translate(21.739375 201.33537) scale(0.1 -0.1)">
+       <use xlink:href="#STHeiti-31"/>
+       <use xlink:href="#STHeiti-35" x="55.399994"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_21">
+      <path d="M 39.820625 147.874243 
+L 494.840625 147.874243 
+" clip-path="url(#p49bb0113b5)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_22">
+      <g>
+       <use xlink:href="#m1cce83d159" x="39.820625" y="147.874243" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_17">
+      <!-- 20 -->
+      <g transform="translate(21.739375 151.853931) scale(0.1 -0.1)">
+       <use xlink:href="#STHeiti-32"/>
+       <use xlink:href="#STHeiti-30" x="55.399994"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_23">
+      <path d="M 39.820625 98.392804 
+L 494.840625 98.392804 
+" clip-path="url(#p49bb0113b5)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_24">
+      <g>
+       <use xlink:href="#m1cce83d159" x="39.820625" y="98.392804" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_18">
+      <!-- 25 -->
+      <g transform="translate(21.739375 102.372492) scale(0.1 -0.1)">
+       <use xlink:href="#STHeiti-32"/>
+       <use xlink:href="#STHeiti-35" x="55.399994"/>
+      </g>
+     </g>
+    </g>
+    <g id="text_19">
+     <!-- JCT (s) -->
+     <g transform="translate(16.264687 234.273672) rotate(-90) scale(0.11 -0.11)">
+      <defs>
+       <path id="STHeiti-4a" d="M 2061 4979 
+L 2528 4979 
+L 2528 1875 
+Q 2528 1254 2432 940 
+Q 2336 627 2067 448 
+Q 1798 269 1434 269 
+Q 845 269 269 755 
+L 512 1120 
+Q 832 902 1037 803 
+Q 1242 704 1430 704 
+Q 1619 704 1776 819 
+Q 1933 934 1997 1136 
+Q 2061 1338 2061 1894 
+L 2061 4979 
+z
+" transform="scale(0.015625)"/>
+       <path id="STHeiti-43" d="M 4838 4128 
+L 4480 3853 
+Q 3840 4646 2835 4646 
+Q 2016 4646 1424 4070 
+Q 832 3494 832 2659 
+Q 832 1824 1411 1264 
+Q 1990 704 2861 704 
+Q 3834 704 4480 1459 
+L 4838 1184 
+Q 4499 736 3980 502 
+Q 3462 269 2835 269 
+Q 1741 269 1043 960 
+Q 346 1651 346 2707 
+Q 346 3360 669 3913 
+Q 992 4467 1565 4780 
+Q 2138 5094 2797 5094 
+Q 3456 5094 3981 4844 
+Q 4506 4595 4838 4128 
+z
+" transform="scale(0.015625)"/>
+       <path id="STHeiti-54" d="M 102 4531 
+L 102 4979 
+L 2624 4979 
+L 2624 4531 
+L 1600 4531 
+L 1600 384 
+L 1133 384 
+L 1133 4531 
+L 102 4531 
+z
+" transform="scale(0.015625)"/>
+       <path id="STHeiti-20" transform="scale(0.015625)"/>
+       <path id="STHeiti-28" d="M 1466 5370 
+L 1978 5370 
+Q 1651 4704 1475 3865 
+Q 1299 3027 1299 2176 
+Q 1299 506 1824 -762 
+L 1338 -762 
+Q 832 480 832 2118 
+Q 832 3891 1466 5370 
+z
+" transform="scale(0.015625)"/>
+       <path id="STHeiti-73" d="M 2195 3411 
+L 1914 3123 
+Q 1562 3462 1229 3462 
+Q 1011 3462 864 3324 
+Q 717 3187 717 2985 
+Q 717 2784 873 2640 
+Q 1030 2496 1414 2294 
+Q 1798 2093 2000 1859 
+Q 2202 1626 2202 1286 
+Q 2202 858 1904 563 
+Q 1606 269 1171 269 
+Q 883 269 617 397 
+Q 352 525 166 755 
+L 442 1062 
+Q 781 685 1152 685 
+Q 1414 685 1600 857 
+Q 1786 1030 1786 1264 
+Q 1786 1498 1622 1648 
+Q 1459 1798 1078 1990 
+Q 698 2182 509 2409 
+Q 320 2637 320 2998 
+Q 320 3360 585 3616 
+Q 851 3872 1289 3872 
+Q 1728 3872 2195 3411 
+z
+" transform="scale(0.015625)"/>
+       <path id="STHeiti-29" d="M 896 5370 
+Q 1530 3891 1530 2118 
+Q 1530 480 1024 -762 
+L 538 -762 
+Q 1062 506 1062 2176 
+Q 1062 3027 886 3865 
+Q 710 4704 384 5370 
+L 896 5370 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#STHeiti-4a"/>
+      <use xlink:href="#STHeiti-43" x="48.199997"/>
+      <use xlink:href="#STHeiti-54" x="129.499985"/>
+      <use xlink:href="#STHeiti-20" x="172.099976"/>
+      <use xlink:href="#STHeiti-28" x="197.09996"/>
+      <use xlink:href="#STHeiti-73" x="233.999954"/>
+      <use xlink:href="#STHeiti-29" x="272.799942"/>
+     </g>
+    </g>
+   </g>
+   <g id="patch_27">
+    <path d="M 39.820625 345.8 
+L 39.820625 88.68 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_28">
+    <path d="M 494.840625 345.8 
+L 494.840625 88.68 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_29">
+    <path d="M 39.820625 345.8 
+L 494.840625 345.8 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_30">
+    <path d="M 39.820625 88.68 
+L 494.840625 88.68 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_20">
+    <!-- -92% -->
+    <g style="fill: #228833" transform="translate(71.311727 323.578599) scale(0.07 -0.07)">
+     <defs>
+      <path id="STHeiti-2d" d="M 205 2304 
+L 1920 2304 
+L 1920 1920 
+L 205 1920 
+L 205 2304 
+z
+" transform="scale(0.015625)"/>
+      <path id="STHeiti-25" d="M 4314 5184 
+L 966 64 
+L 550 64 
+L 3603 4730 
+Q 3232 4640 2845 4614 
+Q 2458 4589 2278 4595 
+L 2112 4602 
+Q 2304 4333 2304 4032 
+Q 2304 3571 1993 3248 
+Q 1683 2925 1225 2925 
+Q 768 2925 454 3238 
+Q 141 3552 141 4006 
+Q 141 4461 464 4774 
+Q 787 5088 1210 5088 
+Q 1382 5088 1702 5021 
+Q 2022 4954 2490 4954 
+Q 3232 4954 3949 5184 
+L 4314 5184 
+z
+M 1914 4013 
+Q 1914 4301 1712 4499 
+Q 1510 4698 1225 4698 
+Q 941 4698 739 4496 
+Q 538 4294 538 4012 
+Q 538 3731 739 3529 
+Q 941 3328 1225 3328 
+Q 1510 3328 1712 3526 
+Q 1914 3725 1914 4013 
+z
+M 2656 1331 
+Q 2656 1773 2973 2093 
+Q 3290 2413 3734 2413 
+Q 4179 2413 4496 2096 
+Q 4813 1779 4813 1331 
+Q 4813 883 4496 566 
+Q 4179 250 3734 250 
+Q 3290 250 2973 566 
+Q 2656 883 2656 1331 
+z
+M 4422 1331 
+Q 4422 1613 4220 1814 
+Q 4019 2016 3734 2016 
+Q 3450 2016 3251 1814 
+Q 3053 1613 3053 1331 
+Q 3053 1050 3251 848 
+Q 3450 646 3734 646 
+Q 4019 646 4220 844 
+Q 4422 1043 4422 1331 
+z
+" transform="scale(0.015625)"/>
+     </defs>
+     <use xlink:href="#STHeiti-2d"/>
+     <use xlink:href="#STHeiti-39" x="33.199997"/>
+     <use xlink:href="#STHeiti-32" x="88.599991"/>
+     <use xlink:href="#STHeiti-25" x="143.999985"/>
+    </g>
+   </g>
+   <g id="text_21">
+    <!-- +2% -->
+    <g style="fill: #ee6677" transform="translate(107.647364 105.866729) scale(0.07 -0.07)">
+     <defs>
+      <path id="STHeiti-2b" d="M 1728 2899 
+L 1728 4250 
+L 2150 4250 
+L 2150 2899 
+L 3520 2899 
+L 3520 2470 
+L 2150 2470 
+L 2150 1114 
+L 1728 1114 
+L 1728 2470 
+L 358 2470 
+L 358 2899 
+L 1728 2899 
+z
+" transform="scale(0.015625)"/>
+     </defs>
+     <use xlink:href="#STHeiti-2b"/>
+     <use xlink:href="#STHeiti-32" x="60.599991"/>
+     <use xlink:href="#STHeiti-25" x="115.999985"/>
+    </g>
+   </g>
+   <g id="text_22">
+    <!-- +15% -->
+    <g style="fill: #ee6677" transform="translate(141.063234 264.849682) scale(0.07 -0.07)">
+     <use xlink:href="#STHeiti-2b"/>
+     <use xlink:href="#STHeiti-31" x="60.599991"/>
+     <use xlink:href="#STHeiti-35" x="115.999985"/>
+     <use xlink:href="#STHeiti-25" x="171.399979"/>
+    </g>
+   </g>
+   <g id="text_23">
+    <!-- -92% -->
+    <g style="fill: #228833" transform="translate(177.376995 323.706953) scale(0.07 -0.07)">
+     <use xlink:href="#STHeiti-2d"/>
+     <use xlink:href="#STHeiti-39" x="33.199997"/>
+     <use xlink:href="#STHeiti-32" x="88.599991"/>
+     <use xlink:href="#STHeiti-25" x="143.999985"/>
+    </g>
+   </g>
+   <g id="text_24">
+    <!-- -92% -->
+    <g style="fill: #228833" transform="translate(212.732085 323.422514) scale(0.07 -0.07)">
+     <use xlink:href="#STHeiti-2d"/>
+     <use xlink:href="#STHeiti-39" x="33.199997"/>
+     <use xlink:href="#STHeiti-32" x="88.599991"/>
+     <use xlink:href="#STHeiti-25" x="143.999985"/>
+    </g>
+   </g>
+   <g id="text_25">
+    <!-- +12% -->
+    <g style="fill: #ee6677" transform="translate(247.128502 240.620977) scale(0.07 -0.07)">
+     <use xlink:href="#STHeiti-2b"/>
+     <use xlink:href="#STHeiti-31" x="60.599991"/>
+     <use xlink:href="#STHeiti-32" x="115.999985"/>
+     <use xlink:href="#STHeiti-25" x="171.399979"/>
+    </g>
+   </g>
+   <g id="text_26">
+    <!-- -91% -->
+    <g style="fill: #228833" transform="translate(283.442263 320.567356) scale(0.07 -0.07)">
+     <use xlink:href="#STHeiti-2d"/>
+     <use xlink:href="#STHeiti-39" x="33.199997"/>
+     <use xlink:href="#STHeiti-31" x="88.599991"/>
+     <use xlink:href="#STHeiti-25" x="143.999985"/>
+    </g>
+   </g>
+   <g id="text_27">
+    <!-- +3% -->
+    <g style="fill: #ee6677" transform="translate(319.7779 96.92381) scale(0.07 -0.07)">
+     <use xlink:href="#STHeiti-2b"/>
+     <use xlink:href="#STHeiti-33" x="60.599991"/>
+     <use xlink:href="#STHeiti-25" x="115.999985"/>
+    </g>
+   </g>
+   <g id="text_28">
+    <!-- +14% -->
+    <g style="fill: #ee6677" transform="translate(353.19377 227.88769) scale(0.07 -0.07)">
+     <use xlink:href="#STHeiti-2b"/>
+     <use xlink:href="#STHeiti-31" x="60.599991"/>
+     <use xlink:href="#STHeiti-34" x="115.999985"/>
+     <use xlink:href="#STHeiti-25" x="171.399979"/>
+    </g>
+   </g>
+   <g id="text_29">
+    <!-- -91% -->
+    <g style="fill: #228833" transform="translate(389.507532 320.786945) scale(0.07 -0.07)">
+     <use xlink:href="#STHeiti-2d"/>
+     <use xlink:href="#STHeiti-39" x="33.199997"/>
+     <use xlink:href="#STHeiti-31" x="88.599991"/>
+     <use xlink:href="#STHeiti-25" x="143.999985"/>
+    </g>
+   </g>
+   <g id="text_30">
+    <!-- -91% -->
+    <g style="fill: #228833" transform="translate(424.862621 320.220036) scale(0.07 -0.07)">
+     <use xlink:href="#STHeiti-2d"/>
+     <use xlink:href="#STHeiti-39" x="33.199997"/>
+     <use xlink:href="#STHeiti-31" x="88.599991"/>
+     <use xlink:href="#STHeiti-25" x="143.999985"/>
+    </g>
+   </g>
+   <g id="text_31">
+    <!-- -0% -->
+    <g style="fill: #228833" transform="translate(462.156929 244.035156) scale(0.07 -0.07)">
+     <use xlink:href="#STHeiti-2d"/>
+     <use xlink:href="#STHeiti-30" x="33.199997"/>
+     <use xlink:href="#STHeiti-25" x="88.599991"/>
+    </g>
+   </g>
+   <g id="text_32">
+    <!-- Per-Job JCT: random_same vs crux_no_compress -->
+    <g transform="translate(125.6425 82.68) scale(0.12 -0.12)">
+     <defs>
+      <path id="STHeiti-50" d="M 557 4979 
+L 1472 4979 
+Q 2285 4979 2534 4915 
+Q 2784 4851 2992 4691 
+Q 3200 4531 3315 4291 
+Q 3430 4051 3430 3757 
+Q 3430 3283 3174 2982 
+Q 2918 2682 2531 2602 
+Q 2144 2522 1344 2522 
+L 1018 2522 
+L 1018 384 
+L 557 384 
+L 557 4979 
+z
+M 1018 4531 
+L 1018 2963 
+L 1792 2963 
+Q 2490 2950 2720 3190 
+Q 2950 3430 2950 3757 
+Q 2950 4531 1830 4531 
+L 1018 4531 
+z
+" transform="scale(0.015625)"/>
+      <path id="STHeiti-65" d="M 3347 1485 
+L 3718 1293 
+Q 3168 269 2093 269 
+Q 1325 269 825 797 
+Q 326 1325 326 2067 
+Q 326 2810 828 3341 
+Q 1331 3872 2070 3872 
+Q 2810 3872 3312 3379 
+Q 3814 2886 3834 2035 
+L 774 2035 
+Q 794 1421 1162 1046 
+Q 1530 672 2054 672 
+Q 2918 672 3347 1485 
+z
+M 3347 2413 
+Q 3258 2899 2899 3174 
+Q 2541 3450 2074 3450 
+Q 1114 3450 819 2413 
+L 3347 2413 
+z
+" transform="scale(0.015625)"/>
+      <path id="STHeiti-72" d="M 320 3782 
+L 768 3782 
+L 768 3290 
+Q 947 3590 1116 3731 
+Q 1286 3872 1494 3872 
+Q 1702 3872 1914 3757 
+L 1683 3386 
+Q 1587 3443 1485 3443 
+Q 1286 3443 1110 3238 
+Q 934 3034 851 2710 
+Q 768 2387 768 1536 
+L 768 384 
+L 320 384 
+L 320 3782 
+z
+" transform="scale(0.015625)"/>
+      <path id="STHeiti-6f" d="M 326 2061 
+Q 326 2810 841 3341 
+Q 1357 3872 2096 3872 
+Q 2835 3872 3350 3341 
+Q 3866 2810 3866 2067 
+Q 3866 1325 3357 797 
+Q 2848 269 2099 269 
+Q 1350 269 838 797 
+Q 326 1325 326 2061 
+z
+M 3424 2054 
+Q 3424 2618 3030 3030 
+Q 2637 3443 2096 3443 
+Q 1555 3443 1164 3030 
+Q 774 2618 774 2048 
+Q 774 1478 1152 1081 
+Q 1530 685 2090 685 
+Q 2650 685 3037 1085 
+Q 3424 1485 3424 2054 
+z
+" transform="scale(0.015625)"/>
+      <path id="STHeiti-62" d="M 518 384 
+L 518 5094 
+L 947 5094 
+L 947 3200 
+Q 1504 3872 2310 3872 
+Q 3040 3872 3549 3344 
+Q 4058 2816 4058 2073 
+Q 4058 1331 3539 800 
+Q 3021 269 2298 269 
+Q 1491 269 947 1011 
+L 947 384 
+L 518 384 
+z
+M 922 2106 
+Q 922 1510 1312 1100 
+Q 1702 691 2265 691 
+Q 2829 691 3222 1107 
+Q 3616 1523 3616 2083 
+Q 3616 2643 3232 3059 
+Q 2848 3475 2272 3475 
+Q 1696 3475 1309 3084 
+Q 922 2694 922 2106 
+z
+" transform="scale(0.015625)"/>
+      <path id="STHeiti-3a" d="M 582 3482 
+Q 582 3642 697 3757 
+Q 813 3872 969 3872 
+Q 1126 3872 1238 3760 
+Q 1350 3648 1350 3485 
+Q 1350 3322 1241 3210 
+Q 1133 3098 969 3098 
+Q 806 3098 694 3210 
+Q 582 3322 582 3482 
+z
+M 582 685 
+Q 582 845 697 957 
+Q 813 1069 969 1069 
+Q 1126 1069 1238 957 
+Q 1350 845 1350 681 
+Q 1350 518 1238 406 
+Q 1126 294 969 294 
+Q 813 294 697 409 
+Q 582 525 582 685 
+z
+" transform="scale(0.015625)"/>
+      <path id="STHeiti-61" d="M 3872 3782 
+L 3872 384 
+L 3443 384 
+L 3443 966 
+Q 2861 269 2112 269 
+Q 1363 269 848 803 
+Q 333 1338 333 2077 
+Q 333 2816 851 3344 
+Q 1370 3872 2093 3872 
+Q 2925 3872 3443 3162 
+L 3443 3782 
+L 3872 3782 
+z
+M 3469 2067 
+Q 3469 2650 3078 3050 
+Q 2688 3450 2121 3450 
+Q 1555 3450 1164 3037 
+Q 774 2624 774 2061 
+Q 774 1498 1171 1085 
+Q 1568 672 2121 672 
+Q 2675 672 3072 1069 
+Q 3469 1466 3469 2067 
+z
+" transform="scale(0.015625)"/>
+      <path id="STHeiti-6e" d="M 486 3782 
+L 928 3782 
+L 928 3174 
+Q 1453 3872 2202 3872 
+Q 2586 3872 2893 3664 
+Q 3200 3456 3328 3120 
+Q 3456 2784 3456 2131 
+L 3456 384 
+L 3021 384 
+L 3021 2003 
+Q 3021 2598 2966 2809 
+Q 2912 3021 2800 3168 
+Q 2688 3315 2515 3392 
+Q 2342 3469 2096 3469 
+Q 1850 3469 1613 3347 
+Q 1376 3226 1209 3008 
+Q 1043 2790 985 2560 
+Q 928 2330 928 1632 
+L 928 384 
+L 486 384 
+L 486 3782 
+z
+" transform="scale(0.015625)"/>
+      <path id="STHeiti-64" d="M 3878 5094 
+L 3878 384 
+L 3450 384 
+L 3450 966 
+Q 2867 269 2115 269 
+Q 1363 269 851 800 
+Q 339 1331 339 2073 
+Q 339 2816 857 3344 
+Q 1376 3872 2099 3872 
+Q 2931 3872 3450 3162 
+L 3450 5094 
+L 3878 5094 
+z
+M 3475 2061 
+Q 3475 2643 3091 3046 
+Q 2707 3450 2131 3450 
+Q 1555 3450 1168 3037 
+Q 781 2624 781 2064 
+Q 781 1504 1177 1088 
+Q 1574 672 2115 672 
+Q 2656 672 3065 1065 
+Q 3475 1459 3475 2061 
+z
+" transform="scale(0.015625)"/>
+      <path id="STHeiti-6d" d="M 486 3782 
+L 922 3782 
+L 922 3194 
+Q 1376 3872 2086 3872 
+Q 2464 3872 2761 3657 
+Q 3059 3443 3162 3053 
+Q 3373 3450 3699 3661 
+Q 4026 3872 4451 3872 
+Q 4877 3872 5222 3542 
+Q 5568 3213 5568 2240 
+L 5568 384 
+L 5120 384 
+L 5120 2240 
+Q 5120 2707 5062 2928 
+Q 5005 3149 4813 3299 
+Q 4621 3450 4304 3450 
+Q 3987 3450 3712 3238 
+Q 3437 3027 3334 2700 
+Q 3232 2374 3232 1715 
+L 3232 384 
+L 2803 384 
+L 2803 2125 
+Q 2803 2669 2745 2902 
+Q 2688 3136 2489 3293 
+Q 2291 3450 2003 3450 
+Q 1715 3450 1462 3280 
+Q 1210 3110 1066 2816 
+Q 922 2522 922 1824 
+L 922 384 
+L 486 384 
+L 486 3782 
+z
+" transform="scale(0.015625)"/>
+      <path id="STHeiti-5f" d="M 0 -96 
+L 3200 -96 
+L 3200 -416 
+L 0 -416 
+L 0 -96 
+z
+" transform="scale(0.015625)"/>
+      <path id="STHeiti-76" d="M 166 3782 
+L 634 3782 
+L 1766 1197 
+L 2899 3782 
+L 3366 3782 
+L 1811 269 
+L 1734 269 
+L 166 3782 
+z
+" transform="scale(0.015625)"/>
+      <path id="STHeiti-63" d="M 4038 3078 
+L 3693 2861 
+Q 3245 3456 2464 3456 
+Q 1850 3456 1434 3062 
+Q 1018 2669 1018 2086 
+Q 1018 1504 1427 1088 
+Q 1837 672 2464 672 
+Q 3213 672 3693 1267 
+L 4038 1037 
+Q 3782 666 3350 467 
+Q 2918 269 2419 269 
+Q 1632 269 1104 787 
+Q 576 1306 576 2054 
+Q 576 2803 1110 3337 
+Q 1645 3872 2483 3872 
+Q 2976 3872 3395 3661 
+Q 3814 3450 4038 3078 
+z
+" transform="scale(0.015625)"/>
+      <path id="STHeiti-75" d="M 3405 384 
+L 2963 384 
+L 2963 992 
+Q 2438 294 1690 294 
+Q 1306 294 998 502 
+Q 691 710 563 1046 
+Q 435 1382 435 2035 
+L 435 3782 
+L 870 3782 
+L 870 2163 
+Q 870 1568 924 1357 
+Q 979 1146 1091 998 
+Q 1203 851 1376 774 
+Q 1549 698 1795 698 
+Q 2042 698 2278 819 
+Q 2515 941 2681 1158 
+Q 2848 1376 2905 1606 
+Q 2963 1837 2963 2534 
+L 2963 3782 
+L 3405 3782 
+L 3405 384 
+z
+" transform="scale(0.015625)"/>
+      <path id="STHeiti-78" d="M 1530 1805 
+L 544 384 
+L 26 384 
+L 1267 2176 
+L 147 3782 
+L 672 3782 
+L 1530 2554 
+L 2381 3782 
+L 2906 3782 
+L 1792 2182 
+L 3053 384 
+L 2522 384 
+L 1530 1805 
+z
+" transform="scale(0.015625)"/>
+      <path id="STHeiti-70" d="M 493 3782 
+L 928 3782 
+L 928 3162 
+Q 1446 3872 2278 3872 
+Q 2995 3872 3513 3344 
+Q 4032 2816 4032 2073 
+Q 4032 1331 3520 800 
+Q 3008 269 2291 269 
+Q 1510 269 928 966 
+L 928 -858 
+L 493 -858 
+L 493 3782 
+z
+M 3597 2067 
+Q 3597 2637 3203 3043 
+Q 2810 3450 2240 3450 
+Q 1670 3450 1283 3050 
+Q 896 2650 896 2061 
+Q 896 1472 1293 1072 
+Q 1690 672 2243 672 
+Q 2797 672 3197 1078 
+Q 3597 1485 3597 2067 
+z
+" transform="scale(0.015625)"/>
+     </defs>
+     <use xlink:href="#STHeiti-50"/>
+     <use xlink:href="#STHeiti-65" x="59.199997"/>
+     <use xlink:href="#STHeiti-72" x="124.199982"/>
+     <use xlink:href="#STHeiti-2d" x="154.299973"/>
+     <use xlink:href="#STHeiti-4a" x="187.499969"/>
+     <use xlink:href="#STHeiti-6f" x="235.699966"/>
+     <use xlink:href="#STHeiti-62" x="301.199951"/>
+     <use xlink:href="#STHeiti-20" x="369.399933"/>
+     <use xlink:href="#STHeiti-4a" x="394.399918"/>
+     <use xlink:href="#STHeiti-43" x="442.599915"/>
+     <use xlink:href="#STHeiti-54" x="523.899902"/>
+     <use xlink:href="#STHeiti-3a" x="566.499893"/>
+     <use xlink:href="#STHeiti-20" x="594.19989"/>
+     <use xlink:href="#STHeiti-72" x="619.199875"/>
+     <use xlink:href="#STHeiti-61" x="649.299866"/>
+     <use xlink:href="#STHeiti-6e" x="717.599854"/>
+     <use xlink:href="#STHeiti-64" x="778.599838"/>
+     <use xlink:href="#STHeiti-6f" x="847.099823"/>
+     <use xlink:href="#STHeiti-6d" x="912.599808"/>
+     <use xlink:href="#STHeiti-5f" x="1006.399796"/>
+     <use xlink:href="#STHeiti-73" x="1056.39978"/>
+     <use xlink:href="#STHeiti-61" x="1095.199768"/>
+     <use xlink:href="#STHeiti-6d" x="1163.499756"/>
+     <use xlink:href="#STHeiti-65" x="1257.299744"/>
+     <use xlink:href="#STHeiti-20" x="1322.299728"/>
+     <use xlink:href="#STHeiti-76" x="1347.299713"/>
+     <use xlink:href="#STHeiti-73" x="1402.699707"/>
+     <use xlink:href="#STHeiti-20" x="1441.499695"/>
+     <use xlink:href="#STHeiti-63" x="1466.49968"/>
+     <use xlink:href="#STHeiti-72" x="1531.199677"/>
+     <use xlink:href="#STHeiti-75" x="1561.299667"/>
+     <use xlink:href="#STHeiti-78" x="1622.099655"/>
+     <use xlink:href="#STHeiti-5f" x="1670.09964"/>
+     <use xlink:href="#STHeiti-6e" x="1720.099625"/>
+     <use xlink:href="#STHeiti-6f" x="1781.099609"/>
+     <use xlink:href="#STHeiti-5f" x="1846.599594"/>
+     <use xlink:href="#STHeiti-63" x="1896.599579"/>
+     <use xlink:href="#STHeiti-6f" x="1961.299576"/>
+     <use xlink:href="#STHeiti-6d" x="2026.799561"/>
+     <use xlink:href="#STHeiti-70" x="2120.599548"/>
+     <use xlink:href="#STHeiti-72" x="2188.79953"/>
+     <use xlink:href="#STHeiti-65" x="2218.899521"/>
+     <use xlink:href="#STHeiti-73" x="2283.899506"/>
+     <use xlink:href="#STHeiti-73" x="2322.699493"/>
+    </g>
+   </g>
+   <g id="legend_1">
+    <g id="patch_31">
+     <path d="M 392.041875 117.96 
+L 489.240625 117.96 
+Q 490.840625 117.96 490.840625 116.36 
+L 490.840625 94.28 
+Q 490.840625 92.68 489.240625 92.68 
+L 392.041875 92.68 
+Q 390.441875 92.68 390.441875 94.28 
+L 390.441875 116.36 
+Q 390.441875 117.96 392.041875 117.96 
+z
+" style="fill: #ffffff; opacity: 0.8; stroke: #cccccc; stroke-linejoin: miter"/>
+    </g>
+    <g id="patch_32">
+     <path d="M 393.641875 102.2475 
+L 409.641875 102.2475 
+L 409.641875 96.6475 
+L 393.641875 96.6475 
+z
+" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_33">
+     <!-- random_same -->
+     <g transform="translate(416.041875 102.2475) scale(0.08 -0.08)">
+      <use xlink:href="#STHeiti-72"/>
+      <use xlink:href="#STHeiti-61" x="30.099991"/>
+      <use xlink:href="#STHeiti-6e" x="98.399979"/>
+      <use xlink:href="#STHeiti-64" x="159.399963"/>
+      <use xlink:href="#STHeiti-6f" x="227.899948"/>
+      <use xlink:href="#STHeiti-6d" x="293.399933"/>
+      <use xlink:href="#STHeiti-5f" x="387.199921"/>
+      <use xlink:href="#STHeiti-73" x="437.199905"/>
+      <use xlink:href="#STHeiti-61" x="475.999893"/>
+      <use xlink:href="#STHeiti-6d" x="544.299881"/>
+      <use xlink:href="#STHeiti-65" x="638.099869"/>
+     </g>
+    </g>
+    <g id="patch_33">
+     <path d="M 393.641875 113.6875 
+L 409.641875 113.6875 
+L 409.641875 108.0875 
+L 393.641875 108.0875 
+z
+" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_34">
+     <!-- crux_no_compress -->
+     <g transform="translate(416.041875 113.6875) scale(0.08 -0.08)">
+      <use xlink:href="#STHeiti-63"/>
+      <use xlink:href="#STHeiti-72" x="64.699997"/>
+      <use xlink:href="#STHeiti-75" x="94.799988"/>
+      <use xlink:href="#STHeiti-78" x="155.599976"/>
+      <use xlink:href="#STHeiti-5f" x="203.59996"/>
+      <use xlink:href="#STHeiti-6e" x="253.599945"/>
+      <use xlink:href="#STHeiti-6f" x="314.59993"/>
+      <use xlink:href="#STHeiti-5f" x="380.099915"/>
+      <use xlink:href="#STHeiti-63" x="430.099899"/>
+      <use xlink:href="#STHeiti-6f" x="494.799896"/>
+      <use xlink:href="#STHeiti-6d" x="560.299881"/>
+      <use xlink:href="#STHeiti-70" x="654.099869"/>
+      <use xlink:href="#STHeiti-72" x="722.29985"/>
+      <use xlink:href="#STHeiti-65" x="752.399841"/>
+      <use xlink:href="#STHeiti-73" x="817.399826"/>
+      <use xlink:href="#STHeiti-73" x="856.199814"/>
+     </g>
+    </g>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g id="patch_34">
+    <path d="M 538.420625 345.8 
+L 993.440625 345.8 
+L 993.440625 88.68 
+L 538.420625 88.68 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="patch_35">
+    <path d="M 559.103352 345.8 
+L 571.477634 345.8 
+L 571.477634 128.735522 
+L 559.103352 128.735522 
+z
+" clip-path="url(#p7095208bf2)" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_36">
+    <path d="M 594.458442 345.8 
+L 606.832723 345.8 
+L 606.832723 117.752479 
+L 594.458442 117.752479 
+z
+" clip-path="url(#p7095208bf2)" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_37">
+    <path d="M 629.813531 345.8 
+L 642.187812 345.8 
+L 642.187812 307.108601 
+L 629.813531 307.108601 
+z
+" clip-path="url(#p7095208bf2)" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_38">
+    <path d="M 665.16862 345.8 
+L 677.542902 345.8 
+L 677.542902 117.938349 
+L 665.16862 117.938349 
+z
+" clip-path="url(#p7095208bf2)" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_39">
+    <path d="M 700.52371 345.8 
+L 712.897991 345.8 
+L 712.897991 109.774335 
+L 700.52371 109.774335 
+z
+" clip-path="url(#p7095208bf2)" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_40">
+    <path d="M 735.878799 345.8 
+L 748.25308 345.8 
+L 748.25308 292.268639 
+L 735.878799 292.268639 
+z
+" clip-path="url(#p7095208bf2)" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_41">
+    <path d="M 771.233888 345.8 
+L 783.60817 345.8 
+L 783.60817 106.596825 
+L 771.233888 106.596825 
+z
+" clip-path="url(#p7095208bf2)" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_42">
+    <path d="M 806.588978 345.8 
+L 818.963259 345.8 
+L 818.963259 107.062459 
+L 806.588978 107.062459 
+z
+" clip-path="url(#p7095208bf2)" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_43">
+    <path d="M 841.944067 345.8 
+L 854.318348 345.8 
+L 854.318348 273.69145 
+L 841.944067 273.69145 
+z
+" clip-path="url(#p7095208bf2)" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_44">
+    <path d="M 877.299156 345.8 
+L 889.673438 345.8 
+L 889.673438 103.616148 
+L 877.299156 103.616148 
+z
+" clip-path="url(#p7095208bf2)" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_45">
+    <path d="M 912.654246 345.8 
+L 925.028527 345.8 
+L 925.028527 100.92381 
+L 912.654246 100.92381 
+z
+" clip-path="url(#p7095208bf2)" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_46">
+    <path d="M 948.009335 345.8 
+L 960.383616 345.8 
+L 960.383616 274.99379 
+L 948.009335 274.99379 
+z
+" clip-path="url(#p7095208bf2)" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_47">
+    <path d="M 571.477634 345.8 
+L 583.851915 345.8 
+L 583.851915 334.855178 
+L 571.477634 334.855178 
+z
+" clip-path="url(#p7095208bf2)" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_48">
+    <path d="M 606.832723 345.8 
+L 619.207004 345.8 
+L 619.207004 117.768366 
+L 606.832723 117.768366 
+z
+" clip-path="url(#p7095208bf2)" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_49">
+    <path d="M 642.187812 345.8 
+L 654.562094 345.8 
+L 654.562094 312.038711 
+L 642.187812 312.038711 
+z
+" clip-path="url(#p7095208bf2)" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_50">
+    <path d="M 677.542902 345.8 
+L 689.917183 345.8 
+L 689.917183 334.216088 
+L 677.542902 334.216088 
+z
+" clip-path="url(#p7095208bf2)" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_51">
+    <path d="M 712.897991 345.8 
+L 725.272272 345.8 
+L 725.272272 333.526122 
+L 712.897991 333.526122 
+z
+" clip-path="url(#p7095208bf2)" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_52">
+    <path d="M 748.25308 345.8 
+L 760.627362 345.8 
+L 760.627362 306.099544 
+L 748.25308 306.099544 
+z
+" clip-path="url(#p7095208bf2)" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_53">
+    <path d="M 783.60817 345.8 
+L 795.982451 345.8 
+L 795.982451 332.593174 
+L 783.60817 332.593174 
+z
+" clip-path="url(#p7095208bf2)" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_54">
+    <path d="M 818.963259 345.8 
+L 831.33754 345.8 
+L 831.33754 105.533565 
+L 818.963259 105.533565 
+z
+" clip-path="url(#p7095208bf2)" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_55">
+    <path d="M 854.318348 345.8 
+L 866.69263 345.8 
+L 866.69263 283.514908 
+L 854.318348 283.514908 
+z
+" clip-path="url(#p7095208bf2)" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_56">
+    <path d="M 889.673438 345.8 
+L 902.047719 345.8 
+L 902.047719 332.106656 
+L 889.673438 332.106656 
+z
+" clip-path="url(#p7095208bf2)" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_57">
+    <path d="M 925.028527 345.8 
+L 937.402808 345.8 
+L 937.402808 331.46672 
+L 925.028527 331.46672 
+z
+" clip-path="url(#p7095208bf2)" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_58">
+    <path d="M 960.383616 345.8 
+L 972.757898 345.8 
+L 972.757898 287.750671 
+L 960.383616 287.750671 
+z
+" clip-path="url(#p7095208bf2)" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="matplotlib.axis_3">
+    <g id="xtick_13">
+     <g id="line2d_25">
+      <g>
+       <use xlink:href="#m9e6b95138f" x="571.477634" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_35">
+      <!-- 0 -->
+      <g transform="translate(569.261384 359.1675) scale(0.08 -0.08)">
+       <use xlink:href="#STHeiti-30"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_14">
+     <g id="line2d_26">
+      <g>
+       <use xlink:href="#m9e6b95138f" x="606.832723" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_36">
+      <!-- 1 -->
+      <g transform="translate(604.616473 359.1675) scale(0.08 -0.08)">
+       <use xlink:href="#STHeiti-31"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_15">
+     <g id="line2d_27">
+      <g>
+       <use xlink:href="#m9e6b95138f" x="642.187812" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_37">
+      <!-- 2 -->
+      <g transform="translate(639.971562 359.1675) scale(0.08 -0.08)">
+       <use xlink:href="#STHeiti-32"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_16">
+     <g id="line2d_28">
+      <g>
+       <use xlink:href="#m9e6b95138f" x="677.542902" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_38">
+      <!-- 3 -->
+      <g transform="translate(675.326652 359.1675) scale(0.08 -0.08)">
+       <use xlink:href="#STHeiti-33"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_17">
+     <g id="line2d_29">
+      <g>
+       <use xlink:href="#m9e6b95138f" x="712.897991" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_39">
+      <!-- 4 -->
+      <g transform="translate(710.681741 359.1675) scale(0.08 -0.08)">
+       <use xlink:href="#STHeiti-34"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_18">
+     <g id="line2d_30">
+      <g>
+       <use xlink:href="#m9e6b95138f" x="748.25308" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_40">
+      <!-- 5 -->
+      <g transform="translate(746.03683 359.1675) scale(0.08 -0.08)">
+       <use xlink:href="#STHeiti-35"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_19">
+     <g id="line2d_31">
+      <g>
+       <use xlink:href="#m9e6b95138f" x="783.60817" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_41">
+      <!-- 6 -->
+      <g transform="translate(781.39192 359.1675) scale(0.08 -0.08)">
+       <use xlink:href="#STHeiti-36"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_20">
+     <g id="line2d_32">
+      <g>
+       <use xlink:href="#m9e6b95138f" x="818.963259" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_42">
+      <!-- 7 -->
+      <g transform="translate(816.747009 359.1675) scale(0.08 -0.08)">
+       <use xlink:href="#STHeiti-37"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_21">
+     <g id="line2d_33">
+      <g>
+       <use xlink:href="#m9e6b95138f" x="854.318348" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_43">
+      <!-- 8 -->
+      <g transform="translate(852.102098 359.1675) scale(0.08 -0.08)">
+       <use xlink:href="#STHeiti-38"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_22">
+     <g id="line2d_34">
+      <g>
+       <use xlink:href="#m9e6b95138f" x="889.673438" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_44">
+      <!-- 9 -->
+      <g transform="translate(887.457188 359.1675) scale(0.08 -0.08)">
+       <use xlink:href="#STHeiti-39"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_23">
+     <g id="line2d_35">
+      <g>
+       <use xlink:href="#m9e6b95138f" x="925.028527" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_45">
+      <!-- 10 -->
+      <g transform="translate(920.596027 359.1675) scale(0.08 -0.08)">
+       <use xlink:href="#STHeiti-31"/>
+       <use xlink:href="#STHeiti-30" x="55.399994"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_24">
+     <g id="line2d_36">
+      <g>
+       <use xlink:href="#m9e6b95138f" x="960.383616" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_46">
+      <!-- 11 -->
+      <g transform="translate(955.951116 359.1675) scale(0.08 -0.08)">
+       <use xlink:href="#STHeiti-31"/>
+       <use xlink:href="#STHeiti-31" x="55.399994"/>
+      </g>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_4">
+    <g id="ytick_7">
+     <g id="line2d_37">
+      <path d="M 538.420625 345.8 
+L 993.440625 345.8 
+" clip-path="url(#p7095208bf2)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_38">
+      <g>
+       <use xlink:href="#m1cce83d159" x="538.420625" y="345.8" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_47">
+      <!-- 0 -->
+      <g transform="translate(525.88 349.779687) scale(0.1 -0.1)">
+       <use xlink:href="#STHeiti-30"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_8">
+     <g id="line2d_39">
+      <path d="M 538.420625 293.642113 
+L 993.440625 293.642113 
+" clip-path="url(#p7095208bf2)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_40">
+      <g>
+       <use xlink:href="#m1cce83d159" x="538.420625" y="293.642113" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_48">
+      <!-- 5 -->
+      <g transform="translate(525.88 297.6218) scale(0.1 -0.1)">
+       <use xlink:href="#STHeiti-35"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_9">
+     <g id="line2d_41">
+      <path d="M 538.420625 241.484225 
+L 993.440625 241.484225 
+" clip-path="url(#p7095208bf2)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_42">
+      <g>
+       <use xlink:href="#m1cce83d159" x="538.420625" y="241.484225" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_49">
+      <!-- 10 -->
+      <g transform="translate(520.339375 245.463913) scale(0.1 -0.1)">
+       <use xlink:href="#STHeiti-31"/>
+       <use xlink:href="#STHeiti-30" x="55.399994"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_10">
+     <g id="line2d_43">
+      <path d="M 538.420625 189.326338 
+L 993.440625 189.326338 
+" clip-path="url(#p7095208bf2)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_44">
+      <g>
+       <use xlink:href="#m1cce83d159" x="538.420625" y="189.326338" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_50">
+      <!-- 15 -->
+      <g transform="translate(520.339375 193.306025) scale(0.1 -0.1)">
+       <use xlink:href="#STHeiti-31"/>
+       <use xlink:href="#STHeiti-35" x="55.399994"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_11">
+     <g id="line2d_45">
+      <path d="M 538.420625 137.168451 
+L 993.440625 137.168451 
+" clip-path="url(#p7095208bf2)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_46">
+      <g>
+       <use xlink:href="#m1cce83d159" x="538.420625" y="137.168451" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_51">
+      <!-- 20 -->
+      <g transform="translate(520.339375 141.148138) scale(0.1 -0.1)">
+       <use xlink:href="#STHeiti-32"/>
+       <use xlink:href="#STHeiti-30" x="55.399994"/>
+      </g>
+     </g>
+    </g>
+    <g id="text_52">
+     <!-- Comm Time (s) -->
+     <g transform="translate(514.864688 256.751484) rotate(-90) scale(0.11 -0.11)">
+      <defs>
+       <path id="STHeiti-69" d="M 282 4730 
+Q 282 4877 387 4985 
+Q 493 5094 643 5094 
+Q 794 5094 899 4988 
+Q 1005 4883 1005 4732 
+Q 1005 4582 899 4476 
+Q 794 4371 643 4371 
+Q 493 4371 387 4480 
+Q 282 4589 282 4730 
+z
+M 422 3782 
+L 864 3782 
+L 864 384 
+L 422 384 
+L 422 3782 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#STHeiti-43"/>
+      <use xlink:href="#STHeiti-6f" x="81.299988"/>
+      <use xlink:href="#STHeiti-6d" x="146.799973"/>
+      <use xlink:href="#STHeiti-6d" x="240.59996"/>
+      <use xlink:href="#STHeiti-20" x="334.399948"/>
+      <use xlink:href="#STHeiti-54" x="359.399933"/>
+      <use xlink:href="#STHeiti-69" x="401.999924"/>
+      <use xlink:href="#STHeiti-6d" x="421.999908"/>
+      <use xlink:href="#STHeiti-65" x="515.799896"/>
+      <use xlink:href="#STHeiti-20" x="580.799881"/>
+      <use xlink:href="#STHeiti-28" x="605.799866"/>
+      <use xlink:href="#STHeiti-73" x="642.69986"/>
+      <use xlink:href="#STHeiti-29" x="681.499847"/>
+     </g>
+    </g>
+   </g>
+   <g id="patch_59">
+    <path d="M 538.420625 345.8 
+L 538.420625 88.68 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_60">
+    <path d="M 993.440625 345.8 
+L 993.440625 88.68 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_61">
+    <path d="M 538.420625 345.8 
+L 993.440625 345.8 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_62">
+    <path d="M 538.420625 88.68 
+L 993.440625 88.68 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_53">
+    <!-- -95% -->
+    <g style="fill: #228833" transform="translate(569.911727 330.855178) scale(0.07 -0.07)">
+     <use xlink:href="#STHeiti-2d"/>
+     <use xlink:href="#STHeiti-39" x="33.199997"/>
+     <use xlink:href="#STHeiti-35" x="88.599991"/>
+     <use xlink:href="#STHeiti-25" x="143.999985"/>
+    </g>
+   </g>
+   <g id="text_54">
+    <!-- -0% -->
+    <g style="fill: #228833" transform="translate(607.206035 113.768366) scale(0.07 -0.07)">
+     <use xlink:href="#STHeiti-2d"/>
+     <use xlink:href="#STHeiti-30" x="33.199997"/>
+     <use xlink:href="#STHeiti-25" x="88.599991"/>
+    </g>
+   </g>
+   <g id="text_55">
+    <!-- -13% -->
+    <g style="fill: #228833" transform="translate(640.621906 308.038711) scale(0.07 -0.07)">
+     <use xlink:href="#STHeiti-2d"/>
+     <use xlink:href="#STHeiti-31" x="33.199997"/>
+     <use xlink:href="#STHeiti-33" x="88.599991"/>
+     <use xlink:href="#STHeiti-25" x="143.999985"/>
+    </g>
+   </g>
+   <g id="text_56">
+    <!-- -95% -->
+    <g style="fill: #228833" transform="translate(675.976995 330.216088) scale(0.07 -0.07)">
+     <use xlink:href="#STHeiti-2d"/>
+     <use xlink:href="#STHeiti-39" x="33.199997"/>
+     <use xlink:href="#STHeiti-35" x="88.599991"/>
+     <use xlink:href="#STHeiti-25" x="143.999985"/>
+    </g>
+   </g>
+   <g id="text_57">
+    <!-- -95% -->
+    <g style="fill: #228833" transform="translate(711.332085 329.526122) scale(0.07 -0.07)">
+     <use xlink:href="#STHeiti-2d"/>
+     <use xlink:href="#STHeiti-39" x="33.199997"/>
+     <use xlink:href="#STHeiti-35" x="88.599991"/>
+     <use xlink:href="#STHeiti-25" x="143.999985"/>
+    </g>
+   </g>
+   <g id="text_58">
+    <!-- -26% -->
+    <g style="fill: #228833" transform="translate(746.687174 302.099544) scale(0.07 -0.07)">
+     <use xlink:href="#STHeiti-2d"/>
+     <use xlink:href="#STHeiti-32" x="33.199997"/>
+     <use xlink:href="#STHeiti-36" x="88.599991"/>
+     <use xlink:href="#STHeiti-25" x="143.999985"/>
+    </g>
+   </g>
+   <g id="text_59">
+    <!-- -94% -->
+    <g style="fill: #228833" transform="translate(782.042263 328.593174) scale(0.07 -0.07)">
+     <use xlink:href="#STHeiti-2d"/>
+     <use xlink:href="#STHeiti-39" x="33.199997"/>
+     <use xlink:href="#STHeiti-34" x="88.599991"/>
+     <use xlink:href="#STHeiti-25" x="143.999985"/>
+    </g>
+   </g>
+   <g id="text_60">
+    <!-- +1% -->
+    <g style="fill: #ee6677" transform="translate(818.3779 101.533565) scale(0.07 -0.07)">
+     <use xlink:href="#STHeiti-2b"/>
+     <use xlink:href="#STHeiti-31" x="60.599991"/>
+     <use xlink:href="#STHeiti-25" x="115.999985"/>
+    </g>
+   </g>
+   <g id="text_61">
+    <!-- -14% -->
+    <g style="fill: #228833" transform="translate(852.752442 279.514908) scale(0.07 -0.07)">
+     <use xlink:href="#STHeiti-2d"/>
+     <use xlink:href="#STHeiti-31" x="33.199997"/>
+     <use xlink:href="#STHeiti-34" x="88.599991"/>
+     <use xlink:href="#STHeiti-25" x="143.999985"/>
+    </g>
+   </g>
+   <g id="text_62">
+    <!-- -94% -->
+    <g style="fill: #228833" transform="translate(888.107532 328.106656) scale(0.07 -0.07)">
+     <use xlink:href="#STHeiti-2d"/>
+     <use xlink:href="#STHeiti-39" x="33.199997"/>
+     <use xlink:href="#STHeiti-34" x="88.599991"/>
+     <use xlink:href="#STHeiti-25" x="143.999985"/>
+    </g>
+   </g>
+   <g id="text_63">
+    <!-- -94% -->
+    <g style="fill: #228833" transform="translate(923.462621 327.46672) scale(0.07 -0.07)">
+     <use xlink:href="#STHeiti-2d"/>
+     <use xlink:href="#STHeiti-39" x="33.199997"/>
+     <use xlink:href="#STHeiti-34" x="88.599991"/>
+     <use xlink:href="#STHeiti-25" x="143.999985"/>
+    </g>
+   </g>
+   <g id="text_64">
+    <!-- -18% -->
+    <g style="fill: #228833" transform="translate(958.81771 283.750671) scale(0.07 -0.07)">
+     <use xlink:href="#STHeiti-2d"/>
+     <use xlink:href="#STHeiti-31" x="33.199997"/>
+     <use xlink:href="#STHeiti-38" x="88.599991"/>
+     <use xlink:href="#STHeiti-25" x="143.999985"/>
+    </g>
+   </g>
+   <g id="text_65">
+    <!-- Per-Job Comm: random_same vs crux_no_compress -->
+    <g transform="translate(614.504688 82.68) scale(0.12 -0.12)">
+     <use xlink:href="#STHeiti-50"/>
+     <use xlink:href="#STHeiti-65" x="59.199997"/>
+     <use xlink:href="#STHeiti-72" x="124.199982"/>
+     <use xlink:href="#STHeiti-2d" x="154.299973"/>
+     <use xlink:href="#STHeiti-4a" x="187.499969"/>
+     <use xlink:href="#STHeiti-6f" x="235.699966"/>
+     <use xlink:href="#STHeiti-62" x="301.199951"/>
+     <use xlink:href="#STHeiti-20" x="369.399933"/>
+     <use xlink:href="#STHeiti-43" x="394.399918"/>
+     <use xlink:href="#STHeiti-6f" x="475.699905"/>
+     <use xlink:href="#STHeiti-6d" x="541.19989"/>
+     <use xlink:href="#STHeiti-6d" x="634.999878"/>
+     <use xlink:href="#STHeiti-3a" x="728.799866"/>
+     <use xlink:href="#STHeiti-20" x="756.499863"/>
+     <use xlink:href="#STHeiti-72" x="781.499847"/>
+     <use xlink:href="#STHeiti-61" x="811.599838"/>
+     <use xlink:href="#STHeiti-6e" x="879.899826"/>
+     <use xlink:href="#STHeiti-64" x="940.899811"/>
+     <use xlink:href="#STHeiti-6f" x="1009.399796"/>
+     <use xlink:href="#STHeiti-6d" x="1074.89978"/>
+     <use xlink:href="#STHeiti-5f" x="1168.699768"/>
+     <use xlink:href="#STHeiti-73" x="1218.699753"/>
+     <use xlink:href="#STHeiti-61" x="1257.499741"/>
+     <use xlink:href="#STHeiti-6d" x="1325.799728"/>
+     <use xlink:href="#STHeiti-65" x="1419.599716"/>
+     <use xlink:href="#STHeiti-20" x="1484.599701"/>
+     <use xlink:href="#STHeiti-76" x="1509.599686"/>
+     <use xlink:href="#STHeiti-73" x="1564.99968"/>
+     <use xlink:href="#STHeiti-20" x="1603.799667"/>
+     <use xlink:href="#STHeiti-63" x="1628.799652"/>
+     <use xlink:href="#STHeiti-72" x="1693.499649"/>
+     <use xlink:href="#STHeiti-75" x="1723.59964"/>
+     <use xlink:href="#STHeiti-78" x="1784.399628"/>
+     <use xlink:href="#STHeiti-5f" x="1832.399612"/>
+     <use xlink:href="#STHeiti-6e" x="1882.399597"/>
+     <use xlink:href="#STHeiti-6f" x="1943.399582"/>
+     <use xlink:href="#STHeiti-5f" x="2008.899567"/>
+     <use xlink:href="#STHeiti-63" x="2058.899551"/>
+     <use xlink:href="#STHeiti-6f" x="2123.599548"/>
+     <use xlink:href="#STHeiti-6d" x="2189.099533"/>
+     <use xlink:href="#STHeiti-70" x="2282.899521"/>
+     <use xlink:href="#STHeiti-72" x="2351.099503"/>
+     <use xlink:href="#STHeiti-65" x="2381.199493"/>
+     <use xlink:href="#STHeiti-73" x="2446.199478"/>
+     <use xlink:href="#STHeiti-73" x="2484.999466"/>
+    </g>
+   </g>
+   <g id="legend_2">
+    <g id="patch_63">
+     <path d="M 890.641875 117.96 
+L 987.840625 117.96 
+Q 989.440625 117.96 989.440625 116.36 
+L 989.440625 94.28 
+Q 989.440625 92.68 987.840625 92.68 
+L 890.641875 92.68 
+Q 889.041875 92.68 889.041875 94.28 
+L 889.041875 116.36 
+Q 889.041875 117.96 890.641875 117.96 
+z
+" style="fill: #ffffff; opacity: 0.8; stroke: #cccccc; stroke-linejoin: miter"/>
+    </g>
+    <g id="patch_64">
+     <path d="M 892.241875 102.2475 
+L 908.241875 102.2475 
+L 908.241875 96.6475 
+L 892.241875 96.6475 
+z
+" style="fill: #999999; stroke: #ffffff; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_66">
+     <!-- random_same -->
+     <g transform="translate(914.641875 102.2475) scale(0.08 -0.08)">
+      <use xlink:href="#STHeiti-72"/>
+      <use xlink:href="#STHeiti-61" x="30.099991"/>
+      <use xlink:href="#STHeiti-6e" x="98.399979"/>
+      <use xlink:href="#STHeiti-64" x="159.399963"/>
+      <use xlink:href="#STHeiti-6f" x="227.899948"/>
+      <use xlink:href="#STHeiti-6d" x="293.399933"/>
+      <use xlink:href="#STHeiti-5f" x="387.199921"/>
+      <use xlink:href="#STHeiti-73" x="437.199905"/>
+      <use xlink:href="#STHeiti-61" x="475.999893"/>
+      <use xlink:href="#STHeiti-6d" x="544.299881"/>
+      <use xlink:href="#STHeiti-65" x="638.099869"/>
+     </g>
+    </g>
+    <g id="patch_65">
+     <path d="M 892.241875 113.6875 
+L 908.241875 113.6875 
+L 908.241875 108.0875 
+L 892.241875 108.0875 
+z
+" style="fill: #ee7733; stroke: #ffffff; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_67">
+     <!-- crux_no_compress -->
+     <g transform="translate(914.641875 113.6875) scale(0.08 -0.08)">
+      <use xlink:href="#STHeiti-63"/>
+      <use xlink:href="#STHeiti-72" x="64.699997"/>
+      <use xlink:href="#STHeiti-75" x="94.799988"/>
+      <use xlink:href="#STHeiti-78" x="155.599976"/>
+      <use xlink:href="#STHeiti-5f" x="203.59996"/>
+      <use xlink:href="#STHeiti-6e" x="253.599945"/>
+      <use xlink:href="#STHeiti-6f" x="314.59993"/>
+      <use xlink:href="#STHeiti-5f" x="380.099915"/>
+      <use xlink:href="#STHeiti-63" x="430.099899"/>
+      <use xlink:href="#STHeiti-6f" x="494.799896"/>
+      <use xlink:href="#STHeiti-6d" x="560.299881"/>
+      <use xlink:href="#STHeiti-70" x="654.099869"/>
+      <use xlink:href="#STHeiti-72" x="722.29985"/>
+      <use xlink:href="#STHeiti-65" x="752.399841"/>
+      <use xlink:href="#STHeiti-73" x="817.399826"/>
+      <use xlink:href="#STHeiti-73" x="856.199814"/>
+     </g>
+    </g>
+   </g>
+  </g>
+  <g id="text_68">
+   <!-- random_same vs crux_no_compress — Per-Job Comparison -->
+   <g transform="translate(313.095469 17.547187) scale(0.13 -0.13)">
+    <defs>
+     <path id="STHeiti-2014" d="M 6400 2112 
+L 0 2112 
+L 0 2458 
+L 6400 2458 
+L 6400 2112 
+z
+" transform="scale(0.015625)"/>
+    </defs>
+    <use xlink:href="#STHeiti-72"/>
+    <use xlink:href="#STHeiti-61" x="30.099991"/>
+    <use xlink:href="#STHeiti-6e" x="98.399979"/>
+    <use xlink:href="#STHeiti-64" x="159.399963"/>
+    <use xlink:href="#STHeiti-6f" x="227.899948"/>
+    <use xlink:href="#STHeiti-6d" x="293.399933"/>
+    <use xlink:href="#STHeiti-5f" x="387.199921"/>
+    <use xlink:href="#STHeiti-73" x="437.199905"/>
+    <use xlink:href="#STHeiti-61" x="475.999893"/>
+    <use xlink:href="#STHeiti-6d" x="544.299881"/>
+    <use xlink:href="#STHeiti-65" x="638.099869"/>
+    <use xlink:href="#STHeiti-20" x="703.099854"/>
+    <use xlink:href="#STHeiti-76" x="728.099838"/>
+    <use xlink:href="#STHeiti-73" x="783.499832"/>
+    <use xlink:href="#STHeiti-20" x="822.29982"/>
+    <use xlink:href="#STHeiti-63" x="847.299805"/>
+    <use xlink:href="#STHeiti-72" x="911.999802"/>
+    <use xlink:href="#STHeiti-75" x="942.099792"/>
+    <use xlink:href="#STHeiti-78" x="1002.89978"/>
+    <use xlink:href="#STHeiti-5f" x="1050.899765"/>
+    <use xlink:href="#STHeiti-6e" x="1100.89975"/>
+    <use xlink:href="#STHeiti-6f" x="1161.899734"/>
+    <use xlink:href="#STHeiti-5f" x="1227.399719"/>
+    <use xlink:href="#STHeiti-63" x="1277.399704"/>
+    <use xlink:href="#STHeiti-6f" x="1342.099701"/>
+    <use xlink:href="#STHeiti-6d" x="1407.599686"/>
+    <use xlink:href="#STHeiti-70" x="1501.399673"/>
+    <use xlink:href="#STHeiti-72" x="1569.599655"/>
+    <use xlink:href="#STHeiti-65" x="1599.699646"/>
+    <use xlink:href="#STHeiti-73" x="1664.699631"/>
+    <use xlink:href="#STHeiti-73" x="1703.499619"/>
+    <use xlink:href="#STHeiti-20" x="1742.299606"/>
+    <use xlink:href="#STHeiti-2014" x="1767.299591"/>
+    <use xlink:href="#STHeiti-20" x="1867.299576"/>
+    <use xlink:href="#STHeiti-50" x="1892.299561"/>
+    <use xlink:href="#STHeiti-65" x="1951.499557"/>
+    <use xlink:href="#STHeiti-72" x="2016.499542"/>
+    <use xlink:href="#STHeiti-2d" x="2046.599533"/>
+    <use xlink:href="#STHeiti-4a" x="2079.79953"/>
+    <use xlink:href="#STHeiti-6f" x="2127.999527"/>
+    <use xlink:href="#STHeiti-62" x="2193.499512"/>
+    <use xlink:href="#STHeiti-20" x="2261.699493"/>
+    <use xlink:href="#STHeiti-43" x="2286.699478"/>
+    <use xlink:href="#STHeiti-6f" x="2367.999466"/>
+    <use xlink:href="#STHeiti-6d" x="2433.499451"/>
+    <use xlink:href="#STHeiti-70" x="2527.299438"/>
+    <use xlink:href="#STHeiti-61" x="2595.49942"/>
+    <use xlink:href="#STHeiti-72" x="2663.799408"/>
+    <use xlink:href="#STHeiti-69" x="2693.899399"/>
+    <use xlink:href="#STHeiti-73" x="2713.899384"/>
+    <use xlink:href="#STHeiti-6f" x="2752.699371"/>
+    <use xlink:href="#STHeiti-6e" x="2818.199356"/>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p49bb0113b5">
+   <rect x="39.820625" y="88.68" width="455.02" height="257.12"/>
+  </clipPath>
+  <clipPath id="p7095208bf2">
+   <rect x="538.420625" y="88.68" width="455.02" height="257.12"/>
+  </clipPath>
+ </defs>
+</svg>

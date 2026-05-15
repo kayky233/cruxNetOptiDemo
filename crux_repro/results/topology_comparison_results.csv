@@ -1,0 +1,13 @@
+scheduler,topology,comm_plan,workload,placement_mode,placement_objective,makespan_s,avg_jct_s,avg_comm_s,useful_gpu_fraction,jobs,ranks,rounds,hosts,gpus_per_host
+random_same,star,ring,synthetic,optimize,balanced,80.890872,57.244592,54.550755,0.076620,12,8,3,8,4
+random_intensity,star,ring,synthetic,optimize,balanced,80.890829,57.244218,54.552976,0.076620,12,8,3,8,4
+crux_no_compress,star,ring,synthetic,optimize,balanced,61.278674,34.914486,31.880338,0.101142,12,8,3,8,4
+crux,star,ring,synthetic,optimize,balanced,61.278674,34.914486,31.880338,0.101142,12,8,3,8,4
+random_same,three_tier_clos,ring,synthetic,optimize,balanced,97.486650,68.527080,65.825370,0.063576,12,8,3,8,4
+random_intensity,three_tier_clos,ring,synthetic,optimize,balanced,97.486651,68.524880,65.824967,0.063576,12,8,3,8,4
+crux_no_compress,three_tier_clos,ring,synthetic,optimize,balanced,67.164387,47.500918,44.468848,0.092279,12,8,3,8,4
+crux,three_tier_clos,ring,synthetic,optimize,balanced,67.164387,47.500918,44.468848,0.092279,12,8,3,8,4
+random_same,ascend,ring,synthetic,optimize,balanced,24.520363,18.625512,16.848983,0.126382,12,8,3,8,8
+random_intensity,ascend,ring,synthetic,optimize,balanced,24.521833,18.587149,16.813495,0.126374,12,8,3,8,8
+crux_no_compress,ascend,ring,synthetic,optimize,balanced,24.744247,8.329163,5.896602,0.125238,12,8,3,8,8
+crux,ascend,ring,synthetic,optimize,balanced,24.744247,8.329163,5.896602,0.125238,12,8,3,8,8

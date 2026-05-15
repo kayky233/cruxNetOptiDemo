@@ -120,6 +120,46 @@ inline TopologyConfig make_dragonfly(int hosts, int gpus_per_host)
   return c;
 }
 
+// ─── 昇腾 Ascend cluster (HCCS + PCIe + RoCE + Leaf-Spine) ─────
+// Models a realistic 昇腾 910B/920 training cluster with:
+//   - 8 NPU per server, connected via HCCS full-mesh (~400 GB/s per link)
+//   - Dual 200G RoCE NIC per server (each NIC serves 4 NPU via PCIe switch)
+//   - Leaf-Spine fabric with 2:1 oversubscription
+
+inline TopologyConfig make_ascend_cluster(int hosts=8, int gpus_per_host=8)
+{
+  TopologyConfig c;
+  c.name = "ascend";
+  c.hosts = hosts;
+  c.gpus_per_host = gpus_per_host;
+
+  // 昇腾 910B: ~256 TFLOPS (FP16), 折算 ~250e12 flops
+  c.gpu_speed_flops = 250e12;
+
+  // ── HCCS interconnect (intra-server NPU-to-NPU) ────────────────
+  // 昇腾 HCCS: ~56 GB/s per lane, 8 NPU full-mesh effective ~400 GB/s aggregate
+  // B/s = GB/s * 1e9
+  c.local_bps = 400e9;       // 400 GB/s HCCS aggregate bandwidth
+  c.local_lat_s = 0.5e-6;   // ~0.5 μs HCCS latency (on-die/interposer)
+
+  // ── NIC (RoCE) ─────────────────────────────────────────────────
+  // Dual-port 200G RoCE NIC per server
+  c.nics_per_host = 2;
+  c.nic_bps = 200e9 / 8.0;  // 200 Gbps per NIC → 25 GB/s
+  c.nic_lat_s = 2e-6;       // ~2 μs NIC + PCIe latency
+
+  // ── Leaf-Spine fabric ──────────────────────────────────────────
+  // 8 Leaf (ToR) switches, each connecting 1 server (满配可接 32+)
+  // 4 Spine switches
+  // Oversubscription ratio: Leaf→Spine 2:1
+  // Latency: Leaf ~3μs, Spine ~5μs
+  c.switches = {
+    {hosts, 400e9 / 8.0, 3e-6},   // Leaf/ToR: 400 Gbps uplink each
+    {4,     800e9 / 8.0, 5e-6},   // Spine:    800 Gbps uplink each
+  };
+  return c;
+}
+
 // ─── link-usage tracker ─────────────────────────────────────────
 
 struct LinkUsage {

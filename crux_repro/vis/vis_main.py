@@ -27,7 +27,7 @@ def main():
     p.add_argument("--jobs", default="results/simgrid_real_trace_optimize_balanced_jobs.csv",
                    help="Job-level CSV")
     p.add_argument("--topology", default="three_tier_clos",
-                   choices=["star", "fat_tree", "three_tier_clos", "dragonfly"],
+                   choices=["star", "fat_tree", "three_tier_clos", "dragonfly", "ascend"],
                    help="Network topology name")
     p.add_argument("--hosts", type=int, default=8)
     p.add_argument("--gpus-per-host", type=int, default=4)
@@ -53,18 +53,21 @@ def main():
 
     if "intensity" in charts:
         print("[vis] Intensity distribution...")
-        plot_intensity(args.jobs, out_dir=args.out_dir)
+        plot_intensity(args.jobs, topology_name=args.topology,
+                       out_dir=args.out_dir)
         generated.append("intensity_distribution")
 
     if "job_compare" in charts:
         print("[vis] Job JCT/Comm comparison...")
         plot_job_compare(args.jobs, baseline=args.baseline, crux=args.crux,
+                         topology_name=args.topology,
                          out_dir=args.out_dir)
         generated.append("job_jct_comm_comparison")
 
     if "gantt" in charts:
         print("[vis] Job Gantt chart...")
         plot_gantt(args.jobs, baseline=args.baseline, crux=args.crux,
+                   topology_name=args.topology,
                    out_dir=args.out_dir)
         generated.append("gantt_comparison")
 
@@ -72,6 +75,7 @@ def main():
         print("[vis] GPU placement heatmap...")
         plot_placement(args.jobs, baseline=args.baseline, crux=args.crux,
                        hosts=args.hosts, gpus_per_host=args.gpus_per_host,
+                       topology_name=args.topology,
                        out_dir=args.out_dir)
         generated.append("placement_heatmap")
 
@@ -93,7 +97,7 @@ def main():
     if not args.no_report:
         print("[vis] Generating report...")
         generate_report(args.results, args.jobs, args.baseline, args.crux,
-                        generated, args.out_dir)
+                        generated, args.out_dir, topology_name=args.topology)
 
     print(f"[vis] Done. {len(generated)} charts + report → {args.out_dir}/")
 

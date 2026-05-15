@@ -88,11 +88,26 @@ def make_dragonfly(hosts=8, gpus_per_host=4):
     )
 
 
+def make_ascend(hosts=8, gpus_per_host=8):
+    return TopologyConfig(
+        name="ascend",
+        hosts=hosts, gpus_per_host=gpus_per_host,
+        local_gbps=400 * 8, nic_gbps=200,
+        local_lat_us=0.5, nic_lat_us=2.0,
+        nics_per_host=2,
+        switches=[
+            SwitchLevel(count=hosts, uplink_gbps=400, latency_us=3.0),
+            SwitchLevel(count=4, uplink_gbps=800, latency_us=5.0),
+        ],
+    )
+
+
 TOPOLOGY_BUILDERS = {
     "star":             make_star,
     "fat_tree":         make_fat_tree,
     "three_tier_clos":  make_three_tier_clos,
     "dragonfly":        make_dragonfly,
+    "ascend":           make_ascend,
 }
 
 

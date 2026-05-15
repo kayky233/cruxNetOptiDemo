@@ -15,9 +15,12 @@ from .vis_data import load_jobs
 def plot_gantt(jobs_csv: str,
                baseline="random_same",
                crux="crux_no_compress",
+               topology_name=None,
                out_dir="results/vis"):
     setup_mpl()
     df = load_jobs(jobs_csv)
+    if topology_name and "topology" in df.columns:
+        df = df[df["topology"] == topology_name]
 
     b = df[df["scheduler"] == baseline].copy()
     c = df[df["scheduler"] == crux].copy()

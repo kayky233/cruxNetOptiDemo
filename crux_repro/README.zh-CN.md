@@ -236,54 +236,59 @@ crux_repro/results/verification/figures/README.zh-CN.md
 
 图表版文档已经直接嵌入 SVG，打开即可看到 K 敏感性、规模压力、路径数、多 seed、极端拥塞等图。
 
-## 关键产物
+## 文档导航
 
-| 类型 | 文件 |
+```
+📂 docs/
+├── 📄 README.zh-CN.md                    ← 文档索引（本页入口）
+│
+├── 📂 reports/                           ← 评审报告（给上级和同事）
+│   ├── CRUX_REPRODUCTION_REPORT.zh-CN.md   Crux 方法复现与模拟验证
+│   └── TOPOLOGY_COMPARISON_REPORT.zh-CN.md 拓扑对比 (star vs clos vs ascend)
+│
+├── 📂 design/                            ← 方案设计文档
+│   ├── SIMGRID_COLLECTIVE_SIMULATION_PLAN.zh-CN.md  总模拟方案 ⭐
+│   ├── REAL_ENV_TOPOLOGY_INTEGRATION.zh-CN.md       实机环境接入
+│   ├── VISUALIZATION_DESIGN.zh-CN.md                可视化方案
+│   ├── IMASTER_API_REQUIREMENTS.zh-CN.md            华为接口需求清单
+│   ├── DEVELOPMENT_DESIGN.zh-CN.md                  开发设计
+│   ├── IMPLEMENTATION_MAP.zh-CN.md                  实现映射
+│   └── TRAINING_INFERENCE_OPTIMIZATION_MODEL.zh-CN.md 训练推理建模
+│
+├── 📂 simgrid-guide/                     ← SimGrid 学习参考
+│   ├── SIMGRID_INDEX.zh-CN.md             索引
+│   ├── SIMGRID_INTRODUCTION.zh-CN.md      简介
+│   ├── SIMGRID_INSTALL.zh-CN.md           安装
+│   └── SIMGRID_{S4U,PLATFORM,MODELS,...}.zh-CN.md
+│
+└── 📂 assets/                            ← SVG 图表
+    ├── gantt_comparison.svg
+    ├── placement_heatmap.svg
+    └── ascend_*.svg
+```
+
+> 完整索引见 [docs/README.zh-CN.md](docs/README.zh-CN.md)
+
+### 快速入口
+
+| 看什么 | 文件 |
 |---|---|
-| 总方案 | `crux_repro/docs/SIMGRID_COLLECTIVE_SIMULATION_PLAN.zh-CN.md` |
-| 实机拓扑/时延接入方案 | `crux_repro/docs/REAL_ENV_TOPOLOGY_INTEGRATION.zh-CN.md` |
-| SimGrid 工程说明 | `crux_repro/simgrid_real/README.zh-CN.md` |
-| trace workload | `crux_repro/results/simgrid_trace_workload.csv` |
-| optimize balanced 汇总 | `crux_repro/results/simgrid_real_trace_optimize_balanced_results.csv` |
-| optimize balanced job 明细 | `crux_repro/results/simgrid_real_trace_optimize_balanced_jobs.csv` |
-| scheduler 报告 | `crux_repro/results/simgrid_real_trace_optimize_balanced_report.md` |
-| job-level 报告 | `crux_repro/results/job_analysis/crux_no_compress_vs_random_same_job_analysis.md` |
-| DeepSeek 补充验证 | `crux_repro/results/verification/VERIFICATION_REPORT.md` |
-| DeepSeek 验证图表 | `crux_repro/results/verification/figures/README.zh-CN.md` |
-| JCT CDF | `crux_repro/results/job_analysis/jct_cdf.svg` |
-| per-job delta 图 | `crux_repro/results/job_analysis/crux_no_compress_jct_delta.svg` |
-
-## 文档入口
-
-- **评审报告**: [Crux 方法复现与模拟验证报告](docs/CRUX_REPRODUCTION_REPORT.zh-CN.md) ← 给上级和同事审阅
-- [文档索引](docs/README.zh-CN.md)
-- [真实 SimGrid 工程说明](simgrid_real/README.zh-CN.md)
-- [结果索引](results/README.zh-CN.md)
+| **给上级汇报** | [`docs/reports/CRUX_REPRODUCTION_REPORT.zh-CN.md`](docs/reports/CRUX_REPRODUCTION_REPORT.zh-CN.md) |
+| **拓扑对比结果** | [`docs/reports/TOPOLOGY_COMPARISON_REPORT.zh-CN.md`](docs/reports/TOPOLOGY_COMPARISON_REPORT.zh-CN.md) |
+| **总模拟方案** | [`docs/design/SIMGRID_COLLECTIVE_SIMULATION_PLAN.zh-CN.md`](docs/design/SIMGRID_COLLECTIVE_SIMULATION_PLAN.zh-CN.md) |
+| **实机接入方案** | [`docs/design/REAL_ENV_TOPOLOGY_INTEGRATION.zh-CN.md`](docs/design/REAL_ENV_TOPOLOGY_INTEGRATION.zh-CN.md) |
+| **华为接口清单** | [`docs/design/IMASTER_API_REQUIREMENTS.zh-CN.md`](docs/design/IMASTER_API_REQUIREMENTS.zh-CN.md) |
+| **可视化方案** | [`docs/design/VISUALIZATION_DESIGN.zh-CN.md`](docs/design/VISUALIZATION_DESIGN.zh-CN.md) |
+| **SimGrid 学习** | [`docs/simgrid-guide/SIMGRID_INDEX.zh-CN.md`](docs/simgrid-guide/SIMGRID_INDEX.zh-CN.md) |
+| **结果数据** | [`results/README.zh-CN.md`](results/README.zh-CN.md) |
 
 ## 当前边界
 
 - 尚未模拟 HCCL/NCCL/RoCE 协议细节；
 - collective 目前以 Ring AllReduce 为主；
 - 昇腾 920 + 910B 的真实拓扑、HCCS/PCIe/NIC 参数还未校准；
-- compute time、tensor size 仍由模型模板补齐；
-- priority compression 目前是近似逻辑，还未映射真实硬件 traffic class。
+- compute time、tensor size 仍由模型模板补齐。
 
 ## 下一步
 
-详细计划在：
-
-[SimGrid Collective 模拟方案：第 11 节 后续改进路线](docs/SIMGRID_COLLECTIVE_SIMULATION_PLAN.zh-CN.md#11-后续改进路线)
-
-摘要：
-
-1. 实机环境接入：通过华为接口采集拓扑/链路/时延，落 TDSQL/Redis，本地优化器读取环境快照；
-2. 拓扑配置化：把当前 C++ 内置拓扑抽成配置文件，并支持从实机快照生成 SimGrid platform；
-3. HCCL benchmark 校准：先让单 job collective 时间可信；
-4. 增加 collective plan：Ring、Tree、Hierarchical、ReduceScatter、AllGather；
-5. 策略消融：区分 placement/path/priority/compression 的独立贡献；
-6. 加背景流和扰动：验证鲁棒性；
-7. 做可视化报告：把结果变成可以评审的材料。
-
-实机接入的独立方案见：
-
-[实机环境拓扑与网络时延接入方案](docs/REAL_ENV_TOPOLOGY_INTEGRATION.zh-CN.md)
+详见 [总模拟方案 §11 后续改进路线](docs/design/SIMGRID_COLLECTIVE_SIMULATION_PLAN.zh-CN.md#11-后续改进路线)

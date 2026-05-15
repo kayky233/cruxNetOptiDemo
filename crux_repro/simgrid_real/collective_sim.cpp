@@ -40,7 +40,8 @@ static Options parse_args(int argc,char** argv){Options o;
 
 static TopologyConfig make_topo(const Options& o){if(o.topology=="star")return make_star(o.hosts,o.gpus_per_host,o.local_gbps,o.nic_gbps,o.core_gbps);
   if(o.topology=="fat_tree")return make_fat_tree(o.hosts,o.gpus_per_host);if(o.topology=="three_tier_clos")return make_three_tier_clos(o.hosts,o.gpus_per_host);
-  if(o.topology=="dragonfly")return make_dragonfly(o.hosts,o.gpus_per_host);throw std::runtime_error("Unknown topology: "+o.topology);}
+  if(o.topology=="dragonfly")return make_dragonfly(o.hosts,o.gpus_per_host);if(o.topology=="ascend")return make_ascend_cluster(o.hosts,o.gpus_per_host);
+  throw std::runtime_error("Unknown topology: "+o.topology);}
 static std::string gn(int host,int gpu){return "h"+std::to_string(host)+"g"+std::to_string(gpu);}
 static std::string hn(int host){return "h"+std::to_string(host)+"g0";}
 
@@ -52,9 +53,14 @@ static void build_platform(sg4::Engine& engine,const TopologyConfig& cfg){auto* 
   std::vector<std::vector<const sg4::Link*>> sw;for(size_t lvl=0;lvl<cfg.switches.size();++lvl){sw.push_back({});
     for(int s=0;s<cfg.switches[lvl].count;++s)sw.back().push_back(root->add_link("sw"+std::to_string(lvl)+"_"+std::to_string(s),cfg.switches[lvl].uplink_bps)->set_latency(cfg.switches[lvl].latency_s));}
   for(int h1=0;h1<cfg.hosts;++h1)for(int g1=0;g1<cfg.gpus_per_host;++g1)for(int h2=h1;h2<cfg.hosts;++h2)for(int g2=0;g2<cfg.gpus_per_host;++g2){
-    if(h1==h2&&g1>=g2)continue;if(h1==h2){root->add_route(gpus[h1][g1],gpus[h2][g2],{local[h1]});}
-    else{std::vector<const sg4::Link*> p;p.push_back(nic[h1*cfg.nics_per_host+0]);
-      for(size_t lvl=0;lvl<sw.size();++lvl)p.push_back(sw[lvl][(h1*31+h2*17+(int)lvl*7)%sw[lvl].size()]);p.push_back(nic[h2*cfg.nics_per_host+0]);root->add_route(gpus[h1][g1],gpus[h2][g2],p);}}
+    if(h1==h2&&g1>=g2)continue;
+    // Assign NIC index per GPU: round-robin across nics_per_host
+    int nic1_idx = g1 % cfg.nics_per_host;
+    int nic2_idx = g2 % cfg.nics_per_host;
+    if(h1==h2){root->add_route(gpus[h1][g1],gpus[h2][g2],{local[h1]});}
+    else{std::vector<const sg4::Link*> p;p.push_back(nic[h1*cfg.nics_per_host+nic1_idx]);
+      for(size_t lvl=0;lvl<sw.size();++lvl)p.push_back(sw[lvl][(h1*31+h2*17+(int)lvl*7)%sw[lvl].size()]);
+      p.push_back(nic[h2*cfg.nics_per_host+nic2_idx]);root->add_route(gpus[h1][g1],gpus[h2][g2],p);}}
   g_link_usage.clear();for(auto* l:local){LinkUsage u;u.bandwidth_bps=cfg.local_bps;g_link_usage[l->get_name()]=u;}
   for(auto* l:nic){LinkUsage u;u.bandwidth_bps=cfg.nic_bps;g_link_usage[l->get_name()]=u;}
   for(size_t lvl=0;lvl<sw.size();++lvl)for(auto* l:sw[lvl]){LinkUsage u;u.bandwidth_bps=cfg.switches[lvl].uplink_bps;g_link_usage[l->get_name()]=u;}root->seal();}

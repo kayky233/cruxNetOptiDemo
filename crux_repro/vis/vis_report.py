@@ -12,12 +12,15 @@ def generate_report(results_csv: str,
                     baseline: str,
                     crux: str,
                     chart_names: list,
-                    out_dir: str):
+                    out_dir: str,
+                    topology_name=None):
     """Generate vis_report.md in out_dir, embedding generated SVGs."""
 
     # Read scheduler-level results
     import pandas as pd
     results = pd.read_csv(results_csv)
+    if topology_name and "topology" in results.columns:
+        results = results[results["topology"] == topology_name]
     b_row = results[results["scheduler"] == baseline]
     c_row = results[results["scheduler"] == crux]
 

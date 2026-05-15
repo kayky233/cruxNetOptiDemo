@@ -66,6 +66,8 @@ def plot_path_heatmap(jobs_csv: str,
                       out_dir="results/vis"):
     setup_mpl()
     df = load_jobs(jobs_csv)
+    if topology_name and "topology" in df.columns:
+        df = df[df["topology"] == topology_name]
     topo = load_topology(topology_name, hosts=hosts, gpus_per_host=gpus_per_host)
 
     b = df[df["scheduler"] == baseline]

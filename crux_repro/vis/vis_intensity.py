@@ -12,9 +12,12 @@ from .vis_utils import setup_mpl, MODEL_COLORS, save_fig
 from .vis_data import load_jobs
 
 
-def plot_intensity(jobs_csv: str, scheduler="random_same", out_dir="results/vis"):
+def plot_intensity(jobs_csv: str, scheduler="random_same",
+                   topology_name=None, out_dir="results/vis"):
     setup_mpl()
     df = load_jobs(jobs_csv)
+    if topology_name and "topology" in df.columns:
+        df = df[df["topology"] == topology_name]
     df = df[df["scheduler"] == scheduler].copy()
     df = df.sort_values("intensity")
 

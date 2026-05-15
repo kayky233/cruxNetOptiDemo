@@ -263,7 +263,7 @@ Python 轻量模拟器在 17 个场景上做了参数扫描，作为机制稳定
 
 ### 5.1 Job 时间线对比（Gantt 图）
 
-![Gantt 对比](gantt_comparison.svg)
+![Gantt 对比](../assets/gantt_comparison.svg)
 
 **解读**：
 - 左侧 `random_same`：job 分散在多个 host 上，跨机通信多，j2（最长的 bar）拖慢了整体 makespan
@@ -272,7 +272,7 @@ Python 轻量模拟器在 17 个场景上做了参数扫描，作为机制稳定
 
 ### 5.2 GPU 放置热力图
 
-![GPU 放置](placement_heatmap.svg)
+![GPU 放置](../assets/placement_heatmap.svg)
 
 **解读**：
 - 左侧 `random_same`：每个 job 的 8 个 rank 分散在 4-6 台 host 上，跨机通信路径多
@@ -284,7 +284,7 @@ Python 轻量模拟器在 17 个场景上做了参数扫描，作为机制稳定
 
 ### 5.3 交换机路径分布
 
-![交换机路径](path_switch_heatmap.svg)
+![交换机路径](../assets/path_switch_heatmap.svg)
 
 **解读**：
 - 热力图行 = job，列 = 交换机，颜色深度 = 该 job 的跨机流量经过该交换机的次数
@@ -296,7 +296,7 @@ Python 轻量模拟器在 17 个场景上做了参数扫描，作为机制稳定
 
 ### 5.4 Per-Job JCT 与通信时间对比
 
-![JCT Comm 对比](job_jct_comm_comparison.svg)
+![JCT Comm 对比](../assets/job_jct_comm_comparison.svg)
 
 **解读**：
 - 绿色 = Crux 改善，红色 = 退化
@@ -305,7 +305,7 @@ Python 轻量模拟器在 17 个场景上做了参数扫描，作为机制稳定
 
 ### 5.5 通信强度分布
 
-![强度分布](intensity_distribution.svg)
+![强度分布](../assets/intensity_distribution.svg)
 
 **解读**：
 - GPT-large（红色点）的通信强度远高于其他 job（~1.2×10^10）
@@ -314,7 +314,7 @@ Python 轻量模拟器在 17 个场景上做了参数扫描，作为机制稳定
 
 ### 5.6 静态网络拓扑
 
-![网络拓扑](topology_diagram.svg)
+![网络拓扑](../assets/topology_diagram.svg)
 
 **解读**：
 - 当前模拟环境的 three_tier_clos 拓扑：8 台 host → 8 个 ToR → 4 个 Agg → 2 个 Core 交换机
