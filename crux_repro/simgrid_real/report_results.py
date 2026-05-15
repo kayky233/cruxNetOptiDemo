@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Generate a compact Markdown report from SimGrid result CSV files."""
+"""Generate a compact Markdown report from SimGrid result CSV files.
+Handles ablation schedulers and new metrics (compute_wait, overlap_ratio)."""
 
 from __future__ import annotations
 
@@ -17,6 +18,11 @@ def pct(base: float, value: float) -> float:
     return (base - value) / base * 100.0 if base else 0.0
 
 
+def fmt_gain(base: float, value: float) -> str:
+    g = pct(base, value)
+    return f"{g:+.2f}%"
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--results", type=Path, required=True)
@@ -30,46 +36,159 @@ def main() -> None:
     base_makespan = float(base["makespan_s"])
     base_jct = float(base["avg_jct_s"])
     base_comm = float(base["avg_comm_s"])
+    base_ugf = float(base["useful_gpu_fraction"])
+
+    # Metadata from first row
+    workload = rows[0].get("workload", "unknown")
+    placement_mode = rows[0].get("placement_mode", "unknown")
+    placement_objective = rows[0].get("placement_objective", "unknown")
+    topology = rows[0].get("topology", "unknown")
+    comm_plan = rows[0].get("comm_plan", "unknown")
+    overlap = rows[0].get("overlap_ratio", "0.0")
+    has_wait = "avg_compute_wait_s" in rows[0]
 
     lines: list[str] = []
-    lines.append("# SimGrid Trace-Driven Collective 模拟报告")
+    lines.append("# SimGrid Collective 竞争模拟报告")
     lines.append("")
     lines.append(f"- 输入结果：`{args.results}`")
-    lines.append(f"- workload：`{rows[0].get('workload', 'unknown')}`")
-    lines.append(f"- placement mode：`{rows[0].get('placement_mode', 'unknown')}`")
-    lines.append(f"- placement objective：`{rows[0].get('placement_objective', 'unknown')}`")
+    lines.append(f"- topology：`{topology}`  |  comm plan：`{comm_plan}`  |  overlap：`{overlap}`")
+    lines.append(f"- workload：`{workload}`  |  placement：`{placement_mode}` / `{placement_objective}`")
     lines.append(f"- baseline：`{base['scheduler']}`")
     lines.append("")
-    lines.append("| scheduler | makespan(s) | makespan gain | avg JCT(s) | JCT gain | avg comm(s) | comm gain | useful GPU fraction |")
-    lines.append("|---|---:|---:|---:|---:|---:|---:|---:|")
+
+    # --- Main comparison table ---
+    lines.append("## Scheduler 对比")
+    lines.append("")
+    header = "| scheduler | makespan(s) | gain | avg JCT(s) | gain | avg comm(s) | gain | GPU fraction |"
+    if has_wait:
+        header = "| scheduler | makespan(s) | gain | avg JCT(s) | gain | avg comm(s) | gain | wait(s) | GPU fraction |"
+    lines.append(header)
+    sep = "|---|---:|---:|---:|---:|---:|---:|---:|"
+    if has_wait:
+        sep = "|---|---:|---:|---:|---:|---:|---:|---:|---:|"
+    lines.append(sep)
     for r in rows:
-        makespan = float(r["makespan_s"])
+        ms = float(r["makespan_s"])
         jct = float(r["avg_jct_s"])
         comm = float(r["avg_comm_s"])
-        util = float(r["useful_gpu_fraction"])
-        lines.append(
-            f"| `{r['scheduler']}` | {makespan:.3f} | {pct(base_makespan, makespan):.2f}% | "
-            f"{jct:.3f} | {pct(base_jct, jct):.2f}% | {comm:.3f} | {pct(base_comm, comm):.2f}% | {util:.4f} |"
-        )
+        ugf = float(r["useful_gpu_fraction"])
+        if has_wait:
+            wait = float(r.get("avg_compute_wait_s", 0))
+            lines.append(
+                f"| `{r['scheduler']}` | {ms:.3f} | {fmt_gain(base_makespan, ms)} | "
+                f"{jct:.3f} | {fmt_gain(base_jct, jct)} | {comm:.3f} | {fmt_gain(base_comm, comm)} | "
+                f"{wait:.3f} | {ugf:.4f} |"
+            )
+        else:
+            lines.append(
+                f"| `{r['scheduler']}` | {ms:.3f} | {fmt_gain(base_makespan, ms)} | "
+                f"{jct:.3f} | {fmt_gain(base_jct, jct)} | {comm:.3f} | {fmt_gain(base_comm, comm)} | "
+                f"{ugf:.4f} |"
+            )
+
+    # --- Ablation decomposition ---
     lines.append("")
+    lines.append("## Ablation 收益分解")
+    lines.append("")
+    lines.append("| 组件 | 对比 | makespan gain | JCT gain | comm gain |")
+    lines.append("|---|---:|---:|---:|")
+
+    # Find individual schedulers
+    by_name = {r["scheduler"]: r for r in rows}
+
+    # Placement only vs baseline
+    if "place_only" in by_name:
+        r = by_name["place_only"]
+        lines.append(
+            f"| **placement only** | `place_only` vs `random_same` | "
+            f"{fmt_gain(base_makespan, float(r['makespan_s']))} | "
+            f"{fmt_gain(base_jct, float(r['avg_jct_s']))} | "
+            f"{fmt_gain(base_comm, float(r['avg_comm_s']))} |"
+        )
+
+    # Priority only vs baseline
+    if "priority_only" in by_name:
+        r = by_name["priority_only"]
+        lines.append(
+            f"| **priority only** | `priority_only` vs `random_same` | "
+            f"{fmt_gain(base_makespan, float(r['makespan_s']))} | "
+            f"{fmt_gain(base_jct, float(r['avg_jct_s']))} | "
+            f"{fmt_gain(base_comm, float(r['avg_comm_s']))} |"
+        )
+
+    # Intensity priority (random_intensity) vs baseline
+    if "random_intensity" in by_name:
+        r = by_name["random_intensity"]
+        lines.append(
+            f"| **intensity buckets** | `random_intensity` vs `random_same` | "
+            f"{fmt_gain(base_makespan, float(r['makespan_s']))} | "
+            f"{fmt_gain(base_jct, float(r['avg_jct_s']))} | "
+            f"{fmt_gain(base_comm, float(r['avg_comm_s']))} |"
+        )
+
+    # Full Crux no compress vs baseline
+    if "crux_no_compress" in by_name:
+        r = by_name["crux_no_compress"]
+        lines.append(
+            f"| **full crux (no compress)** | `crux_no_compress` vs `random_same` | "
+            f"{fmt_gain(base_makespan, float(r['makespan_s']))} | "
+            f"{fmt_gain(base_jct, float(r['avg_jct_s']))} | "
+            f"{fmt_gain(base_comm, float(r['avg_comm_s']))} |"
+        )
+
+    # Full Crux vs baseline
+    if "crux" in by_name:
+        r = by_name["crux"]
+        lines.append(
+            f"| **full crux (K=4)** | `crux` vs `random_same` | "
+            f"{fmt_gain(base_makespan, float(r['makespan_s']))} | "
+            f"{fmt_gain(base_jct, float(r['avg_jct_s']))} | "
+            f"{fmt_gain(base_comm, float(r['avg_comm_s']))} |"
+        )
+
+    # Crux vs Crux no compress (compression loss)
+    if "crux" in by_name and "crux_no_compress" in by_name:
+        r_c = by_name["crux"]
+        r_nc = by_name["crux_no_compress"]
+        nc_ms = float(r_nc["makespan_s"])
+        nc_jct = float(r_nc["avg_jct_s"])
+        nc_comm = float(r_nc["avg_comm_s"])
+        lines.append(
+            f"| **compression gap** | `crux` vs `crux_no_compress` | "
+            f"{fmt_gain(nc_ms, float(r_c['makespan_s']))} | "
+            f"{fmt_gain(nc_jct, float(r_c['avg_jct_s']))} | "
+            f"{fmt_gain(nc_comm, float(r_c['avg_comm_s']))} |"
+        )
+
+    # --- Conclusions ---
+    lines.append("")
+    lines.append("## 结论")
+    lines.append("")
+
     best_jct = min(rows, key=lambda r: float(r["avg_jct_s"]))
     best_makespan = min(rows, key=lambda r: float(r["makespan_s"]))
     best_comm = min(rows, key=lambda r: float(r["avg_comm_s"]))
-    lines.append("## 结论")
+    best_ugf = max(rows, key=lambda r: float(r["useful_gpu_fraction"]))
+
+    lines.append(f"- 平均 JCT 最优：`{best_jct['scheduler']}` ({float(best_jct['avg_jct_s']):.3f}s, {fmt_gain(base_jct, float(best_jct['avg_jct_s']))})")
+    lines.append(f"- makespan 最优：`{best_makespan['scheduler']}` ({float(best_makespan['makespan_s']):.3f}s, {fmt_gain(base_makespan, float(best_makespan['makespan_s']))})")
+    lines.append(f"- 通信时间最优：`{best_comm['scheduler']}` ({float(best_comm['avg_comm_s']):.3f}s, {fmt_gain(base_comm, float(best_comm['avg_comm_s']))})")
+    lines.append(f"- GPU 利用率最优：`{best_ugf['scheduler']}` ({float(best_ugf['useful_gpu_fraction']):.4f})")
+
+    # Decomposition insight
     lines.append("")
-    lines.append(
-        f"- 平均 JCT 最优的是 `{best_jct['scheduler']}`，相对 baseline JCT 改善 "
-        f"{pct(base_jct, float(best_jct['avg_jct_s'])):.2f}%。"
-    )
-    lines.append(
-        f"- makespan 最优的是 `{best_makespan['scheduler']}`，相对 baseline makespan 改善 "
-        f"{pct(base_makespan, float(best_makespan['makespan_s'])):.2f}%。"
-    )
-    lines.append(
-        f"- 平均通信时间最优的是 `{best_comm['scheduler']}`，相对 baseline comm 改善 "
-        f"{pct(base_comm, float(best_comm['avg_comm_s'])):.2f}%。"
-    )
-    lines.append("- 这份报告用于快速比较策略，后续可以继续扩展 job-level timeline、link heatmap 和 CDF 图。")
+    lines.append("### 收益来源分解")
+    if "place_only" in by_name and "crux_no_compress" in by_name:
+        po_gain = pct(base_jct, float(by_name["place_only"]["avg_jct_s"]))
+        full_gain = pct(base_jct, float(by_name["crux_no_compress"]["avg_jct_s"]))
+        lines.append(f"- placement 贡献约占 JCT 改善的 {po_gain/full_gain*100:.0f}% " if full_gain > 0 else "- 无法计算")
+        lines.append(f"- 剩余来自 priority + path selection 的协同效应")
+    if "priority_only" in by_name:
+        prio_gain = pct(base_jct, float(by_name["priority_only"]["avg_jct_s"]))
+        lines.append(f"- priority-only 独立贡献 JCT 改善 {prio_gain:.2f}%，说明仅靠优先级（不改 placement）收益有限")
+
+    lines.append("")
+    lines.append("*此报告用于快速比较策略，完整分析见 job-level timeline、link heatmap 和 CDF 图。*")
     lines.append("")
 
     args.out.parent.mkdir(parents=True, exist_ok=True)

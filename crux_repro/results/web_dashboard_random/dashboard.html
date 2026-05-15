@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SimGrid 集群调度动态回放</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:#0f172a;color:#e2e8f0;overflow:hidden;height:100vh}
+#app{display:flex;flex-direction:column;height:100vh}
+
+/* Top bar */
+#toolbar{display:flex;align-items:center;gap:12px;padding:8px 16px;background:#1e293b;border-bottom:1px solid #334155;z-index:10;flex-shrink:0}
+#toolbar button{background:#334155;color:#e2e8f0;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px;transition:background .15s}
+#toolbar button:hover{background:#475569}
+#toolbar button.active{background:#3b82f6}
+#time-display{font-size:14px;font-weight:600;color:#f8fafc;min-width:100px;text-align:center}
+#toolbar input[type=range]{flex:1;max-width:400px;accent-color:#3b82f6}
+#toolbar select{background:#334155;color:#e2e8f0;border:1px solid #475569;padding:5px 8px;border-radius:6px;font-size:13px}
+#toolbar label{font-size:12px;color:#94a3b8}
+
+/* Main layout */
+#main{display:flex;flex:1;overflow:hidden}
+
+/* Left: Job list */
+#job-panel{width:220px;background:#1e293b;border-right:1px solid #334155;overflow-y:auto;padding:8px;flex-shrink:0}
+#job-panel h3{font-size:13px;color:#94a3b8;margin:4px 0 8px;text-transform:uppercase;letter-spacing:.5px}
+.job-item{display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:4px;margin-bottom:3px;font-size:11px}
+.job-item .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.job-item .info{flex:1;min-width:0}
+.job-item .name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.job-item .meta{font-size:10px;color:#94a3b8}
+.job-item.running{background:#1e3a5f}
+.job-item.completed{opacity:.7}
+.job-item.queued{opacity:.5}
+
+/* Center: Gantt + topology */
+#center{flex:1;display:flex;flex-direction:column;overflow:hidden}
+#gantt-container{flex:1;overflow:hidden;position:relative;background:#0f172a;border-bottom:1px solid #334155}
+#gantt-canvas{position:absolute;top:0;left:0}
+#gantt-labels{position:absolute;top:0;left:0;width:80px;background:#1e293b;z-index:2;pointer-events:none;font-size:10px}
+#topo-panel{height:240px;background:#1e293b;display:flex;gap:8px;padding:8px;flex-shrink:0;overflow:hidden}
+#topo-panel svg{flex:1;min-width:0}
+#link-bars{width:260px;flex-shrink:0;overflow-y:auto;font-size:10px;padding:4px}
+
+/* Bottom: link heatmap */
+#link-heatmap-container{height:120px;background:#1e293b;border-top:1px solid #334155;position:relative;flex-shrink:0}
+#link-heatmap-canvas{position:absolute;top:0;left:0}
+
+/* Status bar */
+#status-bar{display:flex;gap:16px;padding:4px 16px;background:#1e293b;border-top:1px solid #334155;font-size:11px;color:#94a3b8;flex-shrink:0}
+#status-bar span{display:flex;align-items:center;gap:4px}
+#status-bar .val{color:#e2e8f0;font-weight:600}
+
+/* Tooltips */
+.tooltip{position:fixed;background:#1e293b;border:1px solid #475569;border-radius:6px;padding:8px 12px;font-size:11px;pointer-events:none;z-index:100;display:none;max-width:280px}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="toolbar">
+    <button id="btn-play" onclick="togglePlay()">▶ 播放</button>
+    <button id="btn-slower" onclick="changeSpeed(0.5)">⏪</button>
+    <span id="time-display">0.0s</span>
+    <button id="btn-faster" onclick="changeSpeed(2)">⏩</button>
+    <input type="range" id="scrubber" min="0" max="1000" value="0" oninput="scrub(this.value)">
+    <label>速度:</label>
+    <select id="speed-select" onchange="setSpeed(this.value)">
+      <option value="0.5">0.5×</option>
+      <option value="1" selected>1×</option>
+      <option value="2">2×</option>
+      <option value="5">5×</option>
+      <option value="10">10×</option>
+      <option value="30">30×</option>
+    </select>
+    <button id="btn-fit" onclick="fitView()">⊞ 适应</button>
+  </div>
+  <div id="main">
+    <div id="job-panel"><h3>📋 Job 列表</h3><div id="job-list"></div></div>
+    <div id="center">
+      <div id="gantt-container">
+        <div id="gantt-labels"></div>
+        <canvas id="gantt-canvas"></canvas>
+      </div>
+      <div id="topo-panel">
+        <svg id="topo-svg"></svg>
+        <div id="link-bars"><h4 style="font-size:11px;color:#94a3b8;margin-bottom:4px">🔗 链路利用率</h4></div>
+      </div>
+    </div>
+  </div>
+  <div id="link-heatmap-container"><canvas id="link-heatmap-canvas"></canvas></div>
+  <div id="status-bar">
+    <span>🕐 当前: <span class="val" id="status-time">0.0s</span></span>
+    <span>📊 活跃 Job: <span class="val" id="status-active">0</span></span>
+    <span>✅ 已完成: <span class="val" id="status-done">0</span></span>
+    <span>⏳ 排队: <span class="val" id="status-queued">0</span></span>
+    <span>🖥 GPU 占用: <span class="val" id="status-gpu">0%</span></span>
+    <span>📐 makespan: <span class="val" id="status-ms">-</span></span>
+  </div>
+</div>
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+// ═══════════ Data loading ═══════════
+let DATA = null;
+const JOB_COLORS = ["#ef4444","#f59e0b","#22c55e","#3b82f6","#8b5cf6","#ec4899","#14b8a6","#f97316","#06b6d4","#a855f7","#84cc16","#e11d48","#0ea5e9","#d946ef","#10b981","#6366f1"];
+
+function loadData() {
+  const EMBEDDED_DATA = {
+  "metadata": {
+    "makespan_s": 160.918,
+    "total_gpus": 32,
+    "total_jobs": 12,
+    "scheduler": "random_same",
+    "avg_jct_s": 52.952,
+    "useful_gpu_fraction": 0.4689
+  },
+  "topology": {
+    "name": "three_tier_clos",
+    "hosts": 8,
+    "gpus_per_host": 4,
+    "nics_per_host": 1,
+    "switch_levels": [
+      {
+        "count": 8,
+        "label": "ToR",
+        "uplink_gbps": 200
+      },
+      {
+        "count": 4,
+        "label": "Agg",
+        "uplink_gbps": 400
+      },
+      {
+        "count": 2,
+        "label": "Core",
+        "uplink_gbps": 800
+      }
+    ]
+  },
+  "jobs": [
+    {
+      "id": 0,
+      "model": "unknown-mid",
+      "ranks": 8,
+      "arrival_s": 57.548,
+      "start_s": 57.548,
+      "finish_s": 105.508,
+      "jct_s": 47.96,
+      "comm_s": 27.197728,
+      "compute_s": 4.518963,
+      "intensity": 963110107.009765,
+      "placement": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          5,
+          1
+        ]
+      ],
+      "ring_paths": [],
+      "cross_host_hops": 0
+    },
+    {
+      "id": 1,
+      "model": "unknown-large",
+      "ranks": 8,
+      "arrival_s": 2.251,
+      "start_s": 2.251,
+      "finish_s": 92.693,
+      "jct_s": 90.442,
+      "comm_s": 51.572384,
+      "compute_s": 10.924943,
+      "intensity": 752650162.78428,
+      "placement": [
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          6,
+          1
+        ],
+        [
+          7,
+          0
+        ]
+      ],
+      "ring_paths": [],
+      "cross_host_hops": 0
+    },
+    {
+      "id": 2,
+      "model": "unknown-large",
+      "ranks": 8,
+      "arrival_s": 24.753,
+      "start_s": 24.753,
+      "finish_s": 120.058,
+      "jct_s": 95.305,
+      "comm_s": 61.54846,
+      "compute_s": 10.423079,
+      "intensity": 813057457.086627,
+      "placement": [
+        [
+          3,
+          2
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          6,
+          2
+        ],
+        [
+          7,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          3
+        ]
+      ],
+      "ring_paths": [],
+      "cross_host_hops": 0
+    },
+    {
+      "id": 3,
+      "model": "unknown-8gpu",
+      "ranks": 8,
+      "arrival_s": 20.089,
+      "start_s": 20.089,
+      "finish_s": 55.805,
+      "jct_s": 35.716,
+      "comm_s": 24.542228,
+      "compute_s": 2.8674,
+      "intensity": 899385159.641431,
+      "placement": [
+        [
+          5,
+          1
+        ],
+        [
+          6,
+          0
+        ],
+        [
+          6,
+          3
+        ],
+        [
+          7,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "ring_paths": [],
+      "cross_host_hops": 0
+    },
+    {
+      "id": 4,
+      "model": "GPT-large",
+      "ranks": 8,
+      "arrival_s": 66.282,
+      "start_s": 66.282,
+      "finish_s": 160.918,
+      "jct_s": 94.635,
+      "comm_s": 61.307944,
+      "compute_s": 8.600072,
+      "intensity": 1240242078.788445,
+      "placement": [
+        [
+          7,
+          0
+        ],
+        [
+          7,
+          3
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "ring_paths": [],
+      "cross_host_hops": 0
+    },
+    {
+      "id": 5,
+      "model": "unknown-small",
+      "ranks": 2,
+      "arrival_s": 60.903,
+      "start_s": 60.903,
+      "finish_s": 83.334,
+      "jct_s": 22.432,
+      "comm_s": 0.910459,
+      "compute_s": 2.033594,
+      "intensity": 506391465.005062,
+      "placement": [
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "ring_paths": [],
+      "cross_host_hops": 0
+    },
+    {
+      "id": 6,
+      "model": "GPT",
+      "ranks": 8,
+      "arrival_s": 80.296,
+      "start_s": 80.296,
+      "finish_s": 124.536,
+      "jct_s": 44.24,
+      "comm_s": 31.837567,
+      "compute_s": 2.419102,
+      "intensity": 2658530360.333287,
+      "placement": [
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          6,
+          1
+        ],
+        [
+          7,
+          0
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "ring_paths": [],
+      "cross_host_hops": 0
+    },
+    {
+      "id": 7,
+      "model": "GPT",
+      "ranks": 8,
+      "arrival_s": 7.824,
+      "start_s": 7.824,
+      "finish_s": 52.929,
+      "jct_s": 45.104,
+      "comm_s": 35.355559,
+      "compute_s": 2.326554,
+      "intensity": 2602709615.968379,
+      "placement": [
+        [
+          4,
+          1
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          6,
+          2
+        ],
+        [
+          7,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "ring_paths": [],
+      "cross_host_hops": 0
+    },
+    {
+      "id": 8,
+      "model": "unknown-8gpu",
+      "ranks": 8,
+      "arrival_s": 37.973,
+      "start_s": 37.973,
+      "finish_s": 65.87,
+      "jct_s": 27.897,
+      "comm_s": 19.276378,
+      "compute_s": 2.11157,
+      "intensity": 1275048393.65439,
+      "placement": [
+        [
+          6,
+          0
+        ],
+        [
+          6,
+          3
+        ],
+        [
+          7,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "ring_paths": [],
+      "cross_host_hops": 0
+    },
+    {
+      "id": 9,
+      "model": "unknown-mid",
+      "ranks": 8,
+      "arrival_s": 2.682,
+      "start_s": 2.682,
+      "finish_s": 57.225,
+      "jct_s": 54.543,
+      "comm_s": 33.110244,
+      "compute_s": 4.635467,
+      "intensity": 962820295.795298,
+      "placement": [
+        [
+          7,
+          3
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          5,
+          0
+        ]
+      ],
+      "ring_paths": [],
+      "cross_host_hops": 0
+    },
+    {
+      "id": 10,
+      "model": "unknown-large",
+      "ranks": 8,
+      "arrival_s": 19.677,
+      "start_s": 19.677,
+      "finish_s": 81.565,
+      "jct_s": 61.887,
+      "comm_s": 24.881866,
+      "compute_s": 9.322558,
+      "intensity": 879635388.185644,
+      "placement": [
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          6,
+          0
+        ],
+        [
+          6,
+          3
+        ]
+      ],
+      "ring_paths": [],
+      "cross_host_hops": 0
+    },
+    {
+      "id": 11,
+      "model": "unknown-8gpu",
+      "ranks": 8,
+      "arrival_s": 45.482,
+      "start_s": 45.482,
+      "finish_s": 60.742,
+      "jct_s": 15.26,
+      "comm_s": 8.10166,
+      "compute_s": 0.932262,
+      "intensity": 2706066382.560851,
+      "placement": [
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          6,
+          1
+        ],
+        [
+          7,
+          0
+        ],
+        [
+          7,
+          3
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "ring_paths": [],
+      "cross_host_hops": 0
+    }
+  ],
+  "gpu_occupancy": {
+    "h0g0": [
+      [
+        57.548,
+        105.508,
+        0
+      ],
+      [
+        24.753,
+        120.058,
+        2
+      ],
+      [
+        7.824,
+        52.929,
+        7
+      ]
+    ],
+    "h0g1": [
+      [
+        20.089,
+        55.805,
+        3
+      ],
+      [
+        37.973,
+        65.87,
+        8
+      ]
+    ],
+    "h0g2": [
+      [
+        66.282,
+        160.918,
+        4
+      ],
+      [
+        2.682,
+        57.225,
+        9
+      ],
+      [
+        45.482,
+        60.742,
+        11
+      ]
+    ],
+    "h0g3": [
+      [
+        57.548,
+        105.508,
+        0
+      ],
+      [
+        24.753,
+        120.058,
+        2
+      ],
+      [
+        60.903,
+        83.334,
+        5
+      ],
+      [
+        7.824,
+        52.929,
+        7
+      ]
+    ],
+    "h1g0": [
+      [
+        20.089,
+        55.805,
+        3
+      ],
+      [
+        37.973,
+        65.87,
+        8
+      ]
+    ],
+    "h1g1": [
+      [
+        66.282,
+        160.918,
+        4
+      ],
+      [
+        2.682,
+        57.225,
+        9
+      ]
+    ],
+    "h1g2": [
+      [
+        57.548,
+        105.508,
+        0
+      ],
+      [
+        60.903,
+        83.334,
+        5
+      ],
+      [
+        7.824,
+        52.929,
+        7
+      ],
+      [
+        19.677,
+        81.565,
+        10
+      ]
+    ],
+    "h1g3": [
+      [
+        2.251,
+        92.693,
+        1
+      ],
+      [
+        20.089,
+        55.805,
+        3
+      ],
+      [
+        37.973,
+        65.87,
+        8
+      ]
+    ],
+    "h2g0": [
+      [
+        66.282,
+        160.918,
+        4
+      ],
+      [
+        2.682,
+        57.225,
+        9
+      ]
+    ],
+    "h2g1": [
+      [
+        57.548,
+        105.508,
+        0
+      ],
+      [
+        19.677,
+        81.565,
+        10
+      ]
+    ],
+    "h2g2": [
+      [
+        2.251,
+        92.693,
+        1
+      ],
+      [
+        20.089,
+        55.805,
+        3
+      ],
+      [
+        80.296,
+        124.536,
+        6
+      ],
+      [
+        37.973,
+        65.87,
+        8
+      ]
+    ],
+    "h2g3": [
+      [
+        66.282,
+        160.918,
+        4
+      ],
+      [
+        2.682,
+        57.225,
+        9
+      ]
+    ],
+    "h3g0": [
+      [
+        57.548,
+        105.508,
+        0
+      ],
+      [
+        19.677,
+        81.565,
+        10
+      ]
+    ],
+    "h3g1": [
+      [
+        2.251,
+        92.693,
+        1
+      ],
+      [
+        80.296,
+        124.536,
+        6
+      ],
+      [
+        37.973,
+        65.87,
+        8
+      ],
+      [
+        45.482,
+        60.742,
+        11
+      ]
+    ],
+    "h3g2": [
+      [
+        24.753,
+        120.058,
+        2
+      ],
+      [
+        66.282,
+        160.918,
+        4
+      ],
+      [
+        2.682,
+        57.225,
+        9
+      ]
+    ],
+    "h3g3": [
+      [
+        57.548,
+        105.508,
+        0
+      ],
+      [
+        19.677,
+        81.565,
+        10
+      ]
+    ],
+    "h4g0": [
+      [
+        2.251,
+        92.693,
+        1
+      ],
+      [
+        80.296,
+        124.536,
+        6
+      ],
+      [
+        45.482,
+        60.742,
+        11
+      ]
+    ],
+    "h4g1": [
+      [
+        24.753,
+        120.058,
+        2
+      ],
+      [
+        66.282,
+        160.918,
+        4
+      ],
+      [
+        7.824,
+        52.929,
+        7
+      ],
+      [
+        2.682,
+        57.225,
+        9
+      ]
+    ],
+    "h4g2": [
+      [
+        57.548,
+        105.508,
+        0
+      ],
+      [
+        19.677,
+        81.565,
+        10
+      ]
+    ],
+    "h4g3": [
+      [
+        2.251,
+        92.693,
+        1
+      ],
+      [
+        80.296,
+        124.536,
+        6
+      ],
+      [
+        45.482,
+        60.742,
+        11
+      ]
+    ],
+    "h5g0": [
+      [
+        24.753,
+        120.058,
+        2
+      ],
+      [
+        7.824,
+        52.929,
+        7
+      ],
+      [
+        2.682,
+        57.225,
+        9
+      ]
+    ],
+    "h5g1": [
+      [
+        57.548,
+        105.508,
+        0
+      ],
+      [
+        20.089,
+        55.805,
+        3
+      ],
+      [
+        19.677,
+        81.565,
+        10
+      ]
+    ],
+    "h5g2": [
+      [
+        2.251,
+        92.693,
+        1
+      ],
+      [
+        80.296,
+        124.536,
+        6
+      ],
+      [
+        45.482,
+        60.742,
+        11
+      ]
+    ],
+    "h5g3": [
+      [
+        24.753,
+        120.058,
+        2
+      ],
+      [
+        7.824,
+        52.929,
+        7
+      ]
+    ],
+    "h6g0": [
+      [
+        20.089,
+        55.805,
+        3
+      ],
+      [
+        37.973,
+        65.87,
+        8
+      ],
+      [
+        19.677,
+        81.565,
+        10
+      ]
+    ],
+    "h6g1": [
+      [
+        2.251,
+        92.693,
+        1
+      ],
+      [
+        80.296,
+        124.536,
+        6
+      ],
+      [
+        45.482,
+        60.742,
+        11
+      ]
+    ],
+    "h6g2": [
+      [
+        24.753,
+        120.058,
+        2
+      ],
+      [
+        7.824,
+        52.929,
+        7
+      ]
+    ],
+    "h6g3": [
+      [
+        20.089,
+        55.805,
+        3
+      ],
+      [
+        37.973,
+        65.87,
+        8
+      ],
+      [
+        19.677,
+        81.565,
+        10
+      ]
+    ],
+    "h7g0": [
+      [
+        2.251,
+        92.693,
+        1
+      ],
+      [
+        66.282,
+        160.918,
+        4
+      ],
+      [
+        80.296,
+        124.536,
+        6
+      ],
+      [
+        45.482,
+        60.742,
+        11
+      ]
+    ],
+    "h7g1": [
+      [
+        24.753,
+        120.058,
+        2
+      ],
+      [
+        7.824,
+        52.929,
+        7
+      ]
+    ],
+    "h7g2": [
+      [
+        20.089,
+        55.805,
+        3
+      ],
+      [
+        37.973,
+        65.87,
+        8
+      ]
+    ],
+    "h7g3": [
+      [
+        66.282,
+        160.918,
+        4
+      ],
+      [
+        80.296,
+        124.536,
+        6
+      ],
+      [
+        2.682,
+        57.225,
+        9
+      ],
+      [
+        45.482,
+        60.742,
+        11
+      ]
+    ]
+  },
+  "link_timeline": {},
+  "link_aggregate": {
+    "local0": 0.020803,
+    "local1": 0.005807,
+    "local2": 0.016668,
+    "local3": 0.01383,
+    "local4": 0.018924,
+    "local5": 0.016008,
+    "local6": 0.014842,
+    "local7": 0.021616,
+    "nic0_0": 0.373652,
+    "nic1_0": 0.421474,
+    "nic2_0": 0.419601,
+    "nic3_0": 0.4938,
+    "nic4_0": 0.52344,
+    "nic5_0": 0.452161,
+    "nic6_0": 0.398193,
+    "nic7_0": 0.459263,
+    "sw0_0": 0.553373
+  }
+};
+  DATA = EMBEDDED_DATA;
+  init();
+}
+
+// ═══════════ State ═══════════
+let currentTime = 0;
+let playing = false;
+let speed = 1;
+let lastFrame = 0;
+let scrubberMax = 1000;
+
+function togglePlay() {
+  playing = !playing;
+  document.getElementById('btn-play').textContent = playing ? '⏸ 暂停' : '▶ 播放';
+  document.getElementById('btn-play').classList.toggle('active', playing);
+  if (playing) { lastFrame = performance.now(); requestAnimationFrame(tick); }
+}
+
+function changeSpeed(factor) { speed = Math.max(0.1, Math.min(100, speed * factor)); document.getElementById('speed-select').value = speed; }
+function setSpeed(v) { speed = parseFloat(v); }
+
+function scrub(val) {
+  if (!DATA) return;
+  currentTime = (val / scrubberMax) * DATA.metadata.makespan_s;
+  updateAll();
+}
+
+function fitView() {
+  if (!DATA) return;
+  currentTime = 0; playing = false;
+  document.getElementById('btn-play').textContent = '▶ 播放';
+  document.getElementById('btn-play').classList.remove('active');
+  updateAll();
+}
+
+function tick(now) {
+  if (!playing || !DATA) return;
+  const dt = (now - lastFrame) / 1000 * speed;
+  lastFrame = now;
+  currentTime = Math.min(DATA.metadata.makespan_s, currentTime + dt);
+  if (currentTime >= DATA.metadata.makespan_s) { playing = false; document.getElementById('btn-play').textContent = '▶ 重播'; document.getElementById('btn-play').classList.remove('active'); }
+  updateAll();
+  requestAnimationFrame(tick);
+}
+
+// ═══════════ Canvas utilities ═══════════
+function setupCanvas(canvas, container) {
+  const dpr = window.devicePixelRatio || 1;
+  const rect = container.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { ctx, w: rect.width, h: rect.height };
+}
+
+// ═══════════ Gantt chart ═══════════
+let ganttOffsetY = 0;
+let ganttScaleY = 1;
+
+function drawGantt() {
+  if (!DATA) return;
+  const container = document.getElementById('gantt-container');
+  const canvas = document.getElementById('gantt-canvas');
+  const labels = document.getElementById('gantt-labels');
+  const { ctx, w, h } = setupCanvas(canvas, container);
+
+  const topo = DATA.topology;
+  const gpus = topo.hosts * topo.gpus_per_host;
+  const makespan = DATA.metadata.makespan_s;
+  const rowH = Math.max(14, (h - 20) / gpus * ganttScaleY);
+  const totalH = gpus * rowH + 30;
+  const timeW = w - 80;
+  const marginL = 80;
+
+  // Set canvas height for scrolling
+  canvas.style.height = Math.max(h, totalH) + 'px';
+  labels.style.height = Math.max(h, totalH) + 'px';
+
+  ctx.clearRect(0, 0, w * 2, h * 2);
+  ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, w, Math.max(h, totalH));
+
+  // Time grid
+  ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 0.5;
+  const gridN = 10;
+  for (let i = 0; i <= gridN; i++) {
+    const x = marginL + (i / gridN) * timeW;
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, Math.max(h, totalH)); ctx.stroke();
+    ctx.fillStyle = '#64748b'; ctx.font = '10px Arial'; ctx.textAlign = 'center';
+    ctx.fillText((makespan * i / gridN).toFixed(0) + 's', x, 14);
+  }
+  // Current time line
+  const tx = marginL + (currentTime / makespan) * timeW;
+  ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 4]);
+  ctx.beginPath(); ctx.moveTo(tx, 0); ctx.lineTo(tx, Math.max(h, totalH)); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // GPU labels
+  labels.innerHTML = '';
+  for (let hi = 0; hi < topo.hosts; hi++) {
+    for (let gi = 0; gi < topo.gpus_per_host; gi++) {
+      const idx = hi * topo.gpus_per_host + gi;
+      const y = 20 + idx * rowH - ganttOffsetY;
+      if (y + rowH < 0 || y > h) continue;
+      const gid = `h${hi}g${gi}`;
+      const lbl = document.createElement('div');
+      lbl.style.cssText = `position:absolute;top:${y}px;left:4px;width:72px;height:${rowH}px;line-height:${rowH}px;color:#64748b;font-size:9px;text-align:right;padding-right:4px;overflow:hidden`;
+      lbl.textContent = gid;
+      labels.appendChild(lbl);
+
+      // Draw occupied intervals
+      const occupancy = DATA.gpu_occupancy[gid] || [];
+      for (const [t0, t1, jid] of occupancy) {
+        if (t1 < currentTime - makespan * 0.02 || t0 > currentTime + makespan * 0.02) continue;
+        const x0 = marginL + (t0 / makespan) * timeW;
+        const x1 = marginL + (t1 / makespan) * timeW;
+        const alpha = (t0 <= currentTime && currentTime <= t1) ? 1.0 : 0.55;
+        ctx.fillStyle = JOB_COLORS[jid % JOB_COLORS.length];
+        ctx.globalAlpha = alpha;
+        ctx.fillRect(x0, y, Math.max(1, x1 - x0), rowH - 1);
+        ctx.globalAlpha = 1;
+        // Job ID label
+        if (x1 - x0 > 30) {
+          ctx.fillStyle = '#fff'; ctx.font = `${Math.min(9, rowH-4)}px Arial`; ctx.textAlign = 'center';
+          ctx.fillText(jid, (x0 + x1) / 2, y + rowH / 2 + 3);
+        }
+      }
+    }
+  }
+
+  // Scroll
+  container.onwheel = (e) => {
+    e.preventDefault();
+    ganttOffsetY = Math.max(0, Math.min(totalH - h, ganttOffsetY + e.deltaY));
+    ganttScaleY = Math.max(0.5, Math.min(5, ganttScaleY * (e.deltaY > 0 ? 0.9 : 1.1)));
+    drawGantt();
+  };
+}
+
+// ═══════════ Topology snapshot ═══════════
+function drawTopology() {
+  if (!DATA) return;
+  const svg = document.getElementById('topo-svg');
+  const topo = DATA.topology;
+  const hosts = topo.hosts;
+  const gph = topo.gpus_per_host;
+  const w = svg.clientWidth || 600;
+  const h = 230;
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+
+  let html = `<rect width="100%" height="100%" fill="#1e293b"/>`;
+
+  // Layout params
+  const margin = 20;
+  const gpuW = 16, gpuH = 10, gpuGap = 2;
+  const hostW = gph * gpuW + (gph - 1) * gpuGap;
+  const hostGap = 8;
+  const totalW = hosts * hostW + (hosts - 1) * hostGap;
+  const startX = margin + (w - 2 * margin - totalW) / 2;
+  const gpuY = h - margin - gpuH;
+
+  // Switches
+  const swLevels = topo.switch_levels || [];
+  const swY = margin + 10;
+  const swH = 14;
+  let swHtml = '';
+  swLevels.forEach((sl, li) => {
+    const ly = swY + li * 40;
+    for (let si = 0; si < sl.count; si++) {
+      const sx = margin + (w - 2 * margin) * (si + 0.5) / sl.count - 12;
+      swHtml += `<rect x="${sx}" y="${ly}" width="24" height="${swH}" rx="3" fill="#475569"/>`;
+      swHtml += `<text x="${sx+12}" y="${ly+10}" font-size="7" fill="#fff" text-anchor="middle">${sl.label[0]}${si}</text>`;
+    }
+  });
+  html += swHtml;
+
+  // GPUs + occupancy
+  for (let hh = 0; hh < hosts; hh++) {
+    const hx = startX + hh * (hostW + hostGap);
+    for (let gg = 0; gg < gph; gg++) {
+      const gx = hx + gg * (gpuW + gpuGap);
+      const gid = `h${hh}g${gg}`;
+      // Check occupancy at current time
+      const occupancy = DATA.gpu_occupancy[gid] || [];
+      let activeJob = -1;
+      for (const [t0, t1, jid] of occupancy) {
+        if (t0 <= currentTime && currentTime <= t1) { activeJob = jid; break; }
+      }
+      const color = activeJob >= 0 ? JOB_COLORS[activeJob % JOB_COLORS.length] : '#334155';
+      const stroke = activeJob >= 0 ? '#f8fafc' : '#475569';
+      html += `<rect x="${gx}" y="${gpuY}" width="${gpuW}" height="${gpuH}" rx="2" fill="${color}" stroke="${stroke}" stroke-width="1"/>`;
+      if (activeJob >= 0) {
+        html += `<text x="${gx+gpuW/2}" y="${gpuY+gpuH-2}" font-size="6" fill="#fff" text-anchor="middle">${activeJob}</text>`;
+      }
+    }
+    // Host label
+    html += `<text x="${hx+hostW/2}" y="${gpuY+gpuH+12}" font-size="9" fill="#64748b" text-anchor="middle">H${hh}</text>`;
+  }
+
+  // NICs
+  const nicY = gpuY - 20;
+  for (let hh = 0; hh < hosts; hh++) {
+    const hx = startX + hh * (hostW + hostGap);
+    const nx = hx + hostW / 2 - 6;
+    const nicUtil = DATA.link_aggregate?.[`nic${hh}_0`] || 0;
+    const nicColor = nicUtil > 0.5 ? '#ef4444' : nicUtil > 0.3 ? '#f59e0b' : nicUtil > 0.1 ? '#3b82f6' : '#475569';
+    html += `<rect x="${nx}" y="${nicY}" width="12" height="8" rx="2" fill="${nicColor}"/>`;
+    html += `<text x="${nx+6}" y="${nicY-4}" font-size="7" fill="#64748b" text-anchor="middle">N${hh}</text>`;
+  }
+
+  // Connection lines (simplified)
+  for (let hh = 0; hh < hosts; hh++) {
+    const hx = startX + hh * (hostW + hostGap);
+    const nicCx = hx + hostW / 2;
+    // NIC to first switch level
+    if (swLevels.length > 0) {
+      const sl0 = swLevels[0];
+      for (let si = 0; si < sl0.count; si++) {
+        const sx = margin + (w - 2 * margin) * (si + 0.5) / sl0.count;
+        html += `<line x1="${nicCx}" y1="${nicY}" x2="${sx}" y2="${swY+swH}" stroke="#334155" stroke-width="0.5" opacity="0.4"/>`;
+      }
+    }
+  }
+
+  html += `<text x="${w/2}" y="14" font-size="10" fill="#94a3b8" text-anchor="middle">⏱ ${currentTime.toFixed(1)}s — 网络拓扑快照</text>`;
+  svg.innerHTML = html;
+
+  // Link bars
+  drawLinkBars();
+}
+
+function drawLinkBars() {
+  const container = document.getElementById('link-bars');
+  if (!DATA || !DATA.link_aggregate) { container.innerHTML = '<span style="color:#64748b;font-size:10px">无链路数据</span>'; return; }
+
+  const sorted = Object.entries(DATA.link_aggregate).sort((a, b) => b[1] - a[1]);
+  let html = '<h4 style="font-size:11px;color:#94a3b8;margin-bottom:4px">🔗 链路利用率</h4>';
+  const maxU = sorted[0]?.[1] || 1;
+
+  for (const [name, util] of sorted.slice(0, 20)) {
+    const pct = (util * 100).toFixed(1);
+    const color = util > 0.5 ? '#ef4444' : util > 0.3 ? '#f59e0b' : util > 0.1 ? '#3b82f6' : '#334155';
+    const barW = Math.max(2, (util / maxU) * 100);
+    html += `<div style="display:flex;align-items:center;gap:4px;margin-bottom:2px">
+      <span style="width:60px;text-align:right;font-size:9px;color:#94a3b8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</span>
+      <div style="flex:1;height:8px;background:#1e293b;border-radius:2px"><div style="width:${barW}%;height:100%;background:${color};border-radius:2px"></div></div>
+      <span style="font-size:9px;color:${color};width:40px;text-align:right">${pct}%</span>
+    </div>`;
+  }
+  container.innerHTML = html;
+}
+
+// ═══════════ Link heatmap ═══════════
+function drawLinkHeatmap() {
+  if (!DATA || !DATA.link_timeline) return;
+  const container = document.getElementById('link-heatmap-container');
+  const canvas = document.getElementById('link-heatmap-canvas');
+  const { ctx, w, h } = setupCanvas(canvas, container);
+
+  const links = Object.keys(DATA.link_timeline).slice(0, 16);
+  if (!links.length) return;
+
+  ctx.fillStyle = '#1e293b'; ctx.fillRect(0, 0, w, h);
+  const marginL = 100, marginR = 10, marginT = 18, marginB = 6;
+  const plotW = w - marginL - marginR;
+  const plotH = h - marginT - marginB;
+  const rowH = plotH / links.length;
+  const makespan = DATA.metadata.makespan_s;
+
+  links.forEach((link, li) => {
+    const y = marginT + li * rowH;
+    ctx.fillStyle = '#64748b'; ctx.font = '8px Arial'; ctx.textAlign = 'right';
+    ctx.fillText(link.slice(0, 14), marginL - 4, y + rowH / 2 + 3);
+
+    const points = DATA.link_timeline[link] || [];
+    for (let i = 1; i < points.length; i++) {
+      const [t0, u0] = points[i - 1];
+      const [t1, u1] = points[i];
+      const x0 = marginL + (t0 / makespan) * plotW;
+      const x1 = marginL + (t1 / makespan) * plotW;
+      const r = Math.min(255, Math.floor(255 * u0));
+      const g = Math.min(255, Math.floor(255 * (1 - u0)));
+      ctx.fillStyle = `rgb(${r},${g},0)`;
+      ctx.fillRect(x0, y, Math.max(1, x1 - x0), rowH - 1);
+    }
+  });
+
+  // Current time indicator
+  const tx = marginL + (currentTime / makespan) * plotW;
+  ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+  ctx.beginPath(); ctx.moveTo(tx, marginT); ctx.lineTo(tx, h - marginB); ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+// ═══════════ Job list ═══════════
+function updateJobList() {
+  if (!DATA) return;
+  const container = document.getElementById('job-list');
+  let html = '';
+  for (const j of DATA.jobs) {
+    const arrived = currentTime >= j.arrival_s;
+    const finished = currentTime >= j.finish_s;
+    const running = arrived && !finished;
+    const status = finished ? 'completed' : running ? 'running' : 'queued';
+    html += `<div class="job-item ${status}">
+      <span class="dot" style="background:${JOB_COLORS[j.id % JOB_COLORS.length]}"></span>
+      <span class="info"><span class="name">Job ${j.id} ${j.model}</span><span class="meta">${j.ranks}GPU | ${j.jct_s.toFixed(0)}s</span></span>
+    </div>`;
+  }
+  container.innerHTML = html;
+}
+
+// ═══════════ Status bar ═══════════
+function updateStatus() {
+  if (!DATA) return;
+  let active = 0, done = 0, queued = 0, occupied = 0;
+  const total = DATA.topology.hosts * DATA.topology.gpus_per_host;
+
+  for (const j of DATA.jobs) {
+    if (currentTime >= j.finish_s) done++;
+    else if (currentTime >= j.arrival_s) active++;
+    else queued++;
+  }
+
+  for (const gid in DATA.gpu_occupancy) {
+    for (const [t0, t1] of DATA.gpu_occupancy[gid]) {
+      if (t0 <= currentTime && currentTime <= t1) { occupied++; break; }
+    }
+  }
+
+  document.getElementById('status-time').textContent = currentTime.toFixed(1) + 's';
+  document.getElementById('status-active').textContent = active;
+  document.getElementById('status-done').textContent = done;
+  document.getElementById('status-queued').textContent = queued;
+  document.getElementById('status-gpu').textContent = (occupied / total * 100).toFixed(0) + '%';
+  document.getElementById('status-ms').textContent = DATA.metadata.makespan_s.toFixed(1) + 's';
+}
+
+// ═══════════ Update all ═══════════
+function updateAll() {
+  if (!DATA) return;
+  drawGantt();
+  drawTopology();
+  drawLinkHeatmap();
+  updateJobList();
+  updateStatus();
+  // Scrubber
+  const scrubber = document.getElementById('scrubber');
+  const val = (currentTime / DATA.metadata.makespan_s) * scrubberMax;
+  scrubber.value = Math.min(scrubberMax, Math.round(val));
+  document.getElementById('time-display').textContent = currentTime.toFixed(1) + 's';
+}
+
+// ═══════════ Init ═══════════
+function init() {
+  if (!DATA) return;
+  document.getElementById('status-ms').textContent = DATA.metadata.makespan_s.toFixed(1) + 's';
+  document.title = `SimGrid 回放 — ${DATA.topology.name} | ${DATA.metadata.total_jobs} jobs | ${DATA.metadata.total_gpus} GPUs`;
+  currentTime = 0;
+  updateAll();
+
+  // Auto-play after a short delay
+  setTimeout(() => { if (!playing) togglePlay(); }, 800);
+
+  window.addEventListener('resize', updateAll);
+}
+
+window.addEventListener('DOMContentLoaded', loadData);
+</script>
+</body>
+</html>

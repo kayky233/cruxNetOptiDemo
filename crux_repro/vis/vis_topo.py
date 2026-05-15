@@ -14,7 +14,7 @@ from .vis_data import load_topology
 
 def plot_topology(topology_name="three_tier_clos",
                   hosts=8,
-                  gpus_per_host=4,
+                  gpus_per_host=8,
                   out_dir="results/vis"):
     setup_mpl()
     topo = load_topology(topology_name, hosts=hosts, gpus_per_host=gpus_per_host)

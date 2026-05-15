@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="367" viewBox="0 0 780 367">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="390.0" y="22.0" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="700" text-anchor="middle" fill="#1f2937">Link Utilization — random_same</text>
+<text x="140.0" y="50.0" font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700" text-anchor="start" fill="#475569">Switch sw0</text>
+<rect x="140.0" y="46.0" width="540.0" height="12.0" fill="#ef4444" rx="2" stroke="none" opacity="1.00"/>
+<text x="686.0" y="56.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="500" text-anchor="start" fill="#64748b">50.3%</text>
+<text x="132.0" y="56.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="400" text-anchor="end" fill="#6b7280">sw0_0</text>
+<text x="140.0" y="85.0" font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700" text-anchor="start" fill="#475569">NIC</text>
+<rect x="140.0" y="81.0" width="457.7" height="12.0" fill="#f59e0b" rx="2" stroke="none" opacity="1.00"/>
+<text x="603.7" y="91.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="500" text-anchor="start" fill="#64748b">42.7%</text>
+<text x="132.0" y="91.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="400" text-anchor="end" fill="#6b7280">nic0_0</text>
+<rect x="140.0" y="96.0" width="457.7" height="12.0" fill="#f59e0b" rx="2" stroke="none" opacity="1.00"/>
+<text x="603.7" y="106.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="500" text-anchor="start" fill="#64748b">42.7%</text>
+<text x="132.0" y="106.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="400" text-anchor="end" fill="#6b7280">nic1_0</text>
+<rect x="140.0" y="111.0" width="455.5" height="12.0" fill="#f59e0b" rx="2" stroke="none" opacity="1.00"/>
+<text x="601.5" y="121.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="500" text-anchor="start" fill="#64748b">42.5%</text>
+<text x="132.0" y="121.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="400" text-anchor="end" fill="#6b7280">nic4_0</text>
+<rect x="140.0" y="126.0" width="455.5" height="12.0" fill="#f59e0b" rx="2" stroke="none" opacity="1.00"/>
+<text x="601.5" y="136.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="500" text-anchor="start" fill="#64748b">42.5%</text>
+<text x="132.0" y="136.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="400" text-anchor="end" fill="#6b7280">nic5_0</text>
+<rect x="140.0" y="141.0" width="439.3" height="12.0" fill="#f59e0b" rx="2" stroke="none" opacity="1.00"/>
+<text x="585.3" y="151.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="500" text-anchor="start" fill="#64748b">41.0%</text>
+<text x="132.0" y="151.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="400" text-anchor="end" fill="#6b7280">nic2_0</text>
+<rect x="140.0" y="156.0" width="439.3" height="12.0" fill="#f59e0b" rx="2" stroke="none" opacity="1.00"/>
+<text x="585.3" y="166.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="500" text-anchor="start" fill="#64748b">41.0%</text>
+<text x="132.0" y="166.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="400" text-anchor="end" fill="#6b7280">nic3_0</text>
+<rect x="140.0" y="171.0" width="375.5" height="12.0" fill="#f59e0b" rx="2" stroke="none" opacity="1.00"/>
+<text x="521.5" y="181.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="500" text-anchor="start" fill="#64748b">35.0%</text>
+<text x="132.0" y="181.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="400" text-anchor="end" fill="#6b7280">nic6_0</text>
+<rect x="140.0" y="186.0" width="375.5" height="12.0" fill="#f59e0b" rx="2" stroke="none" opacity="1.00"/>
+<text x="521.5" y="196.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="500" text-anchor="start" fill="#64748b">35.0%</text>
+<text x="132.0" y="196.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="400" text-anchor="end" fill="#6b7280">nic7_0</text>
+<text x="140.0" y="225.0" font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700" text-anchor="start" fill="#475569">Intra-host (local)</text>
+<rect x="140.0" y="221.0" width="71.3" height="12.0" fill="#cbd5e1" rx="2" stroke="none" opacity="1.00"/>
+<text x="217.3" y="231.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="500" text-anchor="start" fill="#64748b">6.6%</text>
+<text x="132.0" y="231.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="400" text-anchor="end" fill="#6b7280">local6</text>
+<rect x="140.0" y="236.0" width="71.3" height="12.0" fill="#cbd5e1" rx="2" stroke="none" opacity="1.00"/>
+<text x="217.3" y="246.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="500" text-anchor="start" fill="#64748b">6.6%</text>
+<text x="132.0" y="246.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="400" text-anchor="end" fill="#6b7280">local7</text>
+<rect x="140.0" y="251.0" width="25.9" height="12.0" fill="#cbd5e1" rx="2" stroke="none" opacity="1.00"/>
+<text x="171.9" y="261.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="500" text-anchor="start" fill="#64748b">2.4%</text>
+<text x="132.0" y="261.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="400" text-anchor="end" fill="#6b7280">local2</text>
+<rect x="140.0" y="266.0" width="25.9" height="12.0" fill="#cbd5e1" rx="2" stroke="none" opacity="1.00"/>
+<text x="171.9" y="276.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="500" text-anchor="start" fill="#64748b">2.4%</text>
+<text x="132.0" y="276.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="400" text-anchor="end" fill="#6b7280">local3</text>
+<rect x="140.0" y="281.0" width="24.4" height="12.0" fill="#cbd5e1" rx="2" stroke="none" opacity="1.00"/>
+<text x="170.4" y="291.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="500" text-anchor="start" fill="#64748b">2.3%</text>
+<text x="132.0" y="291.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="400" text-anchor="end" fill="#6b7280">local4</text>
+<rect x="140.0" y="296.0" width="24.4" height="12.0" fill="#cbd5e1" rx="2" stroke="none" opacity="1.00"/>
+<text x="170.4" y="306.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="500" text-anchor="start" fill="#64748b">2.3%</text>
+<text x="132.0" y="306.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="400" text-anchor="end" fill="#6b7280">local5</text>
+<rect x="140.0" y="311.0" width="10.1" height="12.0" fill="#cbd5e1" rx="2" stroke="none" opacity="1.00"/>
+<text x="156.1" y="321.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="500" text-anchor="start" fill="#64748b">0.9%</text>
+<text x="132.0" y="321.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="400" text-anchor="end" fill="#6b7280">local0</text>
+<rect x="140.0" y="326.0" width="10.1" height="12.0" fill="#cbd5e1" rx="2" stroke="none" opacity="1.00"/>
+<text x="156.1" y="336.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="500" text-anchor="start" fill="#64748b">0.9%</text>
+<text x="132.0" y="336.0" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="400" text-anchor="end" fill="#6b7280">local1</text>
+</svg>

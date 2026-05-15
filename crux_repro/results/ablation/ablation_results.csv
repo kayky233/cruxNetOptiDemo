@@ -1,0 +1,7 @@
+scheduler,topology,comm_plan,workload,placement_mode,placement_objective,overlap_ratio,makespan_s,avg_jct_s,avg_comm_s,avg_compute_wait_s,useful_gpu_fraction,jobs,ranks,rounds,hosts,gpus_per_host
+random_same,three_tier_clos,ring,synthetic,optimize,balanced,0.000000,289.534100,17.598693,15.459674,0.000000,0.044327,24,16,3,8,8
+random_intensity,three_tier_clos,ring,synthetic,optimize,balanced,0.000000,406.930636,15.884675,13.745655,0.000000,0.031539,24,16,3,8,8
+place_only,three_tier_clos,ring,synthetic,optimize,balanced,0.000000,170.018329,11.459506,9.320487,0.000000,0.075487,24,16,3,8,8
+priority_only,three_tier_clos,ring,synthetic,optimize,balanced,0.000000,406.930636,15.884675,13.745655,0.000000,0.031539,24,16,3,8,8
+crux_no_compress,three_tier_clos,ring,synthetic,optimize,balanced,0.000000,170.018329,11.459506,9.320487,0.000000,0.075487,24,16,3,8,8
+crux,three_tier_clos,ring,synthetic,optimize,balanced,0.000000,170.236707,11.513193,9.374173,0.000000,0.075390,24,16,3,8,8

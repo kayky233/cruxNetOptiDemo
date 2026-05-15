@@ -27,9 +27,6 @@ struct CommPlan {
                        const struct TopologyConfig& cfg) = 0;
 };
 
-// Forward declare link-tracker helper
-extern void track_link_bytes(int src_host, int dst_host, uint64_t bytes, const TopologyConfig& cfg);
-
 // ─── RingPlan (Ring AllReduce) ──────────────────────────────────
 
 struct RingPlan : CommPlan {
@@ -50,7 +47,7 @@ struct RingPlan : CommPlan {
       auto send = sg4::Mailbox::by_name(next_mbox)->put_init(new int(step), chunk);
       if (send_rate > 0) send->set_rate(send_rate);
       send->start(); recv->wait(); send->wait();
-      track_link_bytes(placement[rank].first, placement[next].first, chunk, cfg);
+      track_link_bytes(placement[rank].first, placement[next].first, chunk, cfg, job_id*97 + step*17 + rank);
       delete recvd;
     }
   }

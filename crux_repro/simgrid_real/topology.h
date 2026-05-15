@@ -177,14 +177,14 @@ struct LinkUsage {
 
 inline std::map<std::string, LinkUsage> g_link_usage;
 
-inline void track_link_bytes(int src_host, int dst_host, uint64_t bytes, const TopologyConfig& cfg) {
+inline void track_link_bytes(int src_host, int dst_host, uint64_t bytes, const TopologyConfig& cfg, int salt = 0) {
   if (src_host == dst_host) {
     g_link_usage["local"+std::to_string(src_host)].total_bytes += bytes;
   } else {
     g_link_usage["nic"+std::to_string(src_host)+"_0"].total_bytes += bytes;
     g_link_usage["nic"+std::to_string(dst_host)+"_0"].total_bytes += bytes;
     for (size_t lvl = 0; lvl < cfg.switches.size(); ++lvl) {
-      int idx = (src_host*31 + dst_host*17 + static_cast<int>(lvl)*7) % cfg.switches[lvl].count;
+      int idx = (src_host*31 + dst_host*17 + static_cast<int>(lvl)*7 + salt*13) % cfg.switches[lvl].count;
       g_link_usage["sw"+std::to_string(lvl)+"_"+std::to_string(idx)].total_bytes += bytes;
     }
   }

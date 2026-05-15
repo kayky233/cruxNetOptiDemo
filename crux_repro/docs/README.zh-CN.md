@@ -19,6 +19,7 @@ docs/
 │   ├── REAL_ENV_TOPOLOGY_INTEGRATION.zh-CN.md       实机环境拓扑接入方案
 │   ├── VISUALIZATION_DESIGN.zh-CN.md                可视化模块设计
 │   ├── IMASTER_API_REQUIREMENTS.zh-CN.md            华为 iMaster NCE API 需求清单
+│   ├── NCCL_LD_PRELOAD_ACF_ANALYSIS.zh-CN.md        NCCL Hook + ACF 迭代时间估算
 │   ├── DEVELOPMENT_DESIGN.zh-CN.md                  早期开发设计（轻量模拟器）
 │   ├── IMPLEMENTATION_MAP.zh-CN.md                  论文概念 → 代码映射
 │   └── TRAINING_INFERENCE_OPTIMIZATION_MODEL.zh-CN.md 训练/推理统一优化模型

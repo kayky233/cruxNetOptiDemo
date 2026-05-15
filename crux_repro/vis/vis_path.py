@@ -60,7 +60,7 @@ def _group_switches_by_level(sw_names, topo):
 def plot_path_heatmap(jobs_csv: str,
                       topology_name="three_tier_clos",
                       hosts=8,
-                      gpus_per_host=4,
+                      gpus_per_host=8,
                       baseline="random_same",
                       crux="crux_no_compress",
                       out_dir="results/vis"):

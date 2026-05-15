@@ -11,7 +11,7 @@ for scheduler in random_same random_intensity crux_no_compress crux; do
     --scheduler "$scheduler" \
     --seed 7 \
     --hosts 8 \
-    --gpus-per-host 4 \
+    --gpus-per-host 8 \
     --jobs 12 \
     --ranks 8 \
     --rounds 4 \

@@ -27,12 +27,15 @@ crux_repro/
 
 ```text
 simgrid_real/
-  collective_sim.cpp       # S4U/C++ 主模拟器
+  collective_sim.cpp       # S4U/C++ 主模拟器 (含 6-scheduler ablation)
+  topology.h               # 拓扑定义 (star/fat_tree/clos/dragonfly/ascend)
+  comm_plan.h              # 通信计划 (ring/tree/hierarchical/pipeline)
   build.sh                 # 构建 C++ 模拟器
   run_all.sh               # synthetic workload 批量运行
   make_trace_workload.py   # Lingjun trace -> SimGrid workload CSV
-  run_trace.sh             # trace-driven 批量运行
-  report_results.py        # scheduler 汇总报告
+  run_trace.sh             # trace-driven 批量运行 (6 scheduler ablation)
+  run_scan.py              # 自动化参数扫描脚本
+  report_results.py        # scheduler 汇总报告 (含 ablation 分解)
   analyze_job_timeline.py  # job-level 分析和 SVG 图
 ```
 
@@ -164,7 +167,91 @@ cd /Users/dkwyl/Documents/tmbProject/net
   --out crux_repro/results/simgrid_real_trace_optimize_balanced_report.md
 ```
 
-### 5. 生成 job-level 分析
+### 5. 生成 Ablation 分解报告（新）
+
+```bash
+cd /Users/dkwyl/Documents/tmbProject/net
+/Users/dkwyl/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 \
+  crux_repro/simgrid_real/report_results.py \
+  --results crux_repro/results/ablation/ablation_results.csv \
+  --out crux_repro/results/ablation/ablation_report.md
+```
+
+报告自动输出 scheduler 对比表、ablation 分解、收益来源分析。
+
+### 6. 运行自动化参数扫描（新）
+
+```bash
+cd /Users/dkwyl/Documents/tmbProject/net
+/Users/dkwyl/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 \
+  crux_repro/simgrid_real/run_scan.py \
+  --scan-topology --scan-scale \
+  --workload-csv crux_repro/results/simgrid_trace_workload.csv \
+  --out-dir crux_repro/results/scan
+```
+
+支持 `--scan-topology`、`--scan-scale`、`--scan-bg`、`--scan-overlap`、`--scan-comm-plan` 或 `--all` 全量扫描。
+
+### 7. 生成增强可视化（新）
+
+```bash
+cd /Users/dkwyl/Documents/tmbProject/net
+/Users/dkwyl/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 \
+  crux_repro/vis/vis_enhanced.py \
+  --results crux_repro/results/ablation/ablation_results.csv \
+  --jobs crux_repro/results/ablation/ablation_jobs.csv \
+  --out-dir crux_repro/results/ablation/vis
+```
+
+产出：ablation 收益分解柱状图、JCT compute/comm/wait 瀑布分解图、链路利用率热力图（需 `--link-timeline-dir`）。
+
+### 8. 生成网络拓扑可视化（新）
+
+```bash
+cd /Users/dkwyl/Documents/tmbProject/net
+/Users/dkwyl/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 \
+  crux_repro/vis/vis_network.py \
+  --jobs crux_repro/results/ablation/ablation_jobs.csv \
+  --links /tmp/netvis_links.csv \
+  --topology three_tier_clos \
+  --hosts 8 --gpus-per-host 8 \
+  --baseline random_same --target crux_no_compress \
+  --out-dir crux_repro/results/vis_network
+```
+
+产出 7 张 SVG：
+
+| 文件 | 内容 |
+|---|---|
+| `topology_map_{scheduler}.svg` | 完整网络拓扑（Switch/NIC/GPU 层级），GPU 按 job 着色，链路按利用率着色/加粗 |
+| `link_congestion.svg` | 链路拥塞排序柱状图（local/NIC/switch 分组） |
+| `job_ring_paths.svg` | Top-4 高通信强度 job 的 Ring AllReduce 环形路径，跨机红色/同机绿色 |
+| `gpu_gantt_{scheduler}.svg` | GPU 占用时间线甘特图，每行一个 GPU，颜色=job |
+| `placement_compare.svg` | baseline vs target 并排 GPU 放置热力图 |
+
+### 9. 生成交互式 Web 动态回放（新）
+
+```bash
+# 一键生成自包含 HTML（数据直接嵌入，无需 data.json）
+cd /Users/dkwyl/Documents/tmbProject/net
+/Users/dkwyl/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 \
+  crux_repro/tools/export_web_data.py \
+  --jobs crux_repro/results/ablation/ablation_jobs.csv \
+  --results crux_repro/results/ablation/ablation_results.csv \
+  --topology three_tier_clos --hosts 8 --gpus-per-host 8 \
+  --scheduler crux_no_compress \
+  --merge-html crux_repro/vis/dashboard.html \
+  --out crux_repro/results/web_dashboard/data.json
+
+# 浏览器打开
+open crux_repro/results/web_dashboard/dashboard.html
+```
+
+页面功能：▶ 播放/暂停 | 拖拽进度条 | 0.5×~30× 变速 | GPU 甘特图(滚轮缩放) | 拓扑快照(GPU 按 job 着色) | 链路利用率柱状图 | Job 排队/运行/完成状态。
+
+产物：`results/web_dashboard/dashboard.html` + `data.json`，以及 `web_dashboard_random/` 基线版本。
+
+### 10. 生成 job-level 分析
 
 ```bash
 cd /Users/dkwyl/Documents/tmbProject/net
@@ -206,6 +293,28 @@ balanced 重排同时考虑 host 负载和 GPU slot 负载，并用当前 worklo
 - 平均 JCT 改善约 15.07%；
 - 平均通信时间改善约 30.07%；
 - useful GPU fraction 从 0.4689 提升到 0.5374。
+
+### Ablation 收益分解（新）
+
+2026-05-15 新增 6-scheduler ablation，用于分离 placement / priority / compression 的独立贡献：
+
+| scheduler | makespan(s) | avg JCT(s) | avg comm(s) | ugf | 说明 |
+|---|---:|---:|---:|---:|---|
+| `random_same` | 95.305 | 52.952 | 31.637 | 0.4689 | baseline：随机放置 + 同优先级 |
+| `random_intensity` | 94.997 | 52.844 | 31.538 | 0.4705 | 仅 intensity 分桶限速 |
+| `priority_only` | 95.031 | 52.850 | 31.561 | 0.4703 | **仅优先级，不改 placement** |
+| `place_only` | **83.171** | **44.970** | **22.124** | **0.5374** | **仅 placement，不加优先级** |
+| `crux_no_compress` | 83.171 | 44.970 | 22.124 | 0.5374 | placement + logical priority |
+| `crux` | 83.985 | 45.074 | 22.291 | 0.5322 | placement + priority + DAG 压缩 |
+
+**核心发现**：
+
+- `place_only`（仅强度感知 placement）达到了与 `crux_no_compress` **完全相同的效果** — makespan 改善 12.73%，JCT 改善 15.07%
+- `priority_only`（仅优先级 + 随机 placement）**几乎无收益**（JCT 改善 < 0.2%）
+- `random_intensity`（简单 intensity 分桶）也几乎无收益
+- **结论：当前模型下，Crux 的收益 ≈ 通信感知的 bin-packing placement。优先级/限速的边际贡献接近于零。**
+
+这个发现在 replay 模式中已有预示（replay 无重排时收益为零），但 ablation 矩阵首次量化了各组件的独立贡献。
 
 ### Job-Level 结果
 
@@ -278,6 +387,7 @@ crux_repro/results/verification/figures/README.zh-CN.md
 | **总模拟方案** | [`docs/design/SIMGRID_COLLECTIVE_SIMULATION_PLAN.zh-CN.md`](docs/design/SIMGRID_COLLECTIVE_SIMULATION_PLAN.zh-CN.md) |
 | **实机接入方案** | [`docs/design/REAL_ENV_TOPOLOGY_INTEGRATION.zh-CN.md`](docs/design/REAL_ENV_TOPOLOGY_INTEGRATION.zh-CN.md) |
 | **华为接口清单** | [`docs/design/IMASTER_API_REQUIREMENTS.zh-CN.md`](docs/design/IMASTER_API_REQUIREMENTS.zh-CN.md) |
+| **网络拓扑可视化** | [`vis/vis_network.py`](vis/vis_network.py) 生成 GPU/交换机/链路拓扑图 + job 分布 + 拥塞热力图 |
 | **可视化方案** | [`docs/design/VISUALIZATION_DESIGN.zh-CN.md`](docs/design/VISUALIZATION_DESIGN.zh-CN.md) |
 | **SimGrid 学习** | [`docs/simgrid-guide/SIMGRID_INDEX.zh-CN.md`](docs/simgrid-guide/SIMGRID_INDEX.zh-CN.md) |
 | **结果数据** | [`results/README.zh-CN.md`](results/README.zh-CN.md) |
@@ -285,10 +395,27 @@ crux_repro/results/verification/figures/README.zh-CN.md
 ## 当前边界
 
 - 尚未模拟 HCCL/NCCL/RoCE 协议细节；
-- collective 目前以 Ring AllReduce 为主；
+- collective 目前以 Ring AllReduce 为主（已实现 tree/hierarchical/pipeline plan）；
 - 昇腾 920 + 910B 的真实拓扑、HCCS/PCIe/NIC 参数还未校准；
-- compute time、tensor size 仍由模型模板补齐。
+- compute time、tensor size 仍由模型模板补齐；
+- 优先级实现为速率限制（`set_rate()`），非真实 hardware traffic class 队列模型。
+
+## 新增功能（2026-05-15）
+
+| 功能 | 文件 | 说明 |
+|---|---|---|
+| 6-scheduler ablation | `collective_sim.cpp` | `random_same` / `random_intensity` / `place_only` / `priority_only` / `crux_no_compress` / `crux` |
+| Compute-comm overlap | `collective_sim.cpp` `--overlap-ratio` | 异步 backward compute 与 collective 通信重叠 |
+| Compute wait 追踪 | `collective_sim.cpp` | `avg_compute_wait_s` 指标，量化 GPU 算力拥塞 |
+| Link timeline 采样 | `collective_sim.cpp` `--link-timeline-out` | 每秒采样每条链路的 cumulative bytes |
+| 自动化参数扫描 | `run_scan.py` | 遍历 topology × scheduler × workload × bg × overlap |
+| Ablation 报告 | `report_results.py` | 自动输出 ablation 收益分解表 |
+| 增强可视化 | `vis/vis_enhanced.py` | ablation 柱状图、JCT 瀑布分解图、link heatmap |
+| 网络拓扑可视化 | `vis/vis_network.py` | GPU/交换机/NIC 拓扑图 + job 分布色块 + 链路拥塞 + Ring 路径 + Gantt |
+| **交互式 Web 回放** | `vis/dashboard.html` | 动态 job 到达/释放、Gantt 时间线、拓扑快照、链路热力、播放/暂停/拖拽 |
 
 ## 下一步
 
 详见 [总模拟方案 §11 后续改进路线](docs/design/SIMGRID_COLLECTIVE_SIMULATION_PLAN.zh-CN.md#11-后续改进路线)
+
+当前最高优先级的模拟层优化已完成（策略 ablation、参数扫描框架、增强可视化）。后续等待实机数据接入后，进行拓扑参数校准和 HCCL benchmark 拟合。

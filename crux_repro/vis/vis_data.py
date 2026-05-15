@@ -42,7 +42,7 @@ class TopologyConfig:
         return names
 
 
-def make_star(hosts=8, gpus_per_host=4, local_gbps=400, nic_gbps=100, core_gbps=320):
+def make_star(hosts=8, gpus_per_host=8, local_gbps=400, nic_gbps=100, core_gbps=320):
     return TopologyConfig(
         name="star",
         hosts=hosts, gpus_per_host=gpus_per_host,
@@ -51,7 +51,7 @@ def make_star(hosts=8, gpus_per_host=4, local_gbps=400, nic_gbps=100, core_gbps=
     )
 
 
-def make_fat_tree(hosts=8, gpus_per_host=4):
+def make_fat_tree(hosts=8, gpus_per_host=8):
     return TopologyConfig(
         name="fat_tree",
         hosts=hosts, gpus_per_host=gpus_per_host,
@@ -63,7 +63,7 @@ def make_fat_tree(hosts=8, gpus_per_host=4):
     )
 
 
-def make_three_tier_clos(hosts=8, gpus_per_host=4):
+def make_three_tier_clos(hosts=8, gpus_per_host=8):
     return TopologyConfig(
         name="three_tier_clos",
         hosts=hosts, gpus_per_host=gpus_per_host,
@@ -76,7 +76,7 @@ def make_three_tier_clos(hosts=8, gpus_per_host=4):
     )
 
 
-def make_dragonfly(hosts=8, gpus_per_host=4):
+def make_dragonfly(hosts=8, gpus_per_host=8):
     return TopologyConfig(
         name="dragonfly",
         hosts=hosts, gpus_per_host=gpus_per_host,
@@ -111,7 +111,7 @@ TOPOLOGY_BUILDERS = {
 }
 
 
-def load_topology(name="three_tier_clos", hosts=8, gpus_per_host=4, **kwargs):
+def load_topology(name="three_tier_clos", hosts=8, gpus_per_host=8, **kwargs):
     builder = TOPOLOGY_BUILDERS.get(name)
     if builder is None:
         raise ValueError(f"Unknown topology: {name}. Options: {list(TOPOLOGY_BUILDERS.keys())}")

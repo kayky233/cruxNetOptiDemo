@@ -45,7 +45,7 @@ def plot_placement(jobs_csv: str,
                    baseline="random_same",
                    crux="crux_no_compress",
                    hosts=8,
-                   gpus_per_host=4,
+                   gpus_per_host=8,
                    topology_name=None,
                    out_dir="results/vis"):
     setup_mpl()
