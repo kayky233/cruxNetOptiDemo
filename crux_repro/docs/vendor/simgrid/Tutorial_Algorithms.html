@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulating Algorithms &mdash; SimGrid  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="_static/showfile.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
+        <script src="_static/tabs.js"></script>
+        <script src="_static/showfile.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Simulating MPI Applications" href="Tutorial_MPI_Applications.html" />
+    <link rel="prev" title="The Modern Age of Computer Systems Simulation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SimGrid
+          </a>
+              <div class="version">
+                4.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">     Simulating distributed algorithms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#discover-the-master-workers">Discover the Master/Workers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-actors">The Actors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#starting-the-simulation">Starting the Simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#platform-file">Platform File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deployment-file">Deployment File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#execution-example">Execution Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#improve-it-yourself">Improve it Yourself</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#using-docker">Using Docker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-your-computer-natively">Using your Computer Natively</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#discovering-the-provided-code">Discovering the Provided Code</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-1-simpler-deployments">Lab 1: Simpler deployments</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#wrap-up">Wrap up</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-2-using-the-whole-platform">Lab 2: Using the Whole Platform</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creating-the-workers-from-the-master">Creating the workers from the master</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#master-workers-communication">Master-Workers Communication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Wrap up</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-3-fixed-experiment-duration">Lab 3: Fixed Experiment Duration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#controlling-the-message-verbosity">Controlling the message verbosity</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-4-what-if-analysis">Lab 4: What-if analysis</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#computational-speed">Computational speed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#communication-speed">Communication speed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dealing-with-failures">Dealing with failures</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-5-competing-applications">Lab 5: Competing Applications</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#visualizing-the-result">Visualizing the result</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#further-improvements">Further Improvements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#after-this-tutorial">After this Tutorial</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_MPI_Applications.html">     Simulating MPI applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Model-checking.html">     Model-checking algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_DAG.html">Simulating DAG</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Manual:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">   Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installing_SimGrid.html">      Installing SimGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Start_your_own_project.html">      Start your own project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="community.html">      The SimGrid community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Release_Notes.html">      Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="application.html">   Describing your application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_s4u.html">      The S4U interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">      S4U examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_smpi.html">      The SMPI interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="The_XBT_toolbox.html">      The XBT toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform.html">   Describing the simulated platform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_examples.html">      Network topology examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_routing.html">      Advanced routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="XML_reference.html">      XML reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_cpp.html">      C++ platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Models.html">   The SimGrid models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Modeling_howtos.html">      Modeling hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Calibrating_the_models.html">      Calibrating the models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plugins.html">      SimGrid plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Experimental_setup.html">   Running an experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Configuring_SimGrid.html">      Configuring SimGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Deploying_your_application.html">      Deploying your application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Outcomes.html">      Simulation outcomes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">SimGrid's Internals:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Design_goals.html">   Design goals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Contributors_Documentation.html">   Contributor's documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SimGrid</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Simulating Algorithms</li>
+  <li class="wy-breadcrumbs-aside">
+    
+
+      <a href="" class="fa fa-bitbucket"> Edit on FramaGit</a>
+    
+  </li>
+
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="simulating-algorithms">
+<span id="usecase-simalgo"></span><h1>Simulating Algorithms<a class="headerlink" href="#simulating-algorithms" title="Permalink to this heading"></a></h1>
+<p>SimGrid was conceived as a tool to study distributed algorithms. Its
+<a class="reference internal" href="app_s4u.html#s4u-doc"><span class="std std-ref">S4U interface</span></a> makes it easy to assess Cloud,
+P2P, HPC, IoT, and other similar settings (<a class="reference internal" href="index.html#index"><span class="std std-ref">more info</span></a>).</p>
+<p>A typical SimGrid simulation is composed of several <a class="reference external" href="app_s4u.html#s4u-actor"><strong>Actors</strong></a>, that
+execute user-provided functions. The actors have to explicitly use the
+S4U interface to express their computation, communication, disk usage,
+and other <a class="reference external" href="app_s4u.html#s4u-activity"><strong>Activities</strong></a> so that they get reflected within the
+simulator. These activities take place on <strong>Resources</strong> (<a class="reference external" href="app_s4u.html#s4u-host"><strong>Hosts</strong></a>,
+<a class="reference external" href="app_s4u.html#s4u-link"><strong>Links</strong></a>, <a class="reference external" href="app_s4u.html#s4u-disk"><strong>Disks</strong></a>). SimGrid predicts the time taken by each
+activity and orchestrates accordingly the actors waiting for the
+completion of these activities.</p>
+<p>Each actor executes a user-provided function on a simulated <a class="reference external" href="app_s4u.html#s4u-host"><strong>Host</strong></a>
+with which it can interact. Communications are not directly sent to
+actors, but posted onto a <a class="reference external" href="app_s4u.html#s4u-mailbox"><strong>Mailbox</strong></a> that serves as a rendez-vous point
+between communicating actors.</p>
+<p><strong>In the remainder of this tutorial</strong>, you will discover a simple yet
+fully-functioning example of SimGrid simulation: the Master/Workers
+application. We will detail each part of the code and the necessary
+configuration to make it work.  After this tour, several exercises
+are proposed to let you discover some of the SimGrid features, hands
+on the keyboard. This practical session will be given in C++ or Python,
+which you are supposed to know beforehand.</p>
+<section id="discover-the-master-workers">
+<h2>Discover the Master/Workers<a class="headerlink" href="#discover-the-master-workers" title="Permalink to this heading"></a></h2>
+<p>This section introduces an example of SimGrid simulation. This
+simple application is composed of two kinds of actors: the <strong>master</strong>
+is in charge of distributing some computational tasks to a set of
+<strong>workers</strong> that execute them.</p>
+<img alt="_images/intro.svg" class="align-center" src="_images/intro.svg" /><p>The provided code dispatches these tasks in <a class="reference external" href="https://en.wikipedia.org/wiki/Round-robin_scheduling">round-robin scheduling</a>,
+i.e. in circular order: tasks are dispatched to each worker one after the other, until all tasks are dispatched.
+You will improve this scheme later in this tutorial.</p>
+<section id="the-actors">
+<h3>The Actors<a class="headerlink" href="#the-actors" title="Permalink to this heading"></a></h3>
+<p>Let’s start with the code of the master. It is represented by the
+<em>master</em> function below. This simple function takes at least 3
+parameters (the number of tasks to dispatch, their computational size
+in flops to compute, and their communication size in bytes to
+exchange). Every parameter after the third one must be the name of a
+host on which a worker is waiting for something to compute.</p>
+<p>Then, the tasks are sent one after the other, each on a mailbox named
+after the worker’s hosts. On the other side, a given worker (which
+code is given below) waits for incoming tasks on its mailbox.</p>
+<p>In the end, once all tasks are dispatched, the master dispatches
+another task per worker, but this time with a negative amount of flops
+to compute. Indeed, this application decided by convention, that the
+workers should stop when encountering such a negative compute_size.</p>
+<blockquote>
+<div><div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-Qysr" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-Qysr" name="Qysr" role="tab" tabindex="0">C++</button><button aria-controls="panel-0-UHl0aG9u" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHl0aG9u" name="UHl0aG9u" role="tab" tabindex="-1">Python</button></div><div aria-labelledby="tab-0-Qysr" class="sphinx-tabs-panel group-tab" id="panel-0-Qysr" name="Qysr" role="tabpanel" tabindex="0"><p>At the end of the day, the only SimGrid specific functions used in
+this example are <a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u7Mailbox7by_nameERKNSt6stringE" title="simgrid::s4u::Mailbox::by_name"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Mailbox::by_name()</span></code></a> (to retrieve or create a mailbox) and
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u7Mailbox3putEPv8uint64_t" title="simgrid::s4u::Mailbox::put"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Mailbox::put()</span></code></a> (so send something over a mailbox). Also, <a class="reference internal" href="The_XBT_toolbox.html#c.XBT_INFO" title="XBT_INFO"><code class="xref c c-macro docutils literal notranslate"><span class="pre">XBT_INFO</span></code></a> is used
+as a replacement to <code class="docutils literal notranslate"><span class="pre">printf()</span></code> or <code class="docutils literal notranslate"><span class="pre">std::cout</span></code> to ensure that the messages
+are nicely logged along with the simulated time and actor name.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">master</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">args</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">xbt_assert</span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;The master function expects at least 3 arguments&quot;</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">long</span><span class="w"> </span><span class="n">tasks_count</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">stol</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">compute_cost</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">stod</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+<span class="w">  </span><span class="kt">long</span><span class="w"> </span><span class="n">communication_cost</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">stol</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sg4</span><span class="o">::</span><span class="n">Mailbox</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">workers</span><span class="p">;</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">args</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">    </span><span class="n">workers</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">sg4</span><span class="o">::</span><span class="n">Mailbox</span><span class="o">::</span><span class="n">by_name</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
+
+<span class="w">  </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;Got %zu workers and %ld tasks to process&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">workers</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="w"> </span><span class="n">tasks_count</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">tasks_count</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* For each task to be executed: */</span>
+<span class="w">    </span><span class="cm">/* - Select a worker in a round-robin way */</span>
+<span class="w">    </span><span class="n">sg4</span><span class="o">::</span><span class="n">Mailbox</span><span class="o">*</span><span class="w"> </span><span class="n">mailbox</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">workers</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">workers</span><span class="p">.</span><span class="n">size</span><span class="p">()];</span>
+
+<span class="w">    </span><span class="cm">/* - Send the computation cost to that worker */</span>
+<span class="w">    </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;Sending task %d of %ld to mailbox &#39;%s&#39;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">tasks_count</span><span class="p">,</span><span class="w"> </span><span class="n">mailbox</span><span class="o">-&gt;</span><span class="n">get_cname</span><span class="p">());</span>
+<span class="w">    </span><span class="n">mailbox</span><span class="o">-&gt;</span><span class="n">put</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">double</span><span class="p">(</span><span class="n">compute_cost</span><span class="p">),</span><span class="w"> </span><span class="n">communication_cost</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;All tasks have been dispatched. Request all workers to stop.&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">workers</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* The workers stop when receiving a negative compute_cost */</span>
+<span class="w">    </span><span class="n">sg4</span><span class="o">::</span><span class="n">Mailbox</span><span class="o">*</span><span class="w"> </span><span class="n">mailbox</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">workers</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">workers</span><span class="p">.</span><span class="n">size</span><span class="p">()];</span>
+
+<span class="w">    </span><span class="n">mailbox</span><span class="o">-&gt;</span><span class="n">put</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">double</span><span class="p">(</span><span class="mf">-1.0</span><span class="p">),</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-UHl0aG9u" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-UHl0aG9u" name="UHl0aG9u" role="tabpanel" tabindex="0"><p>At the end of the day, the only SimGrid specific functions used in
+this example are <a class="reference internal" href="app_s4u.html#simgrid.Mailbox.by_name" title="simgrid.Mailbox.by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">simgrid.Mailbox.by_name()</span></code></a> (to retrieve or create a mailbox) and
+<a class="reference internal" href="app_s4u.html#simgrid.Mailbox.put" title="simgrid.Mailbox.put"><code class="xref py py-func docutils literal notranslate"><span class="pre">simgrid.Mailbox.put()</span></code></a> (so send something over a mailbox). Also, <a class="reference internal" href="app_s4u.html#simgrid.this_actor.info" title="simgrid.this_actor.info"><code class="xref py py-func docutils literal notranslate"><span class="pre">simgrid.this_actor.info()</span></code></a> is used
+as a replacement to <cite>print</cite> to ensure that the messages
+are nicely logged along with the simulated time and actor name.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">master</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Actor master requires 3 parameters plus the workers&#39; names, but got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">tasks_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">compute_cost</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">communicate_cost</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">workers</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)):</span>
+        <span class="n">workers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Mailbox</span><span class="o">.</span><span class="n">by_name</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+    <span class="n">this_actor</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">workers</span><span class="p">)</span><span class="si">}</span><span class="s2"> workers and </span><span class="si">{</span><span class="n">tasks_count</span><span class="si">}</span><span class="s2"> tasks to process&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">tasks_count</span><span class="p">):</span> <span class="c1"># For each task to be executed:</span>
+        <span class="c1"># - Select a worker in a round-robin way</span>
+        <span class="n">mailbox</span> <span class="o">=</span> <span class="n">workers</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">workers</span><span class="p">)]</span>
+
+        <span class="c1"># - Send the computation amount to the worker</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">tasks_count</span> <span class="o">&lt;</span> <span class="mi">10000</span> <span class="ow">or</span> <span class="p">(</span><span class="n">tasks_count</span> <span class="o">&lt;</span> <span class="mi">100000</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">10000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">100000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">this_actor</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sending task </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="n">tasks_count</span><span class="si">}</span><span class="s2"> to mailbox &#39;</span><span class="si">{</span><span class="n">mailbox</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+        <span class="n">mailbox</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">compute_cost</span><span class="p">,</span> <span class="n">communicate_cost</span><span class="p">)</span>
+
+    <span class="n">this_actor</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;All tasks have been dispatched. Request all workers to stop.&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">mailbox</span> <span class="ow">in</span> <span class="n">workers</span><span class="p">:</span>
+        <span class="c1"># The workers stop when receiving a negative compute_cost</span>
+        <span class="n">mailbox</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></div>
+</div></blockquote>
+<p>Then comes the code of the worker actors. This function expects no
+parameter from its vector of strings. Its code is very simple: it
+expects messages on the mailbox that is named after its host. As long as it gets valid
+computation requests (whose compute_amount is positive), it computes
+this task and waits for the next one.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-Qysr" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-1-Qysr" name="Qysr" role="tab" tabindex="0">C++</button><button aria-controls="panel-1-UHl0aG9u" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-1-UHl0aG9u" name="UHl0aG9u" role="tab" tabindex="-1">Python</button></div><div aria-labelledby="tab-1-Qysr" class="sphinx-tabs-panel group-tab" id="panel-1-Qysr" name="Qysr" role="tabpanel" tabindex="0"><p>The worker retrieves its own host with
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u10this_actor8get_hostEv" title="simgrid::s4u::this_actor::get_host"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::this_actor::get_host()</span></code></a>. The
+<a class="reference internal" href="app_s4u.html#api-s4u-this-actor"><span class="std std-ref">simgrid::s4u::this_actor</span></a>
+namespace contains many such helping functions.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">worker</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">args</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">xbt_assert</span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;The worker expects no argument&quot;</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">Host</span><span class="o">*</span><span class="w"> </span><span class="n">my_host</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">this_actor</span><span class="o">::</span><span class="n">get_host</span><span class="p">();</span>
+<span class="w">  </span><span class="n">sg4</span><span class="o">::</span><span class="n">Mailbox</span><span class="o">*</span><span class="w"> </span><span class="n">mailbox</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">Mailbox</span><span class="o">::</span><span class="n">by_name</span><span class="p">(</span><span class="n">my_host</span><span class="o">-&gt;</span><span class="n">get_name</span><span class="p">());</span>
+
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">compute_cost</span><span class="p">;</span>
+<span class="w">  </span><span class="k">do</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">msg</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">mailbox</span><span class="o">-&gt;</span><span class="n">get_unique</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="n">compute_cost</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">msg</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">compute_cost</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="cm">/* If compute_cost is valid, execute a computation of that cost */</span>
+<span class="w">      </span><span class="n">sg4</span><span class="o">::</span><span class="n">this_actor</span><span class="o">::</span><span class="n">execute</span><span class="p">(</span><span class="n">compute_cost</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">compute_cost</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"> </span><span class="cm">/* Stop when receiving an invalid compute_cost */</span>
+
+<span class="w">  </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;Exiting now.&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-1-UHl0aG9u" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-1-UHl0aG9u" name="UHl0aG9u" role="tabpanel" tabindex="0"><p>The worker retrieves its own host with <a class="reference internal" href="app_s4u.html#simgrid.this_actor.get_host" title="simgrid.this_actor.get_host"><code class="xref py py-func docutils literal notranslate"><span class="pre">simgrid.this_actor.get_host()</span></code></a>. The
+<a class="reference internal" href="app_s4u.html#api-s4u-this-actor"><span class="std std-ref">this_actor</span></a> object contains many such helping functions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">worker</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">args</span><span class="p">,</span> <span class="s2">&quot;The worker expects to not get any argument&quot;</span>
+
+    <span class="n">mailbox</span> <span class="o">=</span> <span class="n">Mailbox</span><span class="o">.</span><span class="n">by_name</span><span class="p">(</span><span class="n">this_actor</span><span class="o">.</span><span class="n">get_host</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
+        <span class="n">compute_cost</span> <span class="o">=</span> <span class="n">mailbox</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">compute_cost</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># If compute_cost is valid, execute a computation of that cost</span>
+            <span class="n">this_actor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">compute_cost</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># Stop when receiving an invalid compute_cost</span>
+            <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">this_actor</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Exiting now.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="starting-the-simulation">
+<h3>Starting the Simulation<a class="headerlink" href="#starting-the-simulation" title="Permalink to this heading"></a></h3>
+<p>And this is it. In only a few lines, we defined the algorithm of our master/workers example.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-Qysr" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-2-Qysr" name="Qysr" role="tab" tabindex="0">C++</button><button aria-controls="panel-2-UHl0aG9u" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-2-UHl0aG9u" name="UHl0aG9u" role="tab" tabindex="-1">Python</button></div><div aria-labelledby="tab-2-Qysr" class="sphinx-tabs-panel group-tab" id="panel-2-Qysr" name="Qysr" role="tabpanel" tabindex="0"><p>That being said, an algorithm alone is not enough to define a
+simulation: SimGrid is a library, not a program. So you need to define
+your own <code class="docutils literal notranslate"><span class="pre">main()</span></code> function as follows. This function is in charge of
+creating a SimGrid simulation engine (on line 3), register the actor
+functions to the engine (on lines 7 and 8), load the simulated platform
+from its description file (on line 11), map actors onto that platform
+(on line 12) and run the simulation until its completion on line 15.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">argv</span><span class="p">[])</span>
+<span class="linenos"> 2</span><span class="p">{</span>
+<span class="linenos"> 3</span><span class="w">  </span><span class="n">sg4</span><span class="o">::</span><span class="n">Engine</span><span class="w"> </span><span class="n">e</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="n">argv</span><span class="p">);</span>
+<span class="linenos"> 4</span><span class="w">  </span><span class="n">xbt_assert</span><span class="p">(</span><span class="n">argc</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Usage: %s platform_file deployment_file</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="w">  </span><span class="cm">/* Register the functions representing the actors */</span>
+<span class="linenos"> 7</span><span class="w">  </span><span class="n">e</span><span class="p">.</span><span class="n">register_function</span><span class="p">(</span><span class="s">&quot;master&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">master</span><span class="p">);</span>
+<span class="linenos"> 8</span><span class="w">  </span><span class="n">e</span><span class="p">.</span><span class="n">register_function</span><span class="p">(</span><span class="s">&quot;worker&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">worker</span><span class="p">);</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="w">  </span><span class="cm">/* Load the platform description and then deploy the application */</span>
+<span class="linenos">11</span><span class="w">  </span><span class="n">e</span><span class="p">.</span><span class="n">load_platform</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+<span class="linenos">12</span><span class="w">  </span><span class="n">e</span><span class="p">.</span><span class="n">load_deployment</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="w">  </span><span class="cm">/* Run the simulation */</span>
+<span class="linenos">15</span><span class="w">  </span><span class="n">e</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="w">  </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;Simulation is over&quot;</span><span class="p">);</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos">20</span><span class="p">}</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-2-UHl0aG9u" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-2-UHl0aG9u" name="UHl0aG9u" role="tabpanel" tabindex="0"><p>That being said, an algorithm alone is not enough to define a simulation:
+you need a main block to setup the simulation and its components as follows.
+This code creates a SimGrid simulation engine (on line 4), registers the actor
+functions to the engine (on lines 7 and 8), loads the simulated platform
+from its description file (on line 11), map actors onto that platform
+(on line 12) and run the simulation until its completion on line 15.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="linenos"> 2</span>    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Usage: python app-masterworkers.py platform_file deployment_file&quot;</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span>    <span class="n">e</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span>    <span class="c1"># Register the classes representing the actors</span>
+<span class="linenos"> 7</span>    <span class="n">e</span><span class="o">.</span><span class="n">register_actor</span><span class="p">(</span><span class="s2">&quot;master&quot;</span><span class="p">,</span> <span class="n">master</span><span class="p">)</span>
+<span class="linenos"> 8</span>    <span class="n">e</span><span class="o">.</span><span class="n">register_actor</span><span class="p">(</span><span class="s2">&quot;worker&quot;</span><span class="p">,</span> <span class="n">worker</span><span class="p">)</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span>    <span class="c1"># Load the platform description and then deploy the application</span>
+<span class="linenos">11</span>    <span class="n">e</span><span class="o">.</span><span class="n">load_platform</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="linenos">12</span>    <span class="n">e</span><span class="o">.</span><span class="n">load_deployment</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span>    <span class="c1"># Run the simulation</span>
+<span class="linenos">15</span>    <span class="n">e</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span>    <span class="n">this_actor</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Simulation is over&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></div>
+<p>Finally, this example requires a platform file and a deployment file.</p>
+</section>
+<section id="platform-file">
+<h3>Platform File<a class="headerlink" href="#platform-file" title="Permalink to this heading"></a></h3>
+<p>Platform files define the simulated platform on which the provided
+application will take place. It contains one or several <strong>Network
+Zone</strong> <a class="reference external" href="app_s4u.html#s4u-netzone"><img alt="api_s4u_NetZone" class="align-middle" src="_images/extlink.png" style="width: 12px;" /></a> that contains both <a class="reference external" href="app_s4u.html#s4u-host"><strong>Host</strong></a> and <a class="reference external" href="app_s4u.html#s4u-link"><strong>Link</strong></a>
+Resources, as well as routing information.</p>
+<p>Such files can get rather long and boring, so the example below is
+only an excerpt of the full <code class="docutils literal notranslate"><span class="pre">examples/platforms/small_platform.xml</span></code>
+file. For example, most routing information is missing, and only the
+route between the hosts Tremblay and Fafard is given. This path
+traverses 6 links (named 4, 3, 2, 0, 1, and 8). There are several
+examples of platforms in the archive under <code class="docutils literal notranslate"><span class="pre">examples/platforms</span></code>.</p>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">(excerpts of the small_platform.xml file)</span><a class="headerlink" href="#id6" title="Permalink to this code"></a></div>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&#39;1.0&#39;?&gt;</span>
+<span class="cp">&lt;!DOCTYPE platform SYSTEM &quot;https://simgrid.org/simgrid.dtd&quot;&gt;</span>
+<span class="nt">&lt;platform</span><span class="w"> </span><span class="na">version=</span><span class="s">&quot;4.1&quot;</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="nt">&lt;zone</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;zone0&quot;</span><span class="w"> </span><span class="na">routing=</span><span class="s">&quot;Full&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;host</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;Tremblay&quot;</span><span class="w"> </span><span class="na">speed=</span><span class="s">&quot;98.095Mf&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;host</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;Jupiter&quot;</span><span class="w"> </span><span class="na">speed=</span><span class="s">&quot;76.296Mf&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;host</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;Fafard&quot;</span><span class="w"> </span><span class="na">speed=</span><span class="s">&quot;76.296Mf&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;host</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;Ginette&quot;</span><span class="w"> </span><span class="na">speed=</span><span class="s">&quot;48.492Mf&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;host</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;Bourassa&quot;</span><span class="w"> </span><span class="na">speed=</span><span class="s">&quot;48.492Mf&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;host</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;Jacquelin&quot;</span><span class="w"> </span><span class="na">speed=</span><span class="s">&quot;137.333Mf&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;link</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;6&quot;</span><span class="w"> </span><span class="na">bandwidth=</span><span class="s">&quot;41.279125MBps&quot;</span><span class="w"> </span><span class="na">latency=</span><span class="s">&quot;59.904us&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;link</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;3&quot;</span><span class="w"> </span><span class="na">bandwidth=</span><span class="s">&quot;34.285625MBps&quot;</span><span class="w"> </span><span class="na">latency=</span><span class="s">&quot;514.433us&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;link</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;7&quot;</span><span class="w"> </span><span class="na">bandwidth=</span><span class="s">&quot;11.618875MBps&quot;</span><span class="w"> </span><span class="na">latency=</span><span class="s">&quot;189.98us&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;link</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;9&quot;</span><span class="w"> </span><span class="na">bandwidth=</span><span class="s">&quot;7.20975MBps&quot;</span><span class="w"> </span><span class="na">latency=</span><span class="s">&quot;1.461517ms&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;link</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;2&quot;</span><span class="w"> </span><span class="na">bandwidth=</span><span class="s">&quot;118.6825MBps&quot;</span><span class="w"> </span><span class="na">latency=</span><span class="s">&quot;136.931us&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;link</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;8&quot;</span><span class="w"> </span><span class="na">bandwidth=</span><span class="s">&quot;8.158MBps&quot;</span><span class="w"> </span><span class="na">latency=</span><span class="s">&quot;270.544us&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;link</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;1&quot;</span><span class="w"> </span><span class="na">bandwidth=</span><span class="s">&quot;34.285625MBps&quot;</span><span class="w"> </span><span class="na">latency=</span><span class="s">&quot;514.433us&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;link</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;4&quot;</span><span class="w"> </span><span class="na">bandwidth=</span><span class="s">&quot;10.099625MBps&quot;</span><span class="w"> </span><span class="na">latency=</span><span class="s">&quot;479.78us&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;link</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">bandwidth=</span><span class="s">&quot;41.279125MBps&quot;</span><span class="w"> </span><span class="na">latency=</span><span class="s">&quot;59.904us&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;route</span><span class="w"> </span><span class="na">src=</span><span class="s">&quot;Tremblay&quot;</span><span class="w"> </span><span class="na">dst=</span><span class="s">&quot;Fafard&quot;</span><span class="nt">&gt;</span>
+<span class="w">      </span><span class="nt">&lt;link_ctn</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;4&quot;</span><span class="nt">/&gt;</span>
+<span class="w">      </span><span class="nt">&lt;link_ctn</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;3&quot;</span><span class="nt">/&gt;</span>
+<span class="w">      </span><span class="nt">&lt;link_ctn</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;2&quot;</span><span class="nt">/&gt;</span>
+<span class="w">      </span><span class="nt">&lt;link_ctn</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;0&quot;</span><span class="nt">/&gt;</span>
+<span class="w">      </span><span class="nt">&lt;link_ctn</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;1&quot;</span><span class="nt">/&gt;</span>
+<span class="w">      </span><span class="nt">&lt;link_ctn</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;8&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/route&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/zone&gt;</span>
+<span class="nt">&lt;/platform&gt;</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="deployment-file">
+<h3>Deployment File<a class="headerlink" href="#deployment-file" title="Permalink to this heading"></a></h3>
+<p>Deployment files specify the execution scenario: it lists the actors
+that should be started, along with their parameters. In the following
+example, we start 6 actors: one master and 5 workers.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&#39;1.0&#39;?&gt;</span>
+<span class="cp">&lt;!DOCTYPE platform SYSTEM &quot;https://simgrid.org/simgrid.dtd&quot;&gt;</span>
+<span class="nt">&lt;platform</span><span class="w"> </span><span class="na">version=</span><span class="s">&quot;4.1&quot;</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="cm">&lt;!-- The master actor (with some arguments) --&gt;</span>
+<span class="w">  </span><span class="nt">&lt;actor</span><span class="w"> </span><span class="na">host=</span><span class="s">&quot;Tremblay&quot;</span><span class="w"> </span><span class="na">function=</span><span class="s">&quot;master&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;20&quot;</span><span class="nt">/&gt;</span><span class="w">        </span><span class="cm">&lt;!-- Number of tasks --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;50000000&quot;</span><span class="nt">/&gt;</span><span class="w">  </span><span class="cm">&lt;!-- Computation size of tasks --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;1000000&quot;</span><span class="nt">/&gt;</span><span class="w">   </span><span class="cm">&lt;!-- Communication size of tasks --&gt;</span>
+<span class="w">    </span><span class="cm">&lt;!-- name of hosts on which the workers are running --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;Tremblay&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;Jupiter&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;Fafard&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;Ginette&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;Bourassa&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/actor&gt;</span>
+<span class="w">  </span><span class="cm">&lt;!-- The worker actors (with no argument) --&gt;</span>
+<span class="w">  </span><span class="nt">&lt;actor</span><span class="w"> </span><span class="na">host=</span><span class="s">&quot;Tremblay&quot;</span><span class="w"> </span><span class="na">function=</span><span class="s">&quot;worker&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;actor</span><span class="w"> </span><span class="na">host=</span><span class="s">&quot;Jupiter&quot;</span><span class="w"> </span><span class="na">function=</span><span class="s">&quot;worker&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;actor</span><span class="w"> </span><span class="na">host=</span><span class="s">&quot;Fafard&quot;</span><span class="w"> </span><span class="na">function=</span><span class="s">&quot;worker&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;actor</span><span class="w"> </span><span class="na">host=</span><span class="s">&quot;Ginette&quot;</span><span class="w"> </span><span class="na">function=</span><span class="s">&quot;worker&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;actor</span><span class="w"> </span><span class="na">host=</span><span class="s">&quot;Bourassa&quot;</span><span class="w"> </span><span class="na">function=</span><span class="s">&quot;worker&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/platform&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="execution-example">
+<h3>Execution Example<a class="headerlink" href="#execution-example" title="Permalink to this heading"></a></h3>
+<p>This time, we have all parts: once the program is compiled, we can execute it as follows.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-Qysr" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-3-Qysr" name="Qysr" role="tab" tabindex="0">C++</button><button aria-controls="panel-3-UHl0aG9u" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-3-UHl0aG9u" name="UHl0aG9u" role="tab" tabindex="-1">Python</button></div><div aria-labelledby="tab-3-Qysr" class="sphinx-tabs-panel group-tab" id="panel-3-Qysr" name="Qysr" role="tabpanel" tabindex="0"><p>Note how the <a class="reference internal" href="The_XBT_toolbox.html#c.XBT_INFO" title="XBT_INFO"><code class="xref c c-macro docutils literal notranslate"><span class="pre">XBT_INFO</span></code></a> requests turned into informative messages.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$$</span>$<span class="w"> </span>./masterworkers<span class="w"> </span>platform.xml<span class="w"> </span>deploy.xml
+<span class="o">[</span><span class="w">  </span><span class="m">0</span>.000000<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Got<span class="w"> </span><span class="m">5</span><span class="w"> </span>workers<span class="w"> </span>and<span class="w"> </span><span class="m">20</span><span class="w"> </span>tasks<span class="w"> </span>to<span class="w"> </span>process
+<span class="o">[</span><span class="w">  </span><span class="m">0</span>.000000<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">0</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Tremblay&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">0</span>.002265<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">1</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Jupiter&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">0</span>.171420<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">2</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Fafard&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">0</span>.329817<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">3</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Ginette&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">0</span>.453549<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">4</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Bourassa&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">0</span>.586168<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">5</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Tremblay&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">0</span>.588433<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">6</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Jupiter&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">0</span>.995917<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">7</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Fafard&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">1</span>.154314<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">8</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Ginette&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">1</span>.608379<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">9</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Bourassa&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">1</span>.749885<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">10</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Tremblay&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">1</span>.752150<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">11</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Jupiter&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">1</span>.921304<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">12</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Fafard&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">2</span>.079701<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">13</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Ginette&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">2</span>.763209<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">14</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Bourassa&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">2</span>.913601<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">15</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Tremblay&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">2</span>.915867<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">16</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Jupiter&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">3</span>.085021<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">17</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Fafard&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">3</span>.243418<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">18</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Ginette&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">3</span>.918038<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">19</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Bourassa&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">4</span>.077318<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>All<span class="w"> </span>tasks<span class="w"> </span>have<span class="w"> </span>been<span class="w"> </span>dispatched.<span class="w"> </span>Request<span class="w"> </span>all<span class="w"> </span>workers<span class="w"> </span>to<span class="w"> </span>stop.
+<span class="o">[</span><span class="w">  </span><span class="m">4</span>.077513<span class="o">]</span><span class="w"> </span><span class="o">(</span>worker@Tremblay<span class="o">)</span><span class="w"> </span>Exiting<span class="w"> </span>now.
+<span class="o">[</span><span class="w">  </span><span class="m">4</span>.096528<span class="o">]</span><span class="w"> </span><span class="o">(</span>worker@Jupiter<span class="o">)</span><span class="w"> </span>Exiting<span class="w"> </span>now.
+<span class="o">[</span><span class="w">  </span><span class="m">4</span>.122236<span class="o">]</span><span class="w"> </span><span class="o">(</span>worker@Fafard<span class="o">)</span><span class="w"> </span>Exiting<span class="w"> </span>now.
+<span class="o">[</span><span class="w">  </span><span class="m">4</span>.965689<span class="o">]</span><span class="w"> </span><span class="o">(</span>worker@Ginette<span class="o">)</span><span class="w"> </span>Exiting<span class="w"> </span>now.
+<span class="o">[</span><span class="w">  </span><span class="m">5</span>.133855<span class="o">]</span><span class="w"> </span><span class="o">(</span>maestro@<span class="o">)</span><span class="w"> </span>Simulation<span class="w"> </span>is<span class="w"> </span>over
+<span class="o">[</span><span class="w">  </span><span class="m">5</span>.133855<span class="o">]</span><span class="w"> </span><span class="o">(</span>worker@Bourassa<span class="o">)</span><span class="w"> </span>Exiting<span class="w"> </span>now.
+<span class="nv">$$</span>$
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-3-UHl0aG9u" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-3-UHl0aG9u" name="UHl0aG9u" role="tabpanel" tabindex="0"><p>Note how the <a class="reference internal" href="app_s4u.html#simgrid.this_actor.info" title="simgrid.this_actor.info"><code class="xref py py-func docutils literal notranslate"><span class="pre">simgrid.this_actor.info()</span></code></a> calls turned into informative messages.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$$</span>$<span class="w"> </span>python<span class="w"> </span>./app-masterworkers.py<span class="w"> </span>platform.xml<span class="w"> </span>deploy.xml
+<span class="o">[</span><span class="w">  </span><span class="m">0</span>.000000<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Got<span class="w"> </span><span class="m">5</span><span class="w"> </span>workers<span class="w"> </span>and<span class="w"> </span><span class="m">20</span><span class="w"> </span>tasks<span class="w"> </span>to<span class="w"> </span>process
+<span class="o">[</span><span class="w">  </span><span class="m">0</span>.000000<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">0</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Tremblay&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">0</span>.002265<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">1</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Jupiter&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">0</span>.171420<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">2</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Fafard&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">0</span>.329817<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">3</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Ginette&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">0</span>.453549<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">4</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Bourassa&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">0</span>.586168<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">5</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Tremblay&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">0</span>.588433<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">6</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Jupiter&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">0</span>.995917<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">7</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Fafard&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">1</span>.154314<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">8</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Ginette&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">1</span>.608379<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">9</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Bourassa&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">1</span>.749885<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">10</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Tremblay&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">1</span>.752150<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">11</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Jupiter&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">1</span>.921304<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">12</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Fafard&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">2</span>.079701<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">13</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Ginette&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">2</span>.763209<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">14</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Bourassa&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">2</span>.913601<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">15</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Tremblay&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">2</span>.915867<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">16</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Jupiter&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">3</span>.085021<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">17</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Fafard&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">3</span>.243418<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">18</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Ginette&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">3</span>.918038<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>Sending<span class="w"> </span>task<span class="w"> </span><span class="m">19</span><span class="w"> </span>of<span class="w"> </span><span class="m">20</span><span class="w"> </span>to<span class="w"> </span>mailbox<span class="w"> </span><span class="s1">&#39;Bourassa&#39;</span>
+<span class="o">[</span><span class="w">  </span><span class="m">4</span>.077318<span class="o">]</span><span class="w"> </span><span class="o">(</span>master@Tremblay<span class="o">)</span><span class="w"> </span>All<span class="w"> </span>tasks<span class="w"> </span>have<span class="w"> </span>been<span class="w"> </span>dispatched.<span class="w"> </span>Request<span class="w"> </span>all<span class="w"> </span>workers<span class="w"> </span>to<span class="w"> </span>stop.
+<span class="o">[</span><span class="w">  </span><span class="m">4</span>.077513<span class="o">]</span><span class="w"> </span><span class="o">(</span>worker@Tremblay<span class="o">)</span><span class="w"> </span>Exiting<span class="w"> </span>now.
+<span class="o">[</span><span class="w">  </span><span class="m">4</span>.096528<span class="o">]</span><span class="w"> </span><span class="o">(</span>worker@Jupiter<span class="o">)</span><span class="w"> </span>Exiting<span class="w"> </span>now.
+<span class="o">[</span><span class="w">  </span><span class="m">4</span>.122236<span class="o">]</span><span class="w"> </span><span class="o">(</span>worker@Fafard<span class="o">)</span><span class="w"> </span>Exiting<span class="w"> </span>now.
+<span class="o">[</span><span class="w">  </span><span class="m">4</span>.965689<span class="o">]</span><span class="w"> </span><span class="o">(</span>worker@Ginette<span class="o">)</span><span class="w"> </span>Exiting<span class="w"> </span>now.
+<span class="o">[</span><span class="w">  </span><span class="m">5</span>.133855<span class="o">]</span><span class="w"> </span><span class="o">(</span>maestro@<span class="o">)</span><span class="w"> </span>Simulation<span class="w"> </span>is<span class="w"> </span>over
+<span class="o">[</span><span class="w">  </span><span class="m">5</span>.133855<span class="o">]</span><span class="w"> </span><span class="o">(</span>worker@Bourassa<span class="o">)</span><span class="w"> </span>Exiting<span class="w"> </span>now.
+<span class="nv">$$</span>$
+</pre></div>
+</div>
+</div></div>
+<p>Each example included in the SimGrid distribution comes with a <cite>tesh</cite>
+file that presents how to start the example once compiled, along with
+the expected output. These files are used for the automatic testing of
+the framework but can be used to see the examples’ output without
+compiling them. See e.g. the file
+<a class="reference external" href="https://framagit.org/simgrid/simgrid/-/blob/master/examples/cpp/app-masterworkers/s4u-app-masterworkers.tesh">examples/cpp/app-masterworkers/s4u-app-masterworkers.tesh</a>.
+Lines starting with <cite>$</cite> are the commands to execute;
+lines starting with <cite>&gt;</cite> are the expected output of each command, while
+lines starting with <cite>!</cite> are configuration items for the test runner.</p>
+</section>
+</section>
+<section id="improve-it-yourself">
+<h2>Improve it Yourself<a class="headerlink" href="#improve-it-yourself" title="Permalink to this heading"></a></h2>
+<p>In this section, you will modify the example presented earlier to
+explore the quality of the proposed algorithm. It already works, and
+the simulation prints things, but the truth is that we have no idea of
+whether this is a good algorithm to dispatch tasks to the workers.
+This very simple setting raises many interesting questions:</p>
+<img alt="_images/question.svg" class="align-center" src="_images/question.svg" /><ul>
+<li><p>Which algorithm should the master use? Or should the worker decide
+by themselves?</p>
+<blockquote>
+<div><p>Round Robin is not an efficient algorithm when all tasks are not
+processed at the same speed.  It would probably be more efficient
+if the workers were asking for tasks when ready.</p>
+</div></blockquote>
+</li>
+<li><p>Should tasks be grouped in batches or sent separately?</p>
+<blockquote>
+<div><p>The workers will starve if they don’t get the tasks fast
+enough. One possibility to reduce latency would be to send tasks
+in pools instead of one by one. But if the pools are too big, the
+load balancing will likely get uneven, in particular when
+distributing the last tasks.</p>
+</div></blockquote>
+</li>
+<li><p>How does the quality of such an algorithm dependent on the platform
+characteristics and on the task characteristics?</p>
+<blockquote>
+<div><p>Whenever the input communication time is very small compared to
+processing time and workers are homogeneous, it is likely that the
+round-robin algorithm performs very well. Would it still hold true
+when transfer time is not negligible? What if some tasks are
+performed faster on some specific nodes?</p>
+</div></blockquote>
+</li>
+<li><p>The network topology interconnecting the master and the workers
+may be quite complicated. How does such a topology impact the
+previous result?</p>
+<blockquote>
+<div><p>When data transfers are the bottleneck, it is likely that good
+modeling of the platform becomes essential. The SimGrid platform
+models are particularly handy to account for complex platform
+topologies.</p>
+</div></blockquote>
+</li>
+<li><p>What is the best applicative topology?</p>
+<blockquote>
+<div><p>Is a flat master-worker deployment sufficient? Should we go for a
+hierarchical algorithm, with some forwarders taking large pools of
+tasks from the master, each of them distributing their tasks to a
+sub-pool of workers? Or should we introduce super-peers,
+duplicating the master’s role in a peer-to-peer manner?  Do the
+algorithms require a perfect knowledge of the network?</p>
+</div></blockquote>
+</li>
+<li><p>How is such an algorithm sensitive to external workload variation?</p>
+<blockquote>
+<div><p>What if bandwidth, latency, and computing speed can vary with no
+warning?  Shouldn’t you study whether your algorithm is sensitive
+to such load variations?</p>
+</div></blockquote>
+</li>
+<li><p>Although an algorithm may be more efficient than another, how does
+it interfere with unrelated applications executing on the same
+facilities?</p></li>
+</ul>
+<p><strong>SimGrid was invented to answer such questions.</strong> Do not believe the
+fools saying that all you need to study such settings is a simple
+discrete event simulator. Do you really want to reinvent the wheel,
+debug and optimize your own tool, and validate its models against real
+settings for ages, or do you prefer to sit on the shoulders of a
+giant? With SimGrid, you can focus on your algorithm. The whole
+simulation mechanism is already working.</p>
+<p>Here is the visualization of a SimGrid simulation of two master-worker
+applications (one in light gray and the other in dark gray) running in
+concurrence and showing resource usage over a long period of time. It
+was obtained with the Triva software.</p>
+<img alt="_images/result.png" class="align-center" src="_images/result.png" />
+<section id="using-docker">
+<h3>Using Docker<a class="headerlink" href="#using-docker" title="Permalink to this heading"></a></h3>
+<p>The easiest way to take the tutorial is to use the dedicated Docker image.
+Once you <a class="reference external" href="https://docs.docker.com/install/">installed Docker itself</a>, simply do the following:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>docker<span class="w"> </span>pull<span class="w"> </span>simgrid/tuto-s4u
+<span class="gp">$ </span>mkdir<span class="w"> </span>~/simgrid-tutorial
+<span class="gp">$ </span>docker<span class="w"> </span>run<span class="w"> </span>--user<span class="w"> </span><span class="nv">$UID</span>:<span class="nv">$GID</span><span class="w"> </span>-it<span class="w"> </span>--rm<span class="w"> </span>--name<span class="w"> </span>simgrid<span class="w"> </span>--volume<span class="w"> </span>~/simgrid-tutorial:/source/tutorial<span class="w"> </span>simgrid/tuto-s4u<span class="w"> </span>bash
+</pre></div>
+</div>
+<p>More info if you want to understand that command. Skip it if you want. The <code class="docutils literal notranslate"><span class="pre">--user</span> <span class="pre">$UID:$GID</span></code> part request docker to use your
+login name and group within the container too. <code class="docutils literal notranslate"><span class="pre">-it</span></code> requests to run the command interactively in a terminal. <code class="docutils literal notranslate"><span class="pre">--rm</span></code> asks to
+remove the container once the command is done. <code class="docutils literal notranslate"><span class="pre">--name</span></code> gives a name to the container. <code class="docutils literal notranslate"><span class="pre">--volume</span></code> makes one directory of
+your machine visible from within the container. The part on the left of <code class="docutils literal notranslate"><span class="pre">:</span></code> is the name outside while the right part is the
+name within the container. The last words on the line are the docker image to use as a basis for the container (here,
+<code class="docutils literal notranslate"><span class="pre">simgrid/tuto-s4u</span></code>) and the program to run when the container starts (here, <code class="docutils literal notranslate"><span class="pre">bash</span></code>).</p>
+<p>This will start a new container with all you need to take this
+tutorial, and create a <code class="docutils literal notranslate"><span class="pre">simgrid-tutorial</span></code> directory in your home on
+your host machine that will be visible as <code class="docutils literal notranslate"><span class="pre">/source/tutorial</span></code> within the
+container.  You can then edit the files you want with your favorite
+editor in <code class="docutils literal notranslate"><span class="pre">~/simgrid-tutorial</span></code>, and compile them within the
+container to enjoy the provided dependencies.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Any change to the container out of <code class="docutils literal notranslate"><span class="pre">/source/tutorial</span></code> will be lost
+when you log out of the container, so don’t edit the other files!</p>
+</div>
+<p>All needed dependencies are already installed in this container
+(SimGrid, a C++ compiler, CMake, pajeng, and R). Vite being only
+optional in this tutorial, it is not installed to reduce the image
+size.</p>
+<p>The docker does not run as root, so that the files can easily be exchanged between within the container and the outer world.
+If you need to run a command as root within the container, simply type the following in another terminal to join the same container as root:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>docker<span class="w"> </span>container<span class="w"> </span>ls
+<span class="gp"># </span>This<span class="w"> </span>lists<span class="w"> </span>all<span class="w"> </span>containers<span class="w"> </span>running<span class="w"> </span>on<span class="w"> </span>your<span class="w"> </span>machine.<span class="w"> </span>For<span class="w"> </span>example:
+<span class="gp">#    </span>CONTAINER<span class="w"> </span>ID<span class="w">   </span>IMAGE<span class="w">            </span>COMMAND<span class="w">   </span>CREATED<span class="w">         </span>STATUS<span class="w">         </span>PORTS<span class="w">     </span>NAMES
+<span class="gp">#    </span>7e921b1b18a7<span class="w">   </span>simgrid/stable<span class="w">   </span><span class="s2">&quot;bash&quot;</span><span class="w">    </span><span class="m">7</span><span class="w"> </span>minutes<span class="w"> </span>ago<span class="w">   </span>Up<span class="w"> </span><span class="m">7</span><span class="w"> </span>minutes<span class="w">             </span>simgrid
+
+<span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>--user<span class="w"> </span>root<span class="w"> </span>-it<span class="w"> </span>simgrid<span class="w"> </span>bash
+</pre></div>
+</div>
+<p>The code template is available under <code class="docutils literal notranslate"><span class="pre">/source/simgrid-template-s4u.git</span></code>
+in the image. You should copy it to your working directory and
+recompile it when you first log in:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="c1"># Make sure the simgrid-tutorial directory can be read and written by the non-root user</span>
+<span class="gp">$ </span>sudo<span class="w"> </span>chown<span class="w"> </span><span class="nv">$UID</span>:<span class="nv">$GID</span><span class="w"> </span>~/simgrid-tutorial
+<span class="gp">$ </span><span class="c1"># Connect to the running container if needed</span>
+<span class="gp">$ </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>--user<span class="w"> </span><span class="nv">$UID</span>:<span class="nv">$GID</span><span class="w"> </span>-ti<span class="w"> </span>simgrid<span class="w"> </span>bash
+<span class="gp">$</span>container<span class="o">)</span><span class="w"> </span>cp<span class="w"> </span>-r<span class="w"> </span>/source/simgrid-template-s4u.git/*<span class="w"> </span>/source/tutorial
+<span class="gp">$</span>container<span class="o">)</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>/source/tutorial
+<span class="gp">$</span>container<span class="o">)</span><span class="w"> </span>cmake<span class="w"> </span>.
+<span class="gp">$</span>container<span class="o">)</span><span class="w"> </span>make
+</pre></div>
+</div>
+</section>
+<section id="using-your-computer-natively">
+<h3>Using your Computer Natively<a class="headerlink" href="#using-your-computer-natively" title="Permalink to this heading"></a></h3>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-Qysr" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-4-Qysr" name="Qysr" role="tab" tabindex="0">C++</button><button aria-controls="panel-4-UHl0aG9u" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-4-UHl0aG9u" name="UHl0aG9u" role="tab" tabindex="-1">Python</button></div><div aria-labelledby="tab-4-Qysr" class="sphinx-tabs-panel group-tab" id="panel-4-Qysr" name="Qysr" role="tabpanel" tabindex="0"><p>To take the tutorial on your machine, you first need to <a class="reference internal" href="Installing_SimGrid.html#install"><span class="std std-ref">install
+a recent version of SimGrid</span></a>, a C++ compiler, and also
+<code class="docutils literal notranslate"><span class="pre">pajeng</span></code> to visualize the traces. You may want to install <a class="reference external" href="http://vite.gforge.inria.fr/">Vite</a> to get a first glance at the traces.
+The provided code template requires CMake to compile. On Debian and
+Ubuntu for example, you can get them as follows:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>simgrid<span class="w"> </span>pajeng<span class="w"> </span>cmake<span class="w"> </span>g++<span class="w"> </span>vite
+</pre></div>
+</div>
+<p>An initial version of the source code is provided on framagit. This
+template compiles with CMake. If SimGrid is correctly installed, you
+should be able to clone the <a class="reference external" href="https://framagit.org/simgrid/simgrid-template-s4u">repository</a> and recompile
+everything as follows:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span><span class="o">(</span>exporting<span class="w"> </span>SimGrid_PATH<span class="w"> </span>is<span class="w"> </span>only<span class="w"> </span>needed<span class="w"> </span><span class="k">if</span><span class="w"> </span>SimGrid<span class="w"> </span>is<span class="w"> </span>installed<span class="w"> </span><span class="k">in</span><span class="w"> </span>a<span class="w"> </span>non-standard<span class="w"> </span>path<span class="o">)</span>
+<span class="gp">$ </span><span class="nb">export</span><span class="w"> </span><span class="nv">SimGrid_PATH</span><span class="o">=</span>/where/to/simgrid
+
+<span class="gp">$ </span>git<span class="w"> </span>clone<span class="w"> </span>https://framagit.org/simgrid/simgrid-template-s4u.git
+<span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>simgrid-template-s4u/
+<span class="gp">$ </span>cmake<span class="w"> </span>.
+<span class="gp">$ </span>make
+</pre></div>
+</div>
+<p>If you struggle with the compilation, then you should double-check
+your <a class="reference internal" href="Installing_SimGrid.html#install"><span class="std std-ref">SimGrid installation</span></a>.  On need, please refer to
+the <a class="reference internal" href="Start_your_own_project.html#install-yours-troubleshooting"><span class="std std-ref">Troubleshooting your Project Setup</span></a> section.</p>
+</div><div aria-labelledby="tab-4-UHl0aG9u" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-4-UHl0aG9u" name="UHl0aG9u" role="tabpanel" tabindex="0"><p>To take the tutorial on your machine, you first need to <a class="reference internal" href="Installing_SimGrid.html#install"><span class="std std-ref">install
+a recent version of SimGrid</span></a> and <code class="docutils literal notranslate"><span class="pre">pajeng</span></code> to visualize the
+traces. You may want to install <a class="reference external" href="http://vite.gforge.inria.fr/">Vite</a> to get a first glance at the traces.
+On Debian and Ubuntu for example, you can get them as follows:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>simgrid<span class="w"> </span>pajeng<span class="w"> </span>vite
+</pre></div>
+</div>
+<p>An initial version of the source code is provided on framagit.
+If SimGrid is correctly installed, you should be able to clone the <a class="reference external" href="https://framagit.org/simgrid/simgrid-template-s4u">repository</a> and execute it as follows:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>git<span class="w"> </span>clone<span class="w"> </span>https://framagit.org/simgrid/simgrid-template-s4u.git
+<span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>simgrid-template-s4u/
+<span class="gp">$ </span>python<span class="w"> </span>master-workers.py<span class="w"> </span>small_platform.xml<span class="w"> </span>master-workers_d.xml
+</pre></div>
+</div>
+<p>If you get some errors, then you should double-check
+your <a class="reference internal" href="Installing_SimGrid.html#install"><span class="std std-ref">SimGrid installation</span></a>.  On need, please refer to
+the <a class="reference internal" href="Start_your_own_project.html#install-yours-troubleshooting"><span class="std std-ref">Troubleshooting your Project Setup</span></a> section.</p>
+</div></div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If you use the stable version of Debian 11, Ubuntu 21.04 or Ubuntu 21.10, then you need the right version of this tutorial
+(add <code class="docutils literal notranslate"><span class="pre">--branch</span> <span class="pre">simgrid-v3.25</span></code> as below). These distributions only contain SimGrid v3.25 while the latest version of this
+tutorial needs at least SimGrid v3.27.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>git<span class="w"> </span>clone<span class="w"> </span>--branch<span class="w"> </span>simgrid-v3.25<span class="w"> </span>https://framagit.org/simgrid/simgrid-template-s4u.git
+</pre></div>
+</div>
+</div>
+<p>For R analysis of the produced traces, you may want to install R
+and the <a class="reference external" href="https://github.com/schnorr/pajengr#installation/">pajengr</a> package.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>install<span class="w"> </span>R<span class="w"> </span>and<span class="w"> </span>necessary<span class="w"> </span>packages
+<span class="gp">$ </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>r-base<span class="w"> </span>r-cran-devtools<span class="w"> </span>r-cran-tidyverse
+<span class="gp"># </span>install<span class="w"> </span>pajengr<span class="w"> </span>dependencies
+<span class="gp">$ </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>git<span class="w"> </span>cmake<span class="w"> </span>flex<span class="w"> </span>bison
+<span class="gp"># </span>install<span class="w"> </span>the<span class="w"> </span>pajengr<span class="w"> </span>R<span class="w"> </span>package
+<span class="gp">$ </span>Rscript<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;library(devtools); install_github(&#39;schnorr/pajengr&#39;);&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="discovering-the-provided-code">
+<h3>Discovering the Provided Code<a class="headerlink" href="#discovering-the-provided-code" title="Permalink to this heading"></a></h3>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-5-Qysr" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-5-Qysr" name="Qysr" role="tab" tabindex="0">C++</button><button aria-controls="panel-5-UHl0aG9u" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-5-UHl0aG9u" name="UHl0aG9u" role="tab" tabindex="-1">Python</button></div><div aria-labelledby="tab-5-Qysr" class="sphinx-tabs-panel group-tab" id="panel-5-Qysr" name="Qysr" role="tabpanel" tabindex="0"><p>Please compile and execute the provided simulator as follows:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>make<span class="w"> </span>master-workers
+<span class="gp">$ </span>./master-workers<span class="w"> </span>small_platform.xml<span class="w"> </span>master-workers_d.xml
+</pre></div>
+</div>
+<p>If you get an error message complaining that <code class="docutils literal notranslate"><span class="pre">simgrid::s4u::Mailbox::get()</span></code> does not exist,
+then your version of SimGrid is too old for the version of the tutorial that you got. Check again previous section.</p>
+</div><div aria-labelledby="tab-5-UHl0aG9u" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-5-UHl0aG9u" name="UHl0aG9u" role="tabpanel" tabindex="0"><p>Please execute the provided simulator as follows:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python<span class="w"> </span>master-workers.py<span class="w"> </span>small_platform.xml<span class="w"> </span>master-workers_d.xml
+</pre></div>
+</div>
+<p>If you get an error stating that the simgrid module does not exist, you need to get a newer version of SimGrid.
+You may want to take the tutorial from the docker to get the newest version.</p>
+</div></div>
+<p>For a classical Gantt-Chart visualization, you can use <a class="reference external" href="http://vite.gforge.inria.fr/">Vite</a> if you have it installed, as
+follows. But do not spend too much time installing Vite, because there
+is a better way to visualize SimGrid traces (see below).</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>Run<span class="w"> </span>C++<span class="w"> </span>code
+<span class="gp">$ </span>./master-workers<span class="w"> </span>small_platform.xml<span class="w"> </span>master-workers_d.xml<span class="w"> </span>--cfg<span class="o">=</span>tracing:yes<span class="w"> </span>--cfg<span class="o">=</span>tracing/actor:yes
+<span class="gp"># </span>Run<span class="w"> </span>Python<span class="w"> </span>code
+<span class="gp">$ </span>python<span class="w"> </span>master-workers.py<span class="w"> </span>small_platform.xml<span class="w"> </span>master-workers_d.xml<span class="w"> </span>--cfg<span class="o">=</span>tracing:yes<span class="w"> </span>--cfg<span class="o">=</span>tracing/actor:yes
+
+<span class="gp"># </span>Visualize<span class="w"> </span>the<span class="w"> </span>produced<span class="w"> </span>trace
+<span class="gp">$ </span>vite<span class="w"> </span>simgrid.trace
+</pre></div>
+</div>
+<img alt="_images/vite-screenshot.png" class="align-center" src="_images/vite-screenshot.png" />
+<p>If you want the full power to visualize SimGrid traces, you need
+to use R. As a start, you can download this <a class="reference external" href="https://framagit.org/simgrid/simgrid/raw/master/docs/source/tuto_s4u/draw_gantt.R">starter script</a>
+and use it as follows:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>Run<span class="w"> </span>C++<span class="w"> </span>code
+<span class="gp">$ </span>./master-workers<span class="w"> </span>small_platform.xml<span class="w"> </span>master-workers_d.xml<span class="w"> </span>--cfg<span class="o">=</span>tracing:yes<span class="w"> </span>--cfg<span class="o">=</span>tracing/actor:yes
+<span class="gp"># </span>Run<span class="w"> </span>Python<span class="w"> </span>code
+<span class="gp">$ </span>python<span class="w"> </span>master-workers.py<span class="w"> </span>small_platform.xml<span class="w"> </span>master-workers_d.xml<span class="w"> </span>--cfg<span class="o">=</span>tracing:yes<span class="w"> </span>--cfg<span class="o">=</span>tracing/actor:yes
+
+<span class="gp"># </span>Visualize<span class="w"> </span>the<span class="w"> </span>produced<span class="w"> </span>trace
+<span class="gp">$ </span>Rscript<span class="w"> </span>draw_gantt.R<span class="w"> </span>simgrid.trace
+</pre></div>
+</div>
+<p>It produces a <code class="docutils literal notranslate"><span class="pre">Rplots.pdf</span></code> with the following content:</p>
+<img alt="_images/Rscript-screenshot.png" class="align-center" src="_images/Rscript-screenshot.png" />
+</section>
+</section>
+<section id="lab-1-simpler-deployments">
+<h2>Lab 1: Simpler deployments<a class="headerlink" href="#lab-1-simpler-deployments" title="Permalink to this heading"></a></h2>
+<p class="compact-list"><strong>Learning goals:</strong></p>
+<ul class="compact-list simple">
+<li><p>Get your hands on the code and change the communication pattern</p></li>
+<li><p>Discover the Mailbox mechanism</p></li>
+</ul>
+<p>In the provided example, adding more workers quickly becomes a pain:
+You need to start them (at the bottom of the file) and inform the
+master of its availability with an extra parameter. This is mandatory
+if you want to inform the master of where the workers are running. But
+actually, the master does not need to have this information.</p>
+<p>We could leverage the mailbox mechanism flexibility, and use a sort of
+yellow page system: Instead of sending data to the worker running on
+Fafard, the master could send data to the third worker. Ie, instead of
+using the worker location (which should be filled in two locations),
+we could use their ID (which should be filled in one location
+only).</p>
+<p>This could be done with the following deployment file. It’s
+not shorter than the previous one, but it’s still simpler because the
+information is only written once. It thus follows the <a class="reference external" href="https://en.wikipedia.org/wiki/Don't_repeat_yourself">DRY</a> <a class="reference external" href="http://wiki.c2.com/?SinglePointOfTruth">SPOT</a> design principle.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&#39;1.0&#39;?&gt;</span>
+<span class="cp">&lt;!DOCTYPE platform SYSTEM &quot;https://simgrid.org/simgrid.dtd&quot;&gt;</span>
+<span class="nt">&lt;platform</span><span class="w"> </span><span class="na">version=</span><span class="s">&quot;4.1&quot;</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="cm">&lt;!-- The master actor (with 4 arguments) --&gt;</span>
+<span class="w">  </span><span class="nt">&lt;actor</span><span class="w"> </span><span class="na">host=</span><span class="s">&quot;Tremblay&quot;</span><span class="w"> </span><span class="na">function=</span><span class="s">&quot;master&quot;</span><span class="nt">&gt;</span>
+<span class="w">     </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;5&quot;</span><span class="nt">/&gt;</span><span class="w">         </span><span class="cm">&lt;!-- Workers count --&gt;</span>
+<span class="w">     </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;20&quot;</span><span class="nt">/&gt;</span><span class="w">        </span><span class="cm">&lt;!-- Tasks count --&gt;</span>
+<span class="w">     </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;50000000&quot;</span><span class="nt">/&gt;</span><span class="w">  </span><span class="cm">&lt;!-- Computation size of tasks --&gt;</span>
+<span class="w">     </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;1000000&quot;</span><span class="nt">/&gt;</span><span class="w">   </span><span class="cm">&lt;!-- Communication size of tasks --&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/actor&gt;</span>
+
+<span class="w">  </span><span class="cm">&lt;!-- The worker actors (with one argument each: the ID of this worker) --&gt;</span>
+<span class="w">  </span><span class="nt">&lt;actor</span><span class="w"> </span><span class="na">host=</span><span class="s">&quot;Tremblay&quot;</span><span class="w"> </span><span class="na">function=</span><span class="s">&quot;worker&quot;</span><span class="nt">&gt;</span>
+<span class="w">     </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/actor&gt;</span>
+<span class="w">  </span><span class="nt">&lt;actor</span><span class="w"> </span><span class="na">host=</span><span class="s">&quot;Jupiter&quot;</span><span class="w"> </span><span class="na">function=</span><span class="s">&quot;worker&quot;</span><span class="nt">&gt;</span>
+<span class="w">     </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;1&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/actor&gt;</span>
+<span class="w">  </span><span class="nt">&lt;actor</span><span class="w"> </span><span class="na">host=</span><span class="s">&quot;Fafard&quot;</span><span class="w"> </span><span class="na">function=</span><span class="s">&quot;worker&quot;</span><span class="nt">&gt;</span>
+<span class="w">     </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;2&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/actor&gt;</span>
+<span class="w">  </span><span class="nt">&lt;actor</span><span class="w"> </span><span class="na">host=</span><span class="s">&quot;Ginette&quot;</span><span class="w"> </span><span class="na">function=</span><span class="s">&quot;worker&quot;</span><span class="nt">&gt;</span>
+<span class="w">     </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;3&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/actor&gt;</span>
+<span class="w">  </span><span class="nt">&lt;actor</span><span class="w"> </span><span class="na">host=</span><span class="s">&quot;Bourassa&quot;</span><span class="w"> </span><span class="na">function=</span><span class="s">&quot;worker&quot;</span><span class="nt">&gt;</span>
+<span class="w">     </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;4&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/actor&gt;</span>
+<span class="nt">&lt;/platform&gt;</span>
+</pre></div>
+</div>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-6-Qysr" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-6-Qysr" name="Qysr" role="tab" tabindex="0">C++</button><button aria-controls="panel-6-UHl0aG9u" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-6-UHl0aG9u" name="UHl0aG9u" role="tab" tabindex="-1">Python</button></div><div aria-labelledby="tab-6-Qysr" class="sphinx-tabs-panel group-tab" id="panel-6-Qysr" name="Qysr" role="tabpanel" tabindex="0"><p>Copy your <code class="docutils literal notranslate"><span class="pre">master-workers.cpp</span></code> into <code class="docutils literal notranslate"><span class="pre">master-workers-lab1.cpp</span></code> and
+add a new executable into <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>. Then modify your worker
+function so that it gets its mailbox name not from the name of its
+host, but from the string passed as <code class="docutils literal notranslate"><span class="pre">args[1]</span></code>. The master will send
+messages to all workers based on their number, for example as follows:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">tasks_count</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">worker_rank</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">workers_count</span><span class="p">);</span>
+<span class="w">   </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">mailbox_name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;worker-&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">worker_rank</span><span class="p">;</span>
+<span class="w">   </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Mailbox</span><span class="o">*</span><span class="w"> </span><span class="n">mailbox</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Mailbox</span><span class="o">::</span><span class="n">by_name</span><span class="p">(</span><span class="n">mailbox_name</span><span class="p">);</span>
+
+<span class="w">   </span><span class="n">mailbox</span><span class="o">-&gt;</span><span class="n">put</span><span class="p">(...);</span>
+
+<span class="w">   </span><span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-6-UHl0aG9u" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-6-UHl0aG9u" name="UHl0aG9u" role="tabpanel" tabindex="0"><p>Copy your <code class="docutils literal notranslate"><span class="pre">master-workers.py</span></code> into <code class="docutils literal notranslate"><span class="pre">master-workers-lab1.py</span></code> then
+modify your worker
+function so that it gets its mailbox name not from the name of its
+host, but from the string passed as <code class="docutils literal notranslate"><span class="pre">args[0]</span></code>. The master will send
+messages to all workers based on their number, for example as follows:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">range</span><span class="p">(</span><span class="n">tasks_count</span><span class="p">)</span><span class="o">:</span>
+<span class="w">   </span><span class="n">mailbox</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Mailbox</span><span class="p">.</span><span class="n">by_name</span><span class="p">(</span><span class="n">str</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">worker_count</span><span class="p">))</span>
+<span class="w">   </span><span class="n">mailbox</span><span class="p">.</span><span class="n">put</span><span class="p">(...)</span>
+</pre></div>
+</div>
+</div></div>
+<section id="wrap-up">
+<h3>Wrap up<a class="headerlink" href="#wrap-up" title="Permalink to this heading"></a></h3>
+<p>The mailboxes are a very powerful mechanism in SimGrid, allowing many
+interesting application settings. They may feel unusual if you are
+used to BSD sockets or other classical systems, but you will soon
+appreciate their power. They are only used to match
+communications but have no impact on the communication
+timing. <code class="docutils literal notranslate"><span class="pre">put()</span></code> and <code class="docutils literal notranslate"><span class="pre">get()</span></code> are matched regardless of their
+initiators’ location and then the real communication occurs between
+the involved parties.</p>
+<p>Please refer to the full <a class="reference external" href="app_s4u.html#s4u-mailbox">Mailboxes’ documentation</a>
+for more details.</p>
+</section>
+</section>
+<section id="lab-2-using-the-whole-platform">
+<h2>Lab 2: Using the Whole Platform<a class="headerlink" href="#lab-2-using-the-whole-platform" title="Permalink to this heading"></a></h2>
+<p class="compact-list"><strong>Learning goals:</strong></p>
+<ul class="compact-list simple">
+<li><p>Interact with the platform (get the list of all hosts)</p></li>
+<li><p>Create actors directly from your program instead of the deployment file</p></li>
+</ul>
+<p>It is now easier to add a new worker, but you still have to do it
+manually. It would be much easier if the master could start the
+workers on its own, one per available host in the platform. The new
+deployment file should be as simple as:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&#39;1.0&#39;?&gt;</span>
+<span class="cp">&lt;!DOCTYPE platform SYSTEM &quot;https://simgrid.org/simgrid.dtd&quot;&gt;</span>
+<span class="nt">&lt;platform</span><span class="w"> </span><span class="na">version=</span><span class="s">&quot;4.1&quot;</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="cm">&lt;!-- The master actor (with some arguments) --&gt;</span>
+<span class="w">  </span><span class="nt">&lt;actor</span><span class="w"> </span><span class="na">host=</span><span class="s">&quot;Tremblay&quot;</span><span class="w"> </span><span class="na">function=</span><span class="s">&quot;master&quot;</span><span class="nt">&gt;</span>
+<span class="w">     </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;20&quot;</span><span class="nt">/&gt;</span><span class="w">        </span><span class="cm">&lt;!-- Tasks count --&gt;</span>
+<span class="w">     </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;50000000&quot;</span><span class="nt">/&gt;</span><span class="w">  </span><span class="cm">&lt;!-- Computation size of tasks --&gt;</span>
+<span class="w">     </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;1000000&quot;</span><span class="nt">/&gt;</span><span class="w">   </span><span class="cm">&lt;!-- Communication size of tasks --&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/actor&gt;</span>
+<span class="nt">&lt;/platform&gt;</span>
+</pre></div>
+</div>
+<section id="creating-the-workers-from-the-master">
+<h3>Creating the workers from the master<a class="headerlink" href="#creating-the-workers-from-the-master" title="Permalink to this heading"></a></h3>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-7-Qysr" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-7-Qysr" name="Qysr" role="tab" tabindex="0">C++</button><button aria-controls="panel-7-UHl0aG9u" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-7-UHl0aG9u" name="UHl0aG9u" role="tab" tabindex="-1">Python</button></div><div aria-labelledby="tab-7-Qysr" class="sphinx-tabs-panel group-tab" id="panel-7-Qysr" name="Qysr" role="tabpanel" tabindex="0"><p>For that, the master needs to retrieve the list of hosts declared in
+the platform with <a class="reference internal" href="app_s4u.html#_CPPv4NK7simgrid3s4u6Engine13get_all_hostsEv" title="simgrid::s4u::Engine::get_all_hosts"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Engine::get_all_hosts()</span></code></a>.
+Then, the master should start the worker actors with
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u5Actor6createERKNSt6stringEPN3s4u4HostERKNSt8functionIFvvEEE" title="simgrid::s4u::Actor::create"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Actor::create()</span></code></a>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Actor::create(name,</span> <span class="pre">host,</span> <span class="pre">func,</span> <span class="pre">params...)</span></code> is a very flexible
+function. Its third parameter is the function that the actor should
+execute. This function can take any kind of parameter, provided that
+you pass similar parameters to <code class="docutils literal notranslate"><span class="pre">Actor::create()</span></code>. For example, you
+could have something like this:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">my_actor</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">param1</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">param2</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">param3</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="p">...</span>
+<span class="p">}</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">argv</span><span class="o">**</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="p">...</span>
+<span class="w">   </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">ActorPtr</span><span class="w"> </span><span class="n">actor</span><span class="p">;</span>
+<span class="w">   </span><span class="n">actor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Actor</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Host</span><span class="o">::</span><span class="n">by_name</span><span class="p">(</span><span class="s">&quot;the_host&quot;</span><span class="p">),</span>
+<span class="w">                                       </span><span class="o">&amp;</span><span class="n">my_actor</span><span class="p">,</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span><span class="w"> </span><span class="mf">3.14</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;thevalue&quot;</span><span class="p">);</span>
+<span class="w">   </span><span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-7-UHl0aG9u" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-7-UHl0aG9u" name="UHl0aG9u" role="tabpanel" tabindex="0"><p>For that, the master needs to retrieve the list of hosts declared in
+the platform with <code class="xref py py-func docutils literal notranslate"><span class="pre">simgrid.Engine.get_all_hosts()</span></code>. Since this method is not static,
+you may want to call it on the Engine instance, as in <code class="docutils literal notranslate"><span class="pre">Engine.instance().get_all_hosts()</span></code>.
+Then, the master should start the worker actors with <a class="reference internal" href="app_s4u.html#simgrid.Actor.create" title="simgrid.Actor.create"><code class="xref py py-func docutils literal notranslate"><span class="pre">simgrid.Actor.create()</span></code></a>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Actor.create(name,</span> <span class="pre">host,</span> <span class="pre">func,</span> <span class="pre">params...)</span></code> is a very flexible
+function. Its third parameter is the function that the actor should
+execute. This function can take any kind of parameter, provided that
+you pass similar parameters to <code class="docutils literal notranslate"><span class="pre">Actor.create()</span></code>. For example, you
+could have something like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_actor</span><span class="p">(</span><span class="n">param1</span><span class="p">,</span> <span class="n">param2</span><span class="p">,</span> <span class="n">param3</span><span class="p">):</span>
+   <span class="c1"># your code comes here</span>
+<span class="n">actor</span> <span class="o">=</span> <span class="n">simgrid</span><span class="o">.</span><span class="n">Actor</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">the_host</span><span class="p">,</span> <span class="n">my_actor</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="mf">3.14</span><span class="p">,</span> <span class="s2">&quot;thevalue&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="master-workers-communication">
+<h3>Master-Workers Communication<a class="headerlink" href="#master-workers-communication" title="Permalink to this heading"></a></h3>
+<p>Previously, the workers got from their parameter the name of the
+mailbox they should use. We can still do so: the master should build
+such a parameter before using it in the <code class="docutils literal notranslate"><span class="pre">Actor::create()</span></code> call. The
+master could even pass directly the mailbox as a parameter to the
+workers.</p>
+<p>Since we want later to study concurrent applications, it is advised to
+use a mailbox name that is unique over the simulation even if there is
+more than one master.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-8-Qysr" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-8-Qysr" name="Qysr" role="tab" tabindex="0">C++</button><button aria-controls="panel-8-UHl0aG9u" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-8-UHl0aG9u" name="UHl0aG9u" role="tab" tabindex="-1">Python</button></div><div aria-labelledby="tab-8-Qysr" class="sphinx-tabs-panel group-tab" id="panel-8-Qysr" name="Qysr" role="tabpanel" tabindex="0"><p>One possibility for that is to use the actor ID (aid) of each worker
+as a mailbox name. The master can retrieve the aid of the newly
+created actor with <a class="reference internal" href="app_s4u.html#_CPPv4NK7simgrid3s4u5Actor7get_pidEv" title="simgrid::s4u::Actor::get_pid"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Actor::get_pid()</span></code></a> while the actor itself can
+retrieve its own aid with <a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u10this_actor7get_pidEv" title="simgrid::s4u::this_actor::get_pid"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::this_actor::get_pid()</span></code></a>.
+The retrieved value is an <a class="reference internal" href="app_s4u.html#_CPPv45aid_t" title="aid_t"><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">aid_t</span></code></a>, which is an alias for <code class="docutils literal notranslate"><span class="pre">long</span></code>.</p>
+</div><div aria-labelledby="tab-8-UHl0aG9u" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-8-UHl0aG9u" name="UHl0aG9u" role="tabpanel" tabindex="0"><p>One possibility for that is to use the actor ID of each worker
+as a mailbox name. The master can retrieve the aid of the newly
+created actor with <a class="reference internal" href="app_s4u.html#simgrid.Actor.pid" title="simgrid.Actor.pid"><code class="xref py py-func docutils literal notranslate"><span class="pre">simgrid.Actor.pid()</span></code></a> while the actor itself can
+retrieve its own aid with <a class="reference internal" href="app_s4u.html#simgrid.this_actor.get_pid" title="simgrid.this_actor.get_pid"><code class="xref py py-func docutils literal notranslate"><span class="pre">simgrid.this_actor.get_pid()</span></code></a>.</p>
+</div></div>
+</section>
+<section id="id4">
+<h3>Wrap up<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h3>
+<p>In this exercise, we reduced the amount of configuration that our
+simulator requests. This is both a good idea and a dangerous
+trend. This simplification is another application of the good old DRY/SPOT
+programming principle (<a class="reference external" href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">Don’t Repeat Yourself / Single Point Of Truth</a>), and you
+really want your programming artifacts to follow these software
+engineering principles.</p>
+<p>But at the same time, you should be careful in separating your
+scientific contribution (the master/workers algorithm) and the
+artifacts used to test it (platform, deployment, and workload). This is
+why SimGrid forces you to express your platform and deployment files
+in XML instead of using a programming interface: it forces a clear
+separation of concerns between things of different nature.</p>
+</section>
+</section>
+<section id="lab-3-fixed-experiment-duration">
+<h2>Lab 3: Fixed Experiment Duration<a class="headerlink" href="#lab-3-fixed-experiment-duration" title="Permalink to this heading"></a></h2>
+<p class="compact-list"><strong>Learning goals:</strong></p>
+<ul class="compact-list simple">
+<li><p>Forcefully kill actors, and stop the simulation at a given point of time</p></li>
+<li><p>Control the logging verbosity</p></li>
+</ul>
+<p>In the current version, the number of tasks is defined through the
+worker arguments. Hence, tasks are created at the very beginning of
+the simulation. Instead, have the master dispatching tasks for a
+predetermined amount of time.  The tasks must now be created on need
+instead of beforehand.</p>
+<p>Of course, usual time functions like <code class="docutils literal notranslate"><span class="pre">gettimeofday</span></code> will give you the
+time on your real machine, which is pretty useless in the
+simulation. Instead, retrieve the time in the simulated world with
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u6Engine9get_clockEv" title="simgrid::s4u::Engine::get_clock"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Engine::get_clock()</span></code></a> (C++) or
+<code class="xref py py-func docutils literal notranslate"><span class="pre">simgrid.Engine.get_clock()</span></code>) (Python).</p>
+<p>You can still stop your workers with a specific task as previously,
+or you may kill them forcefully with <a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u5Actor4killEv" title="simgrid::s4u::Actor::kill"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Actor::kill()</span></code></a> (C++)
+<a class="reference internal" href="app_s4u.html#simgrid.Actor.kill" title="simgrid.Actor.kill"><code class="xref py py-func docutils literal notranslate"><span class="pre">simgrid.Actor.kill()</span></code></a> (Python).</p>
+<p>Anyway, the new deployment <cite>deployment3.xml</cite> file should thus look
+like this:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&#39;1.0&#39;?&gt;</span>
+<span class="cp">&lt;!DOCTYPE platform SYSTEM &quot;https://simgrid.org/simgrid.dtd&quot;&gt;</span>
+<span class="nt">&lt;platform</span><span class="w"> </span><span class="na">version=</span><span class="s">&quot;4.1&quot;</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="nt">&lt;actor</span><span class="w"> </span><span class="na">host=</span><span class="s">&quot;Tremblay&quot;</span><span class="w"> </span><span class="na">function=</span><span class="s">&quot;master&quot;</span><span class="nt">&gt;</span>
+<span class="w">     </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;600&quot;</span><span class="nt">/&gt;</span><span class="w">       </span><span class="cm">&lt;!-- Simulation timeout, in seconds --&gt;</span>
+<span class="w">     </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;50000000&quot;</span><span class="nt">/&gt;</span><span class="w">  </span><span class="cm">&lt;!-- Computation size of tasks --&gt;</span>
+<span class="w">     </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;1000000&quot;</span><span class="nt">/&gt;</span><span class="w">   </span><span class="cm">&lt;!-- Communication size of tasks --&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/actor&gt;</span>
+<span class="nt">&lt;/platform&gt;</span>
+</pre></div>
+</div>
+<section id="controlling-the-message-verbosity">
+<h3>Controlling the message verbosity<a class="headerlink" href="#controlling-the-message-verbosity" title="Permalink to this heading"></a></h3>
+<p>Not all messages are equally informative, so you probably want to
+change some of the <em>info</em> messages (C: <a class="reference internal" href="The_XBT_toolbox.html#c.XBT_INFO" title="XBT_INFO"><code class="xref c c-macro docutils literal notranslate"><span class="pre">XBT_INFO</span></code></a>; Python: <a class="reference internal" href="app_s4u.html#simgrid.this_actor.info" title="simgrid.this_actor.info"><code class="xref py py-func docutils literal notranslate"><span class="pre">simgrid.this_actor.info()</span></code></a>)
+into <em>debug</em> messages`(C: <a class="reference internal" href="The_XBT_toolbox.html#c.XBT_DEBUG" title="XBT_DEBUG"><code class="xref c c-macro docutils literal notranslate"><span class="pre">XBT_DEBUG</span></code></a>; Python: <a class="reference internal" href="app_s4u.html#simgrid.this_actor.debug" title="simgrid.this_actor.debug"><code class="xref py py-func docutils literal notranslate"><span class="pre">simgrid.this_actor.debug()</span></code></a>) so that they are
+hidden by default. For example, you may want to use an <em>info</em> message once
+every 100 tasks and <em>debug</em> when sending all the other tasks. Or
+you could show only the total number of tasks processed by
+default. You can still see the debug messages as follows:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./master-workers-lab3<span class="w"> </span>small_platform.xml<span class="w"> </span>deployment3.xml<span class="w"> </span>--log<span class="o">=</span>s4u_app_masterworker.thres:debug
+</pre></div>
+</div>
+</section>
+</section>
+<section id="lab-4-what-if-analysis">
+<h2>Lab 4: What-if analysis<a class="headerlink" href="#lab-4-what-if-analysis" title="Permalink to this heading"></a></h2>
+<p class="compact-list"><strong>Learning goals:</strong></p>
+<ul class="compact-list simple">
+<li><p>Change the platform characteristics during the simulation.</p></li>
+<li><p>Explore other communication patterns.</p></li>
+</ul>
+<section id="computational-speed">
+<h3>Computational speed<a class="headerlink" href="#computational-speed" title="Permalink to this heading"></a></h3>
+<p>Attach a profile to your hosts, so that their computational speed automatically vary over time, modeling an external load on these machines.
+This can be done with <a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Host17set_speed_profileEPN6kernel7profile7ProfileE" title="simgrid::s4u::Host::set_speed_profile"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Host::set_speed_profile()</span></code></a> (C++) or <a class="reference internal" href="app_s4u.html#simgrid.Host.set_speed_profile" title="simgrid.Host.set_speed_profile"><code class="xref py py-func docutils literal notranslate"><span class="pre">simgrid.Host.set_speed_profile()</span></code></a> (Python).</p>
+<p>Make it so that one of the hosts get really really slow, and observe how your whole application performance decreases.
+This is because one slow host slows down the whole process. Instead of a round-robin dispatch push,
+you should completely reorganize your application in a First-Come First-Served manner (FCFS).
+Actors should pull a task whenever they are ready, so that fast actors can overpass slow ones in the queue.</p>
+<p>There is two ways to implement that: either the workers request a task to the master by sending their name to a specific mailbox,
+or the master directly pushes the tasks to a centralized mailbox from which the workers pull their work. The first approach is closer
+to what would happen with communications based on BSD sockets while the second is closer to message queues. You could also decide to
+model your socket application in the second manner if you want to neglect these details and keep your simulator simple. It’s your decision.</p>
+<p>Changing the communication schema can be a bit hairy, but once it works, you will see that such as simple FCFS schema allows one to greatly
+increase the amount of tasks handled over time here. Things may be different with another platform file.</p>
+</section>
+<section id="communication-speed">
+<h3>Communication speed<a class="headerlink" href="#communication-speed" title="Permalink to this heading"></a></h3>
+<p>Let’s now modify the communication speed between hosts.</p>
+<p>Retrieve a link from its name with <a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Link7by_nameERKNSt6stringE" title="simgrid::s4u::Link::by_name"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Link::by_name()</span></code></a> (C++) or <a class="reference internal" href="app_s4u.html#simgrid.Link.by_name" title="simgrid.Link.by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">simgrid.Link.by_name()</span></code></a> (python).</p>
+<p>Retrieve all links in the platform with <a class="reference internal" href="app_s4u.html#_CPPv4NK7simgrid3s4u6Engine13get_all_linksEv" title="simgrid::s4u::Engine::get_all_links"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Engine::get_all_links()</span></code></a> (C++) or <code class="xref py py-func docutils literal notranslate"><span class="pre">simgrid.Engine.get_all_links()</span></code> (python).</p>
+<p>Retrieve the list of links from one host to another with <a class="reference internal" href="app_s4u.html#_CPPv4NK7simgrid3s4u4Host8route_toEPK4HostRNSt6vectorIP4LinkEEPd" title="simgrid::s4u::Host::route_to"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Host::route_to()</span></code></a> (C++) or <a class="reference internal" href="app_s4u.html#simgrid.Host.route_to" title="simgrid.Host.route_to"><code class="xref py py-func docutils literal notranslate"><span class="pre">simgrid.Host.route_to()</span></code></a> (python).</p>
+<p>Modify the bandwidth of a given link with <a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Link13set_bandwidthEd" title="simgrid::s4u::Link::set_bandwidth"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Link::set_bandwidth()</span></code></a> (C++) or <a class="reference internal" href="app_s4u.html#simgrid.Link.set_bandwidth" title="simgrid.Link.set_bandwidth"><code class="xref py py-func docutils literal notranslate"><span class="pre">simgrid.Link.set_bandwidth()</span></code></a> (python).
+You can even have the bandwidth automatically vary over time with <a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Link21set_bandwidth_profileEPN6kernel7profile7ProfileE" title="simgrid::s4u::Link::set_bandwidth_profile"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Link::set_bandwidth_profile()</span></code></a> (C++) or <a class="reference internal" href="app_s4u.html#simgrid.Link.set_bandwidth_profile" title="simgrid.Link.set_bandwidth_profile"><code class="xref py py-func docutils literal notranslate"><span class="pre">simgrid.Link.set_bandwidth_profile()</span></code></a> (python).</p>
+<p>Once implemented, you will notice that slow communications may still result in situations
+where one worker only works at a given point of time. To overcome that, your master needs
+to send data to several workers in parallel, using
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u7Mailbox9put_asyncEPv8uint64_t" title="simgrid::s4u::Mailbox::put_async"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Mailbox::put_async()</span></code></a> (C++) or <a class="reference internal" href="app_s4u.html#simgrid.Mailbox.put_async" title="simgrid.Mailbox.put_async"><code class="xref py py-func docutils literal notranslate"><span class="pre">simgrid.Mailbox.put_async()</span></code></a> (Python)
+to start several communications in parallel, and
+<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Comm::wait_any()</span></code> (C++) or and <code class="xref py py-func docutils literal notranslate"><span class="pre">simgrid.Comm.wait_any()</span></code> (Python)
+to react to the completion of one of these communications. Actually, since this code somewhat tricky
+to write, it’s provided as <a class="reference internal" href="Examples.html#s4u-ex-communication"><span class="std std-ref">an example</span></a> in the distribution (search for
+<code class="docutils literal notranslate"><span class="pre">wait_any</span></code> in that page).</p>
+</section>
+<section id="dealing-with-failures">
+<h3>Dealing with failures<a class="headerlink" href="#dealing-with-failures" title="Permalink to this heading"></a></h3>
+<p>Turn a given link off with <a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Link8turn_offEv" title="simgrid::s4u::Link::turn_off"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Link::turn_off()</span></code></a> (C++) or <a class="reference internal" href="app_s4u.html#simgrid.Link.turn_off" title="simgrid.Link.turn_off"><code class="xref py py-func docutils literal notranslate"><span class="pre">simgrid.Link.turn_off()</span></code></a> (python).
+You can even implement churn where a link automatically turn off and on again over time with <a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Link17set_state_profileEPN6kernel7profile7ProfileE" title="simgrid::s4u::Link::set_state_profile"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Link::set_state_profile()</span></code></a> (C++) or <a class="reference internal" href="app_s4u.html#simgrid.Link.set_state_profile" title="simgrid.Link.set_state_profile"><code class="xref py py-func docutils literal notranslate"><span class="pre">simgrid.Link.set_state_profile()</span></code></a> (python).</p>
+<p>If a link fails while you try to use it, <code class="docutils literal notranslate"><span class="pre">wait()</span></code> will raise a <code class="docutils literal notranslate"><span class="pre">NetworkFailureException</span></code> that you need to catch.
+Again, there is a nice example demoing this feature, <a class="reference internal" href="Examples.html#s4u-ex-communication"><span class="std std-ref">under platform-failures</span></a>.</p>
+</section>
+</section>
+<section id="lab-5-competing-applications">
+<h2>Lab 5: Competing Applications<a class="headerlink" href="#lab-5-competing-applications" title="Permalink to this heading"></a></h2>
+<p class="compact-list"><strong>Learning goals:</strong></p>
+<ul class="compact-list simple">
+<li><p>Advanced vizualization through tracing categories</p></li>
+</ul>
+<p>It is now time to start several applications at once, with the following <code class="docutils literal notranslate"><span class="pre">deployment5.xml</span></code> file.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&#39;1.0&#39;?&gt;</span>
+<span class="cp">&lt;!DOCTYPE platform SYSTEM &quot;https://simgrid.org/simgrid.dtd&quot;&gt;</span>
+<span class="nt">&lt;platform</span><span class="w"> </span><span class="na">version=</span><span class="s">&quot;4.1&quot;</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="nt">&lt;actor</span><span class="w"> </span><span class="na">host=</span><span class="s">&quot;Tremblay&quot;</span><span class="w"> </span><span class="na">function=</span><span class="s">&quot;master&quot;</span><span class="nt">&gt;</span>
+<span class="w">     </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;600&quot;</span><span class="nt">/&gt;</span><span class="w">       </span><span class="cm">&lt;!-- Simulation timeout --&gt;</span>
+<span class="w">     </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;50000000&quot;</span><span class="nt">/&gt;</span><span class="w">  </span><span class="cm">&lt;!-- Computation size of tasks --&gt;</span>
+<span class="w">     </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;10&quot;</span><span class="nt">/&gt;</span><span class="w">        </span><span class="cm">&lt;!-- Communication size of tasks --&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/actor&gt;</span>
+<span class="w">  </span><span class="nt">&lt;actor</span><span class="w"> </span><span class="na">host=</span><span class="s">&quot;Fafard&quot;</span><span class="w"> </span><span class="na">function=</span><span class="s">&quot;master&quot;</span><span class="nt">&gt;</span>
+<span class="w">     </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;600&quot;</span><span class="nt">/&gt;</span><span class="w">       </span><span class="cm">&lt;!-- Simulation timeout --&gt;</span>
+<span class="w">     </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;50000000&quot;</span><span class="nt">/&gt;</span><span class="w">  </span><span class="cm">&lt;!-- Computation size of tasks --&gt;</span>
+<span class="w">     </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;10&quot;</span><span class="nt">/&gt;</span><span class="w">        </span><span class="cm">&lt;!-- Communication size of tasks --&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/actor&gt;</span>
+<span class="w">  </span><span class="nt">&lt;actor</span><span class="w"> </span><span class="na">host=</span><span class="s">&quot;Jupiter&quot;</span><span class="w"> </span><span class="na">function=</span><span class="s">&quot;master&quot;</span><span class="nt">&gt;</span>
+<span class="w">     </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;600&quot;</span><span class="nt">/&gt;</span><span class="w">       </span><span class="cm">&lt;!-- Simulation timeout --&gt;</span>
+<span class="w">     </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;50000000&quot;</span><span class="nt">/&gt;</span><span class="w">  </span><span class="cm">&lt;!-- Computation size of tasks --&gt;</span>
+<span class="w">     </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;10&quot;</span><span class="nt">/&gt;</span><span class="w">        </span><span class="cm">&lt;!-- Communication size of tasks --&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/actor&gt;</span>
+<span class="nt">&lt;/platform&gt;</span>
+</pre></div>
+</div>
+<p>Things happen when you do so, but it remains utterly difficult to
+understand what’s happening exactly. Even Gantt visualizations
+contain too much information to be useful: it is impossible to
+understand which task belongs to which application. To fix this, we
+will categorize the tasks.</p>
+<p>Instead of starting the execution in one function call only with
+<code class="docutils literal notranslate"><span class="pre">this_actor::execute(cost)</span></code>, you need to
+create the execution activity, set its tracing category, start it
+and wait for its completion, as follows.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-9-Qysr" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-9-Qysr" name="Qysr" role="tab" tabindex="0">C++</button><button aria-controls="panel-9-UHl0aG9u" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-9-UHl0aG9u" name="UHl0aG9u" role="tab" tabindex="-1">Python</button></div><div aria-labelledby="tab-9-Qysr" class="sphinx-tabs-panel group-tab" id="panel-9-Qysr" name="Qysr" role="tabpanel" tabindex="0"><p>Use <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Exec::set_tracing_category()</span></code> to change the category of an execution.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">ExecPtr</span><span class="w"> </span><span class="n">exec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">this_actor</span><span class="o">::</span><span class="n">exec_init</span><span class="p">(</span><span class="n">compute_cost</span><span class="p">);</span>
+<span class="n">exec</span><span class="o">-&gt;</span><span class="n">set_tracing_category</span><span class="p">(</span><span class="n">category</span><span class="p">);</span>
+<span class="c1">// exec-&gt;start() is optional here as wait() starts the activity on need</span>
+<span class="n">exec</span><span class="o">-&gt;</span><span class="n">wait</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>You can shorten this code as follows:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">this_actor</span><span class="o">::</span><span class="n">exec_init</span><span class="p">(</span><span class="n">compute_cost</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">set_tracing_category</span><span class="p">(</span><span class="n">category</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">wait</span><span class="p">();</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-9-UHl0aG9u" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-9-UHl0aG9u" name="UHl0aG9u" role="tabpanel" tabindex="0"><p>Use <code class="xref py py-func docutils literal notranslate"><span class="pre">simgrid.Exec.set_tracing_category()</span></code> to change the category of an execution.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exec</span> <span class="o">=</span> <span class="n">simgrid</span><span class="p">:</span><span class="o">.</span><span class="n">this_actor</span><span class="o">.</span><span class="n">exec_init</span><span class="p">(</span><span class="n">compute_cost</span><span class="p">)</span>
+<span class="n">exec</span><span class="o">.</span><span class="n">set_tracing_category</span><span class="p">(</span><span class="n">category</span><span class="p">)</span>
+<span class="c1"># exec.start() is optional here as wait() starts the activity on need</span>
+<span class="n">exec</span><span class="o">-&gt;</span><span class="n">wait</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You can shorten this code as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">simgrid</span><span class="o">.</span><span class="n">this_actor</span><span class="o">.</span><span class="n">exec_init</span><span class="p">(</span><span class="n">compute_cost</span><span class="p">)</span><span class="o">.</span><span class="n">set_tracing_category</span><span class="p">(</span><span class="n">category</span><span class="p">)</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></div>
+<section id="visualizing-the-result">
+<h3>Visualizing the result<a class="headerlink" href="#visualizing-the-result" title="Permalink to this heading"></a></h3>
+<p>vite is not enough to understand the situation, because it does not
+deal with categorization. This time, you absolutely must switch to R,
+as explained on <a class="reference external" href="https://simgrid.org/contrib/R_visualization.html">this page</a>.</p>
+<div class="admonition-todo admonition" id="id5">
+<p class="admonition-title">Todo</p>
+<p>Include here the minimal setting to view something in R.</p>
+</div>
+</section>
+</section>
+<section id="further-improvements">
+<h2>Further Improvements<a class="headerlink" href="#further-improvements" title="Permalink to this heading"></a></h2>
+<p>From this, many things can easily be added. For example, you could:</p>
+<ul>
+<li><p>Allow workers to have several pending requests  to overlap
+communication and computations as much as possible. Non-blocking
+communication will probably become handy here.</p></li>
+<li><p>Add a performance measurement mechanism, enabling the master to make smart scheduling choices.</p></li>
+<li><p>Test your code on other platforms, from the <code class="docutils literal notranslate"><span class="pre">examples/platforms</span></code>
+directory in your archive.</p>
+<p>What is the largest number of tasks requiring 50e6 flops and 1e5
+bytes that you manage to distribute and process in one hour on
+<code class="docutils literal notranslate"><span class="pre">g5k.xml</span></code> ?</p>
+</li>
+<li><p>Optimize not only for the number of tasks handled but also for the total energy dissipated.</p></li>
+<li><p>And so on. If you come up with a nice extension, please share
+it with us so that we can extend this tutorial.</p></li>
+</ul>
+</section>
+<section id="after-this-tutorial">
+<h2>After this Tutorial<a class="headerlink" href="#after-this-tutorial" title="Permalink to this heading"></a></h2>
+<p>This tutorial is now terminated. You could keep reading the online documentation and
+tutorials, or you could head up to the <a class="reference internal" href="Examples.html#s4u-examples"><span class="std std-ref">example section</span></a> to read some code.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="The Modern Age of Computer Systems Simulation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Tutorial_MPI_Applications.html" class="btn btn-neutral float-right" title="Simulating MPI Applications" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2002-2025, The SimGrid Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

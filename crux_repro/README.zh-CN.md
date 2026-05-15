@@ -241,6 +241,7 @@ crux_repro/results/verification/figures/README.zh-CN.md
 | 类型 | 文件 |
 |---|---|
 | 总方案 | `crux_repro/docs/SIMGRID_COLLECTIVE_SIMULATION_PLAN.zh-CN.md` |
+| 实机拓扑/时延接入方案 | `crux_repro/docs/REAL_ENV_TOPOLOGY_INTEGRATION.zh-CN.md` |
 | SimGrid 工程说明 | `crux_repro/simgrid_real/README.zh-CN.md` |
 | trace workload | `crux_repro/results/simgrid_trace_workload.csv` |
 | optimize balanced 汇总 | `crux_repro/results/simgrid_real_trace_optimize_balanced_results.csv` |
@@ -254,6 +255,7 @@ crux_repro/results/verification/figures/README.zh-CN.md
 
 ## 文档入口
 
+- **评审报告**: [Crux 方法复现与模拟验证报告](docs/CRUX_REPRODUCTION_REPORT.zh-CN.md) ← 给上级和同事审阅
 - [文档索引](docs/README.zh-CN.md)
 - [真实 SimGrid 工程说明](simgrid_real/README.zh-CN.md)
 - [结果索引](results/README.zh-CN.md)
@@ -274,10 +276,14 @@ crux_repro/results/verification/figures/README.zh-CN.md
 
 摘要：
 
-1. 拓扑配置化：把当前 C++ 内置拓扑抽成配置文件；
-2. HCCL benchmark 校准：先让单 job collective 时间可信；
-3. 增加 collective plan：Ring、Tree、Hierarchical、ReduceScatter、AllGather；
-4. 策略消融：区分 placement/path/priority/compression 的独立贡献；
-5. 接入 trace-driven workload：从 synthetic 走向生产轨迹；
+1. 实机环境接入：通过华为接口采集拓扑/链路/时延，落 TDSQL/Redis，本地优化器读取环境快照；
+2. 拓扑配置化：把当前 C++ 内置拓扑抽成配置文件，并支持从实机快照生成 SimGrid platform；
+3. HCCL benchmark 校准：先让单 job collective 时间可信；
+4. 增加 collective plan：Ring、Tree、Hierarchical、ReduceScatter、AllGather；
+5. 策略消融：区分 placement/path/priority/compression 的独立贡献；
 6. 加背景流和扰动：验证鲁棒性；
 7. 做可视化报告：把结果变成可以评审的材料。
+
+实机接入的独立方案见：
+
+[实机环境拓扑与网络时延接入方案](docs/REAL_ENV_TOPOLOGY_INTEGRATION.zh-CN.md)

@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulating DAG &mdash; SimGrid  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="_static/showfile.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
+        <script src="_static/showfile.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Introduction" href="Introduction.html" />
+    <link rel="prev" title="Formal Verification and Model checking" href="Tutorial_Model-checking.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SimGrid
+          </a>
+              <div class="version">
+                4.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Algorithms.html">     Simulating distributed algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_MPI_Applications.html">     Simulating MPI applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Model-checking.html">     Model-checking algorithms</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Simulating DAG</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#definition-of-a-dag">Definition of a DAG</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#representing-vertices-activities">Representing Vertices/Activities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#representing-edges-dependencies">Representing Edges/Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-1-basics">Lab 1: Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-2-import-a-dag-from-a-file">Lab 2: Import a DAG from a file</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#from-a-dot-file">From a DOT file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#from-a-json-file">From a JSON file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#from-a-dax-file-deprecated">From a DAX file [deprecated]</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-3-scheduling-with-the-min-min-algorithm">Lab 3: Scheduling with the Min-Min algorithm</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#find-tasks-to-schedule">Find Tasks to Schedule</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#find-the-best-placement">Find the Best Placement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#schedule-a-task">Schedule a Task</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mixing-it-all-together">Mixing it all Together</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Manual:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">   Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installing_SimGrid.html">      Installing SimGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Start_your_own_project.html">      Start your own project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="community.html">      The SimGrid community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Release_Notes.html">      Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="application.html">   Describing your application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_s4u.html">      The S4U interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">      S4U examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_smpi.html">      The SMPI interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="The_XBT_toolbox.html">      The XBT toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform.html">   Describing the simulated platform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_examples.html">      Network topology examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_routing.html">      Advanced routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="XML_reference.html">      XML reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_cpp.html">      C++ platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Models.html">   The SimGrid models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Modeling_howtos.html">      Modeling hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Calibrating_the_models.html">      Calibrating the models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plugins.html">      SimGrid plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Experimental_setup.html">   Running an experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Configuring_SimGrid.html">      Configuring SimGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Deploying_your_application.html">      Deploying your application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Outcomes.html">      Simulation outcomes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">SimGrid's Internals:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Design_goals.html">   Design goals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Contributors_Documentation.html">   Contributor's documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SimGrid</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Simulating DAG</li>
+  <li class="wy-breadcrumbs-aside">
+    
+
+      <a href="" class="fa fa-bitbucket"> Edit on FramaGit</a>
+    
+  </li>
+
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="simulating-dag">
+<span id="simdag"></span><h1>Simulating DAG<a class="headerlink" href="#simulating-dag" title="Permalink to this heading"></a></h1>
+<p>This tutorial presents the basics to understand how DAG are represented in SimGrid and how to simulate their workflow.</p>
+<section id="definition-of-a-dag">
+<h2>Definition of a DAG<a class="headerlink" href="#definition-of-a-dag" title="Permalink to this heading"></a></h2>
+<p>Directed Acyclic Graph:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{G} = (\mathcal{V},\mathcal{E})\]</div>
+<p>Set of vertices representing <a class="reference internal" href="app_s4u.html#api-s4u-activity"><span class="std std-ref">Activities</span></a>:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{V} = {v_i | i = 1, ..., V}\]</div>
+<p>Set of edges representing precedence constraints between <a class="reference internal" href="app_s4u.html#api-s4u-activity"><span class="std std-ref">Activities</span></a>:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{E} = {e_i,j | (i,j) \in {1, ..., V} x {1, ..., V}}\]</div>
+<img alt="_images/dag.svg" class="align-center" src="_images/dag.svg" /><section id="representing-vertices-activities">
+<h3>Representing Vertices/Activities<a class="headerlink" href="#representing-vertices-activities" title="Permalink to this heading"></a></h3>
+<p>There is two types of <a class="reference internal" href="app_s4u.html#api-s4u-activity"><span class="std std-ref">Activities</span></a> that can represent Vertices: <a class="reference internal" href="app_s4u.html#api-s4u-exec"><span class="std std-ref">Exec</span></a> and <a class="reference internal" href="app_s4u.html#api-s4u-comm"><span class="std std-ref">Comm</span></a>.
+Thoses activities must be initiated and configured to properly describe your worflow.</p>
+<p>An Exec represents the execution of an amount of flop on a <a class="reference internal" href="app_s4u.html#api-s4u-host"><span class="std std-ref">Host</span></a> of your platform.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">ExecPtr</span><span class="w"> </span><span class="n">exec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Exec</span><span class="o">::</span><span class="n">init</span><span class="p">();</span>
+<span class="n">exec</span><span class="o">-&gt;</span><span class="n">set_flops_amount</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span>
+<span class="n">exec</span><span class="o">-&gt;</span><span class="n">set_host</span><span class="p">(</span><span class="n">Host</span><span class="o">*</span><span class="p">);</span>
+<span class="n">exec</span><span class="o">-&gt;</span><span class="n">start</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>A Comm represents a data transfer between two <a class="reference internal" href="app_s4u.html#api-s4u-host"><span class="std std-ref">Hosts</span></a> of your platform.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">CommPtr</span><span class="w"> </span><span class="n">comm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Comm</span><span class="o">::</span><span class="n">sendto_init</span><span class="p">();</span>
+<span class="n">comm</span><span class="o">-&gt;</span><span class="n">set_source</span><span class="p">(</span><span class="n">Host</span><span class="o">*</span><span class="p">);</span>
+<span class="n">comm</span><span class="o">-&gt;</span><span class="n">set_destination</span><span class="p">(</span><span class="n">Host</span><span class="o">*</span><span class="p">);</span>
+<span class="n">comm</span><span class="o">-&gt;</span><span class="n">start</span><span class="p">();</span>
+</pre></div>
+</div>
+</section>
+<section id="representing-edges-dependencies">
+<h3>Representing Edges/Dependencies<a class="headerlink" href="#representing-edges-dependencies" title="Permalink to this heading"></a></h3>
+<p>An activity will not start until all of its dependencies have been completed.
+Activities may have any number of successors.
+Dependencies between Activities are created using <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Activity::add_successor()</span></code>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">exec</span><span class="o">-&gt;</span><span class="n">add_successor</span><span class="p">(</span><span class="n">comm</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The Activity <code class="docutils literal notranslate"><span class="pre">comm</span></code> will not start until <code class="docutils literal notranslate"><span class="pre">exec</span></code> has been completed.</p>
+</section>
+</section>
+<section id="lab-1-basics">
+<h2>Lab 1: Basics<a class="headerlink" href="#lab-1-basics" title="Permalink to this heading"></a></h2>
+<p>The goal of this lab is to describe the following DAG:</p>
+<img alt="_images/dag1.svg" class="align-center" src="_images/dag1.svg" /><p>In this DAG we want <code class="docutils literal notranslate"><span class="pre">c1</span></code> to compute 1e9 flops, <code class="docutils literal notranslate"><span class="pre">c2</span></code> to compute 5e9 flops and <code class="docutils literal notranslate"><span class="pre">c3</span></code> to compute 2e9 flops.
+There is also a data transfer of 5e8 bytes between <code class="docutils literal notranslate"><span class="pre">c1</span></code> and <code class="docutils literal notranslate"><span class="pre">c3</span></code>.</p>
+<p>First of all, include the SimGrid library and define the log category.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;simgrid/s4u.hpp&quot;</span>
+
+<span class="n">XBT_LOG_NEW_DEFAULT_CATEGORY</span><span class="p">(</span><span class="n">dag_tuto</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Messages specific for this s4u tutorial&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Inside the <code class="docutils literal notranslate"><span class="pre">main</span></code> function create an instance of <a class="reference internal" href="app_s4u.html#api-s4u-engine"><span class="std std-ref">Engine</span></a> and load the platform.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Engine</span><span class="w"> </span><span class="nf">e</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="n">argv</span><span class="p">);</span>
+<span class="w">  </span><span class="n">e</span><span class="p">.</span><span class="n">load_platform</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+</pre></div>
+</div>
+<p>Retrieve pointers to some hosts.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Host</span><span class="o">*</span><span class="w"> </span><span class="n">tremblay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">host_by_name</span><span class="p">(</span><span class="s">&quot;Tremblay&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Host</span><span class="o">*</span><span class="w"> </span><span class="n">jupiter</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">host_by_name</span><span class="p">(</span><span class="s">&quot;Jupiter&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Initiate the activities.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">ExecPtr</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="o">::</span><span class="n">init</span><span class="p">();</span>
+<span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">ExecPtr</span><span class="w"> </span><span class="n">c2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="o">::</span><span class="n">init</span><span class="p">();</span>
+<span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">ExecPtr</span><span class="w"> </span><span class="n">c3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="o">::</span><span class="n">init</span><span class="p">();</span>
+<span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">CommPtr</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Comm</span><span class="o">::</span><span class="n">sendto_init</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Give names to thoses activities.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="n">c1</span><span class="o">-&gt;</span><span class="n">set_name</span><span class="p">(</span><span class="s">&quot;c1&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">c2</span><span class="o">-&gt;</span><span class="n">set_name</span><span class="p">(</span><span class="s">&quot;c2&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">c3</span><span class="o">-&gt;</span><span class="n">set_name</span><span class="p">(</span><span class="s">&quot;c3&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">t1</span><span class="o">-&gt;</span><span class="n">set_name</span><span class="p">(</span><span class="s">&quot;t1&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Set the amount of work for each activity.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="n">c1</span><span class="o">-&gt;</span><span class="n">set_flops_amount</span><span class="p">(</span><span class="mf">1e9</span><span class="p">);</span>
+<span class="w">  </span><span class="n">c2</span><span class="o">-&gt;</span><span class="n">set_flops_amount</span><span class="p">(</span><span class="mf">5e9</span><span class="p">);</span>
+<span class="w">  </span><span class="n">c3</span><span class="o">-&gt;</span><span class="n">set_flops_amount</span><span class="p">(</span><span class="mf">2e9</span><span class="p">);</span>
+<span class="w">  </span><span class="n">t1</span><span class="o">-&gt;</span><span class="n">set_payload_size</span><span class="p">(</span><span class="mf">5e8</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Define the dependencies between the activities.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="n">c1</span><span class="o">-&gt;</span><span class="n">add_successor</span><span class="p">(</span><span class="n">t1</span><span class="p">);</span>
+<span class="w">  </span><span class="n">t1</span><span class="o">-&gt;</span><span class="n">add_successor</span><span class="p">(</span><span class="n">c3</span><span class="p">);</span>
+<span class="w">  </span><span class="n">c2</span><span class="o">-&gt;</span><span class="n">add_successor</span><span class="p">(</span><span class="n">c3</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Set the location of each Exec activity and source and destination for the Comm activity.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="n">c1</span><span class="o">-&gt;</span><span class="n">set_host</span><span class="p">(</span><span class="n">tremblay</span><span class="p">);</span>
+<span class="w">  </span><span class="n">c2</span><span class="o">-&gt;</span><span class="n">set_host</span><span class="p">(</span><span class="n">jupiter</span><span class="p">);</span>
+<span class="w">  </span><span class="n">c3</span><span class="o">-&gt;</span><span class="n">set_host</span><span class="p">(</span><span class="n">jupiter</span><span class="p">);</span>
+<span class="w">  </span><span class="n">t1</span><span class="o">-&gt;</span><span class="n">set_source</span><span class="p">(</span><span class="n">tremblay</span><span class="p">);</span>
+<span class="w">  </span><span class="n">t1</span><span class="o">-&gt;</span><span class="n">set_destination</span><span class="p">(</span><span class="n">jupiter</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Start the executions of Activities without dependencies.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="n">c1</span><span class="o">-&gt;</span><span class="n">start</span><span class="p">();</span>
+<span class="w">  </span><span class="n">c2</span><span class="o">-&gt;</span><span class="n">start</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Add a callback to monitor the Exec activities.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="o">::</span><span class="n">on_completion_cb</span><span class="p">([](</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">exec</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;Exec &#39;%s&#39; is complete (start time: %f, finish time: %f)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">exec</span><span class="p">.</span><span class="n">get_cname</span><span class="p">(),</span>
+<span class="w">             </span><span class="n">exec</span><span class="p">.</span><span class="n">get_start_time</span><span class="p">(),</span><span class="w"> </span><span class="n">exec</span><span class="p">.</span><span class="n">get_finish_time</span><span class="p">());</span>
+<span class="w">  </span><span class="p">});</span>
+</pre></div>
+</div>
+<p>Add a callback to monitor the Comm activities.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Comm</span><span class="o">::</span><span class="n">on_completion_cb</span><span class="p">([](</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Comm</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">comm</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;Comm &#39;%s&#39; is complete (start time: %f, finish time: %f)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">comm</span><span class="p">.</span><span class="n">get_cname</span><span class="p">(),</span>
+<span class="w">             </span><span class="n">comm</span><span class="p">.</span><span class="n">get_start_time</span><span class="p">(),</span><span class="w"> </span><span class="n">comm</span><span class="p">.</span><span class="n">get_finish_time</span><span class="p">());</span>
+<span class="w">  </span><span class="p">});</span>
+</pre></div>
+</div>
+<p>Finally, run the simulation.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="n">e</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>The execution of this code should give you the following output:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&gt; [10.194200] [dag_tuto/INFO] Exec &#39;c1&#39; is complete (start time: 0.000000, finish time: 10.194200)
+&gt; [65.534235] [dag_tuto/INFO] Exec &#39;c2&#39; is complete (start time: 0.000000, finish time: 65.534235)
+&gt; [85.283378] [dag_tuto/INFO] Comm &#39;t1&#39; is complete (start time: 10.194200, finish time: 85.283378)
+&gt; [111.497072] [dag_tuto/INFO] Exec &#39;c3&#39; is complete (start time: 85.283378, finish time: 111.497072)
+</pre></div>
+</div>
+</section>
+<section id="lab-2-import-a-dag-from-a-file">
+<h2>Lab 2: Import a DAG from a file<a class="headerlink" href="#lab-2-import-a-dag-from-a-file" title="Permalink to this heading"></a></h2>
+<p>In this lab we present how to import a DAG into you SimGrid simulation, either using a DOT file, a JSON file, or a DAX file.</p>
+<p>The files presented in this lab describe the following DAG:</p>
+<img alt="_images/dag2.svg" class="align-center" src="_images/dag2.svg" /><section id="from-a-dot-file">
+<h3>From a DOT file<a class="headerlink" href="#from-a-dot-file" title="Permalink to this heading"></a></h3>
+<p>A DOT file describes a workflow in accordance with the graphviz format.</p>
+<p>The following DOT file describes the workflow presented at the beginning of this lab:</p>
+<div class="highlight-dot notranslate"><div class="highlight"><pre><span></span><span class="k">digraph</span><span class="w"> </span><span class="nt">G</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">c1</span><span class="w"> </span><span class="p">[</span><span class="na">size</span><span class="p">=</span><span class="s2">&quot;1e9&quot;</span><span class="p">];</span>
+<span class="w">  </span><span class="nt">c2</span><span class="w"> </span><span class="p">[</span><span class="na">size</span><span class="p">=</span><span class="s2">&quot;5e9&quot;</span><span class="p">];</span>
+<span class="w">  </span><span class="nt">c3</span><span class="w"> </span><span class="p">[</span><span class="na">size</span><span class="p">=</span><span class="s2">&quot;2e9&quot;</span><span class="p">];</span>
+<span class="w">  </span><span class="nt">root</span><span class="o">-&gt;</span><span class="nt">c1</span><span class="w"> </span><span class="p">[</span><span class="na">size</span><span class="p">=</span><span class="s2">&quot;2e8&quot;</span><span class="p">];</span>
+<span class="w">  </span><span class="nt">root</span><span class="o">-&gt;</span><span class="nt">c2</span><span class="w"> </span><span class="p">[</span><span class="na">size</span><span class="p">=</span><span class="s2">&quot;1e8&quot;</span><span class="p">];</span>
+<span class="w">  </span><span class="nt">c1</span><span class="o">-&gt;</span><span class="nt">c3</span><span class="w"> </span><span class="p">[</span><span class="na">size</span><span class="p">=</span><span class="s2">&quot;5e8&quot;</span><span class="p">];</span>
+<span class="w">  </span><span class="nt">c2</span><span class="o">-&gt;</span><span class="nt">c3</span><span class="w"> </span><span class="p">[</span><span class="na">size</span><span class="p">=</span><span class="s2">&quot;-1.&quot;</span><span class="p">];</span>
+<span class="w">  </span><span class="nt">c3</span><span class="o">-&gt;</span><span class="nt">end</span><span class="w"> </span><span class="p">[</span><span class="na">size</span><span class="p">=</span><span class="s2">&quot;2e8&quot;</span><span class="p">];</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>It can be imported as a vector of Activities into SimGrid using <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::create_DAG_from_DOT()</span></code>. Then, you have to assign hosts to your Activities.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright (c) 2003-2025. The SimGrid Team. All rights reserved.          */</span>
+
+<span class="cm">/* This program is free software; you can redistribute it and/or modify it</span>
+<span class="cm"> * under the terms of the license (GNU LGPL) which comes with this package. */</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;simgrid/s4u.hpp&quot;</span>
+
+<span class="n">XBT_LOG_NEW_DEFAULT_CATEGORY</span><span class="p">(</span><span class="n">dag_from_dot_simple</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Messages specific for this s4u example&quot;</span><span class="p">);</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Engine</span><span class="w"> </span><span class="n">e</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="n">argv</span><span class="p">);</span>
+<span class="w">  </span><span class="n">e</span><span class="p">.</span><span class="n">load_platform</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">ActivityPtr</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">create_DAG_from_dot</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+
+<span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Host</span><span class="o">*</span><span class="w"> </span><span class="n">tremblay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">host_by_name</span><span class="p">(</span><span class="s">&quot;Tremblay&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Host</span><span class="o">*</span><span class="w"> </span><span class="n">jupiter</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">host_by_name</span><span class="p">(</span><span class="s">&quot;Jupiter&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Host</span><span class="o">*</span><span class="w"> </span><span class="n">fafard</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">host_by_name</span><span class="p">(</span><span class="s">&quot;Fafard&quot;</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">dag</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">get</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">set_host</span><span class="p">(</span><span class="n">fafard</span><span class="p">);</span>
+<span class="w">  </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">dag</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">get</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">set_host</span><span class="p">(</span><span class="n">tremblay</span><span class="p">);</span>
+<span class="w">  </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">dag</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">get</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">set_host</span><span class="p">(</span><span class="n">jupiter</span><span class="p">);</span>
+<span class="w">  </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">dag</span><span class="p">[</span><span class="mi">3</span><span class="p">].</span><span class="n">get</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">set_host</span><span class="p">(</span><span class="n">jupiter</span><span class="p">);</span>
+<span class="w">  </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">dag</span><span class="p">[</span><span class="mi">8</span><span class="p">].</span><span class="n">get</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">set_host</span><span class="p">(</span><span class="n">jupiter</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">dag</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">comm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Comm</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">get</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">pred</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="o">*&gt;</span><span class="p">((</span><span class="o">*</span><span class="n">comm</span><span class="o">-&gt;</span><span class="n">get_dependencies</span><span class="p">().</span><span class="n">begin</span><span class="p">()).</span><span class="n">get</span><span class="p">());</span>
+<span class="w">      </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">succ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">comm</span><span class="o">-&gt;</span><span class="n">get_successors</span><span class="p">().</span><span class="n">front</span><span class="p">().</span><span class="n">get</span><span class="p">());</span>
+<span class="w">      </span><span class="n">comm</span><span class="o">-&gt;</span><span class="n">set_source</span><span class="p">(</span><span class="n">pred</span><span class="o">-&gt;</span><span class="n">get_host</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">set_destination</span><span class="p">(</span><span class="n">succ</span><span class="o">-&gt;</span><span class="n">get_host</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="o">::</span><span class="n">on_completion_cb</span><span class="p">([](</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">exec</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;Exec &#39;%s&#39; on %s is complete (start time: %f, finish time: %f)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">exec</span><span class="p">.</span><span class="n">get_cname</span><span class="p">(),</span>
+<span class="w">             </span><span class="n">exec</span><span class="p">.</span><span class="n">get_host</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get_cname</span><span class="p">(),</span><span class="w"> </span><span class="n">exec</span><span class="p">.</span><span class="n">get_start_time</span><span class="p">(),</span><span class="w"> </span><span class="n">exec</span><span class="p">.</span><span class="n">get_finish_time</span><span class="p">());</span>
+<span class="w">  </span><span class="p">});</span>
+
+<span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Comm</span><span class="o">::</span><span class="n">on_completion_cb</span><span class="p">([](</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Comm</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">comm</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;Comm &#39;%s&#39; from %s to %s is complete (start time: %f, finish time: %f)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">comm</span><span class="p">.</span><span class="n">get_cname</span><span class="p">(),</span>
+<span class="w">             </span><span class="n">comm</span><span class="p">.</span><span class="n">get_source</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get_cname</span><span class="p">(),</span><span class="w"> </span><span class="n">comm</span><span class="p">.</span><span class="n">get_destination</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get_cname</span><span class="p">(),</span><span class="w"> </span><span class="n">comm</span><span class="p">.</span><span class="n">get_start_time</span><span class="p">(),</span>
+<span class="w">             </span><span class="n">comm</span><span class="p">.</span><span class="n">get_finish_time</span><span class="p">());</span>
+<span class="w">  </span><span class="p">});</span>
+
+<span class="w">  </span><span class="n">e</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The execution of this code should give you the following output:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&gt; [0.000000] [dag_from_dot_simple/INFO] Exec &#39;root&#39; on Fafard is complete (start time: 0.000000, finish time: 0.000000)
+&gt; [33.394394] [dag_from_dot_simple/INFO] Comm &#39;root-&gt;c2&#39; from Fafard to Jupiter is complete (start time: 0.000000, finish time: 33.394394)
+&gt; [39.832311] [dag_from_dot_simple/INFO] Comm &#39;root-&gt;c1&#39; from Fafard to Tremblay is complete (start time: 0.000000, finish time: 39.832311)
+&gt; [50.026511] [dag_from_dot_simple/INFO] Exec &#39;c1&#39; on Tremblay is complete (start time: 39.832311, finish time: 50.026511)
+&gt; [98.928629] [dag_from_dot_simple/INFO] Exec &#39;c2&#39; on Jupiter is complete (start time: 33.394394, finish time: 98.928629)
+&gt; [125.115689] [dag_from_dot_simple/INFO] Comm &#39;c1-&gt;c3&#39; from Tremblay to Jupiter is complete (start time: 50.026511, finish time: 125.115689)
+&gt; [151.329383] [dag_from_dot_simple/INFO] Exec &#39;c3&#39; on Jupiter is complete (start time: 125.115689, finish time: 151.329383)
+&gt; [151.743605] [dag_from_dot_simple/INFO] Comm &#39;c3-&gt;end&#39; from Jupiter to Jupiter is complete (start time: 151.329383, finish time: 151.743605)
+&gt; [151.743605] [dag_from_dot_simple/INFO] Exec &#39;end&#39; on Jupiter is complete (start time: 151.743605, finish time: 151.743605)
+</pre></div>
+</div>
+</section>
+<section id="from-a-json-file">
+<h3>From a JSON file<a class="headerlink" href="#from-a-json-file" title="Permalink to this heading"></a></h3>
+<p>A JSON file describes a workflow in accordance with the <a class="reference external" href="https://github.com/wfcommons/wfformat">wfformat</a> .</p>
+<p>The following JSON file describes the workflow presented at the beginning of this lab:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;simple_json&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;schemaVersion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;workflow&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;makespanInSeconds&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;executedAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2023-03-09T00:00:00-00:00&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;tasks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;c1&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;compute&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;parents&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">        </span><span class="nt">&quot;runtimeInSeconds&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1e9</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;machine&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Tremblay&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;t1&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;transfer&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;parents&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;c1&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;writtenBytes&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">5e8</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;machine&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Jupiter&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;c2&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;compute&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;parents&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">        </span><span class="nt">&quot;runtimeInSeconds&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">5e9</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;machine&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Jupiter&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;c3&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;compute&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;parents&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;t1&quot;</span><span class="p">,</span><span class="s2">&quot;c2&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;runtimeInSeconds&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">2e9</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;machine&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Jupiter&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;machines&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span><span class="nt">&quot;nodeName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Tremblay&quot;</span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span><span class="nt">&quot;nodeName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Jupiter&quot;</span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>It can be imported as a vector of Activities into SimGrid using <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::create_DAG_from_json()</span></code>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright (c) 2003-2025. The SimGrid Team. All rights reserved.          */</span>
+
+<span class="cm">/* This program is free software; you can redistribute it and/or modify it</span>
+<span class="cm"> * under the terms of the license (GNU LGPL) which comes with this package. */</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;simgrid/s4u.hpp&quot;</span>
+
+<span class="n">XBT_LOG_NEW_DEFAULT_CATEGORY</span><span class="p">(</span><span class="n">dag_from_json_simple</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Messages specific for this s4u example&quot;</span><span class="p">);</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Engine</span><span class="w"> </span><span class="n">e</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="n">argv</span><span class="p">);</span>
+<span class="w">  </span><span class="n">e</span><span class="p">.</span><span class="n">load_platform</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">ActivityPtr</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">create_DAG_from_json</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+
+<span class="w">   </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="o">::</span><span class="n">on_completion_cb</span><span class="p">([](</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">exec</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;Exec &#39;%s&#39; is complete (start time: %f, finish time: %f)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">exec</span><span class="p">.</span><span class="n">get_cname</span><span class="p">(),</span>
+<span class="w">             </span><span class="n">exec</span><span class="p">.</span><span class="n">get_start_time</span><span class="p">(),</span><span class="w"> </span><span class="n">exec</span><span class="p">.</span><span class="n">get_finish_time</span><span class="p">());</span>
+<span class="w">  </span><span class="p">});</span>
+
+<span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Comm</span><span class="o">::</span><span class="n">on_completion_cb</span><span class="p">([](</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Comm</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">comm</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;Comm &#39;%s&#39; is complete (start time: %f, finish time: %f)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">comm</span><span class="p">.</span><span class="n">get_cname</span><span class="p">(),</span>
+<span class="w">             </span><span class="n">comm</span><span class="p">.</span><span class="n">get_start_time</span><span class="p">(),</span><span class="w"> </span><span class="n">comm</span><span class="p">.</span><span class="n">get_finish_time</span><span class="p">());</span>
+<span class="w">  </span><span class="p">});</span>
+
+<span class="w">  </span><span class="n">e</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The execution of this code should give you the following output:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&gt; [10.194200] [dag_from_json_simple/INFO] Exec &#39;c1&#39; is complete (start time: 0.000000, finish time: 10.194200)
+&gt; [65.534235] [dag_from_json_simple/INFO] Exec &#39;c2&#39; is complete (start time: 0.000000, finish time: 65.534235)
+&gt; [85.283378] [dag_from_json_simple/INFO] Comm &#39;t1&#39; is complete (start time: 10.194200, finish time: 85.283378)
+&gt; [111.497072] [dag_from_json_simple/INFO] Exec &#39;c3&#39; is complete (start time: 85.283378, finish time: 111.497072)
+</pre></div>
+</div>
+</section>
+<section id="from-a-dax-file-deprecated">
+<h3>From a DAX file [deprecated]<a class="headerlink" href="#from-a-dax-file-deprecated" title="Permalink to this heading"></a></h3>
+<p>A DAX file describes a workflow in accordance with the <a class="reference external" href="http://pegasus.isi.edu/">Pegasus</a> format.</p>
+<p>The following DAX file describes the workflow presented at the beginning of this lab:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;adag</span><span class="w"> </span><span class="na">xmlns=</span><span class="s">&quot;http://pegasus.isi.edu/schema/DAX&quot;</span><span class="w"> </span><span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+<span class="w">      </span><span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://pegasus.isi.edu/schema/DAX http://pegasus.isi.edu/schema/dax-2.1.xsd&quot;</span>
+<span class="w">      </span><span class="na">version=</span><span class="s">&quot;2.1&quot;</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="nt">&lt;job</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;1&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;c1&quot;</span><span class="w"> </span><span class="na">runtime=</span><span class="s">&quot;10&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;uses</span><span class="w"> </span><span class="na">file=</span><span class="s">&quot;i1&quot;</span><span class="w"> </span><span class="na">link=</span><span class="s">&quot;input&quot;</span><span class="w"> </span><span class="na">register=</span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="na">transfer=</span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="na">optional=</span><span class="s">&quot;false&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;data&quot;</span><span class="w"> </span><span class="na">size=</span><span class="s">&quot;2e8&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;uses</span><span class="w"> </span><span class="na">file=</span><span class="s">&quot;o1&quot;</span><span class="w"> </span><span class="na">link=</span><span class="s">&quot;output&quot;</span><span class="w"> </span><span class="na">register=</span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="na">transfer=</span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="na">optional=</span><span class="s">&quot;false&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;data&quot;</span><span class="w"> </span><span class="na">size=</span><span class="s">&quot;5e8&quot;</span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/job&gt;</span>
+<span class="w">  </span><span class="nt">&lt;job</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;2&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;c2&quot;</span><span class="w"> </span><span class="na">runtime=</span><span class="s">&quot;50&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;uses</span><span class="w"> </span><span class="na">file=</span><span class="s">&quot;i2&quot;</span><span class="w"> </span><span class="na">link=</span><span class="s">&quot;input&quot;</span><span class="w"> </span><span class="na">register=</span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="na">transfer=</span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="na">optional=</span><span class="s">&quot;false&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;data&quot;</span><span class="w"> </span><span class="na">size=</span><span class="s">&quot;1e8&quot;</span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/job&gt;</span>
+<span class="w">  </span><span class="nt">&lt;job</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;3&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;c3&quot;</span><span class="w"> </span><span class="na">runtime=</span><span class="s">&quot;20&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;uses</span><span class="w"> </span><span class="na">file=</span><span class="s">&quot;o1&quot;</span><span class="w"> </span><span class="na">link=</span><span class="s">&quot;input&quot;</span><span class="w"> </span><span class="na">register=</span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="na">transfer=</span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="na">optional=</span><span class="s">&quot;false&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;data&quot;</span><span class="w"> </span><span class="na">size=</span><span class="s">&quot;5e8&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;uses</span><span class="w"> </span><span class="na">file=</span><span class="s">&quot;o3&quot;</span><span class="w"> </span><span class="na">link=</span><span class="s">&quot;output&quot;</span><span class="w"> </span><span class="na">register=</span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="na">transfer=</span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="na">optional=</span><span class="s">&quot;false&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;data&quot;</span><span class="w"> </span><span class="na">size=</span><span class="s">&quot;2e8&quot;</span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/job&gt;</span>
+<span class="w">  </span><span class="nt">&lt;child</span><span class="w"> </span><span class="na">ref=</span><span class="s">&quot;3&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;parent</span><span class="w"> </span><span class="na">ref=</span><span class="s">&quot;1&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;parent</span><span class="w"> </span><span class="na">ref=</span><span class="s">&quot;2&quot;</span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/child&gt;</span>
+<span class="nt">&lt;/adag&gt;</span>
+</pre></div>
+</div>
+<p>It can be imported as a vector of Activities into SimGrid using <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::create_DAG_from_DAX()</span></code>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright (c) 2003-2025. The SimGrid Team. All rights reserved.          */</span>
+
+<span class="cm">/* This program is free software; you can redistribute it and/or modify it</span>
+<span class="cm"> * under the terms of the license (GNU LGPL) which comes with this package. */</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;simgrid/s4u.hpp&quot;</span>
+
+<span class="n">XBT_LOG_NEW_DEFAULT_CATEGORY</span><span class="p">(</span><span class="n">dag_from_dax_simple</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Messages specific for this s4u example&quot;</span><span class="p">);</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Engine</span><span class="w"> </span><span class="n">e</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="n">argv</span><span class="p">);</span>
+<span class="w">  </span><span class="n">e</span><span class="p">.</span><span class="n">load_platform</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">ActivityPtr</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">create_DAG_from_DAX</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+
+<span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Host</span><span class="o">*</span><span class="w"> </span><span class="n">tremblay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">host_by_name</span><span class="p">(</span><span class="s">&quot;Tremblay&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Host</span><span class="o">*</span><span class="w"> </span><span class="n">jupiter</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">host_by_name</span><span class="p">(</span><span class="s">&quot;Jupiter&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Host</span><span class="o">*</span><span class="w"> </span><span class="n">fafard</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">host_by_name</span><span class="p">(</span><span class="s">&quot;Fafard&quot;</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">dag</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">get</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">set_host</span><span class="p">(</span><span class="n">fafard</span><span class="p">);</span>
+<span class="w">  </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">dag</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">get</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">set_host</span><span class="p">(</span><span class="n">tremblay</span><span class="p">);</span>
+<span class="w">  </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">dag</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">get</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">set_host</span><span class="p">(</span><span class="n">jupiter</span><span class="p">);</span>
+<span class="w">  </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">dag</span><span class="p">[</span><span class="mi">3</span><span class="p">].</span><span class="n">get</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">set_host</span><span class="p">(</span><span class="n">jupiter</span><span class="p">);</span>
+<span class="w">  </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">dag</span><span class="p">[</span><span class="mi">8</span><span class="p">].</span><span class="n">get</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">set_host</span><span class="p">(</span><span class="n">jupiter</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">dag</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">comm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Comm</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">get</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">pred</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="o">*&gt;</span><span class="p">((</span><span class="o">*</span><span class="n">comm</span><span class="o">-&gt;</span><span class="n">get_dependencies</span><span class="p">().</span><span class="n">begin</span><span class="p">()).</span><span class="n">get</span><span class="p">());</span>
+<span class="w">      </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">succ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">comm</span><span class="o">-&gt;</span><span class="n">get_successors</span><span class="p">().</span><span class="n">front</span><span class="p">().</span><span class="n">get</span><span class="p">());</span>
+<span class="w">      </span><span class="n">comm</span><span class="o">-&gt;</span><span class="n">set_source</span><span class="p">(</span><span class="n">pred</span><span class="o">-&gt;</span><span class="n">get_host</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">set_destination</span><span class="p">(</span><span class="n">succ</span><span class="o">-&gt;</span><span class="n">get_host</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="o">::</span><span class="n">on_completion_cb</span><span class="p">([](</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Exec</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">exec</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;Exec &#39;%s&#39; is complete (start time: %f, finish time: %f)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">exec</span><span class="p">.</span><span class="n">get_cname</span><span class="p">(),</span>
+<span class="w">             </span><span class="n">exec</span><span class="p">.</span><span class="n">get_start_time</span><span class="p">(),</span><span class="w"> </span><span class="n">exec</span><span class="p">.</span><span class="n">get_finish_time</span><span class="p">());</span>
+<span class="w">  </span><span class="p">});</span>
+
+<span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Comm</span><span class="o">::</span><span class="n">on_completion_cb</span><span class="p">([](</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Comm</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">comm</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;Comm &#39;%s&#39; is complete (start time: %f, finish time: %f)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">comm</span><span class="p">.</span><span class="n">get_cname</span><span class="p">(),</span>
+<span class="w">             </span><span class="n">comm</span><span class="p">.</span><span class="n">get_start_time</span><span class="p">(),</span><span class="w"> </span><span class="n">comm</span><span class="p">.</span><span class="n">get_finish_time</span><span class="p">());</span>
+<span class="w">  </span><span class="p">});</span>
+
+<span class="w">  </span><span class="n">e</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="lab-3-scheduling-with-the-min-min-algorithm">
+<h2>Lab 3: Scheduling with the Min-Min algorithm<a class="headerlink" href="#lab-3-scheduling-with-the-min-min-algorithm" title="Permalink to this heading"></a></h2>
+<p>In this lab we present how to schedule activities imported from a DAX file using the
+<a class="reference external" href="https://www.researchgate.net/figure/The-Traditional-Min-Min-Scheduling-Algorithm_fig5_236346423">Min-Min algorithm</a>.</p>
+<p>The source code for this lab can be found <a class="reference external" href="https://framagit.org/simgrid/simgrid/-/blob/stable/examples/cpp/dag-scheduling/s4u-dag-scheduling.cpp">here</a>.</p>
+<p>For code readability we first create the <cite>sg4</cite> namespace.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">namespace</span><span class="w"> </span><span class="nn">sg4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">simgrid</span><span class="o">::</span><span class="nn">s4u</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The core mechanism of the algorithm lies in three functions.
+They respectively serve the purpose of finding tasks to schedule,
+finding the best host to execute them and properly scheduling them.</p>
+<section id="find-tasks-to-schedule">
+<h3>Find Tasks to Schedule<a class="headerlink" href="#find-tasks-to-schedule" title="Permalink to this heading"></a></h3>
+<p>The role of this function is to retrieve tasks that are ready to be scheduled, i.e, that have their dependencies solved.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sg4</span><span class="o">::</span><span class="n">Exec</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">get_ready_tasks</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sg4</span><span class="o">::</span><span class="n">ActivityPtr</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">dax</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sg4</span><span class="o">::</span><span class="n">Exec</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">ready_tasks</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">sg4</span><span class="o">::</span><span class="n">Exec</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">candidate_execs</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">dax</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Only look at activity that have their dependencies solved but are not assigned</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="o">-&gt;</span><span class="n">dependencies_solved</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">not</span><span class="w"> </span><span class="n">a</span><span class="o">-&gt;</span><span class="n">is_assigned</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// if it is an exec, it&#39;s ready</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">exec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">sg4</span><span class="o">::</span><span class="n">Exec</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">get</span><span class="p">()))</span>
+<span class="w">        </span><span class="n">ready_tasks</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">exec</span><span class="p">);</span>
+<span class="w">      </span><span class="c1">// if it a comm, we consider its successor as a candidate. If a candidate solves all its dependencies,</span>
+<span class="w">      </span><span class="c1">// i.e., get all its input data, it&#39;s ready</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">comm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">sg4</span><span class="o">::</span><span class="n">Comm</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">get</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">next_exec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">sg4</span><span class="o">::</span><span class="n">Exec</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">comm</span><span class="o">-&gt;</span><span class="n">get_successors</span><span class="p">().</span><span class="n">front</span><span class="p">().</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">candidate_execs</span><span class="p">[</span><span class="n">next_exec</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">next_exec</span><span class="o">-&gt;</span><span class="n">get_dependencies</span><span class="p">().</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">candidate_execs</span><span class="p">[</span><span class="n">next_exec</span><span class="p">])</span>
+<span class="w">          </span><span class="n">ready_tasks</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">next_exec</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">XBT_DEBUG</span><span class="p">(</span><span class="s">&quot;There are %zu ready tasks&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">ready_tasks</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">ready_tasks</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="find-the-best-placement">
+<h3>Find the Best Placement<a class="headerlink" href="#find-the-best-placement" title="Permalink to this heading"></a></h3>
+<p>Once we have a task ready to be scheduled, we need to find the best placement for it.
+This is done by evaluating the earliest finish time among all hosts.
+It depends on the duration of the data transfers of the parents of this task to this host.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">Host</span><span class="o">*</span><span class="w"> </span><span class="nf">get_best_host</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">ExecPtr</span><span class="w"> </span><span class="n">exec</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="o">*</span><span class="w"> </span><span class="n">min_finish_time</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">sg4</span><span class="o">::</span><span class="n">Host</span><span class="o">*</span><span class="w"> </span><span class="n">best_host</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">  </span><span class="o">*</span><span class="n">min_finish_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">();</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">host</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">Engine</span><span class="o">::</span><span class="n">get_instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get_all_hosts</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">data_available</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="mf">0.</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">last_data_available</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">-1.0</span><span class="p">;</span>
+<span class="w">    </span><span class="cm">/* compute last_data_available */</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">parent</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">exec</span><span class="o">-&gt;</span><span class="n">get_dependencies</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="cm">/* normal case */</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">comm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">sg4</span><span class="o">::</span><span class="n">Comm</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">parent</span><span class="p">.</span><span class="n">get</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">comm</span><span class="o">-&gt;</span><span class="n">get_source</span><span class="p">();</span>
+<span class="w">        </span><span class="n">XBT_DEBUG</span><span class="p">(</span><span class="s">&quot;transfer from %s to %s&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">source</span><span class="o">-&gt;</span><span class="n">get_cname</span><span class="p">(),</span><span class="w"> </span><span class="n">host</span><span class="o">-&gt;</span><span class="n">get_cname</span><span class="p">());</span>
+<span class="w">        </span><span class="cm">/* Estimate the redistribution time from this parent */</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">redist_time</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">comm</span><span class="o">-&gt;</span><span class="n">get_remaining</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mf">1e-6</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="n">redist_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="kt">double</span><span class="w"> </span><span class="n">bandwidth</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">();</span>
+<span class="w">          </span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">links</span><span class="p">,</span><span class="w"> </span><span class="n">latency</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">source</span><span class="o">-&gt;</span><span class="n">route_to</span><span class="p">(</span><span class="n">host</span><span class="p">);</span>
+<span class="w">          </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">link</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">links</span><span class="p">)</span>
+<span class="w">            </span><span class="n">bandwidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">bandwidth</span><span class="p">,</span><span class="w"> </span><span class="n">link</span><span class="o">-&gt;</span><span class="n">get_bandwidth</span><span class="p">());</span>
+
+<span class="w">          </span><span class="n">redist_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">latency</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">comm</span><span class="o">-&gt;</span><span class="n">get_remaining</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">bandwidth</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="c1">// We use the user data field to store the finish time of the predecessor of the comm, i.e., its potential</span>
+<span class="w">        </span><span class="c1">// start time</span>
+<span class="w">        </span><span class="n">data_available</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">comm</span><span class="o">-&gt;</span><span class="n">get_data</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">redist_time</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="cm">/* no transfer, control dependency */</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">parent_exec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">sg4</span><span class="o">::</span><span class="n">Exec</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">parent</span><span class="p">.</span><span class="n">get</span><span class="p">()))</span>
+<span class="w">        </span><span class="n">data_available</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent_exec</span><span class="o">-&gt;</span><span class="n">get_finish_time</span><span class="p">();</span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">last_data_available</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">data_available</span><span class="p">)</span>
+<span class="w">        </span><span class="n">last_data_available</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data_available</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">finish_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="o">*</span><span class="n">host</span><span class="o">-&gt;</span><span class="n">get_data</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(),</span><span class="w"> </span><span class="n">last_data_available</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                         </span><span class="n">exec</span><span class="o">-&gt;</span><span class="n">get_remaining</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">host</span><span class="o">-&gt;</span><span class="n">get_speed</span><span class="p">();</span>
+
+<span class="w">    </span><span class="n">XBT_DEBUG</span><span class="p">(</span><span class="s">&quot;%s finishes on %s at %f&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">exec</span><span class="o">-&gt;</span><span class="n">get_cname</span><span class="p">(),</span><span class="w"> </span><span class="n">host</span><span class="o">-&gt;</span><span class="n">get_cname</span><span class="p">(),</span><span class="w"> </span><span class="n">finish_time</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">finish_time</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">*</span><span class="n">min_finish_time</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="o">*</span><span class="n">min_finish_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">finish_time</span><span class="p">;</span>
+<span class="w">      </span><span class="n">best_host</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">host</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">best_host</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="schedule-a-task">
+<h3>Schedule a Task<a class="headerlink" href="#schedule-a-task" title="Permalink to this heading"></a></h3>
+<p>When the best host has been found, the task is scheduled on it:</p>
+<ul class="simple">
+<li><p>it sets the host of the task to schedule</p></li>
+<li><p>it stores the finish time of this task on the host</p></li>
+<li><p>it sets the destination of parents communication</p></li>
+<li><p>it sets the source of any child communication.</p></li>
+</ul>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">schedule_on</span><span class="p">(</span><span class="n">sg4</span><span class="o">::</span><span class="n">ExecPtr</span><span class="w"> </span><span class="n">exec</span><span class="p">,</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">Host</span><span class="o">*</span><span class="w"> </span><span class="n">host</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">busy_until</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">exec</span><span class="o">-&gt;</span><span class="n">set_host</span><span class="p">(</span><span class="n">host</span><span class="p">);</span>
+<span class="w">  </span><span class="c1">// We use the user data field to store up to when the host is busy</span>
+<span class="w">  </span><span class="k">delete</span><span class="w"> </span><span class="n">host</span><span class="o">-&gt;</span><span class="n">get_data</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="c1">// In case we&#39;re erasing a previous value</span>
+<span class="w">  </span><span class="n">host</span><span class="o">-&gt;</span><span class="n">set_data</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">double</span><span class="p">(</span><span class="n">busy_until</span><span class="p">));</span>
+<span class="w">  </span><span class="c1">// we can also set the destination of all the input comms of this exec</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">pred</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">exec</span><span class="o">-&gt;</span><span class="n">get_dependencies</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">comm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">sg4</span><span class="o">::</span><span class="n">Comm</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">pred</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">comm</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">comm</span><span class="o">-&gt;</span><span class="n">set_destination</span><span class="p">(</span><span class="n">host</span><span class="p">);</span>
+<span class="w">      </span><span class="k">delete</span><span class="w"> </span><span class="n">comm</span><span class="o">-&gt;</span><span class="n">get_data</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="c1">// we can also set the source of all the output comms of this exec</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">succ</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">exec</span><span class="o">-&gt;</span><span class="n">get_successors</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">comm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">sg4</span><span class="o">::</span><span class="n">Comm</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">succ</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">comm</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span>
+<span class="w">      </span><span class="n">comm</span><span class="o">-&gt;</span><span class="n">set_source</span><span class="p">(</span><span class="n">host</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="mixing-it-all-together">
+<h3>Mixing it all Together<a class="headerlink" href="#mixing-it-all-together" title="Permalink to this heading"></a></h3>
+<p>Now that we have the key components of the algorithm let’s merge them inside the main function.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">**</span><span class="w"> </span><span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<p>First, we initialize the SimGrid Engine.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">sg4</span><span class="o">::</span><span class="n">Engine</span><span class="w"> </span><span class="nf">e</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="n">argv</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The Min-Min algorithm schedules unscheduled tasks.
+To keep track of them we make use of the method <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Engine::track_vetoed_activities()</span></code>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">sg4</span><span class="o">::</span><span class="n">Activity</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">vetoed</span><span class="p">;</span>
+<span class="n">e</span><span class="p">.</span><span class="n">track_vetoed_activities</span><span class="p">(</span><span class="o">&amp;</span><span class="n">vetoed</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>We add the following callback that will be triggered at the end of execution activities.
+This callback stores the finish time of the execution,
+to use it as a start time for any subsequent communications.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">sg4</span><span class="o">::</span><span class="n">Activity</span><span class="o">::</span><span class="n">on_completion_cb</span><span class="p">([](</span><span class="n">sg4</span><span class="o">::</span><span class="n">Activity</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">activity</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// when an Exec completes, we need to set the potential start time of all its ouput comms</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">exec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">sg4</span><span class="o">::</span><span class="n">Exec</span><span class="w"> </span><span class="k">const</span><span class="o">*&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">activity</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">exec</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span><span class="w"> </span><span class="c1">// Only Execs are concerned here</span>
+<span class="w">    </span><span class="k">return</span><span class="p">;</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">succ</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">exec</span><span class="o">-&gt;</span><span class="n">get_successors</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">comm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">sg4</span><span class="o">::</span><span class="n">Comm</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">succ</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">comm</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">finish_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">double</span><span class="p">(</span><span class="n">exec</span><span class="o">-&gt;</span><span class="n">get_finish_time</span><span class="p">());</span>
+<span class="w">      </span><span class="c1">// We use the user data field to store the finish time of the predecessor of the comm, i.e., its potential start</span>
+<span class="w">      </span><span class="c1">// time</span>
+<span class="w">      </span><span class="n">comm</span><span class="o">-&gt;</span><span class="n">set_data</span><span class="p">(</span><span class="n">finish_time</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>We load the platform and force sequential execution on hosts.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">load_platform</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+
+<span class="cm">/* Mark all hosts as sequential, as it ought to be in such a scheduling example.</span>
+<span class="cm"> *</span>
+<span class="cm"> * It means that the hosts can only compute one thing at a given time. If an execution already takes place on a given</span>
+<span class="cm"> * host, any subsequently started execution will be queued until after the first execution terminates */</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">host</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">get_all_hosts</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">host</span><span class="o">-&gt;</span><span class="n">set_concurrency_limit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">  </span><span class="n">host</span><span class="o">-&gt;</span><span class="n">set_data</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">double</span><span class="p">(</span><span class="mf">0.0</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The tasks are imported from a DAX file.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* load the DAX file */</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">dax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">create_DAG_from_DAX</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+</pre></div>
+</div>
+<p>We look for the best host for the root task and schedule it.
+We then advance the simulation to unlock next schedulable tasks.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Schedule the root first */</span>
+<span class="kt">double</span><span class="w"> </span><span class="n">finish_time</span><span class="p">;</span>
+<span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">sg4</span><span class="o">::</span><span class="n">Exec</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">dax</span><span class="p">.</span><span class="n">front</span><span class="p">().</span><span class="n">get</span><span class="p">());</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">host</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">get_best_host</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">finish_time</span><span class="p">);</span>
+<span class="n">schedule_on</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">host</span><span class="p">);</span>
+<span class="n">e</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Then, we get to the major loop of the algorithm.
+This loop goes on until all tasks have been scheduled and executed.
+It starts by finding ready tasks using <cite>get_ready_tasks</cite>.
+It iteratively looks for the task that will finish first among ready tasks using <cite>get_best_host</cite>, and place it using <cite>schedule_on</cite>.
+When no more tasks can be placed, we advance the simulation.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">not</span><span class="w"> </span><span class="n">vetoed</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">XBT_DEBUG</span><span class="p">(</span><span class="s">&quot;Start new scheduling round&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="cm">/* Get the set of ready tasks */</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">ready_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get_ready_tasks</span><span class="p">(</span><span class="n">dax</span><span class="p">);</span>
+<span class="w">  </span><span class="n">vetoed</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ready_tasks</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* there is no ready exec, let advance the simulation */</span>
+<span class="w">    </span><span class="n">e</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
+<span class="w">    </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="cm">/* For each ready exec:</span>
+<span class="cm">   * get the host that minimizes the completion time.</span>
+<span class="cm">   * select the exec that has the minimum completion time on its best host.</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">min_finish_time</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">();</span>
+<span class="w">  </span><span class="n">sg4</span><span class="o">::</span><span class="n">Exec</span><span class="o">*</span><span class="w"> </span><span class="n">selected_task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">  </span><span class="n">sg4</span><span class="o">::</span><span class="n">Host</span><span class="o">*</span><span class="w"> </span><span class="n">selected_host</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">exec</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ready_tasks</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">XBT_DEBUG</span><span class="p">(</span><span class="s">&quot;%s is ready&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">exec</span><span class="o">-&gt;</span><span class="n">get_cname</span><span class="p">());</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">finish_time</span><span class="p">;</span>
+<span class="w">    </span><span class="n">host</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get_best_host</span><span class="p">(</span><span class="n">exec</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">finish_time</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">finish_time</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">min_finish_time</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">min_finish_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">finish_time</span><span class="p">;</span>
+<span class="w">      </span><span class="n">selected_task</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">exec</span><span class="p">;</span>
+<span class="w">      </span><span class="n">selected_host</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">host</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;Schedule %s on %s&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">selected_task</span><span class="o">-&gt;</span><span class="n">get_cname</span><span class="p">(),</span><span class="w"> </span><span class="n">selected_host</span><span class="o">-&gt;</span><span class="n">get_cname</span><span class="p">());</span>
+<span class="w">  </span><span class="n">schedule_on</span><span class="p">(</span><span class="n">selected_task</span><span class="p">,</span><span class="w"> </span><span class="n">selected_host</span><span class="p">,</span><span class="w"> </span><span class="n">min_finish_time</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">ready_tasks</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<span class="w">  </span><span class="n">e</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Finally, we clean up the memory.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Cleanup memory */</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">get_all_hosts</span><span class="p">())</span>
+<span class="w">  </span><span class="k">delete</span><span class="w"> </span><span class="n">h</span><span class="o">-&gt;</span><span class="n">get_data</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Tutorial_Model-checking.html" class="btn btn-neutral float-left" title="Formal Verification and Model checking" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Introduction.html" class="btn btn-neutral float-right" title="Introduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2002-2025, The SimGrid Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

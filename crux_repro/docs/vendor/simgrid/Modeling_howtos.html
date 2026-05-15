@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modeling Hints &mdash; SimGrid  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="_static/showfile.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
+        <script src="_static/showfile.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Calibrating the models" href="Calibrating_the_models.html" />
+    <link rel="prev" title="The SimGrid models" href="Models.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SimGrid
+          </a>
+              <div class="version">
+                4.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Algorithms.html">     Simulating distributed algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_MPI_Applications.html">     Simulating MPI applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Model-checking.html">     Model-checking algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_DAG.html">Simulating DAG</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Manual:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">   Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installing_SimGrid.html">      Installing SimGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Start_your_own_project.html">      Start your own project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="community.html">      The SimGrid community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Release_Notes.html">      Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="application.html">   Describing your application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_s4u.html">      The S4U interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">      S4U examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_smpi.html">      The SMPI interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="The_XBT_toolbox.html">      The XBT toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform.html">   Describing the simulated platform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_examples.html">      Network topology examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_routing.html">      Advanced routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="XML_reference.html">      XML reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_cpp.html">      C++ platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Models.html">   The SimGrid models</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">      Modeling hints</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#doing-science-with-simgrid">Doing Science with SimGrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#modeling-churn-e-g-in-p2p">Modeling churn (e.g., in P2P)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#modeling-multicore-machines">Modeling multicore machines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#default-model">Default model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pinning-tasks-to-cores">Pinning tasks to cores</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#modeling-machine-boot-and-shutdown-periods">Modeling machine boot and shutdown periods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#modeling-parallel-links">Modeling parallel links</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Calibrating_the_models.html">      Calibrating the models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plugins.html">      SimGrid plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Experimental_setup.html">   Running an experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Configuring_SimGrid.html">      Configuring SimGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Deploying_your_application.html">      Deploying your application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Outcomes.html">      Simulation outcomes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">SimGrid's Internals:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Design_goals.html">   Design goals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Contributors_Documentation.html">   Contributor's documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SimGrid</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Modeling Hints</li>
+  <li class="wy-breadcrumbs-aside">
+    
+
+      <a href="" class="fa fa-bitbucket"> Edit on FramaGit</a>
+    
+  </li>
+
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <object id="TOC" data="graphical-toc.svg" type="image/svg+xml"></object>
+<script>
+window.onload=function() { // Wait for the SVG to be loaded before changing it
+  var elem=document.querySelector("#TOC").contentDocument.getElementById("PlatformBox")
+  elem.style="opacity:0.93999999;fill:#ff0000;fill-opacity:0.1;stroke:#000000;stroke-width:0.35277778;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1";
+}
+</script>
+<br/>
+<br/><section id="modeling-hints">
+<span id="howto"></span><h1>Modeling Hints<a class="headerlink" href="#modeling-hints" title="Permalink to this heading"></a></h1>
+<p>There is no perfect model. Only models that are adapted to the
+specific study that you want to do. SimGrid provides several advanced
+mechanisms that you can adapt to model the situation that you are
+interested in, and it is often uneasy to see where to start with.
+This page collects several hints and tricks on modeling situations.
+Even if you are looking for a very advanced, specific use case, these
+examples may help you to design the solution you need.</p>
+<section id="doing-science-with-simgrid">
+<span id="howto-science"></span><h2>Doing Science with SimGrid<a class="headerlink" href="#doing-science-with-simgrid" title="Permalink to this heading"></a></h2>
+<p>Many users are using SimGrid as a scientific instrument for their
+research. This tool was indeed invented to that extent, and we strive
+to streamline this kind of usage. But SimGrid is no magical tool, and
+it is of your responsibility that the tool actually provides sensible
+results. Fortunately, there is a vast literature on how to avoid
+Modeling &amp; Simulations pitfalls. We review here some specific works.</p>
+<p>In <a class="reference external" href="http://www.dtic.mil/dtic/tr/fulltext/u2/a405051.pdf">An Integrated Approach to Evaluating Simulation Credibility</a>, the authors
+provide a methodology enabling the users to increase their confidence
+in the simulation tools they use. First of all, you must know what you
+actually expect to discover whether the tool actually covers your
+needs. Then, as they say, “a fool with a tool is still a fool”, so you
+need to think about your methodology before you submit your articles.
+<a class="reference external" href="https://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/20080015742.pdf">Towards a Credibility Assessment of Models and Simulations</a>
+gives a formal methodology to assess the credibility of your
+simulation results.</p>
+<p><a class="reference external" href="https://dl.acm.org/citation.cfm?id=2430188">Seven Pitfalls in Modeling and Simulation Research</a> is even more
+specific. Here are the listed pitfalls: (1) Don’t know whether it’s
+modeling or simulation, (2) No separation of concerns, (3) No clear
+scientific question, (4) Implementing everything from scratch, (5)
+Unsupported claims, (6) Toy duck approach, and (7) The tunnel view. As
+you can see, this article is a must read. It’s a pity that it’s not
+freely available, though.</p>
+</section>
+<section id="modeling-churn-e-g-in-p2p">
+<span id="howto-churn"></span><h2>Modeling churn (e.g., in P2P)<a class="headerlink" href="#modeling-churn-e-g-in-p2p" title="Permalink to this heading"></a></h2>
+<p>One of the biggest challenges in P2P settings is to cope with the
+churn, meaning that resources keep appearing and disappearing. In
+SimGrid, you can always change the state of each host manually, with
+eg <a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Host7turn_onEv" title="simgrid::s4u::Host::turn_on"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Host::turn_on()</span></code></a>. To reduce the burden when
+the churn is high, you can also attach a <strong>state profile</strong> to the host
+directly.</p>
+<p>This can be done through the XML file, using the <code class="docutils literal notranslate"><span class="pre">state_file</span></code>
+attribute of <a class="reference internal" href="XML_reference.html#pf-tag-host"><span class="std std-ref">&lt;host&gt;</span></a>, <a class="reference internal" href="XML_reference.html#pf-tag-cluster"><span class="std std-ref">&lt;cluster&gt;</span></a> or
+<a class="reference internal" href="XML_reference.html#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a>. Every line (but the last) of such files describes
+timed events with the form “date value”. Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">0</span>
+<span class="mi">2</span> <span class="mi">1</span>
+<span class="n">LOOPAFTER</span> <span class="mi">8</span>
+</pre></div>
+</div>
+<p>This file uses a cryptic yet simple formalism:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>At time t = 1, the host is turned off (a zero value means OFF).</p></li>
+<li><p>At time t = 2, the host is turned back on (any other value than zero means ON).</p></li>
+<li><p>At time t = 10, the profile is reset (as we are 8 seconds after the last event). Then the host will be turned off again at time t = 11.</p></li>
+</ul>
+</div></blockquote>
+<p>If your profile does not contain any LOOPAFTER line, then it will be executed only once and not in a repetitive way.</p>
+<p>Another possibility is to use the
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Host17set_state_profileEPN6kernel7profile7ProfileE" title="simgrid::s4u::Host::set_state_profile"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Host::set_state_profile()</span></code></a> or
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Link17set_state_profileEPN6kernel7profile7ProfileE" title="simgrid::s4u::Link::set_state_profile"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Link::set_state_profile()</span></code></a> functions. These
+functions take a profile, that can be a fixed profile exhaustively
+listing the events, or something else if you wish.</p>
+<p>For further reading, you could turn to <a class="reference internal" href="Examples.html#s4u-ex-comm-failure"><span class="std std-ref">this example</span></a>
+on how to react to communication failures, or  <a class="reference internal" href="Examples.html#s4u-ex-platform-state-profile"><span class="std std-ref">this one</span></a>
+on how to attach a state profile to hosts and react to execution failures.</p>
+</section>
+<section id="modeling-multicore-machines">
+<span id="howto-multicore"></span><h2>Modeling multicore machines<a class="headerlink" href="#modeling-multicore-machines" title="Permalink to this heading"></a></h2>
+<section id="default-model">
+<h3>Default model<a class="headerlink" href="#default-model" title="Permalink to this heading"></a></h3>
+<p>Multicore machines are very complex, and there are many ways to model
+them. The default models of SimGrid are coarse grain and capture some
+elements of this reality. Here is how to declare simple multicore hosts:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;host</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;mymachine&quot;</span><span class="w"> </span><span class="na">speed=</span><span class="s">&quot;8Gf&quot;</span><span class="w"> </span><span class="na">core=</span><span class="s">&quot;4&quot;</span><span class="nt">/&gt;</span>
+</pre></div>
+</div>
+<p>It declares a 4-core host called “mymachine”, each core computing 8
+GFlops per second. If you put one activity of 8 GFlops on this host, it
+will be computed in 1 second (by default, activities are
+single-threaded and cannot leverage the computing power of more than
+one core). If you run two such activities simultaneously, they will still be
+computed in one second, and so on up to 4 activities. If you start 5 activities,
+they will share the total computing power, and each activity will be
+computed in 5/4 = 1.25 seconds. This is a very simple model, but that is
+all what you get by default from SimGrid.</p>
+</section>
+<section id="pinning-tasks-to-cores">
+<span id="howto-multicore-separate-hosts"></span><h3>Pinning tasks to cores<a class="headerlink" href="#pinning-tasks-to-cores" title="Permalink to this heading"></a></h3>
+<p>The default model does not account for task pinning, where you
+manually select on which core each of the existing activity should
+execute. The best solution to model this is probably to model your
+4-core processor as 4 distinct hosts, and assigning the activities to
+cores by migrating them to the declared hosts. In some sense, this
+takes the whole Network-On-Chip idea really seriously.</p>
+<p>Some extra complications may arise here. If you have more activities than
+cores, you’ll have to <a class="reference external" href="https://en.wikipedia.org/wiki/Scheduling_%28computing%29#Operating_system_process_scheduler_implementations)">schedule your activities</a>
+yourself on the cores (so you’d better avoid this complexity). Since
+you cannot have more than one network model in a given SimGrid
+simulation, you will end up with a TCP connection between your cores. A
+possible work around is to never start any simulated communication
+between the cores and have the same routes from each core to the
+rest of the external network.</p>
+<p>Modeling a multicore CPU as a set of SimGrid hosts may seem strange and unconvincing, but some users achieved very realistic
+simulations of multicore and GPU machines this way. A <a class="reference internal" href="Models.html#understanding-raw-network-model"><span class="std std-ref">raw network model</span></a> proves useful
+in this context.</p>
+</section>
+</section>
+<section id="modeling-machine-boot-and-shutdown-periods">
+<h2>Modeling machine boot and shutdown periods<a class="headerlink" href="#modeling-machine-boot-and-shutdown-periods" title="Permalink to this heading"></a></h2>
+<p>When a physical host boots up, a lot of things happen. It takes time
+during which the machine is not usable but dissipates energy, and
+programs actually die and restart during a reboot. Since there are many
+ways to model it, SimGrid does not do any modeling choice for you but
+the most obvious ones.</p>
+<p>Any actor running on a host that is shut down will be killed and all
+its activities will be automatically canceled. If the actor killed was
+marked as auto-restartable (with <a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u5Actor16set_auto_restartEb" title="simgrid::s4u::Actor::set_auto_restart"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Actor::set_auto_restart()</span></code></a>),
+it will start anew with the same parameters when the host boots back up.</p>
+<p>By default, shutdowns and boots are instantaneous. If you want to
+add an extra delay, you have to do that yourself, for example from a
+<cite>controller</cite> actor that runs on another host. The best way to do so is
+to declare a fictional pstate where the CPU delivers 0 flop per
+second (so every activity on that host will be frozen when the host is
+in this pstate). When you want to switch the host off, your controller
+switches the host to that specific pstate (with
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Host10set_pstateEm" title="simgrid::s4u::Host::set_pstate"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Host::set_pstate()</span></code></a>), waits for the amount of
+time that you decided necessary for your host to shut down, and turns
+the host off (with <a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Host8turn_offEv" title="simgrid::s4u::Host::turn_off"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Host::turn_off()</span></code></a>). To boot
+up, switch the host on, go into the specific pstate, wait a while and
+go to a more regular pstate.</p>
+<p>To model the energy dissipation, you need to put the right energy
+consumption in your startup/shutdown specific pstate. Remember that
+the energy consumed is equal to the instantaneous consumption
+multiplied by the time in which the host keeps in that state. Do the
+maths, and set the right instantaneous consumption to your pstate, and
+you’ll get the whole boot period to consume the amount of energy that
+you want. You may want to have one fictional pstate for the boot
+period and another one for the shutdown period.</p>
+<p>Of course, this is only one possible way to model these things. YMMV ;)</p>
+</section>
+<section id="modeling-parallel-links">
+<span id="howto-parallel-links"></span><h2>Modeling parallel links<a class="headerlink" href="#modeling-parallel-links" title="Permalink to this heading"></a></h2>
+<p>Most HPC topologies, such as fat-trees, allow parallel links (a
+router A and a router B can be connected by more than one link).
+You might be tempted to model this configuration as follows :</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;router</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;routerA&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;router</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;routerB&quot;</span><span class="nt">/&gt;</span>
+
+<span class="nt">&lt;link</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;link1&quot;</span><span class="w"> </span><span class="na">bandwidth=</span><span class="s">&quot;10GBps&quot;</span><span class="w"> </span><span class="na">latency=</span><span class="s">&quot;2us&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;link</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;link2&quot;</span><span class="w"> </span><span class="na">bandwidth=</span><span class="s">&quot;10GBps&quot;</span><span class="w"> </span><span class="na">latency=</span><span class="s">&quot;2us&quot;</span><span class="nt">/&gt;</span>
+
+<span class="nt">&lt;route</span><span class="w"> </span><span class="na">src=</span><span class="s">&quot;routerA&quot;</span><span class="w"> </span><span class="na">dst=</span><span class="s">&quot;routerB&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;link_ctn</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;link1&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/route&gt;</span>
+<span class="nt">&lt;route</span><span class="w"> </span><span class="na">src=</span><span class="s">&quot;routerA&quot;</span><span class="w"> </span><span class="na">dst=</span><span class="s">&quot;routerB&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;link_ctn</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;link2&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/route&gt;</span>
+</pre></div>
+</div>
+<p>But that will not work, since SimGrid doesn’t allow several routes for
+a single <cite>{src ; dst}</cite> pair. Instead, what you should do is:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Use a single route with both links (so both will be traversed
+each time a message is exchanged between router A and B)</p></li>
+<li><p>Double the bandwidth of one link, to model the total bandwidth of
+both links used in parallel. This will make sure no combined
+communications between router A and B use more than the bandwidth
+of two links</p></li>
+<li><p>Assign the other link a <cite>FATPIPE</cite> sharing policy, which will allow
+several communications to use the full bandwidth of this link without
+having to share it. This will model the fact that individual
+communications can use at most this link’s bandwidth</p></li>
+<li><p>Set the latency of one of the links to 0, so that latency is only
+accounted for once (since both link are traversed by each message)</p></li>
+</ul>
+</div></blockquote>
+<p>So the final platform for our example becomes :</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;router</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;routerA&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;router</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;routerB&quot;</span><span class="nt">/&gt;</span>
+
+<span class="cm">&lt;!-- This link limits the total bandwidth of all parallel communications --&gt;</span>
+<span class="nt">&lt;link</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;link1&quot;</span><span class="w"> </span><span class="na">bandwidth=</span><span class="s">&quot;20GBps&quot;</span><span class="w"> </span><span class="na">latency=</span><span class="s">&quot;2us&quot;</span><span class="nt">/&gt;</span>
+
+<span class="cm">&lt;!-- This link only limits the bandwidth of individual communications --&gt;</span>
+<span class="nt">&lt;link</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;link2&quot;</span><span class="w"> </span><span class="na">bandwidth=</span><span class="s">&quot;10GBps&quot;</span><span class="w"> </span><span class="na">latency=</span><span class="s">&quot;0us&quot;</span><span class="w"> </span><span class="na">sharing_policy=</span><span class="s">&quot;FATPIPE&quot;</span><span class="nt">/&gt;</span>
+
+<span class="cm">&lt;!-- Each message traverses both links --&gt;</span>
+<span class="nt">&lt;route</span><span class="w"> </span><span class="na">src=</span><span class="s">&quot;routerA&quot;</span><span class="w"> </span><span class="na">dst=</span><span class="s">&quot;routerB&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;link_ctn</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;link1&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;link_ctn</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;link2&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/route&gt;</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Models.html" class="btn btn-neutral float-left" title="The SimGrid models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Calibrating_the_models.html" class="btn btn-neutral float-right" title="Calibrating the models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2002-2025, The SimGrid Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

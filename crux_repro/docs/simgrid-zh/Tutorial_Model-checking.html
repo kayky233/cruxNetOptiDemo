@@ -1,0 +1,1172 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>模型检验算法 - SimGrid 中文手册</title><style>
+:root{--bg:#f7f8fb;--sbg:#17182c;--stx:#d6d7e7;--muted:#8d90a8;--accent:#e94560;--txt:#272838;--hd:#16213e;--code:#f1f4f8;--bd:#dfe3ea;--note:#fff8e6}
+*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC",Arial,sans-serif;background:var(--bg);color:var(--txt);line-height:1.7;display:flex}
+nav{width:330px;min-width:330px;height:100vh;position:sticky;top:0;background:var(--sbg);color:var(--stx);overflow:auto;padding:18px 0;font-size:14px} nav h2{font-size:18px;padding:0 20px 12px;margin:0 0 6px;border-bottom:1px solid rgba(255,255,255,.12)} nav h2 a{color:#fff;text-decoration:none} nav h2 small{display:block;color:var(--muted);font-size:11px;font-weight:400;margin-top:2px}.sec{display:block;color:#56b6e8;font-weight:700;text-transform:uppercase;font-size:12px;padding:16px 20px 6px}nav a{display:block;color:var(--stx);text-decoration:none;padding:5px 20px 5px 30px}nav a:hover,nav a.active{background:rgba(233,69,96,.13);color:#ff6b86}main{width:min(1040px,calc(100vw - 330px));padding:34px 52px 90px}h1{font-size:34px;line-height:1.2;color:var(--hd);margin:0 0 18px}h2{font-size:25px;color:var(--hd);margin:42px 0 12px;padding-bottom:7px;border-bottom:2px solid var(--bd)}h3{font-size:20px;color:var(--hd);margin:30px 0 10px}h4{font-size:16px;color:#4b4f63;margin:22px 0 8px}p{margin:9px 0}a{color:#0f5e9c}pre{background:var(--code);border:1px solid var(--bd);border-radius:6px;padding:12px 15px;overflow:auto;line-height:1.45;font-size:12.5px}code{font-family:"SF Mono",Menlo,Consolas,monospace;background:var(--code);padding:1px 4px;border-radius:3px}pre code{background:transparent;padding:0}img{max-width:100%;height:auto;display:block;margin:16px auto}table{border-collapse:collapse;width:100%;margin:14px 0}td,th{border:1px solid var(--bd);padding:7px 9px}th{background:var(--code)}blockquote,.admonition{border-left:4px solid #f0c040;background:var(--note);padding:8px 14px;margin:14px 0}.meta{color:#687085;font-size:13px;margin-bottom:18px}.raw-note{background:#eef7ff;border:1px solid #cbe7ff;border-radius:6px;padding:10px 12px;margin-bottom:18px;font-size:13px}@media(max-width:900px){body{display:block}nav{position:relative;width:100%;min-width:0;height:auto}main{width:100%;padding:20px}}
+</style></head><body>
+<nav><h2><a href="index.html">SimGrid 4.1</a><small>中文本地化镜像</small></h2>
+<span class="sec">教程</span>
+<a href="Tutorial_Algorithms.html">模拟分布式算法</a>
+<a href="Tutorial_MPI_Applications.html">模拟 MPI 应用</a>
+<a class="active" href="Tutorial_Model-checking.html">模型检验算法</a>
+<a href="Tutorial_DAG.html">模拟 DAG</a>
+<span class="sec">用户手册</span>
+<a href="Introduction.html">简介</a>
+<a href="Installing_SimGrid.html">安装 SimGrid</a>
+<a href="Start_your_own_project.html">创建自己的项目</a>
+<a href="community.html">SimGrid 社区</a>
+<a href="Release_Notes.html">发布说明</a>
+<a href="application.html">描述应用程序</a>
+<a href="app_s4u.html">S4U 接口</a>
+<a href="Examples.html">S4U 示例</a>
+<a href="app_smpi.html">SMPI 接口</a>
+<a href="The_XBT_toolbox.html">XBT 工具箱</a>
+<a href="Platform.html">描述模拟平台</a>
+<a href="Platform_examples.html">网络拓扑示例</a>
+<a href="Platform_routing.html">高级路由</a>
+<a href="XML_reference.html">XML 参考</a>
+<a href="Platform_cpp.html">C++ 平台</a>
+<a href="Models.html">SimGrid 模型</a>
+<a href="Modeling_howtos.html">建模提示</a>
+<a href="Calibrating_the_models.html">校准模型</a>
+<a href="Plugins.html">SimGrid 插件</a>
+<a href="Experimental_setup.html">运行实验</a>
+<a href="Configuring_SimGrid.html">配置 SimGrid</a>
+<a href="Deploying_your_application.html">部署应用程序</a>
+<a href="Outcomes.html">模拟输出</a>
+<span class="sec">SimGrid 内部文档</span>
+<a href="Design_goals.html">设计目标</a>
+<a href="Contributors_Documentation.html">贡献者文档</a>
+</nav>
+<main><div class="meta">来源：<a href="https://simgrid.org/doc/latest/Tutorial_Model-checking.html">https://simgrid.org/doc/latest/Tutorial_Model-checking.html</a> · 本地化镜像生成，代码块与图片保留官方内容</div>
+<div class="raw-note">说明：本页采用镜像式本地化，导航和主要标题已中文化；代码块、命令输出和图片按官方页面原样保留，便于逐项核对。</div>
+
+             
+  <section id="formal-verification-and-model-checking">
+<span id="usecase-modelchecking"></span><h1>Formal Verification and Model checking</h1>
+<p>Mc SimGrid is a full-featured model-checker that is embedded in the SimGrid framework. It can be used to formally verify safety
+properties on codes running on top of SimGrid, be them classical pthread applications, <a class="reference internal" href="Tutorial_Algorithms.html#usecase-simalgo"><span class="std std-ref">simple algorithms</span></a>, or <a class="reference internal" href="Tutorial_MPI_Applications.html#usecase-smpi"><span class="std std-ref">full MPI applications</span></a>. This module is under heavy development since 15 years now.
+It is less stable than the parts of SimGrid intended to predict the performance of your application, but should still be usable
+if you’re motivated and patient with us.</p>
+<section id="primer-on-formal-methods">
+<h2>Primer on formal methods</h2>
+<p>Formal methods are techniques leveraging mathematics to test and assess systems. They are routinely used to assess computer
+hardware, transportation systems or any other complex engineering process. Among these methods, model checking is a technique to
+automatically prove that a given model verifies a given property by systematically checking all states of the model. The
+property and model are written in a mathematical language and fed to an automated tool called model checker.  When the model
+does not verify the property, the model checker gives a counter-example that can be used to refine and improve the model.
+Conversely, if no counter-example can be found after an exhaustive exploration of the model, we know that the property holds for
+the model. It may also happen that the model is too large to be exhaustively explored, in which case the model checker is not
+conclusive. Model checkers rely on so-called reduction techniques (based on symmetries and equivalence) to efficiently explore
+the system state. <a class="reference external" href="https://spinroot.com/spin/whatispin.html">Spin</a> is a renowned model checker while <a class="reference external" href="https://en.wikipedia.org/wiki/TLA%2B">TLA+</a> is a mathematical language that can be used in such context.</p>
+<p>Software model checking applies similar ideas to programs, without requiring a mathematical model of the system. Instead, the
+program itself is used as a model to verify against a property. Along these lines, Mc SimGrid is a stateless model checker: it
+does not leverage static analysis nor symbolic execution. Instead, the program is simply executed through all possible outcomes.
+On indecision points, the application is forked (in the <a class="reference external" href="https://en.wikipedia.org/wiki/Fork_(system_call)">UNIX meaning</a>), the
+first branch is executed exhaustively, and then the other fork of the system is used to explore the other execution branch.</p>
+<p>Mc SimGrid targets parallel and distributed applications that interact through message passing or through synchronization
+mechanisms (mutex, barrier, etc). It can be used to find crash and other property violations even if they only occur under rare
+conditions. Starting with v4.1, it can also detect any race conditions under some conditions. In addition to these classical
+<a class="reference external" href="https://en.wikipedia.org/wiki/Linear_time_property">safety properties</a>, it can also ensure <a class="reference external" href="https://hal.inria.fr/hal-01953167/document">communication determinism</a>, a property that allows more efficient solutions toward fault-tolerance. It can
+alleviate the state space explosion problem through several variants of <a class="reference external" href="https://en.wikipedia.org/wiki/Partial_order_reduction">Dynamic Partial Ordering Reduction (DPOR)</a>. Note that Mc SimGrid is currently less mature than other parts of the
+framework, but it improves every month. Please report any question and issue so that we can further improve it.</p>
+<section id="instrumentation-solutions">
+<h3>Instrumentation solutions</h3>
+<p>The model checker can only find bugs related to the applicative events it can observe.  Several partially compatible solutions
+exist observe events in Mc SimGrid. The first instrumentation solution leverage <a class="reference internal" href="Tutorial_MPI_Applications.html#usecase-smpi"><span class="std std-ref">SMPI</span></a> to detect misuses of
+the MPI interface. It can observe communications done with MPI, but not thread operations nor memory accesses. The second
+instrumentation solution is called <code class="docutils literal notranslate"><span class="pre">sthread</span></code>. This library can be injected with <a class="reference external" href="https://en.wikipedia.org/wiki/Dynamic_linker#Systems_using_ELF">LD_PRELOAD</a> into the applications to observe thread operations and
+several synchronizations (mutex, barrier, semaphores, etc).</p>
+<p>Prior to SimGrid v4.1, memory accesses could not be observed, preventing Mc SimGrid from the detection of memory race conditions
+and other bugs that can only be observed for specific ordering of the memory read and write events. As such, It could only be
+used to detect misuses of the synchronization functions such as pthread calls or MPI calls (depending on the leveraged
+instrumentation solution), such as the ones resulting in deadlocks.</p>
+<p>Starting with v4.1 (not released at the time of writing), read and write memory events can be observed in programs compiled with
+our <code class="docutils literal notranslate"><span class="pre">mclang</span></code> compilation wrapper that adds an extra pass to the <code class="docutils literal notranslate"><span class="pre">clang</span></code> compiler that tracks memory accesses at runtime. The
+memory events are not interleaved explicitly. Instead, Mc SimGrid uses a race detector inspired from <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/1543135.1542490">FastTrack</a> to detect races on the explored executions.</p>
+</section>
+<section id="limits">
+<h3>Limits</h3>
+<p>The first limit lies in the observation of events. Many applicative events remain unobserved. Communications are not observed if
+they don’t use the MPI standard; Disk accesses are left completely unobserved, and so are the time-related APIs, to name a few.</p>
+<p>The second practical limit lies in the huge amount of scenarios to explore. SimGrid tries to explore only non-redundant scenarios
+thanks to classical reduction techniques (such as DPOR) but the exploration may well never finish if you don’t carefully adapt
+your application to this mode. The amount of event interleavings to explore grows exponentially with the amount of actors and
+amount of events in each actor’s history. Keep your program small to fully explore your scenarios.</p>
+<p>A classical trap is that the model checker can only verify whether your application fits the properties provided, which is
+useless if you have a bug in your property. Remember also that one way for your application to never violate a given assertion
+is to not start at all, because of a stupid bug.</p>
+<p>Another limit of this mode is that time becomes discrete in the model checker: You can say for example that the application took
+42 steps to run, but there is no way to know how much time it took or the number of watts that were dissipated.</p>
+<p>The model checker may well miss existing issues, as it computes the possible outcomes <em>from a given initial situation</em>. This
+approach is not adapted to prove the correctness of your application in full generality.</p>
+</section>
+</section>
+<section id="getting-mc-simgrid">
+<h2>Getting Mc SimGrid</h2>
+<p>The model checker is included in the SimGrid source code, and it’s compiled by default with no extra dependencies. It’s also
+activated in the Debian package since v3.36-2. If your precompiled version of SimGrid lacks support for the model checker, you
+could build SimGrid from source. Simply request it from cmake (<code class="docutils literal notranslate"><span class="pre">cmake</span> <span class="pre">-Denable_model-checking</span> <span class="pre">.</span></code>) and then compile SimGrid
+<a class="reference internal" href="Installing_SimGrid.html#install-src"><span class="std std-ref">as usual</span></a>. It should work out of the box on all major systems (Linux, FreeBSD, Windows with WSL, or Mac OS
+X). Double check the value of the <code class="docutils literal notranslate"><span class="pre">SIMGRID_HAVE_MC</span></code> in the generated file <code class="docutils literal notranslate"><span class="pre">include/simgrid/config.h</span></code>. If it’s not defined to
+1, read the configuration logs to understand why the model checker was not compiled in, and try again.</p>
+<p>To test SimGrid without installing it, you can use Docker. You can either pull the <code class="docutils literal notranslate"><span class="pre">simgrid/tuto-mc</span></code> (3.3Gb) image that
+contains a full SimGrid installation and all needed files, or the <code class="docutils literal notranslate"><span class="pre">simgrid/mc-slim</span></code> image (850Mb) that contains the bare
+minimum to use the model-checker. That’s still quite a large image, but we need a complete clang installation in the docker to
+recompile the C/C++ code with SimGrid.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-c2ltZ3JpZC9tYy1zbGlt" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tab" tabindex="0">simgrid/mc-slim</button><button aria-controls="panel-0-c2ltZ3JpZC90dXRvLW1j" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tab" tabindex="-1">simgrid/tuto-mc</button></div><div aria-labelledby="tab-0-c2ltZ3JpZC9tYy1zbGlt" class="sphinx-tabs-panel group-tab" id="panel-0-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tabpanel" tabindex="0"><p>If you go for the small image, the following script <code class="docutils literal notranslate"><span class="pre">simgrid.sh</span></code> will execute a command within the docker.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="ch">#! /bin/sh</span>
+
+<span class="nb">exec</span><span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-i<span class="w"> </span>-v<span class="w"> </span><span class="nv">$PWD</span>:<span class="nv">$PWD</span><span class="w"> </span>-w<span class="w"> </span><span class="nv">$PWD</span><span class="w"> </span>-u<span class="w"> </span><span class="nv">$UID</span>:<span class="nv">$UID</span><span class="w"> </span>simgrid/mc-slim<span class="w"> </span><span class="nv">$*</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">-v</span> <span class="pre">$PWD:$PWD</span></code> makes the current directory visible from within the docker while <code class="docutils literal notranslate"><span class="pre">-w</span> <span class="pre">$PWD</span></code> uses that directory as a
+working directory. <code class="docutils literal notranslate"><span class="pre">-u</span> <span class="pre">$UID:$UID</span></code> uses your identity within the docker so that the files created within the directory
+have the right ownership and permissions. Add <code class="docutils literal notranslate"><span class="pre">--ulimit</span> <span class="pre">nofile=1024:1024</span></code> if you want to run valgrind within the
+container, but it’s not installed for now.</p>
+<p>Make the <code class="docutils literal notranslate"><span class="pre">simgrid.sh</span></code> executable with a <code class="docutils literal notranslate"><span class="pre">chmod</span></code>. Once it’s done, you can use it to run a command within the docker.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>chmod<span class="w"> </span>+x<span class="w"> </span>simgrid.sh
+<span class="gp">$ </span>./simgrid.sh<span class="w"> </span>hostname
+<span class="go">01e5b887ce44  # this is the name of the docker container. It will thus change each time you run it</span>
+<span class="gp">$ </span>hostname
+<span class="go">  (here comes the name of your linux system. It will not change with time)</span>
+<span class="gp">$ </span>./simgrid.sh<span class="w"> </span>clang<span class="w"> </span>--version
+<span class="go">  (here comes the clang version installed in the docker container -- 19.1.7 as of writing)</span>
+<span class="gp">$ </span>clang<span class="w"> </span>--version
+<span class="go">  (here comes the clang version on your machine. You may even not have it installed, that&#39;s OK)</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-c2ltZ3JpZC90dXRvLW1j" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tabpanel" tabindex="0"><p>If you go for the large image, the following command starts a terminal within the Docker container, where SimGrid is already installed.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>docker<span class="w"> </span>image<span class="w"> </span>pull<span class="w"> </span>simgrid/tuto-mc
+<span class="gp">$ </span>mkdir<span class="w"> </span>~/tuto-mcsimgrid<span class="w"> </span><span class="c1"># or chose another directory to share between your computer and the docker container</span>
+<span class="gp">$ </span>docker<span class="w"> </span>run<span class="w"> </span>--user<span class="w"> </span><span class="nv">$UID</span>:<span class="nv">$GID</span><span class="w"> </span>-it<span class="w"> </span>--rm<span class="w"> </span>--name<span class="w"> </span>mcsimgrid<span class="w"> </span>--volume<span class="w"> </span>~/tuto-mcsimgrid:/source/tutorial<span class="w"> </span>simgrid/tuto-mc<span class="w"> </span>bash
+</pre></div>
+</div>
+<p>If the copy command fails, complaining that you do not have the needed right, try removing the <code class="docutils literal notranslate"><span class="pre">sudo</span></code> in front of your
+<code class="docutils literal notranslate"><span class="pre">docker</span></code> command, or the <code class="docutils literal notranslate"><span class="pre">--user</span> <span class="pre">$UID:$GID</span></code> part of the docker command if the <code class="docutils literal notranslate"><span class="pre">sudo</span></code> is mandatory in your setup.</p>
+<p>More info if you want to understand that command. Skip it if you wish. The <code class="docutils literal notranslate"><span class="pre">--user</span> <span class="pre">$UID:$GID</span></code> part request docker to use
+your login name and group within the container too. <code class="docutils literal notranslate"><span class="pre">-it</span></code> requests to run the command interactively in a terminal.
+<code class="docutils literal notranslate"><span class="pre">--rm</span></code> asks to remove the container once the command is done. <code class="docutils literal notranslate"><span class="pre">--name</span></code> gives a name to the container. <code class="docutils literal notranslate"><span class="pre">--volume</span></code>
+makes one directory of your machine visible from within the container. The part on the left of <code class="docutils literal notranslate"><span class="pre">:</span></code> is the name outside
+while the right part is the name within the container. The last words on the line are the docker image to use as a basis
+for the container (here, <code class="docutils literal notranslate"><span class="pre">simgrid/tuto-mc</span></code>) and the program to run when the container starts (here, <code class="docutils literal notranslate"><span class="pre">bash</span></code>).</p>
+<p>In the container, you have access to the following directories of interest:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/source/tutorial</span></code>: A view to the <code class="docutils literal notranslate"><span class="pre">~/tuto-mcsimgrid</span></code> directory on your disk, out of the container.
+Edit the files you want from your computer and save them in <code class="docutils literal notranslate"><span class="pre">~/tuto-mcsimgrid</span></code>;
+Compile and use them immediately within the container in <code class="docutils literal notranslate"><span class="pre">/source/tutorial</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/source/tutorial-model-checking.git</span></code>: Files provided with this tutorial.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/source/simgrid-v???</span></code>: Source code of SimGrid, pre-configured in MC mode. The framework is also installed in <code class="docutils literal notranslate"><span class="pre">/usr</span></code>
+so the source code is only provided for your information.</p></li>
+</ul>
+<p>To use valgrind from within the container, you probably need to run the following command</p>
+</div></div>
+</section>
+<section id="lab1-dining-philosophers-with-sthread">
+<h2>Lab1: Dining philosophers with sthread</h2>
+<p>Let’s first explore the behavior of bugged implementation of the <a class="reference external" href="https://en.wikipedia.org/wiki/Dining_philosophers_problem">dining philosophers problem</a>.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-c2ltZ3JpZC9tYy1zbGlt" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-1-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tab" tabindex="0">simgrid/mc-slim</button><button aria-controls="panel-1-c2ltZ3JpZC90dXRvLW1j" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-1-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tab" tabindex="-1">simgrid/tuto-mc</button></div><div aria-labelledby="tab-1-c2ltZ3JpZC9tYy1zbGlt" class="sphinx-tabs-panel group-tab" id="panel-1-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tabpanel" tabindex="0"><p>First download the tutorial files from git.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>git<span class="w"> </span>clone<span class="w"> </span>--depth<span class="o">=</span><span class="m">1</span><span class="w"> </span>https://framagit.org/simgrid/tutorial-model-checking.git
+<span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>tutorial-model-checking.git
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-1-c2ltZ3JpZC90dXRvLW1j" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-1-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tabpanel" tabindex="0"><p>Once in the container, copy all files from the tutorial into the directory shared between your host computer and the container.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>From<span class="w"> </span>within<span class="w"> </span>the<span class="w"> </span>container
+<span class="gp">$ </span>cp<span class="w"> </span>-r<span class="w"> </span>/source/tutorial-model-checking.git/*<span class="w"> </span>/source/tutorial/
+<span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>/source/tutorial/
+</pre></div>
+</div>
+<p>Several files should have appeared in the <code class="docutils literal notranslate"><span class="pre">~/tuto-mcsimgrid</span></code> directory of your computer (out of the container).</p>
+</div></div>
+<p>This lab uses <a class="reference external" href="https://framagit.org/simgrid/tutorial-model-checking/-/blob/main/philosophers.c">philosophers.c</a></p>
+<div class="toggle-header docutils container">
+<p>Code of <code class="docutils literal notranslate"><span class="pre">philosophers.c</span></code>: click here to open</p>
+</div>
+<div class="toggle-content hidden-content docutils container">
+<p>You can also <a class="reference external" href="https://framagit.org/simgrid/tutorial-model-checking/-/blob/main/philosophers.c">view it online</a></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright (c) 2024-2025. The SimGrid Team. All rights reserved.          */</span>
+
+<span class="cm">/* This program is free software; you can redistribute it and/or modify it</span>
+<span class="cm"> * under the terms of the license (GNU LGPL) which comes with this package. */</span>
+
+<span class="c1">// Naive dining philosophers solution, which leads to deadlock.</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;pthread.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdlib.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;unistd.h&gt;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="n">DEBUG</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">forks</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">philosopher</span><span class="p">;</span>
+<span class="w">  </span><span class="n">pthread_mutex_t</span><span class="o">*</span><span class="w"> </span><span class="n">left_fork</span><span class="p">;</span>
+<span class="w">  </span><span class="n">pthread_mutex_t</span><span class="o">*</span><span class="w"> </span><span class="n">right_fork</span><span class="p">;</span>
+<span class="p">}</span><span class="o">*</span><span class="w"> </span><span class="n">forks</span><span class="p">;</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="nf">philosopher_code</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">forks_arg</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">forks</span><span class="o">*</span><span class="w"> </span><span class="n">forks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">forks_arg</span><span class="p">;</span>
+<span class="w">  </span><span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="n">forks</span><span class="o">-&gt;</span><span class="n">left_fork</span><span class="p">);</span>
+<span class="w">  </span><span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="n">forks</span><span class="o">-&gt;</span><span class="n">right_fork</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">DEBUG</span><span class="p">)</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Philosopher %d just ate.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">forks</span><span class="o">-&gt;</span><span class="n">philosopher</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">forks</span><span class="o">-&gt;</span><span class="n">left_fork</span><span class="p">);</span>
+<span class="w">  </span><span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">forks</span><span class="o">-&gt;</span><span class="n">right_fork</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">argc</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Usage: %s NUM_PHILOSOPHERS DEBUG</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">NUM_THREADS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+<span class="w">  </span><span class="n">DEBUG</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+
+<span class="w">  </span><span class="n">pthread_t</span><span class="w"> </span><span class="kr">thread</span><span class="p">[</span><span class="n">NUM_THREADS</span><span class="p">];</span>
+<span class="w">  </span><span class="n">pthread_mutex_t</span><span class="w"> </span><span class="n">mutex_resource</span><span class="p">[</span><span class="n">NUM_THREADS</span><span class="p">];</span>
+
+<span class="w">  </span><span class="n">forks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">malloc</span><span class="p">(</span><span class="n">NUM_THREADS</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">forks</span><span class="p">));</span>
+
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NUM_THREADS</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">pthread_mutex_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mutex_resource</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="w">    </span><span class="n">forks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">forks</span><span class="p">){</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">mutex_resource</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="o">&amp;</span><span class="n">mutex_resource</span><span class="p">[(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">NUM_THREADS</span><span class="p">]};</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NUM_THREADS</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="kr">thread</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">philosopher_code</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">forks</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NUM_THREADS</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">pthread_join</span><span class="p">(</span><span class="kr">thread</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">free</span><span class="p">(</span><span class="n">forks</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p><br></br>
+The provided code is as simple as possible. It simply declares a <code class="docutils literal notranslate"><span class="pre">philosopher_code</span></code> function, representing a philosopher that
+first picks its left fork and then right fork before eating. This code is obviously wrong: if all philosopher manage to get
+their left fork at the same time, no one will manage to get its right fork (because it’s the left fork of someone else), and the
+execution will deadlock.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-c2ltZ3JpZC9tYy1zbGlt" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-2-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tab" tabindex="0">simgrid/mc-slim</button><button aria-controls="panel-2-c2ltZ3JpZC90dXRvLW1j" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-2-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tab" tabindex="-1">simgrid/tuto-mc</button></div><div aria-labelledby="tab-2-c2ltZ3JpZC9tYy1zbGlt" class="sphinx-tabs-panel group-tab" id="panel-2-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tabpanel" tabindex="0"><p>Suprisingly, this code works when you run it:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>Do<span class="w"> </span>not<span class="w"> </span>forget<span class="w"> </span>the<span class="w"> </span>./simgrid.sh<span class="w"> </span>at<span class="w"> </span>the<span class="w"> </span>beginning<span class="w"> </span>to<span class="w"> </span>enter<span class="w"> </span>the<span class="w"> </span>docker<span class="w"> </span><span class="k">for</span><span class="w"> </span>each<span class="w"> </span><span class="nb">command</span>
+
+<span class="gp">$ </span>./simgrid.sh<span class="w"> </span>clang<span class="w"> </span>-g<span class="w"> </span>philosophers.c<span class="w"> </span>-o<span class="w"> </span>philosophers
+<span class="gp">$ </span>./simgrid.sh<span class="w"> </span>./philosophers<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="c1"># launch 5 philosophers, enabling debug</span>
+<span class="go">Philosopher 0 just ate.</span>
+<span class="go">Philosopher 1 just ate.</span>
+<span class="go">Philosopher 2 just ate.</span>
+<span class="go">Philosopher 3 just ate.</span>
+<span class="go">Philosopher 4 just ate.</span>
+<span class="gp">$</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-2-c2ltZ3JpZC90dXRvLW1j" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-2-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tabpanel" tabindex="0"><p>Suprisingly, this code works when you run it:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>From<span class="w"> </span>within<span class="w"> </span>the<span class="w"> </span>container,<span class="w"> </span>directory<span class="w"> </span>/source/tutorial/
+
+<span class="gp">$ </span>cmake<span class="w"> </span>.<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make<span class="w"> </span>philosophers
+<span class="gp">$ </span>./philosophers<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="c1"># launch 5 philosophers, enabling debug</span>
+<span class="go">Philosopher 0 just ate.</span>
+<span class="go">Philosopher 2 just ate.</span>
+<span class="go">Philosopher 3 just ate.</span>
+<span class="go">Philosopher 1 just ate.</span>
+<span class="go">Philosopher 4 just ate.</span>
+<span class="gp">$</span>
+</pre></div>
+</div>
+</div></div>
+<p>The philosophers may well eat in another order in your case, but it is really unlikely that you manage to trigger the bug in
+your first run. Actually, you can probably run the code ten thousands times without triggering the issue.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-c2ltZ3JpZC9tYy1zbGlt" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-3-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tab" tabindex="0">simgrid/mc-slim</button><button aria-controls="panel-3-c2ltZ3JpZC90dXRvLW1j" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-3-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tab" tabindex="-1">simgrid/tuto-mc</button></div><div aria-labelledby="tab-3-c2ltZ3JpZC9tYy1zbGlt" class="sphinx-tabs-panel group-tab" id="panel-3-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="sb">`</span>seq<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">10000</span><span class="sb">`</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;XXX Run </span><span class="nv">$i</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">;</span><span class="w"> </span>./simgrid.sh<span class="w"> </span>./philosophers<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
+<span class="gp gp-VirtualEnv">(10,000 non-buggy executions -- most likely)</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-3-c2ltZ3JpZC90dXRvLW1j" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-3-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>From<span class="w"> </span>within<span class="w"> </span>the<span class="w"> </span>container,<span class="w"> </span>directory<span class="w"> </span>/source/tutorial/
+<span class="gp">$ </span><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="sb">`</span>seq<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">10000</span><span class="sb">`</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;XXX Run </span><span class="nv">$i</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">;</span><span class="w"> </span>./philosophers<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
+<span class="gp gp-VirtualEnv">(10,000 non-buggy executions -- most likely)</span>
+</pre></div>
+</div>
+</div></div>
+<p>This is exactly what makes debugging multithreaded applications so frustrating. It often happens that even if you know for sure
+that your code is wrong, you fail to trigger the issue with your tests. The second source of frustration comes from the fact
+that when you get an unexpected deadlock in your test, you fail to understand how your application reached that buggy state. And
+if you add any logs to your application, its behavior changes and the bug disappear (such bugs are often called <a class="reference external" href="https://en.wikipedia.org/wiki/Heisenbug">heisenbugs</a>).</p>
+<p>Fortunately, SimGrid can catch the bug of such a small program very quickly and provides a large amount of information about the
+bugs it finds. You just have to run your code within the <code class="docutils literal notranslate"><span class="pre">simgrid-mc</span></code> program, asking for <em>sthread</em> replacement of
+<code class="docutils literal notranslate"><span class="pre">pthread</span></code>.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-c2ltZ3JpZC9tYy1zbGlt" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-4-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tab" tabindex="0">simgrid/mc-slim</button><button aria-controls="panel-4-c2ltZ3JpZC90dXRvLW1j" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-4-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tab" tabindex="-1">simgrid/tuto-mc</button></div><div aria-labelledby="tab-4-c2ltZ3JpZC9tYy1zbGlt" class="sphinx-tabs-panel group-tab" id="panel-4-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./simgrid.sh<span class="w"> </span>simgrid-mc<span class="w"> </span>--sthread<span class="w"> </span>./philosophers<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">0</span>
+<span class="gp gp-VirtualEnv">(output explained below)</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-4-c2ltZ3JpZC90dXRvLW1j" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-4-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>From<span class="w"> </span>within<span class="w"> </span>the<span class="w"> </span>container,<span class="w"> </span>directory<span class="w"> </span>/source/tutorial/
+
+<span class="gp">$ </span>simgrid-mc<span class="w"> </span>--sthread<span class="w"> </span>./philosophers<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">0</span>
+<span class="gp gp-VirtualEnv">(output explained below)</span>
+</pre></div>
+</div>
+</div></div>
+<p>If you get an error such as <code class="docutils literal notranslate"><span class="pre">Channel::receive</span> <span class="pre">failure:</span> <span class="pre">Connection</span> <span class="pre">reset</span> <span class="pre">by</span> <span class="pre">peer</span></code>, read further the logs. It’s probably that
+the binary does not exist or something. SimGrid is very verbose when things go wrong but the cause to your problem should be
+described somewhere in the verbiage.</p>
+<p>If simgrid-mc fails with the error <code class="docutils literal notranslate"><span class="pre">[root/CRITICAL]</span> <span class="pre">Could</span> <span class="pre">not</span> <span class="pre">wait</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">model-checker.</span></code>, you need to explicitly add the
+PTRACE capability to your docker. Restart your docker with the additional parameter <code class="docutils literal notranslate"><span class="pre">--cap-add</span> <span class="pre">SYS_PTRACE</span></code>.</p>
+<p>Since Mc SimGrid is a software model checker, it exhaustively explores all possible outcomes of your application, so you can
+take for granted that it will find a bug if there is any. If the exploration terminates without finding any bug, then you can be
+reasonably confident that your program is bug-free. It’s not a proof either, because Mc SimGrid itself is a complex program
+which may contain bugs, preventing it from finding existing bugs in your application. If your program is too large, its
+exhaustive exploration may be too large to be practical. But in our case, Mc SimGrid produces a counter example in one tenth of
+a second:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[0.000000] [xbt_cfg/INFO] Configuration change: Set &#39;model-check/setenv&#39; to &#39;LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libsthread.so&#39;</span>
+<span class="go">[0.000000] [mc_checkerside/INFO] setenv &#39;LD_PRELOAD&#39;=&#39;/usr/lib/x86_64-linux-gnu/libsthread.so&#39;</span>
+<span class="go">sthread is intercepting the execution of ./philosophers. If it&#39;s not what you want, export STHREAD_IGNORE_BINARY=./philosophers</span>
+<span class="go">[0.000000] [mc_dfs/INFO] Start a DFS exploration. Reduction is: dpor.</span>
+<span class="go">[0.000000] [mc_global/INFO] **************************</span>
+<span class="go">[0.000000] [mc_global/INFO] *** DEADLOCK DETECTED ***</span>
+<span class="go">[0.000000] [mc_global/INFO] **************************</span>
+<span class="gp gp-VirtualEnv">(more info omitted)</span>
+</pre></div>
+</div>
+<p>The first few lines are debug and various informative messages, such as the used version of sthread and the fact that sthread
+successfully intercepts our binary. Then the exploration starts, quickly leading to the deadlock. Then comes the current state
+of the system when the deadlock arises:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[0.000000] [ker_engine/INFO] 6 actors are still active, awaiting something. Here is their status:</span>
+<span class="go">[0.000000] [ker_engine/INFO]  - pid 1 (main thread@Lilibeth) simcall ActorJoin(pid:2)</span>
+<span class="go">[0.000000] [ker_engine/INFO]  - pid 2 (thread 1@Lilibeth) simcall MUTEX_WAIT(mutex_id:1 owner:3)</span>
+<span class="go">[0.000000] [ker_engine/INFO]  - pid 3 (thread 2@Lilibeth) simcall MUTEX_WAIT(mutex_id:2 owner:4)</span>
+<span class="go">[0.000000] [ker_engine/INFO]  - pid 4 (thread 3@Lilibeth) simcall MUTEX_WAIT(mutex_id:3 owner:5)</span>
+<span class="go">[0.000000] [ker_engine/INFO]  - pid 5 (thread 4@Lilibeth) simcall MUTEX_WAIT(mutex_id:4 owner:6)</span>
+<span class="go">[0.000000] [ker_engine/INFO]  - pid 6 (thread 5@Lilibeth) simcall MUTEX_WAIT(mutex_id:0 owner:2)</span>
+</pre></div>
+</div>
+<p>The main thread of our program (the first one, the one given pid 1 by SimGrid) is waiting in a <code class="docutils literal notranslate"><span class="pre">pthread_join</span></code> (SimGrid
+converts it into its internal ActorJoin <em>simcall</em> i.e. transition i.e. observed program event). We even learn that this thread
+is trying to join on the thread of pid 2 at that point. We then see the expected loop of locks characterizing the deadlock:
+pid 2 owns mutex 0 and wants mutex 1; pid 3 owns mutex 1 and wants 2; pid 4 owns mutex 2 and wants 3; pid 5 owns mutex 3 and
+wants 4; pid 6 owns mutex 4 and wants 0. That’s exactly the bug we were expecting from that code.</p>
+<p>SimGrid then details the execution trace leading to this deadlock.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[0.000000] [mc_global/INFO] Counter-example execution trace:</span>
+<span class="go">[0.000000] [mc_global/INFO]   Actor 2 in simcall MUTEX_ASYNC_LOCK(mutex: 0, owner: 2)</span>
+<span class="go">[0.000000] [mc_global/INFO]   Actor 2 in simcall MUTEX_WAIT(mutex: 0, owner: 2)</span>
+<span class="go">[0.000000] [mc_global/INFO]   Actor 3 in simcall MUTEX_ASYNC_LOCK(mutex: 1, owner: 3)</span>
+<span class="go">[0.000000] [mc_global/INFO]   Actor 2 in simcall MUTEX_ASYNC_LOCK(mutex: 1, owner: 3)</span>
+<span class="go">[0.000000] [mc_global/INFO]   Actor 3 in simcall MUTEX_WAIT(mutex: 1, owner: 3)</span>
+<span class="go">[0.000000] [mc_global/INFO]   Actor 4 in simcall MUTEX_ASYNC_LOCK(mutex: 2, owner: 4)</span>
+<span class="go">[0.000000] [mc_global/INFO]   Actor 3 in simcall MUTEX_ASYNC_LOCK(mutex: 2, owner: 4)</span>
+<span class="go">[0.000000] [mc_global/INFO]   Actor 4 in simcall MUTEX_WAIT(mutex: 2, owner: 4)</span>
+<span class="go">[0.000000] [mc_global/INFO]   Actor 5 in simcall MUTEX_ASYNC_LOCK(mutex: 3, owner: 5)</span>
+<span class="go">[0.000000] [mc_global/INFO]   Actor 4 in simcall MUTEX_ASYNC_LOCK(mutex: 3, owner: 5)</span>
+<span class="go">[0.000000] [mc_global/INFO]   Actor 5 in simcall MUTEX_WAIT(mutex: 3, owner: 5)</span>
+<span class="go">[0.000000] [mc_global/INFO]   Actor 6 in simcall MUTEX_ASYNC_LOCK(mutex: 4, owner: 6)</span>
+<span class="go">[0.000000] [mc_global/INFO]   Actor 5 in simcall MUTEX_ASYNC_LOCK(mutex: 4, owner: 6)</span>
+<span class="go">[0.000000] [mc_global/INFO]   Actor 6 in simcall MUTEX_WAIT(mutex: 4, owner: 6)</span>
+<span class="go">[0.000000] [mc_global/INFO]   Actor 6 in simcall MUTEX_ASYNC_LOCK(mutex: 0, owner: 2)</span>
+</pre></div>
+</div>
+<p>SimGrid execution traces are not that easy to read because the internal events do not perfectly match the API we used. Most
+notably, <code class="docutils literal notranslate"><span class="pre">pthread_lock</span></code> is split into two events: <code class="docutils literal notranslate"><span class="pre">MUTEX_ASYNC_LOCK</span></code> (where the actor declares it intend to lock the mutex
+without blocking. It puts its name in the waiting list of that mutex) and <code class="docutils literal notranslate"><span class="pre">MUTEX_WAIT</span></code> (where it actually blocks until its
+name is becomes the first from that list). When <code class="docutils literal notranslate"><span class="pre">MUTEX_ASYNC_LOCK</span></code> appears in the execution trace, it means that this action
+was successfully run by the corresponding actor (intend to wait on the mutex do not appear in the trace, only successful waits
+appear).</p>
+<p>You can read <code class="docutils literal notranslate"><span class="pre">MUTEX_ASYNC_LOCK</span></code> as <code class="docutils literal notranslate"><span class="pre">pthread_lock_begin</span></code> while <code class="docutils literal notranslate"><span class="pre">MUTEX_WAIT</span></code> would be  <code class="docutils literal notranslate"><span class="pre">pthread_lock_end</span></code>.
+<code class="docutils literal notranslate"><span class="pre">pthread_unlock</span></code> simply becomes <code class="docutils literal notranslate"><span class="pre">MUTEX_UNLOCK</span></code>, even if there is no such operation in that execution trace.</p>
+<p>With this information and our previous understanding of the issue, we can read the trace as follows:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Actor 2 takes mutex 0 (<code class="docutils literal notranslate"><span class="pre">MUTEX_ASYNC_LOCK</span></code> + <code class="docutils literal notranslate"><span class="pre">MUTEX_WAIT</span></code>)</p></li>
+<li><p>Actor 3 declares its intend to take mutex 1 (<code class="docutils literal notranslate"><span class="pre">MUTEX_ASYNC_LOCK</span></code>)</p></li>
+<li><p>Actor 2 declares its intend to take mutex 1 (<code class="docutils literal notranslate"><span class="pre">MUTEX_ASYNC_LOCK</span></code>)</p></li>
+</ul>
+</div></blockquote>
+<p>This is already a dangerous move, as actor 2 is the owner of mutex 0 and wants the mutex 1, that is owned by actor 3 that will
+need the mutex 2 to release the mutex 1. But the deadlock is not granted yet, as nobody owns mutex 2 yet, so actor 3 could still
+get it. When exactly does the trap close in on our threads?</p>
+<p>If we read the output further, SimGrid displays the critical transition, which is the first transition after which no valid
+execution exist. Before that critical transition, some possible executions still manage to avoid any issue, but after that
+transition all executions are buggy.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[0.000000] [mc_ct/INFO] *********************************</span>
+<span class="go">[0.000000] [mc_ct/INFO] *** CRITICAL TRANSITION FOUND ***</span>
+<span class="go">[0.000000] [mc_ct/INFO] *********************************</span>
+<span class="go">[0.000000] [mc_ct/INFO] Current knowledge of explored stack:</span>
+<span class="go">[0.000000] [mc_ct/INFO]   (  CORRECT) Actor 2 in  ==&gt; simcall: MUTEX_ASYNC_LOCK(mutex: 0, owner: 2)</span>
+<span class="go">[0.000000] [mc_ct/INFO]   (  CORRECT) Actor 2 in  ==&gt; simcall: MUTEX_WAIT(mutex: 0, owner: 2)</span>
+<span class="go">[0.000000] [mc_ct/INFO]   (  CORRECT) Actor 3 in  ==&gt; simcall: MUTEX_ASYNC_LOCK(mutex: 1, owner: 3)</span>
+<span class="go">[0.000000] [mc_ct/INFO]   (  CORRECT) Actor 2 in  ==&gt; simcall: MUTEX_ASYNC_LOCK(mutex: 1, owner: 3)</span>
+<span class="go">[0.000000] [mc_ct/INFO]   (  CORRECT) Actor 3 in  ==&gt; simcall: MUTEX_WAIT(mutex: 1, owner: 3)</span>
+<span class="go">[0.000000] [mc_ct/INFO]   (  CORRECT) Actor 4 in  ==&gt; simcall: MUTEX_ASYNC_LOCK(mutex: 2, owner: 4)</span>
+<span class="go">[0.000000] [mc_ct/INFO]   (INCORRECT) Actor 3 in  ==&gt; simcall: MUTEX_ASYNC_LOCK(mutex: 2, owner: 4)</span>
+<span class="go">[0.000000] [mc_ct/INFO]   (INCORRECT) Actor 4 in  ==&gt; simcall: MUTEX_WAIT(mutex: 2, owner: 4)</span>
+<span class="go">[0.000000] [mc_ct/INFO]   (INCORRECT) Actor 4 in  ==&gt; simcall: MUTEX_ASYNC_LOCK(mutex: 0, owner: 2)</span>
+<span class="go">[0.000000] [mc_ct/INFO] Found the critical transition: Actor 4 ==&gt; simcall: MUTEX_ASYNC_LOCK(mutex: 2, owner: 4)</span>
+</pre></div>
+</div>
+<p>Once the actor 4 becomes the owner of mutex 2 while any other philosopher owns a mutex, the deadlock becomes inevitable.</p>
+<p>Before that critical transition, SimGrid displays some information on how to reproduce the bug out of the model checker as well as additional statistics.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[0.000000] [mc_Session/INFO] You can debug the problem (and see the whole details) by rerunning out of simgrid-mc</span>
+<span class="go">                             with --cfg=model-check/replay:&#39;1;1;1;1;1;2;2;3;2;3;4;3;4;5;4;5;6;5;6;6&#39;</span>
+<span class="go">[0.000000] [mc_dfs/INFO] DFS exploration ended. 390 unique states visited; 15 explored traces (322 transition replays, 696 states visited overall)</span>
+</pre></div>
+</div>
+<p>As stated in the first message, you can rerun the faulty execution trace directly with the given extra parameter. This can be
+useful to run that execution within valgrind, you probably don’t want to slow down your application with valgrind while running
+the time consuming model checker. But the real advantage of that command is that SimGrid provides much more information when
+replaying a given trace. As you can see below, that’s probably more information than you could dream of.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-5-c2ltZ3JpZC9tYy1zbGlt" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-5-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tab" tabindex="0">simgrid/mc-slim</button><button aria-controls="panel-5-c2ltZ3JpZC90dXRvLW1j" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-5-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tab" tabindex="-1">simgrid/tuto-mc</button></div><div aria-labelledby="tab-5-c2ltZ3JpZC9tYy1zbGlt" class="sphinx-tabs-panel group-tab" id="panel-5-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./simgrid.sh<span class="w"> </span>simgrid-mc<span class="w"> </span>--sthread<span class="w"> </span>./philosophers<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">0</span><span class="w"> </span>--cfg<span class="o">=</span>model-check/replay:<span class="s1">&#39;1;1;1;1;1;2;2;3;2;3;4;3;4;5;4;5;6;5;6;6&#39;</span>
+<span class="go">sthread is intercepting the execution of ./philosophers. If it&#39;s not what you want, export STHREAD_IGNORE_BINARY=./philosophers</span>
+<span class="go">[0.000000] [xbt_cfg/INFO] Configuration change: Set &#39;model-check/replay&#39; to &#39;1;1;1;1;1;2;2;3;2;3;4;3;4;5;4;5;6;5;6;6&#39;</span>
+<span class="go">[0.000000] [mc_record/INFO] path=1;1;1;1;1;2;2;3;2;3;4;3;4;5;4;5;6;5;6;6</span>
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">[0.000000] [mc_record/INFO] * Path chunk #1 &#39;1/0&#39; Actor main thread(pid:1): ActorCreate(-1)</span>
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">Backtrace (displayed in actor main thread):</span>
+<span class="go">  -&gt;  #0 simgrid::xbt::BacktraceImpl::BacktraceImpl() at src/xbt/backtrace.cpp:48</span>
+<span class="go">  -&gt;  #1 xbt_backtrace_display_current at src/xbt/backtrace.cpp:36</span>
+<span class="go">  -&gt;  #2 simgrid::kernel::actor::ActorImpl::yield() at src/kernel/actor/ActorImpl.cpp:297</span>
+<span class="go">  -&gt;  #3 simcall(simgrid::kernel::actor::Simcall::Type, std::function&lt;void ()&gt; const&amp;, simgrid::kernel::actor::SimcallObserver*) at src/kernel/actor/Simcall.cpp:58</span>
+<span class="go">  -&gt;  #4 simcall_run_answered(std::function&lt;void ()&gt; const&amp;, simgrid::kernel::actor::SimcallObserver*) at src/kernel/actor/Simcall.cpp:67</span>
+<span class="go">  -&gt;  #5 boost::intrusive_ptr&lt;simgrid::s4u::Actor&gt; simgrid::s4u::Host::add_actor&lt;std::_Bind&lt;sthread_create::$_0 (void* (*)(void*), void*)&gt; &gt;(std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;, std::_Bind&lt;sthread_create::$_0 (void* (*)(void*), void*)&gt;) at include/simgrid/s4u/Host.hpp:255</span>
+<span class="go">  -&gt;  #6 pthread_create at src/sthread/sthread.c:144</span>
+<span class="go">  -&gt;  #7 main at /tmp/tutorial-model-checking.git/philosophers.c:52</span>
+
+<span class="gp gp-VirtualEnv">(some more ActorCreate()</span> <span class="go">transitions ignored)</span>
+
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">[0.000000] [mc_record/INFO] * Path chunk #6 &#39;2/0&#39; Actor thread 1(pid:2): MUTEX_ASYNC_LOCK(mutex_id:0 owner:none)</span>
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">Backtrace (displayed in actor thread 1):</span>
+<span class="go">  -&gt;  #0 simgrid::xbt::BacktraceImpl::BacktraceImpl() at src/xbt/backtrace.cpp:48</span>
+<span class="go">  -&gt;  #1 xbt_backtrace_display_current at src/xbt/backtrace.cpp:36</span>
+<span class="go">  -&gt;  #2 simgrid::kernel::actor::ActorImpl::yield() at src/kernel/actor/ActorImpl.cpp:297</span>
+<span class="go">  -&gt;  #3 simcall(simgrid::kernel::actor::Simcall::Type, std::function&lt;void ()&gt; const&amp;, simgrid::kernel::actor::SimcallObserver*) at src/kernel/actor/Simcall.cpp:58</span>
+<span class="go">  -&gt;  #4 simcall_run_answered(std::function&lt;void ()&gt; const&amp;, simgrid::kernel::actor::SimcallObserver*) at src/kernel/actor/Simcall.cpp:67</span>
+<span class="go">  -&gt;  #5 sthread_mutex_lock at src/sthread/sthread_impl.cpp:252</span>
+<span class="go">  -&gt;  #6 pthread_mutex_lock at src/sthread/sthread.c:160</span>
+<span class="go">  -&gt;  #7 philosopher_code at /tmp/tutorial-model-checking.git/philosophers.c:19</span>
+<span class="go">  -&gt;  #8 auto sthread_create::$_0::operator()&lt;void* (void*), void&gt;(void* (*)(void*), void*) const at src/sthread/sthread_impl.cpp:154</span>
+<span class="go">  -&gt;  #9 std::function&lt;void ()&gt;::operator()() const at /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/std_function.h:593</span>
+<span class="go">  -&gt;  #10</span>
+
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">[0.000000] [mc_record/INFO] * Path chunk #7 &#39;2/0&#39; Actor thread 1(pid:2): MUTEX_WAIT(mutex_id:0 owner:2)</span>
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">Backtrace (displayed in actor thread 1):</span>
+<span class="go">  -&gt;  #0 simgrid::xbt::BacktraceImpl::BacktraceImpl() at src/xbt/backtrace.cpp:48</span>
+<span class="go">  -&gt;  #1 xbt_backtrace_display_current at src/xbt/backtrace.cpp:36</span>
+<span class="go">  -&gt;  #2 simgrid::kernel::actor::ActorImpl::yield() at src/kernel/actor/ActorImpl.cpp:297</span>
+<span class="go">  -&gt;  #3 simcall(simgrid::kernel::actor::Simcall::Type, std::function&lt;void ()&gt; const&amp;, simgrid::kernel::actor::SimcallObserver*) at src/kernel/actor/Simcall.cpp:58</span>
+<span class="go">  -&gt;  #4 simcall_run_blocking(std::function&lt;void ()&gt; const&amp;, simgrid::kernel::actor::SimcallObserver*) at src/kernel/actor/Simcall.cpp:74</span>
+<span class="go">  -&gt;  #5 sthread_mutex_lock at src/sthread/sthread_impl.cpp:252</span>
+<span class="go">  -&gt;  #6 pthread_mutex_lock at src/sthread/sthread.c:160</span>
+<span class="go">  -&gt;  #7 philosopher_code at /tmp/tutorial-model-checking.git/philosophers.c:19</span>
+<span class="go">  -&gt;  #8 auto sthread_create::$_0::operator()&lt;void* (void*), void&gt;(void* (*)(void*), void*) const at src/sthread/sthread_impl.cpp:154</span>
+<span class="go">  -&gt;  #9 std::function&lt;void ()&gt;::operator()() const at /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/std_function.h:593</span>
+<span class="go">  -&gt;  #10</span>
+
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">[0.000000] [mc_record/INFO] * Path chunk #8 &#39;3/0&#39; Actor thread 2(pid:3): MUTEX_ASYNC_LOCK(mutex_id:1 owner:none)</span>
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">Backtrace (displayed in actor thread 2):</span>
+<span class="go">  -&gt;  #0 simgrid::xbt::BacktraceImpl::BacktraceImpl() at src/xbt/backtrace.cpp:48</span>
+<span class="go">  -&gt;  #1 xbt_backtrace_display_current at src/xbt/backtrace.cpp:36</span>
+<span class="go">  -&gt;  #2 simgrid::kernel::actor::ActorImpl::yield() at src/kernel/actor/ActorImpl.cpp:297</span>
+<span class="go">  -&gt;  #3 simcall(simgrid::kernel::actor::Simcall::Type, std::function&lt;void ()&gt; const&amp;, simgrid::kernel::actor::SimcallObserver*) at src/kernel/actor/Simcall.cpp:58</span>
+<span class="go">  -&gt;  #4 simcall_run_answered(std::function&lt;void ()&gt; const&amp;, simgrid::kernel::actor::SimcallObserver*) at src/kernel/actor/Simcall.cpp:67</span>
+<span class="go">  -&gt;  #5 sthread_mutex_lock at src/sthread/sthread_impl.cpp:252</span>
+<span class="go">  -&gt;  #6 pthread_mutex_lock at src/sthread/sthread.c:160</span>
+<span class="go">  -&gt;  #7 philosopher_code at /tmp/tutorial-model-checking.git/philosophers.c:19</span>
+<span class="go">  -&gt;  #8 auto sthread_create::$_0::operator()&lt;void* (void*), void&gt;(void* (*)(void*), void*) const at src/sthread/sthread_impl.cpp:154</span>
+<span class="go">  -&gt;  #9 std::function&lt;void ()&gt;::operator()() const at /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/std_function.h:593</span>
+
+<span class="gp gp-VirtualEnv">(some more execution chunks ignored)</span>
+
+<span class="go">[0.000000] [mc_record/INFO] The replay of the trace is complete. DEADLOCK detected.</span>
+<span class="go">[0.000000] [ker_engine/INFO] 6 actors are still active, awaiting something. Here is their status:</span>
+<span class="go">[0.000000] [ker_engine/INFO]  - pid 1 (main thread@Lilibeth) simcall ActorJoin(pid:2)</span>
+<span class="go">[0.000000] [ker_engine/INFO]  - pid 2 (thread 1@Lilibeth) simcall MUTEX_WAIT(mutex_id:1 owner:3)</span>
+<span class="go">[0.000000] [ker_engine/INFO]  - pid 3 (thread 2@Lilibeth) simcall MUTEX_WAIT(mutex_id:2 owner:4)</span>
+<span class="go">[0.000000] [ker_engine/INFO]  - pid 4 (thread 3@Lilibeth) simcall MUTEX_WAIT(mutex_id:3 owner:5)</span>
+<span class="go">[0.000000] [ker_engine/INFO]  - pid 5 (thread 4@Lilibeth) simcall MUTEX_WAIT(mutex_id:4 owner:6)</span>
+<span class="go">[0.000000] [ker_engine/INFO]  - pid 6 (thread 5@Lilibeth) simcall MUTEX_WAIT(mutex_id:0 owner:2)</span>
+<span class="go">[0.000000] [sthread/INFO] All threads exited. Terminating the simulation.</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-5-c2ltZ3JpZC90dXRvLW1j" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-5-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>simgrid-mc<span class="w"> </span>--sthread<span class="w"> </span>./philosophers<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">0</span><span class="w"> </span>--cfg<span class="o">=</span>model-check/replay:<span class="s1">&#39;1;1;1;1;1;2;2;3;2;3;4;3;4;5;4;5;6;5;6;6&#39;</span>
+<span class="go">sthread is intercepting the execution of ./philosophers. If it&#39;s not what you want, export STHREAD_IGNORE_BINARY=./philosophers</span>
+<span class="go">[0.000000] [xbt_cfg/INFO] Configuration change: Set &#39;model-check/replay&#39; to &#39;1;1;1;1;1;2;2;3;2;3;4;3;4;5;4;5;6;5;6;6&#39;</span>
+<span class="go">[0.000000] [mc_record/INFO] path=2;2;3;2;3;4;3;4;4</span>
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">[0.000000] [mc_record/INFO] * Path chunk #1 &#39;2/0&#39; Actor thread 1(pid:2): MUTEX_ASYNC_LOCK(mutex_id:0 owner:none)</span>
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">Backtrace (displayed in actor thread 1):</span>
+<span class="go">  -&gt;  #0 xbt_backtrace_display_current at /src/xbt/backtrace.cpp:31</span>
+<span class="go">  -&gt;  #1 simcall_run_answered(std::function&lt;void ()&gt; const&amp;, simgrid::kernel::actor::SimcallObserver*) at /src/kernel/actor/Simcall.cpp:67</span>
+<span class="go">  -&gt;  #2 simgrid::s4u::Mutex::lock() at /src/s4u/s4u_Mutex.cpp:24</span>
+<span class="go">  -&gt;  #3 sthread_mutex_lock at /src/sthread/sthread_impl.cpp:223</span>
+<span class="go">  -&gt;  #4 pthread_mutex_lock at /usr/include/pthread.h:738</span>
+<span class="go">  -&gt;  #5 philosopher_code at /source/tutorial/philosophers.c:19</span>
+<span class="go">  -&gt;  #6 std::_Function_handler&lt;void (), std::_Bind&lt;sthread_create::{lambda(auto:1*, auto:2*)#1} (void* (*)(sthread_create::{lambda(auto:1*, auto:2*)#1}), sthread_create::{lambda(auto:1*, auto:2*)#1})&gt; &gt;::_M_invoke(std::_Any_data const&amp;) at /usr/include/c++/10/bits/std_function.h:293</span>
+<span class="go">  -&gt;  #7 smx_ctx_wrapper at /src/kernel/context/ContextSwapped.cpp:43</span>
+
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">[0.000000] [mc_record/INFO] * Path chunk #2 &#39;2/0&#39; Actor thread 1(pid:2): MUTEX_WAIT(mutex_id:0 owner:2)</span>
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">Backtrace (displayed in actor thread 1):</span>
+<span class="go">  -&gt;  #0 xbt_backtrace_display_current at /src/xbt/backtrace.cpp:31</span>
+<span class="go">  -&gt;  #1 simcall_run_blocking(std::function&lt;void ()&gt; const&amp;, simgrid::kernel::actor::SimcallObserver*) at /src/kernel/actor/Simcall.cpp:74</span>
+<span class="go">  -&gt;  #2 simgrid::s4u::Mutex::lock() at /src/s4u/s4u_Mutex.cpp:28</span>
+<span class="go">  -&gt;  #3 sthread_mutex_lock at /src/sthread/sthread_impl.cpp:223</span>
+<span class="go">  -&gt;  #4 pthread_mutex_lock at /usr/include/pthread.h:738</span>
+<span class="go">  -&gt;  #5 philosopher_code at /source/tutorial/philosophers.c:19</span>
+<span class="go">  -&gt;  #6 std::_Function_handler&lt;void (), std::_Bind&lt;sthread_create::{lambda(auto:1*, auto:2*)#1} (void* (*)(sthread_create::{lambda(auto:1*, auto:2*)#1}), sthread_create::{lambda(auto:1*, auto:2*)#1})&gt; &gt;::_M_invoke(std::_Any_data const&amp;) at /usr/include/c++/10/bits/std_function.h:293</span>
+<span class="go">  -&gt;  #7 smx_ctx_wrapper at /src/kernel/context/ContextSwapped.cpp:43</span>
+
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">[0.000000] [mc_record/INFO] * Path chunk #3 &#39;3/0&#39; Actor thread 2(pid:3): MUTEX_ASYNC_LOCK(mutex_id:1 owner:none)</span>
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">Backtrace (displayed in actor thread 2):</span>
+<span class="go">  -&gt;  #0 xbt_backtrace_display_current at /src/xbt/backtrace.cpp:31</span>
+<span class="go">  -&gt;  #1 simcall_run_answered(std::function&lt;void ()&gt; const&amp;, simgrid::kernel::actor::SimcallObserver*) at /src/kernel/actor/Simcall.cpp:67</span>
+<span class="go">  -&gt;  #2 simgrid::s4u::Mutex::lock() at /src/s4u/s4u_Mutex.cpp:24</span>
+<span class="go">  -&gt;  #3 sthread_mutex_lock at /src/sthread/sthread_impl.cpp:223</span>
+<span class="go">  -&gt;  #4 pthread_mutex_lock at /usr/include/pthread.h:738</span>
+<span class="go">  -&gt;  #5 philosopher_code at /source/tutorial/philosophers.c:19</span>
+<span class="go">  -&gt;  #6 std::_Function_handler&lt;void (), std::_Bind&lt;sthread_create::{lambda(auto:1*, auto:2*)#1} (void* (*)(sthread_create::{lambda(auto:1*, auto:2*)#1}), sthread_create::{lambda(auto:1*, auto:2*)#1})&gt; &gt;::_M_invoke(std::_Any_data const&amp;) at /usr/include/c++/10/bits/std_function.h:293</span>
+<span class="go">  -&gt;  #7 smx_ctx_wrapper at /src/kernel/context/ContextSwapped.cpp:43</span>
+
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">[0.000000] [mc_record/INFO] * Path chunk #4 &#39;2/0&#39; Actor thread 1(pid:2): MUTEX_ASYNC_LOCK(mutex_id:1 owner:3)</span>
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">Backtrace (displayed in actor thread 1):</span>
+<span class="go">  -&gt;  #0 xbt_backtrace_display_current at /src/xbt/backtrace.cpp:31</span>
+<span class="go">  -&gt;  #1 simcall_run_answered(std::function&lt;void ()&gt; const&amp;, simgrid::kernel::actor::SimcallObserver*) at /src/kernel/actor/Simcall.cpp:67</span>
+<span class="go">  -&gt;  #2 simgrid::s4u::Mutex::lock() at /src/s4u/s4u_Mutex.cpp:24</span>
+<span class="go">  -&gt;  #3 sthread_mutex_lock at /src/sthread/sthread_impl.cpp:223</span>
+<span class="go">  -&gt;  #4 pthread_mutex_lock at /usr/include/pthread.h:738</span>
+<span class="go">  -&gt;  #5 philosopher_code at /source/tutorial/philosophers.c:21</span>
+<span class="go">  -&gt;  #6 std::_Function_handler&lt;void (), std::_Bind&lt;sthread_create::{lambda(auto:1*, auto:2*)#1} (void* (*)(sthread_create::{lambda(auto:1*, auto:2*)#1}), sthread_create::{lambda(auto:1*, auto:2*)#1})&gt; &gt;::_M_invoke(std::_Any_data const&amp;) at /usr/include/c++/10/bits/std_function.h:293</span>
+<span class="go">  -&gt;  #7 smx_ctx_wrapper at /src/kernel/context/ContextSwapped.cpp:43</span>
+
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">[0.000000] [mc_record/INFO] * Path chunk #5 &#39;3/0&#39; Actor thread 2(pid:3): MUTEX_WAIT(mutex_id:1 owner:3)</span>
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">Backtrace (displayed in actor thread 2):</span>
+<span class="go">  -&gt;  #0 xbt_backtrace_display_current at /src/xbt/backtrace.cpp:31</span>
+<span class="go">  -&gt;  #1 simcall_run_blocking(std::function&lt;void ()&gt; const&amp;, simgrid::kernel::actor::SimcallObserver*) at /src/kernel/actor/Simcall.cpp:74</span>
+<span class="go">  -&gt;  #2 simgrid::s4u::Mutex::lock() at /src/s4u/s4u_Mutex.cpp:28</span>
+<span class="go">  -&gt;  #3 sthread_mutex_lock at /src/sthread/sthread_impl.cpp:223</span>
+<span class="go">  -&gt;  #4 pthread_mutex_lock at /usr/include/pthread.h:738</span>
+<span class="go">  -&gt;  #5 philosopher_code at /source/tutorial/philosophers.c:19</span>
+<span class="go">  -&gt;  #6 std::_Function_handler&lt;void (), std::_Bind&lt;sthread_create::{lambda(auto:1*, auto:2*)#1} (void* (*)(sthread_create::{lambda(auto:1*, auto:2*)#1}), sthread_create::{lambda(auto:1*, auto:2*)#1})&gt; &gt;::_M_invoke(std::_Any_data const&amp;) at /usr/include/c++/10/bits/std_function.h:293</span>
+<span class="go">  -&gt;  #7 smx_ctx_wrapper at /src/kernel/context/ContextSwapped.cpp:43</span>
+
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">[0.000000] [mc_record/INFO] * Path chunk #6 &#39;4/0&#39; Actor thread 3(pid:4): MUTEX_ASYNC_LOCK(mutex_id:2 owner:none)</span>
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">Backtrace (displayed in actor thread 3):</span>
+<span class="go">  -&gt;  #0 xbt_backtrace_display_current at /src/xbt/backtrace.cpp:31</span>
+<span class="go">  -&gt;  #1 simcall_run_answered(std::function&lt;void ()&gt; const&amp;, simgrid::kernel::actor::SimcallObserver*) at /src/kernel/actor/Simcall.cpp:67</span>
+<span class="go">  -&gt;  #2 simgrid::s4u::Mutex::lock() at /src/s4u/s4u_Mutex.cpp:24</span>
+<span class="go">  -&gt;  #3 sthread_mutex_lock at /src/sthread/sthread_impl.cpp:223</span>
+<span class="go">  -&gt;  #4 pthread_mutex_lock at /usr/include/pthread.h:738</span>
+<span class="go">  -&gt;  #5 philosopher_code at /source/tutorial/philosophers.c:19</span>
+<span class="go">  -&gt;  #6 std::_Function_handler&lt;void (), std::_Bind&lt;sthread_create::{lambda(auto:1*, auto:2*)#1} (void* (*)(sthread_create::{lambda(auto:1*, auto:2*)#1}), sthread_create::{lambda(auto:1*, auto:2*)#1})&gt; &gt;::_M_invoke(std::_Any_data const&amp;) at /usr/include/c++/10/bits/std_function.h:293</span>
+<span class="go">  -&gt;  #7 smx_ctx_wrapper at /src/kernel/context/ContextSwapped.cpp:43</span>
+
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">[0.000000] [mc_record/INFO] * Path chunk #7 &#39;3/0&#39; Actor thread 2(pid:3): MUTEX_ASYNC_LOCK(mutex_id:2 owner:4)</span>
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">Backtrace (displayed in actor thread 2):</span>
+<span class="go">  -&gt;  #0 xbt_backtrace_display_current at /src/xbt/backtrace.cpp:31</span>
+<span class="go">  -&gt;  #1 simcall_run_answered(std::function&lt;void ()&gt; const&amp;, simgrid::kernel::actor::SimcallObserver*) at /src/kernel/actor/Simcall.cpp:67</span>
+<span class="go">  -&gt;  #2 simgrid::s4u::Mutex::lock() at /src/s4u/s4u_Mutex.cpp:24</span>
+<span class="go">  -&gt;  #3 sthread_mutex_lock at /src/sthread/sthread_impl.cpp:223</span>
+<span class="go">  -&gt;  #4 pthread_mutex_lock at /usr/include/pthread.h:738</span>
+<span class="go">  -&gt;  #5 philosopher_code at /source/tutorial/philosophers.c:21</span>
+<span class="go">  -&gt;  #6 std::_Function_handler&lt;void (), std::_Bind&lt;sthread_create::{lambda(auto:1*, auto:2*)#1} (void* (*)(sthread_create::{lambda(auto:1*, auto:2*)#1}), sthread_create::{lambda(auto:1*, auto:2*)#1})&gt; &gt;::_M_invoke(std::_Any_data const&amp;) at /usr/include/c++/10/bits/std_function.h:293</span>
+<span class="go">  -&gt;  #7 smx_ctx_wrapper at /src/kernel/context/ContextSwapped.cpp:43</span>
+
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">[0.000000] [mc_record/INFO] * Path chunk #8 &#39;4/0&#39; Actor thread 3(pid:4): MUTEX_WAIT(mutex_id:2 owner:4)</span>
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">Backtrace (displayed in actor thread 3):</span>
+<span class="go">  -&gt;  #0 xbt_backtrace_display_current at /src/xbt/backtrace.cpp:31</span>
+<span class="go">  -&gt;  #1 simcall_run_blocking(std::function&lt;void ()&gt; const&amp;, simgrid::kernel::actor::SimcallObserver*) at /src/kernel/actor/Simcall.cpp:74</span>
+<span class="go">  -&gt;  #2 simgrid::s4u::Mutex::lock() at /src/s4u/s4u_Mutex.cpp:28</span>
+<span class="go">  -&gt;  #3 sthread_mutex_lock at /src/sthread/sthread_impl.cpp:223</span>
+<span class="go">  -&gt;  #4 pthread_mutex_lock at /usr/include/pthread.h:738</span>
+<span class="go">  -&gt;  #5 philosopher_code at /source/tutorial/philosophers.c:19</span>
+<span class="go">  -&gt;  #6 std::_Function_handler&lt;void (), std::_Bind&lt;sthread_create::{lambda(auto:1*, auto:2*)#1} (void* (*)(sthread_create::{lambda(auto:1*, auto:2*)#1}), sthread_create::{lambda(auto:1*, auto:2*)#1})&gt; &gt;::_M_invoke(std::_Any_data const&amp;) at /usr/include/c++/10/bits/std_function.h:293</span>
+<span class="go">  -&gt;  #7 smx_ctx_wrapper at /src/kernel/context/ContextSwapped.cpp:43</span>
+
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">[0.000000] [mc_record/INFO] * Path chunk #9 &#39;4/0&#39; Actor thread 3(pid:4): MUTEX_ASYNC_LOCK(mutex_id:3 owner:none)</span>
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">Backtrace (displayed in actor thread 3):</span>
+<span class="go">  -&gt;  #0 xbt_backtrace_display_current at /src/xbt/backtrace.cpp:31</span>
+<span class="go">  -&gt;  #1 simcall_run_answered(std::function&lt;void ()&gt; const&amp;, simgrid::kernel::actor::SimcallObserver*) at /src/kernel/actor/Simcall.cpp:67</span>
+<span class="go">  -&gt;  #2 simgrid::s4u::Mutex::lock() at /src/s4u/s4u_Mutex.cpp:24</span>
+<span class="go">  -&gt;  #3 sthread_mutex_lock at /src/sthread/sthread_impl.cpp:223</span>
+<span class="go">  -&gt;  #4 pthread_mutex_lock at /usr/include/pthread.h:738</span>
+<span class="go">  -&gt;  #5 philosopher_code at /source/tutorial/philosophers.c:21</span>
+<span class="go">  -&gt;  #6 std::_Function_handler&lt;void (), std::_Bind&lt;sthread_create::{lambda(auto:1*, auto:2*)#1} (void* (*)(sthread_create::{lambda(auto:1*, auto:2*)#1}), sthread_create::{lambda(auto:1*, auto:2*)#1})&gt; &gt;::_M_invoke(std::_Any_data const&amp;) at /usr/include/c++/10/bits/std_function.h:293</span>
+<span class="go">  -&gt;  #7 smx_ctx_wrapper at /src/kernel/context/ContextSwapped.cpp:43</span>
+
+<span class="go">[0.000000] [mc_record/INFO] The replay of the trace is complete. The application could run further.</span>
+<span class="go">[0.000000] [sthread/INFO] All threads exited. Terminating the simulation.</span>
+<span class="go">[0.000000] /src/kernel/EngineImpl.cpp:275: [ker_engine/WARNING] Process called exit when leaving - Skipping cleanups</span>
+<span class="go">[0.000000] /src/kernel/EngineImpl.cpp:275: [ker_engine/WARNING] Process called exit when leaving - Skipping cleanups</span>
+</pre></div>
+</div>
+</div></div>
+<p>We hope this tool proves useful for debugging your multithreaded code. We encourage you to share your feedback, whether positive
+or negative. Additionally, we would appreciate learning about any bugs you have identified using this tool. Our team will strive
+to address any challenges you encounter while working with Mc SimGrid.</p>
+</section>
+<section id="lab2-race-condition-with-sthread">
+<h2>Lab2: race condition with sthread</h2>
+<p>This short lab aims at searching for race conditions with the latest version of SimGrid. It requires SimGrid v4.1 (that is not
+yet released), and was only tested with the Docker image. See above to pull and start the Docker image.</p>
+<p>If you want to search for race conditions in your code, you must use our compilation wrapper to compile the programs.
+Do not forget the <code class="docutils literal notranslate"><span class="pre">-g</span></code> flag, or the messages will be less informative.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-6-c2ltZ3JpZC9tYy1zbGlt" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-6-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tab" tabindex="0">simgrid/mc-slim</button><button aria-controls="panel-6-c2ltZ3JpZC90dXRvLW1j" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-6-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tab" tabindex="-1">simgrid/tuto-mc</button></div><div aria-labelledby="tab-6-c2ltZ3JpZC9tYy1zbGlt" class="sphinx-tabs-panel group-tab" id="panel-6-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>git<span class="w"> </span>clone<span class="w"> </span>--depth<span class="o">=</span><span class="m">1</span><span class="w"> </span>https://framagit.org/simgrid/tutorial-model-checking.git
+<span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>tutorial-model-checking.git
+<span class="gp">$ </span>./simgrid.sh<span class="w"> </span>mclang<span class="w"> </span>plusplus.c<span class="w"> </span>-o<span class="w"> </span>plusplus<span class="w"> </span>-g
+<span class="go">Successfully instrumented 4 read operations and 3 writes operations</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-6-c2ltZ3JpZC90dXRvLW1j" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-6-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>From<span class="w"> </span>within<span class="w"> </span>the<span class="w"> </span>container,<span class="w"> </span>directory<span class="w"> </span>/source/tutorial/
+
+<span class="gp">$ </span>cp<span class="w"> </span>/source/tutorial-model-checking.git/plusplus.c<span class="w"> </span>.
+<span class="gp">$ </span>mclang<span class="w"> </span>plusplus.c<span class="w"> </span>-o<span class="w"> </span>plusplus<span class="w"> </span>-g
+<span class="go">Successfully instrumented 4 read operations and 3 writes operations</span>
+</pre></div>
+</div>
+</div></div>
+<p>Looking at the <a class="reference external" href="https://framagit.org/simgrid/tutorial-model-checking/-/blob/main/philosophers.c">source code</a>, there is a
+clear race condition between the two threads on the variable <code class="docutils literal notranslate"><span class="pre">i</span></code>. This is because incrementing an integer is not an atomic
+operation, so <code class="docutils literal notranslate"><span class="pre">i</span></code> could have the value of <code class="docutils literal notranslate"><span class="pre">1</span></code> if the threads compete for its increment. But if you run the program, it is
+very unlikely that you observe any issue, even if you run it 10,000 times in a row.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-7-c2ltZ3JpZC9tYy1zbGlt" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-7-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tab" tabindex="0">simgrid/mc-slim</button><button aria-controls="panel-7-c2ltZ3JpZC90dXRvLW1j" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-7-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tab" tabindex="-1">simgrid/tuto-mc</button></div><div aria-labelledby="tab-7-c2ltZ3JpZC9tYy1zbGlt" class="sphinx-tabs-panel group-tab" id="panel-7-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./simgrid.sh<span class="w"> </span>./plusplus
+<span class="gp">$ </span><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="sb">`</span>seq<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">10000</span><span class="sb">`</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;XXX Run </span><span class="nv">$i</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">;</span><span class="w"> </span>./simgrid.sh<span class="w"> </span>./plusplus<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-7-c2ltZ3JpZC90dXRvLW1j" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-7-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>From<span class="w"> </span>within<span class="w"> </span>the<span class="w"> </span>container,<span class="w"> </span>directory<span class="w"> </span>/source/tutorial/
+
+<span class="gp">$ </span>./plusplus
+<span class="gp">$ </span><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="sb">`</span>seq<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">10000</span><span class="sb">`</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;XXX Run </span><span class="nv">$i</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">;</span><span class="w"> </span>./plusplus<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
+</pre></div>
+</div>
+</div></div>
+<p>But if you run this program within the model checker, it detects the issue instantaneously, and properly report the race condition:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-8-c2ltZ3JpZC9tYy1zbGlt" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-8-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tab" tabindex="0">simgrid/mc-slim</button><button aria-controls="panel-8-c2ltZ3JpZC90dXRvLW1j" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-8-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tab" tabindex="-1">simgrid/tuto-mc</button></div><div aria-labelledby="tab-8-c2ltZ3JpZC9tYy1zbGlt" class="sphinx-tabs-panel group-tab" id="panel-8-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./simgrid.sh<span class="w"> </span>simgrid-mc<span class="w"> </span>--sthread<span class="w"> </span>./plusplus
+<span class="go">[0.000000] [mc_checkerside/INFO] setenv &#39;LD_PRELOAD&#39;=&#39;/usr/lib/x86_64-linux-gnu/libsthread.so&#39;</span>
+<span class="go">sthread is intercepting the execution of ./plusplus. If it&#39;s not what you want, export STHREAD_IGNORE_BINARY=./plusplus</span>
+<span class="go">[0.000000] [mc_dfs/INFO] Start a DFS exploration. Reduction is: dpor.</span>
+<span class="go">[0.000000] [mc_explo/INFO] Found a datarace at location 0x561ce34d004c between actor 2 and 3 after the follwing execution:</span>
+<span class="go">[0.000000] [mc_explo/INFO]   Actor 1 in simcall ActorCreate(child 2)</span>
+<span class="go">[0.000000] [mc_explo/INFO]   Actor 1 in simcall ActorCreate(child 3)</span>
+<span class="go">[0.000000] [mc_explo/INFO]   Actor 2 in simcall ActorExit()</span>
+<span class="go">[0.000000] [mc_explo/INFO]   Actor 1 in simcall ActorJoin(target 2, no timeout)</span>
+<span class="go">[0.000000] [mc_explo/INFO]   Actor 3 in simcall ActorExit()</span>
+<span class="go">[0.000000] [mc_explo/INFO] You can debug the problem (and see the whole details) by rerunning out of simgrid-mc with --cfg=model-check/replay:&#39;1;1;2;1;3&#39;</span>
+<span class="go">[0.000000] [mc_dfs/INFO] DFS exploration ended. 6 unique states visited; 0 explored traces (0 transition replays, 5 states visited overall)</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-8-c2ltZ3JpZC90dXRvLW1j" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-8-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>From<span class="w"> </span>within<span class="w"> </span>the<span class="w"> </span>container,<span class="w"> </span>directory<span class="w"> </span>/source/tutorial/
+
+<span class="gp">$ </span>simgrid-mc<span class="w"> </span>--sthread<span class="w"> </span>./plusplus
+<span class="go">[0.000000] [mc_checkerside/INFO] setenv &#39;LD_PRELOAD&#39;=&#39;/usr/lib/x86_64-linux-gnu/libsthread.so&#39;</span>
+<span class="go">sthread is intercepting the execution of ./plusplus. If it&#39;s not what you want, export STHREAD_IGNORE_BINARY=./plusplus</span>
+<span class="go">[0.000000] [mc_dfs/INFO] Start a DFS exploration. Reduction is: dpor.</span>
+<span class="go">[0.000000] [mc_explo/INFO] Found a datarace at location 0x55d463ce604c between actor 2 and 3 after the follwing execution:</span>
+<span class="go">[0.000000] [mc_explo/INFO]   Actor 1 in simcall ActorCreate(child 2)</span>
+<span class="go">[0.000000] [mc_explo/INFO]   Actor 1 in simcall ActorCreate(child 3)</span>
+<span class="go">[0.000000] [mc_explo/INFO]   Actor 2 in simcall ActorExit()</span>
+<span class="go">[0.000000] [mc_explo/INFO]   Actor 1 in simcall ActorJoin(target 2, no timeout)</span>
+<span class="go">[0.000000] [mc_explo/INFO]   Actor 3 in simcall ActorExit()</span>
+<span class="go">[0.000000] [mc_explo/INFO] You can debug the problem (and see the whole details) by rerunning out of simgrid-mc with --cfg=model-check/replay:&#39;1;1;2;1;3&#39;</span>
+<span class="go">[0.000000] [mc_dfs/INFO] DFS exploration ended. 6 unique states visited; 0 explored traces (0 transition replays, 5 states visited overall)</span>
+</pre></div>
+</div>
+</div></div>
+<p>To replay the execution to get more details, you must inject sthread manually through <code class="docutils literal notranslate"><span class="pre">LD_PRELOAD</span></code>. The syntax is given in the
+first line of the <code class="docutils literal notranslate"><span class="pre">simgrid-mc</span></code> output shown above.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-9-c2ltZ3JpZC9tYy1zbGlt" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-9-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tab" tabindex="0">simgrid/mc-slim</button><button aria-controls="panel-9-c2ltZ3JpZC90dXRvLW1j" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-9-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tab" tabindex="-1">simgrid/tuto-mc</button></div><div aria-labelledby="tab-9-c2ltZ3JpZC9tYy1zbGlt" class="sphinx-tabs-panel group-tab" id="panel-9-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>From<span class="w"> </span>within<span class="w"> </span>the<span class="w"> </span>container,<span class="w"> </span>directory<span class="w"> </span>/source/tutorial/
+
+<span class="gp">$ </span>./simgrid.sh<span class="w"> </span>simgrid-mc<span class="w"> </span>--sthread<span class="w"> </span>./plusplus<span class="w"> </span>--cfg<span class="o">=</span>model-check/replay:<span class="s1">&#39;1;1;2;1;3&#39;</span>
+<span class="gp"># </span><span class="o">(</span>verbose<span class="w"> </span>description<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>first<span class="w"> </span>execution<span class="w"> </span>steps,<span class="w"> </span>that<span class="w"> </span>are<span class="w"> </span>not<span class="w"> </span>that<span class="w"> </span>informative<span class="o">)</span>
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">[0.000000] [mc_record/INFO] * Path chunk #5 &#39;3/0&#39; Actor thread 2(pid:3): ActorExit()</span>
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">[0.000000] [mc_record/INFO] Found a datarace at location 0x562a1c30c04c</span>
+<span class="go">[0.000000] [mc_record/INFO] First operation was a WRITE made by actor 2:</span>
+<span class="go">  -&gt;  #0 simgrid::xbt::BacktraceImpl::BacktraceImpl() at src/xbt/backtrace.cpp:48</span>
+<span class="go">  -&gt;  #1 thread_code at /tmp/tutorial-model-checking.git/plusplus.c:8</span>
+<span class="go">  -&gt;  #2 auto sthread_create::$_0::operator()&lt;void* (void*), void&gt;(void* (*)(void*), void*) const at src/sthread/sthread_impl.cpp:154</span>
+<span class="go">  -&gt;  #3 std::function&lt;void ()&gt;::operator()() const at /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/std_function.h:593</span>
+<span class="go">  -&gt;  #4</span>
+
+<span class="go">[0.000000] [mc_record/INFO] Second operation was a READ made by actor 3:</span>
+<span class="go">  -&gt;  #0 simgrid::xbt::BacktraceImpl::BacktraceImpl() at src/xbt/backtrace.cpp:48</span>
+<span class="go">  -&gt;  #1 thread_code at /tmp/tutorial-model-checking.git/plusplus.c:8</span>
+<span class="go">  -&gt;  #2 auto sthread_create::$_0::operator()&lt;void* (void*), void&gt;(void* (*)(void*), void*) const at src/sthread/sthread_impl.cpp:154</span>
+<span class="go">  -&gt;  #3 std::function&lt;void ()&gt;::operator()() const at /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/std_function.h:593</span>
+<span class="go">  -&gt;  #4</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-9-c2ltZ3JpZC90dXRvLW1j" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-9-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>From<span class="w"> </span>within<span class="w"> </span>the<span class="w"> </span>container,<span class="w"> </span>directory<span class="w"> </span>/source/tutorial/
+
+<span class="gp">$ </span>simgrid-mc<span class="w"> </span>--sthread<span class="w"> </span>./plusplus<span class="w"> </span>--cfg<span class="o">=</span>model-check/replay:<span class="s1">&#39;1;1;2;1;3&#39;</span>
+<span class="gp"># </span><span class="o">(</span>verbose<span class="w"> </span>description<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>first<span class="w"> </span>execution<span class="w"> </span>steps,<span class="w"> </span>that<span class="w"> </span>are<span class="w"> </span>not<span class="w"> </span>that<span class="w"> </span>informative<span class="o">)</span>
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">[0.000000] [mc_record/INFO] * Path chunk #5 &#39;3/0&#39; Actor thread 2(pid:3): ActorExit()</span>
+<span class="go">[0.000000] [mc_record/INFO] ***********************************************************************************</span>
+<span class="go">[0.000000] [mc_record/INFO] Found a datarace at location 0x562a1c30c04c</span>
+<span class="go">[0.000000] [mc_record/INFO] First operation was a WRITE made by actor 2:</span>
+<span class="go">  -&gt;  #0 simgrid::xbt::BacktraceImpl::BacktraceImpl() at src/xbt/backtrace.cpp:48</span>
+<span class="go">  -&gt;  #1 thread_code at /tmp/tutorial-model-checking.git/plusplus.c:8</span>
+<span class="go">  -&gt;  #2 auto sthread_create::$_0::operator()&lt;void* (void*), void&gt;(void* (*)(void*), void*) const at src/sthread/sthread_impl.cpp:154</span>
+<span class="go">  -&gt;  #3 std::function&lt;void ()&gt;::operator()() const at /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/std_function.h:593</span>
+<span class="go">  -&gt;  #4</span>
+
+<span class="go">[0.000000] [mc_record/INFO] Second operation was a READ made by actor 3:</span>
+<span class="go">  -&gt;  #0 simgrid::xbt::BacktraceImpl::BacktraceImpl() at src/xbt/backtrace.cpp:48</span>
+<span class="go">  -&gt;  #1 thread_code at /tmp/tutorial-model-checking.git/plusplus.c:8</span>
+<span class="go">  -&gt;  #2 auto sthread_create::$_0::operator()&lt;void* (void*), void&gt;(void* (*)(void*), void*) const at src/sthread/sthread_impl.cpp:154</span>
+<span class="go">  -&gt;  #3 std::function&lt;void ()&gt;::operator()() const at /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/std_function.h:593</span>
+<span class="go">  -&gt;  #4</span>
+</pre></div>
+</div>
+</div></div>
+<p>When you know where to look, you from this output that the bug comes from a READ and a WRITE, both occuring at line
+<code class="docutils literal notranslate"><span class="pre">plusplus.c:8</span></code> in the function <code class="docutils literal notranslate"><span class="pre">thread_code</span></code> of the provided example.</p>
+</section>
+<section id="lab3-non-deterministic-receive-s4u-or-mpi">
+<h2>Lab3: non-deterministic receive (S4U or MPI)</h2>
+<section id="motivational-example">
+<h3>Motivational example</h3>
+<p>Let’s go with another example of a bugged program, this time using message passing in a distributed setting.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-10-c2ltZ3JpZC9tYy1zbGlt" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-10-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tab" tabindex="0">simgrid/mc-slim</button><button aria-controls="panel-10-c2ltZ3JpZC9tYy1zbGlt-1" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-10-c2ltZ3JpZC9tYy1zbGlt-1" name="c2ltZ3JpZC9tYy1zbGlt-1" role="tab" tabindex="-1">simgrid/mc-slim</button></div><div aria-labelledby="tab-10-c2ltZ3JpZC9tYy1zbGlt" class="sphinx-tabs-panel group-tab" id="panel-10-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tabpanel" tabindex="0"><p>First download the files from the tutorial on need.</p>
+<blockquote>
+<div><p>$ git clone –depth=1 <a class="reference external" href="https://framagit.org/simgrid/tutorial-model-checking.git">https://framagit.org/simgrid/tutorial-model-checking.git</a>
+$ cd tutorial-model-checking.git</p>
+</div></blockquote>
+</div><div aria-labelledby="tab-10-c2ltZ3JpZC9tYy1zbGlt-1" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-10-c2ltZ3JpZC9tYy1zbGlt-1" name="c2ltZ3JpZC9tYy1zbGlt-1" role="tabpanel" tabindex="0"><p>Once in the container, copy all files from the tutorial into the directory shared between your host computer and the container.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>From<span class="w"> </span>within<span class="w"> </span>the<span class="w"> </span>container
+
+<span class="gp">$ </span>cp<span class="w"> </span>-r<span class="w"> </span>/source/tutorial-model-checking.git/*<span class="w"> </span>/source/tutorial/
+<span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>/source/tutorial/
+</pre></div>
+</div>
+<p>Several files should have appeared in the <code class="docutils literal notranslate"><span class="pre">~/tuto-mcsimgrid</span></code> directory of your computer.</p>
+</div></div>
+<p>This lab uses <a class="reference external" href="https://framagit.org/simgrid/tutorial-model-checking/-/blob/main/ndet-receive-s4u.cpp">ndet-receive-s4u.cpp</a>,
+that relies the <a class="reference internal" href="app_s4u.html#s4u-doc"><span class="std std-ref">S4U interface</span></a> of SimGrid, but we provide a
+<a class="reference external" href="https://framagit.org/simgrid/tutorial-model-checking/-/blob/main/ndet-receive-mpi.cpp">MPI version</a>
+if you prefer (see below for details on using the MPI version).</p>
+<div class="toggle-header docutils container">
+<p>Code of <code class="docutils literal notranslate"><span class="pre">ndet-receive-s4u.cpp</span></code>: click here to open</p>
+</div>
+<div class="toggle-content hidden-content docutils container">
+<p>You can also <a class="reference external" href="https://framagit.org/simgrid/tutorial-model-checking/-/blob/main/ndet-receive-s4u.cpp">view it online</a></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright (c) 2010-2025. The SimGrid Team. All rights reserved.          */</span>
+
+<span class="cm">/* This program is free software; you can redistribute it and/or modify it</span>
+<span class="cm"> * under the terms of the license (GNU LGPL) which comes with this package. */</span>
+
+<span class="cm">/******************** Non-deterministic message ordering  *********************/</span>
+<span class="cm">/* Server assumes a fixed order in the reception of messages from its clients */</span>
+<span class="cm">/* which is incorrect because the message ordering is non-deterministic       */</span>
+<span class="cm">/******************************************************************************/</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;simgrid/s4u.hpp&gt;</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">sg4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">simgrid</span><span class="o">::</span><span class="nn">s4u</span><span class="p">;</span>
+
+<span class="k">constexpr</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+
+<span class="n">XBT_LOG_NEW_DEFAULT_CATEGORY</span><span class="p">(</span><span class="n">example</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;this example&quot;</span><span class="p">);</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">server</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">mb</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">Mailbox</span><span class="o">::</span><span class="n">by_name</span><span class="p">(</span><span class="s">&quot;mymailbox&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">value_got</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">count</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">received</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mb</span><span class="o">-&gt;</span><span class="n">get</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="n">value_got</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">received</span><span class="p">;</span>
+<span class="w">    </span><span class="k">delete</span><span class="w"> </span><span class="n">received</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">xbt_assert</span><span class="p">(</span><span class="n">value_got</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;OK&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">client</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">id</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">int</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+<span class="w">  </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;Sending %d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+<span class="w">  </span><span class="n">sg4</span><span class="o">::</span><span class="n">Mailbox</span><span class="o">::</span><span class="n">by_name</span><span class="p">(</span><span class="s">&quot;mymailbox&quot;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">put</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span><span class="w"> </span><span class="mi">10000</span><span class="p">);</span>
+<span class="w">  </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;Sent!&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">sg4</span><span class="o">::</span><span class="n">Engine</span><span class="w"> </span><span class="n">e</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="n">argv</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">platform_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;small_platform.xml&quot;</span><span class="p">;</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">argc</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">    </span><span class="n">platform_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="w">  </span><span class="n">e</span><span class="p">.</span><span class="n">load_platform</span><span class="p">(</span><span class="n">platform_file</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">sg4</span><span class="o">::</span><span class="n">Actor</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;server&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">Host</span><span class="o">::</span><span class="n">by_name</span><span class="p">(</span><span class="s">&quot;Tremblay&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">server</span><span class="p">);</span>
+<span class="w">  </span><span class="n">sg4</span><span class="o">::</span><span class="n">Actor</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;client&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">Host</span><span class="o">::</span><span class="n">by_name</span><span class="p">(</span><span class="s">&quot;Jupiter&quot;</span><span class="p">),</span><span class="w">  </span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">  </span><span class="n">sg4</span><span class="o">::</span><span class="n">Actor</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;client&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">Host</span><span class="o">::</span><span class="n">by_name</span><span class="p">(</span><span class="s">&quot;Bourassa&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+<span class="w">  </span><span class="n">sg4</span><span class="o">::</span><span class="n">Actor</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;client&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">Host</span><span class="o">::</span><span class="n">by_name</span><span class="p">(</span><span class="s">&quot;Ginette&quot;</span><span class="p">),</span><span class="w">  </span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">e</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p><br></br>
+The provided code is rather simple: Three <code class="docutils literal notranslate"><span class="pre">client</span></code> are launched with an integer from <code class="docutils literal notranslate"><span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3</span></code> as a parameter. These actors simply
+send their parameter to a given mailbox. A <code class="docutils literal notranslate"><span class="pre">server</span></code> receives 3 messages and assumes that the last received message is the number <code class="docutils literal notranslate"><span class="pre">3</span></code>.
+If you compile and run it, it simply works:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-11-c2ltZ3JpZC9tYy1zbGlt" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-11-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tab" tabindex="0">simgrid/mc-slim</button><button aria-controls="panel-11-c2ltZ3JpZC90dXRvLW1j" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-11-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tab" tabindex="-1">simgrid/tuto-mc</button></div><div aria-labelledby="tab-11-c2ltZ3JpZC9tYy1zbGlt" class="sphinx-tabs-panel group-tab" id="panel-11-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./simgrid.sh<span class="w"> </span>clang++<span class="w"> </span>ndet-receive-s4u.cpp<span class="w"> </span>-lsimgrid<span class="w"> </span>-Wno-deprecated-declarations<span class="w"> </span>-o<span class="w"> </span>ndet
+<span class="gp">$ </span>./simgrid.sh<span class="w"> </span>./ndet<span class="w"> </span>small_platform.xml
+<span class="go">[Jupiter:client:(2) 0.000000] [example/INFO] Sending 1</span>
+<span class="go">[Bourassa:client:(3) 0.000000] [example/INFO] Sending 2</span>
+<span class="go">[Ginette:client:(4) 0.000000] [example/INFO] Sending 3</span>
+<span class="go">[Jupiter:client:(2) 0.020516] [example/INFO] Sent!</span>
+<span class="go">[Bourassa:client:(3) 0.047027] [example/INFO] Sent!</span>
+<span class="go">[Ginette:client:(4) 0.064651] [example/INFO] Sent!</span>
+<span class="go">[Tremblay:server:(1) 0.064651] [example/INFO] OK</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-11-c2ltZ3JpZC90dXRvLW1j" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-11-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cmake<span class="w"> </span>.<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make
+<span class="gp gp-VirtualEnv">(output omitted)</span>
+<span class="gp">$ </span>./ndet-receive-s4u<span class="w"> </span>small_platform.xml
+<span class="go">[Jupiter:client:(2) 0.000000] [example/INFO] Sending 1</span>
+<span class="go">[Bourassa:client:(3) 0.000000] [example/INFO] Sending 2</span>
+<span class="go">[Ginette:client:(4) 0.000000] [example/INFO] Sending 3</span>
+<span class="go">[Jupiter:client:(2) 0.020516] [example/INFO] Sent!</span>
+<span class="go">[Bourassa:client:(3) 0.047027] [example/INFO] Sent!</span>
+<span class="go">[Ginette:client:(4) 0.064651] [example/INFO] Sent!</span>
+<span class="go">[Tremblay:server:(1) 0.064651] [example/INFO] OK</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="running-and-understanding-mc-simgrid">
+<h3>Running and understanding Mc SimGrid</h3>
+<p>If you think about it, that’s weird that this code works: all the messages are sent at the exact same time (t=0), so there is no reason for
+the message <code class="docutils literal notranslate"><span class="pre">3</span></code> to arrive last. Depending on the link speed, any order should be possible. To trigger the bug, you could fiddle with the
+source code and/or the platform file, but this is not a method. It’s time to start Mc SimGrid, the SimGrid model checker, to exhaustively test
+all message orders. For that, you simply launch your simulation as a parameter to the <code class="docutils literal notranslate"><span class="pre">simgrid-mc</span></code> binary as you would do with <code class="docutils literal notranslate"><span class="pre">valgrind</span></code>:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-12-c2ltZ3JpZC9tYy1zbGlt" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-12-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tab" tabindex="0">simgrid/mc-slim</button><button aria-controls="panel-12-c2ltZ3JpZC90dXRvLW1j" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-12-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tab" tabindex="-1">simgrid/tuto-mc</button></div><div aria-labelledby="tab-12-c2ltZ3JpZC9tYy1zbGlt" class="sphinx-tabs-panel group-tab" id="panel-12-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./simgrid.sh<span class="w"> </span>simgrid-mc<span class="w"> </span>./ndet-receive-s4u<span class="w"> </span>small_platform.xml
+<span class="gp gp-VirtualEnv">(some output ignored)</span>
+<span class="go">[Tremblay:server:(1) 0.000000] (...) Assertion value_got == 3 failed</span>
+<span class="gp gp-VirtualEnv">(more output ignored)</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-12-c2ltZ3JpZC90dXRvLW1j" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-12-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>simgrid-mc<span class="w"> </span>./ndet-receive-s4u<span class="w"> </span>small_platform.xml
+<span class="gp gp-VirtualEnv">(some output ignored)</span>
+<span class="go">[Tremblay:server:(1) 0.000000] (...) Assertion value_got == 3 failed</span>
+<span class="gp gp-VirtualEnv">(more output ignored)</span>
+</pre></div>
+</div>
+</div></div>
+<p>If it fails with the error <code class="docutils literal notranslate"><span class="pre">[root/CRITICAL]</span> <span class="pre">Could</span> <span class="pre">not</span> <span class="pre">wait</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">model-checker.</span></code>, you need to explicitly add the PTRACE capability to
+your docker. Restart your docker with the additional parameter <code class="docutils literal notranslate"><span class="pre">--cap-add</span> <span class="pre">SYS_PTRACE</span></code>.</p>
+<p>At the end, it works: Mc SimGrid successfully triggers the bug. But the produced output is somewhat long and hairy. Don’t worry, we will
+now read it together. It can be split in several parts:</p>
+<ul>
+<li><p>First, you have some information coming from the application.</p>
+<ul>
+<li><p>On top, you see the output of the application, but somewhat stuttering. This is exactly what happens: since Mc SimGrid is exploring
+all possible outcome of the code, the execution is sometimes rewind to explore another possible branch (here: another possible
+message ordering). Note also that all times are always 0 in the model checker, since the time is abstracted away in this mode.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[Jupiter:client:(2) 0.000000] [example/INFO] Sending 1</span>
+<span class="go">[Bourassa:client:(3) 0.000000] [example/INFO] Sending 2</span>
+<span class="go">[Ginette:client:(4) 0.000000] [example/INFO] Sending 3</span>
+<span class="go">[0.000000] [mc_dfs/INFO] Start a DFS exploration. Reduction is: dpor.</span>
+<span class="go">[Jupiter:client:(2) 0.000000] [example/INFO] Sent!</span>
+<span class="go">[Bourassa:client:(3) 0.000000] [example/INFO] Sent!</span>
+<span class="go">[Tremblay:server:(1) 0.000000] [example/INFO] OK</span>
+<span class="go">[Ginette:client:(4) 0.000000] [example/INFO] Sent!</span>
+<span class="go">[Jupiter:client:(2) 0.000000] [example/INFO] Sent!</span>
+<span class="go">[Bourassa:client:(3) 0.000000] [example/INFO] Sent!</span>
+<span class="go">[Jupiter:client:(2) 0.000000] [example/INFO] Sent!</span>
+</pre></div>
+</div>
+</li>
+<li><p>Then you have the error message, along with a backtrace of the application at the point where the assertion fails. Not all the frames of
+the backtrace are useful, and some are omitted here.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[Tremblay:server:(1) 0.000000] /source/tutorial/ndet-receive-s4u.cpp:27: [root/CRITICAL] Assertion value_got == 3 failed</span>
+<span class="go">Backtrace (displayed in actor server):</span>
+<span class="go">  -&gt;  #0 xbt_backtrace_display_current at /src/xbt/backtrace.cpp:31</span>
+<span class="go">  -&gt;  #1 server() in ./ndet-receive-s4u</span>
+<span class="go">  (uninformative frames omitted)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>After that comes a lot of information from the model-checker.</p></li>
+</ul>
+<blockquote>
+<div><ul>
+<li><p>First, the error message itself. The <code class="docutils literal notranslate"><span class="pre">xbt_assert</span></code> in the code result in an <code class="docutils literal notranslate"><span class="pre">abort()</span></code> in the application, that is interpreted as an
+application crash by the model-checker.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[0.000000] [mc_ModelChecker/INFO] **************************</span>
+<span class="go">[0.000000] [mc_ModelChecker/INFO] ** CRASH IN THE PROGRAM **</span>
+<span class="go">[0.000000] [mc_ModelChecker/INFO] **************************</span>
+<span class="go">[0.000000] [mc_ModelChecker/INFO] From signal: Aborted</span>
+<span class="go">[0.000000] [mc_ModelChecker/INFO] A core dump was generated by the system.</span>
+</pre></div>
+</div>
+</li>
+<li><p>An execution trace is then given, listing all the actions that led to that faulty execution. This is not easy to read, because the API
+calls we made (put/get) are split in atomic calls (iSend+Wait/iRecv+Wait), and all executions are interleaved. Also, Mc SimGrid
+reports the first faulty execution it finds: it may not be the shorter one.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[0.000000] [mc_explo/INFO] Counter-example execution trace:</span>
+<span class="go">[0.000000] [mc_explo/INFO]   Actor 1 in Irecv ==&gt; simcall: iRecv(mbox=0)</span>
+<span class="go">[0.000000] [mc_explo/INFO]   Actor 2 in Isend ==&gt; simcall: iSend(mbox=0)</span>
+<span class="go">[0.000000] [mc_explo/INFO]   Actor 1 in Wait ==&gt; simcall: WaitComm(from 2 to 1, mbox=0, no timeout)</span>
+<span class="go">[0.000000] [mc_explo/INFO]   Actor 1 in Irecv ==&gt; simcall: iRecv(mbox=0)</span>
+<span class="go">[0.000000] [mc_explo/INFO]   Actor 2 in Wait ==&gt; simcall: WaitComm(from 2 to 1, mbox=0, no timeout)</span>
+<span class="go">[0.000000] [mc_explo/INFO]   Actor 4 in Isend ==&gt; simcall: iSend(mbox=0)</span>
+<span class="go">[0.000000] [mc_explo/INFO]   Actor 1 in Wait ==&gt; simcall: WaitComm(from 4 to 1, mbox=0, no timeout)</span>
+<span class="go">[0.000000] [mc_explo/INFO]   Actor 1 in Irecv ==&gt; simcall: iRecv(mbox=0)</span>
+<span class="go">[0.000000] [mc_explo/INFO]   Actor 3 in Isend ==&gt; simcall: iSend(mbox=0)</span>
+<span class="go">[0.000000] [mc_explo/INFO]   Actor 1 in Wait ==&gt; simcall: WaitComm(from 3 to 1, mbox=0, no timeout)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Then, the execution path is given.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[0.000000] [mc_explo/INFO] You can debug the problem (and see the whole details) by rerunning out</span>
+<span class="go">                           of simgrid-mc with --cfg=model-check/replay:&#39;1;2;1;1;2;4;1;1;3;1&#39;</span>
+</pre></div>
+</div>
+<p>This is the magical string (here: <code class="docutils literal notranslate"><span class="pre">1;2;1;1;2;4;1;1;3;1</span></code>) that you should pass to your simulator to follow the same
+execution path, but this time with many additional information. You can also add valgrind or a sanitizer to the party to
+ensure that you have no memory error in your code.</p>
+</li>
+</ul>
+<blockquote>
+<div><div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-13-c2ltZ3JpZC9tYy1zbGlt" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-13-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tab" tabindex="0">simgrid/mc-slim</button><button aria-controls="panel-13-c2ltZ3JpZC90dXRvLW1j" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-13-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tab" tabindex="-1">simgrid/tuto-mc</button></div><div aria-labelledby="tab-13-c2ltZ3JpZC9tYy1zbGlt" class="sphinx-tabs-panel group-tab" id="panel-13-c2ltZ3JpZC9tYy1zbGlt" name="c2ltZ3JpZC9tYy1zbGlt" role="tabpanel" tabindex="0"><p>Valgrind is not available in this docker image, but using the Address Sanitizer is quite easy:</p>
+<blockquote>
+<div><p>$ ./simgrid.sh clang++ ndet-receive-s4u.cpp -lsimgrid -fsanitize=address -fno-omit-frame-pointer -o ndet
+$ ./simgrid.sh valgrind ./ndet-receive-s4u small_platform.xml –cfg=model-check/replay:’1;2;1;1;2;4;1;1;3;1’
+==402== Memcheck, a memory error detector
+==402== Copyright (C) 2002-2017, and GNU GPL’d, by Julian Seward et al.
+==402== Using Valgrind-3.16.1 and LibVEX; rerun with -h for copyright info
+==402== Command: ./ndet-receive-s4u small_platform.xml –cfg=model-check/replay:1;2;1;1;2;4;1;1;3;1
+==402==
+[0.000000] [xbt_cfg/INFO] Configuration change: Set ‘model-check/replay’ to ‘1;2;1;1;2;4;1;1;3;1’
+[0.000000] [mc_record/INFO] path=1;2;1;1;2;4;1;1;3;1
+[Jupiter:client:(2) 0.000000] [example/INFO] Sending 1
+[Bourassa:client:(3) 0.000000] [example/INFO] Sending 2
+[Ginette:client:(4) 0.000000] [example/INFO] Sending 3
+[Jupiter:client:(2) 0.000000] [example/INFO] Sent!
+[Tremblay:server:(1) 0.000000] /source/tutorial/ndet-receive-s4u.cpp:27: [root/CRITICAL] Assertion value_got == 3 failed
+(some output ignored)
+==402==
+==402== Process terminating with default action of signal 6 (SIGABRT): dumping core
+==402==    at 0x550FCE1: raise (raise.c:51)
+==402==    by 0x54F9536: abort (abort.c:79)
+==402==    by 0x10C696: server() (ndet-receive-s4u.cpp:27)
+(more valgrind output ignored)</p>
+</div></blockquote>
+</div><div aria-labelledby="tab-13-c2ltZ3JpZC90dXRvLW1j" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-13-c2ltZ3JpZC90dXRvLW1j" name="c2ltZ3JpZC90dXRvLW1j" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<p>$ valgrind ./ndet-receive-s4u small_platform.xml –cfg=model-check/replay:’1;2;1;1;2;4;1;1;3;1’
+==402== Memcheck, a memory error detector
+==402== Copyright (C) 2002-2017, and GNU GPL’d, by Julian Seward et al.
+==402== Using Valgrind-3.16.1 and LibVEX; rerun with -h for copyright info
+==402== Command: ./ndet-receive-s4u small_platform.xml –cfg=model-check/replay:1;2;1;1;2;4;1;1;3;1
+==402==
+[0.000000] [xbt_cfg/INFO] Configuration change: Set ‘model-check/replay’ to ‘1;2;1;1;2;4;1;1;3;1’
+[0.000000] [mc_record/INFO] path=1;2;1;1;2;4;1;1;3;1
+[Jupiter:client:(2) 0.000000] [example/INFO] Sending 1
+[Bourassa:client:(3) 0.000000] [example/INFO] Sending 2
+[Ginette:client:(4) 0.000000] [example/INFO] Sending 3
+[Jupiter:client:(2) 0.000000] [example/INFO] Sent!
+[Tremblay:server:(1) 0.000000] /source/tutorial/ndet-receive-s4u.cpp:27: [root/CRITICAL] Assertion value_got == 3 failed
+(some output ignored)
+==402==
+==402== Process terminating with default action of signal 6 (SIGABRT): dumping core
+==402==    at 0x550FCE1: raise (raise.c:51)
+==402==    by 0x54F9536: abort (abort.c:79)
+==402==    by 0x10C696: server() (ndet-receive-s4u.cpp:27)
+(more valgrind output ignored)</p>
+</div></div>
+</div></blockquote>
+<ul>
+<li><p>Then, Mc SimGrid displays some statistics about the amount of states and traces visited to find this bug.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[0.000000] [mc_dfs/INFO] DFS exploration ended. 19 unique states visited; 1 explored traces (12 transition replays, 31 states visited overall)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Finally, the model checker searches for the critical transition, that is, the execution step afer which the problem becomes
+unavoidable. Before that transition, some executions manage to avoid any issue and reach a non-faulty program execution,
+while after that transition, only faulty executions can be reached. We believe that this information could help you to
+better understand the issue, and we would love to hear what you think about this feature.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[0.000000] [mc_ct/INFO] *********************************</span>
+<span class="go">[0.000000] [mc_ct/INFO] *** CRITICAL TRANSITION FOUND ***</span>
+<span class="go">[0.000000] [mc_ct/INFO] *********************************</span>
+<span class="go">[0.000000] [mc_ct/INFO] Current knowledge of explored stack:</span>
+<span class="go">[0.000000] [mc_ct/INFO]   (  CORRECT) Actor 1 in Irecv ==&gt; simcall: iRecv(mbox=0, comm=1, tag=0))</span>
+<span class="go">[0.000000] [mc_ct/INFO]   (  CORRECT) Actor 2 in Isend ==&gt; simcall: iSend(mbox=0, comm=1, tag=0)</span>
+<span class="go">[0.000000] [mc_ct/INFO]   (  CORRECT) Actor 1 in Wait ==&gt; simcall: WaitComm(from 2 to 1, mbox=0, no timeout, comm=1)</span>
+<span class="go">[0.000000] [mc_ct/INFO]   (  CORRECT) Actor 1 in Irecv ==&gt; simcall: iRecv(mbox=0, comm=3, tag=0))</span>
+<span class="go">[0.000000] [mc_ct/INFO]   (  CORRECT) Actor 2 in Wait ==&gt; simcall: WaitComm(from 2 to 1, mbox=0, no timeout, comm=1)</span>
+<span class="go">[0.000000] [mc_ct/INFO]   (  CORRECT) Actor 4 in Isend ==&gt; simcall: iSend(mbox=0, comm=3, tag=0)</span>
+<span class="go">[0.000000] [mc_ct/INFO]   (INCORRECT) Actor 1 in Wait ==&gt; simcall: WaitComm(from 4 to 1, mbox=0, no timeout, comm=3)</span>
+<span class="go">[0.000000] [mc_ct/INFO]   (INCORRECT) Actor 1 in Irecv ==&gt; simcall: iRecv(mbox=0, comm=5, tag=0))</span>
+<span class="go">[0.000000] [mc_ct/INFO]   (INCORRECT) Actor 3 in Isend ==&gt; simcall: iSend(mbox=0, comm=5, tag=0)</span>
+<span class="go">[0.000000] [mc_ct/INFO]   (INCORRECT) Actor 1 in Wait ==&gt; simcall: WaitComm(from 3 to 1, mbox=0, no timeout, comm=5)</span>
+<span class="go">[0.000000] [mc_ct/INFO] Found the critical transition: Actor 4 ==&gt; simcall: iSend(mbox=0, comm=3, tag=0)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div></blockquote>
+</section>
+<section id="using-mpi-instead-of-s4u">
+<h3>Using MPI instead of S4U</h3>
+<p>If you prefer, you can use MPI instead of the SimGrid-specific interface. Inspect the provided <code class="docutils literal notranslate"><span class="pre">ndet-receive-mpi.c</span></code> file: that’s just a
+translation of <code class="docutils literal notranslate"><span class="pre">ndet-receive-s4u.cpp</span></code> to MPI.</p>
+<div class="toggle-header docutils container">
+<p>Code of <code class="docutils literal notranslate"><span class="pre">ndet-receive-mpi.c</span></code>: click here to open</p>
+</div>
+<div class="toggle-content hidden-content docutils container">
+<p>You can also <a class="reference external" href="https://framagit.org/simgrid/tutorial-model-checking/-/blob/main/ndet-receive-mpi.c">view it online</a>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright (c) 2010-2025. The SimGrid Team. All rights reserved.          */</span>
+
+<span class="cm">/* This program is free software; you can redistribute it and/or modify it</span>
+<span class="cm"> * under the terms of the license (GNU LGPL) which comes with this package. */</span>
+
+<span class="cm">/******************** Non-deterministic message ordering  *********************/</span>
+<span class="cm">/* Server assumes a fixed order in the reception of messages from its clients */</span>
+<span class="cm">/* which is incorrect because the message ordering is non-deterministic       */</span>
+<span class="cm">/******************************************************************************/</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mpi.h&gt;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">**</span><span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">rank</span><span class="p">;</span>
+<span class="w">  </span><span class="n">MPI_Status</span><span class="w"> </span><span class="n">status</span><span class="p">;</span>
+
+<span class="w">  </span><span class="cm">/* Initialize MPI */</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">MPI_SUCCESS</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;MPI initialization failed!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">size</span><span class="p">);</span><span class="w">   </span><span class="cm">/* Get nr of tasks */</span>
+<span class="w">  </span><span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rank</span><span class="p">);</span><span class="w">   </span><span class="cm">/* Get id of this process */</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;run this program with exactly 4 processes (-np 4)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">MPI_Finalize</span><span class="p">();</span>
+<span class="w">    </span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">recv_buffer</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">recv_buffer</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_INT</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_ANY_SOURCE</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_ANY_TAG</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+<span class="w">      </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Message received from %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">recv_buffer</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">recv_buffer</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;The last received message is not 3 but %d!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">recv_buffer</span><span class="p">);</span>
+<span class="w">      </span><span class="n">fflush</span><span class="p">(</span><span class="n">stdout</span><span class="p">);</span>
+<span class="w">      </span><span class="n">abort</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span><span class="k">else</span><span class="p">{</span>
+<span class="w">    </span><span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_INT</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Sent %d to rank 0</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rank</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">MPI_Finalize</span><span class="p">();</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p><br></br>
+You can compile and run it on top of SimGrid as follows (don’t forget to add <code class="docutils literal notranslate"><span class="pre">./simgrid.sh</span></code> in front of all commands if you
+use the <code class="docutils literal notranslate"><span class="pre">simgrid/mc-slim</span></code> image).</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>smpicc<span class="w"> </span>ndet-receive-mpi.c<span class="w"> </span>-o<span class="w"> </span>ndet-receive-mpi
+<span class="gp">$ </span>smpirun<span class="w"> </span>-np<span class="w"> </span><span class="m">4</span><span class="w"> </span>-platform<span class="w"> </span>small_platform.xml<span class="w"> </span>ndet-receive-mpi
+</pre></div>
+</div>
+<p>Interestingly enough, the bug is triggered on my machine even without Mc SimGrid, because the simulator happens to use the execution path
+leading to it. It may not be the case on your machine, as this depends on the iteration order of an unsorted collection. Instead, we
+should use Mc SimGrid to exhaustively explore the state space and trigger the bug in all cases.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>smpirun<span class="w"> </span>-wrapper<span class="w"> </span>simgrid-mc<span class="w"> </span>-np<span class="w"> </span><span class="m">4</span><span class="w"> </span>-platform<span class="w"> </span>small_platform.xml<span class="w"> </span>ndet-receive-mpi
+</pre></div>
+</div>
+<p>The produced output is then very similar to the one you get with S4U, even if the exact execution path leading to the bug may
+differs. You can also trigger a given execution path out of the model-checker, for example to explore it with valgrind (if
+you’re not in the <code class="docutils literal notranslate"><span class="pre">simgrid/mc-slim</span></code> docker image) or to get more information.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>With<span class="w"> </span>valgrind<span class="w"> </span>out<span class="w"> </span>of<span class="w"> </span>simgrid-mc<span class="w"> </span><span class="k">if</span><span class="w"> </span>you<span class="s1">&#39;re not in mc-slim</span>
+<span class="gp">$ </span><span class="s1">smpirun -wrapper valgrind -np 4 -platform small_platform.xml --cfg=model-check/replay:&#39;</span><span class="m">1</span><span class="p">;</span><span class="m">2</span><span class="p">;</span><span class="m">1</span><span class="p">;</span><span class="m">1</span><span class="p">;</span><span class="m">4</span><span class="p">;</span><span class="m">1</span><span class="p">;</span><span class="m">1</span><span class="p">;</span><span class="m">3</span><span class="p">;</span><span class="m">1</span><span class="s1">&#39; ndet-receive-mpi</span>
+<span class="gp"># </span><span class="s1">Still within simgrid-mc but with the full logs, the only way to go if you&#39;</span>re<span class="w"> </span><span class="k">in</span><span class="w"> </span>mc-slim
+<span class="gp">$ </span>./simgrid.sh<span class="w"> </span>smpirun<span class="w"> </span>-wrapper<span class="w"> </span>simgrid-mc<span class="w"> </span>-np<span class="w"> </span><span class="m">4</span><span class="w"> </span>-platform<span class="w"> </span>small_platform.xml<span class="w"> </span>--cfg<span class="o">=</span>model-check/replay:<span class="s1">&#39;1;2;1;1;4;1;1;3;1&#39;</span><span class="w"> </span>ndet-receive-mpi
+</pre></div>
+</div>
+</section>
+<section id="under-the-hood">
+<h3>Under the hood</h3>
+<p>If you want to run such analysis on your own code, out of the provided docker, there is some steps that you should take.</p>
+<ul class="simple">
+<li><p>SimGrid should naturally <a class="reference internal" href="Installing_SimGrid.html#install-src"><span class="std std-ref">be compiled</span></a> with model-checking support. This requires some extra dependencies
+(documented on the <a class="reference internal" href="Installing_SimGrid.html#install-src"><span class="std std-ref">relevant page</span></a>).</p></li>
+<li><p>Mc SimGrid uses the <code class="docutils literal notranslate"><span class="pre">ptrace</span></code> system call to spy on the verified application. Some versions of Docker forbid the use of this call by
+default for security reason (it could be used to escape the docker containment with older versions of Linux). If you encounter this
+issue, you should either update your settings (the security issue was solved in later versions of Linux), or add <code class="docutils literal notranslate"><span class="pre">--cap-add</span>
+<span class="pre">SYS_PTRACE</span></code> to the docker parameters, as hinted by the text.</p></li>
+</ul>
+</section>
+</section>
+<section id="going-further">
+<h2>Going further</h2>
+<p>This tutorial is not complete yet, as there is nothing on reduction techniques. For now, the best source of information on these
+topics is <a class="reference external" href="https://simgrid.org/tutorials/simgrid-mc-101.pdf">this old tutorial</a> and <a class="reference external" href="http://people.irisa.fr/Martin.Quinson/blog/2018/0123/McSimGrid-Boston.pdf">that old presentation</a>. But be warned that these source of information
+are very old: the liveness verification was removed in v3.35, even if these docs still mention it.</p>
+</section>
+</section>
+
+
+           
+</main></body></html>

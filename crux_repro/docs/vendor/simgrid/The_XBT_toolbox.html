@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The XBT toolbox &mdash; SimGrid  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="_static/showfile.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
+        <script src="_static/showfile.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Describing your Simulated Platform" href="Platform.html" />
+    <link rel="prev" title="SMPI: Simulate MPI Applications" href="app_smpi.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SimGrid
+          </a>
+              <div class="version">
+                4.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Algorithms.html">     Simulating distributed algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_MPI_Applications.html">     Simulating MPI applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Model-checking.html">     Model-checking algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_DAG.html">Simulating DAG</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Manual:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">   Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installing_SimGrid.html">      Installing SimGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Start_your_own_project.html">      Start your own project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="community.html">      The SimGrid community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Release_Notes.html">      Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="application.html">   Describing your application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_s4u.html">      The S4U interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">      S4U examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_smpi.html">      The SMPI interface</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">      The XBT toolbox</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#logging-api">Logging API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#declaring-categories">Declaring categories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#logging-messages">Logging messages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#default-category">Default category</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#specific-category">Specific category</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#other-functions">Other functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#existing-categories">Existing categories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#full-example">Full example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#performance-concern">Performance concern</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dynamic-arrays">Dynamic arrays</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creation-and-destruction">Creation and destruction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dynars-as-regular-arrays">Dynars as regular arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dynar-size">Dynar size</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#perl-like-interface">Perl-like interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#direct-content-manipulation">Direct content manipulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dynars-of-scalars">Dynars of scalars</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#iterating-over-dynars">Iterating over Dynars</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-with-scalar-values">Example with scalar values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-with-pointed-values">Example with pointed values</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Platform.html">   Describing the simulated platform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_examples.html">      Network topology examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_routing.html">      Advanced routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="XML_reference.html">      XML reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_cpp.html">      C++ platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Models.html">   The SimGrid models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Modeling_howtos.html">      Modeling hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Calibrating_the_models.html">      Calibrating the models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plugins.html">      SimGrid plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Experimental_setup.html">   Running an experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Configuring_SimGrid.html">      Configuring SimGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Deploying_your_application.html">      Deploying your application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Outcomes.html">      Simulation outcomes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">SimGrid's Internals:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Design_goals.html">   Design goals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Contributors_Documentation.html">   Contributor's documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SimGrid</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">The XBT toolbox</li>
+  <li class="wy-breadcrumbs-aside">
+    
+
+      <a href="" class="fa fa-bitbucket"> Edit on FramaGit</a>
+    
+  </li>
+
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="the-xbt-toolbox">
+<span id="xbt"></span><h1>The XBT toolbox<a class="headerlink" href="#the-xbt-toolbox" title="Permalink to this heading"></a></h1>
+<p>XBT is not an interface to describe your application, but rather a toolbox of features that are used everywhere in SimGrid. The code described in this page is not specific to any
+of the existing interfaces, and it’s used in all of them.</p>
+<section id="logging-api">
+<span id="logging-prog"></span><h2>Logging API<a class="headerlink" href="#logging-api" title="Permalink to this heading"></a></h2>
+<p>As introduced in <a class="reference internal" href="Outcomes.html#outcome-logs"><span class="std std-ref">Textual logging</span></a>, the SimGrid logging mechanism allows users to configure at runtime the messages that should be displayed and those that should be omitted. Each
+message produced in the code is given a category (denoting its topic) and a priority. Then at runtime, each category is given a threshold (only messages of priority higher than
+that threshold are displayed), a layout (deciding how the messages in this category are formatted), and an appender (deciding what to do with the message: either print on stderr or
+to a file).</p>
+<p>This section documents the provided API. To see how to configure these features at runtime, please refer to <a class="reference internal" href="Configuring_SimGrid.html#logging-config"><span class="std std-ref">Logging configuration</span></a>.</p>
+<section id="declaring-categories">
+<h3>Declaring categories<a class="headerlink" href="#declaring-categories" title="Permalink to this heading"></a></h3>
+<p>Typically, there will be a category for each module of the implementation, so that users can independently control the logging for each module.
+Refer to the <a class="reference internal" href="#logging-categories"><span class="std std-ref">Existing categories</span></a> section for a list of all existing categories in SimGrid.</p>
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.XBT_LOG_NEW_CATEGORY">
+<span class="sig-name descname"><span class="n"><span class="pre">XBT_LOG_NEW_CATEGORY</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">category</span></span>, <span class="n"><span class="pre">description</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.XBT_LOG_NEW_CATEGORY" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Creates a new category that is not within any existing categories. It will be located right below the <code class="docutils literal notranslate"><span class="pre">root</span></code> category.
+<code class="docutils literal notranslate"><span class="pre">category</span></code> must be a valid identifier (such as <code class="docutils literal notranslate"><span class="pre">mycat</span></code>) with no quote or anything. It should also be unique over the whole binary.
+<code class="docutils literal notranslate"><span class="pre">description</span></code> must be a string, between quotes.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.XBT_LOG_NEW_SUBCATEGORY">
+<span class="sig-name descname"><span class="n"><span class="pre">XBT_LOG_NEW_SUBCATEGORY</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">category</span></span>, <span class="n"><span class="pre">parent_category</span></span>, <span class="n"><span class="pre">description</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.XBT_LOG_NEW_SUBCATEGORY" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Creates a new category under the provided <code class="docutils literal notranslate"><span class="pre">parent_category</span></code>.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.XBT_LOG_NEW_DEFAULT_CATEGORY">
+<span class="sig-name descname"><span class="n"><span class="pre">XBT_LOG_NEW_DEFAULT_CATEGORY</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">category</span></span>, <span class="n"><span class="pre">description</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.XBT_LOG_NEW_DEFAULT_CATEGORY" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Similar to <a class="reference internal" href="#c.XBT_LOG_NEW_CATEGORY" title="XBT_LOG_NEW_CATEGORY"><code class="xref c c-macro docutils literal notranslate"><span class="pre">XBT_LOG_NEW_CATEGORY</span></code></a>, and the created category is the default one in the current source file.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.XBT_LOG_NEW_DEFAULT_SUBCATEGORY">
+<span class="sig-name descname"><span class="n"><span class="pre">XBT_LOG_NEW_DEFAULT_SUBCATEGORY</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">category</span></span>, <span class="n"><span class="pre">parent_category</span></span>, <span class="n"><span class="pre">description</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.XBT_LOG_NEW_DEFAULT_SUBCATEGORY" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Similar to <a class="reference internal" href="#c.XBT_LOG_NEW_SUBCATEGORY" title="XBT_LOG_NEW_SUBCATEGORY"><code class="xref c c-macro docutils literal notranslate"><span class="pre">XBT_LOG_NEW_SUBCATEGORY</span></code></a>, and the created category is the default one in the current source file.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.XBT_LOG_EXTERNAL_CATEGORY">
+<span class="sig-name descname"><span class="n"><span class="pre">XBT_LOG_EXTERNAL_CATEGORY</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">category</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.XBT_LOG_EXTERNAL_CATEGORY" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Make an external category (i.e., a category declared in another source file) visible from this source file.
+In each source file, at most one category can be the default one.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.XBT_LOG_EXTERNAL_DEFAULT_CATEGORY">
+<span class="sig-name descname"><span class="n"><span class="pre">XBT_LOG_EXTERNAL_DEFAULT_CATEGORY</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">category</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.XBT_LOG_EXTERNAL_DEFAULT_CATEGORY" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Use an external category as default category in this source file.</p>
+</dd></dl>
+
+</section>
+<section id="logging-messages">
+<h3>Logging messages<a class="headerlink" href="#logging-messages" title="Permalink to this heading"></a></h3>
+<section id="default-category">
+<h4>Default category<a class="headerlink" href="#default-category" title="Permalink to this heading"></a></h4>
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.XBT_CRITICAL">
+<span class="sig-name descname"><span class="n"><span class="pre">XBT_CRITICAL</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">format_string</span></span>, <span class="n"><span class="pre">parameters...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.XBT_CRITICAL" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Report a fatal error to the default category.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.XBT_ERROR">
+<span class="sig-name descname"><span class="n"><span class="pre">XBT_ERROR</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">format_string</span></span>, <span class="n"><span class="pre">parameters...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.XBT_ERROR" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Report an error to the default category.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.XBT_WARN">
+<span class="sig-name descname"><span class="n"><span class="pre">XBT_WARN</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">format_string</span></span>, <span class="n"><span class="pre">parameters...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.XBT_WARN" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Report a warning or an important information to the default category.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.XBT_INFO">
+<span class="sig-name descname"><span class="n"><span class="pre">XBT_INFO</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">format_string</span></span>, <span class="n"><span class="pre">parameters...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.XBT_INFO" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Report an information of regular importance to the default category.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.XBT_VERB">
+<span class="sig-name descname"><span class="n"><span class="pre">XBT_VERB</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">format_string</span></span>, <span class="n"><span class="pre">parameters...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.XBT_VERB" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Report a verbose information to the default category.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.XBT_DEBUG">
+<span class="sig-name descname"><span class="n"><span class="pre">XBT_DEBUG</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">format_string</span></span>, <span class="n"><span class="pre">parameters...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.XBT_DEBUG" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Report a debug-only information to the default category.</p>
+</dd></dl>
+
+<p>For each of the logging macros, the first parameter must be a printf-like format string, and the subsequent parameters must match this format. If you compile with the -Wall option,
+the compiler will warn you for unmatched arguments, such as passing a pointer while the format string expects an integer. Using this option is usually a good idea.</p>
+<p>Here is an example: <code class="docutils literal notranslate"><span class="pre">XBT_WARN(&quot;Values</span> <span class="pre">are:</span> <span class="pre">%d</span> <span class="pre">and</span> <span class="pre">'%s'&quot;,</span> <span class="pre">5,</span> <span class="pre">&quot;oops&quot;);</span></code></p>
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.XBT_IN">
+<span class="sig-name descname"><span class="n"><span class="pre">XBT_IN</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">format_string</span></span>, <span class="n"><span class="pre">parameters...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.XBT_IN" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Report that the execution flow enters a given function (which name is displayed automatically).</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.XBT_OUT">
+<span class="sig-name descname"><span class="n"><span class="pre">XBT_OUT</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">format_string</span></span>, <span class="n"><span class="pre">parameters...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.XBT_OUT" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Report that the execution flow exits a given function (which name is displayed automatically).</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.XBT_HERE">
+<span class="sig-name descname"><span class="n"><span class="pre">XBT_HERE</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">format_string</span></span>, <span class="n"><span class="pre">parameters...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.XBT_HERE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Report that the execution flow reaches a given location.</p>
+</dd></dl>
+
+</section>
+<section id="specific-category">
+<h4>Specific category<a class="headerlink" href="#specific-category" title="Permalink to this heading"></a></h4>
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.XBT_CCRITICAL">
+<span class="sig-name descname"><span class="n"><span class="pre">XBT_CCRITICAL</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">category</span></span>, <span class="n"><span class="pre">format_string</span></span>, <span class="n"><span class="pre">parameters...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.XBT_CCRITICAL" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Report a fatal error to the specified <code class="docutils literal notranslate"><span class="pre">category</span></code>.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.XBT_CERROR">
+<span class="sig-name descname"><span class="n"><span class="pre">XBT_CERROR</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">category</span></span>, <span class="n"><span class="pre">format_string</span></span>, <span class="n"><span class="pre">parameters...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.XBT_CERROR" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Report an error to the specified <code class="docutils literal notranslate"><span class="pre">category</span></code>.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.XBT_CWARN">
+<span class="sig-name descname"><span class="n"><span class="pre">XBT_CWARN</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">category</span></span>, <span class="n"><span class="pre">format_string</span></span>, <span class="n"><span class="pre">parameters...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.XBT_CWARN" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Report a warning or an important information to the specified <code class="docutils literal notranslate"><span class="pre">category</span></code>.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.XBT_CINFO">
+<span class="sig-name descname"><span class="n"><span class="pre">XBT_CINFO</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">category</span></span>, <span class="n"><span class="pre">format_string</span></span>, <span class="n"><span class="pre">parameters...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.XBT_CINFO" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Report an information of regular importance to the specified <code class="docutils literal notranslate"><span class="pre">category</span></code>.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.XBT_CVERB">
+<span class="sig-name descname"><span class="n"><span class="pre">XBT_CVERB</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">category</span></span>, <span class="n"><span class="pre">format_string</span></span>, <span class="n"><span class="pre">parameters...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.XBT_CVERB" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Report a verbose information to the specified <code class="docutils literal notranslate"><span class="pre">category</span></code>.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.XBT_CDEBUG">
+<span class="sig-name descname"><span class="n"><span class="pre">XBT_CDEBUG</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">category</span></span>, <span class="n"><span class="pre">format_string</span></span>, <span class="n"><span class="pre">parameters...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.XBT_CDEBUG" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Report a debug-only information to the specified <code class="docutils literal notranslate"><span class="pre">category</span></code>.</p>
+</dd></dl>
+
+<p>Of course, the specified category must be visible from this source file, either because it was created there (e.g. with <a class="reference internal" href="#c.XBT_LOG_NEW_CATEGORY" title="XBT_LOG_NEW_CATEGORY"><code class="xref c c-macro docutils literal notranslate"><span class="pre">XBT_LOG_NEW_CATEGORY</span></code></a>) or because it was made
+visible with <a class="reference internal" href="#c.XBT_LOG_EXTERNAL_CATEGORY" title="XBT_LOG_EXTERNAL_CATEGORY"><code class="xref c c-macro docutils literal notranslate"><span class="pre">XBT_LOG_EXTERNAL_CATEGORY</span></code></a>.</p>
+</section>
+</section>
+<section id="other-functions">
+<h3>Other functions<a class="headerlink" href="#other-functions" title="Permalink to this heading"></a></h3>
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.XBT_LOG_ISENABLED">
+<span class="sig-name descname"><span class="n"><span class="pre">XBT_LOG_ISENABLED</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">category</span></span>, <span class="n"><span class="pre">priority</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.XBT_LOG_ISENABLED" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Returns true if that category displays the messages of that priority. It’s useful to compute a value that is used only in the logging, such as the textual representation of a
+non-trivial object.</p>
+<p>The specified priority must be one of <code class="docutils literal notranslate"><span class="pre">xbt_log_priority_trace</span></code>, <code class="docutils literal notranslate"><span class="pre">xbt_log_priority_debug</span></code>, <code class="docutils literal notranslate"><span class="pre">xbt_log_priority_verbose</span></code>, <code class="docutils literal notranslate"><span class="pre">xbt_log_priority_info</span></code>,
+<code class="docutils literal notranslate"><span class="pre">xbt_log_priority_warning</span></code>, <code class="docutils literal notranslate"><span class="pre">xbt_log_priority_error</span></code> or <code class="docutils literal notranslate"><span class="pre">xbt_log_priority_critical</span></code>.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xbt_log_control_set">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xbt_log_control_set</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">setting</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xbt_log_control_set" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Sets the provided <code class="docutils literal notranslate"><span class="pre">setting</span></code> as if it was passed in a <code class="docutils literal notranslate"><span class="pre">--log</span></code> command-line parameter.</p>
+</dd></dl>
+
+<p>You should not use any of the macros which name starts with ‘_’.</p>
+</section>
+<section id="existing-categories">
+<span id="logging-categories"></span><h3>Existing categories<a class="headerlink" href="#existing-categories" title="Permalink to this heading"></a></h3>
+<p>This is the list of all categories existing in the SimGrid implementation. Some of them only exist with specific compile-time options, while your implementation may add new ones. Please add <code class="docutils literal notranslate"><span class="pre">--help-log-categories</span></code> to the command-line of a SimGrid simulator to see the exact list of categories usable with it.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>dag_parsing: Generation DAGs from files</p></li>
+<li><p>instr: Logging the behavior of the tracing system (used for Visualization/Analysis of simulations)</p>
+<ul>
+<li><p>instr_paje_events: Paje tracing event system (events)</p></li>
+<li><p>instr_paje_trace: tracing event system</p></li>
+<li><p>instr_routing: Tracing platform hierarchy</p></li>
+<li><p>instr_smpi: Tracing SMPI</p></li>
+</ul>
+</li>
+<li><p>java: SimGrid for Java(TM)</p></li>
+<li><p>ker_engine: Logging specific to Engine (kernel)</p></li>
+<li><p>kernel: SimGrid internals</p>
+<ul>
+<li><p>Battery: Logging specific to the battery plugin</p></li>
+<li><p>Chiller: Logging specific to the solar panel plugin</p></li>
+<li><p>SolarPanel: Logging specific to the solar panel plugin</p></li>
+<li><p>Task: Logging specific to the task plugin</p></li>
+<li><p>cmonkey: Chaos Monkey plugin</p></li>
+<li><p>config: About the configuration of SimGrid</p></li>
+<li><p>host_dvfs: Logging specific to the HostDvfs plugin</p></li>
+<li><p>host_energy: Logging specific to the host energy plugin</p></li>
+<li><p>ker_activity: Kernel activity-related synchronization</p></li>
+<li><p>ker_actor: Logging specific to Actor’s kernel side</p></li>
+<li><p>ker_bmf: Kernel BMF solver</p></li>
+<li><p>ker_context: Context switching mechanism</p></li>
+<li><p>ker_cpu: Kernel cpu-related synchronization</p></li>
+<li><p>ker_io: Kernel io-related synchronization</p></li>
+<li><p>ker_lmm: Kernel Linear Max-Min solver</p></li>
+<li><p>ker_mailbox: Mailbox implementation</p></li>
+<li><p>ker_mess: Kernel message synchronization</p></li>
+<li><p>ker_mq: Message queue implementation</p></li>
+<li><p>ker_network: Kernel network-related synchronization</p></li>
+<li><p>ker_platform: Kernel platform-related information</p>
+<ul>
+<li><p>ker_netpoint: Kernel implementation of netpoints</p></li>
+<li><p>ker_routing_cluster: Kernel Cluster Routing</p></li>
+<li><p>ker_routing_dijkstra: Kernel Dijkstra Routing</p></li>
+<li><p>ker_routing_dragonfly: Kernel Dragonfly Routing</p></li>
+<li><p>ker_routing_fat_tree: Kernel Fat-Tree Routing</p></li>
+<li><p>ker_routing_floyd: Kernel Floyd Routing</p></li>
+<li><p>ker_routing_full: Kernel Full Routing</p></li>
+<li><p>ker_routing_generic: Kernel Generic Routing</p></li>
+<li><p>ker_routing_none: Kernel No Routing</p></li>
+<li><p>ker_routing_star: Kernel Star Routing</p></li>
+<li><p>ker_routing_torus: Kernel Torus Routing</p></li>
+<li><p>ker_routing_vivaldi: Kernel Vivaldi Routing</p></li>
+<li><p>ker_routing_wifi: Kernel Wifi Routing</p></li>
+<li><p>platf_parse: Logging specific to the parsing of platform files</p></li>
+</ul>
+</li>
+<li><p>ker_resource: Resources, modeling the platform performance</p>
+<ul>
+<li><p>res_cpu: CPU resource, fueling execution activites</p>
+<ul>
+<li><p>cpu_cas: CPU resource, CAS01 model (used by default)</p></li>
+<li><p>cpu_ti: CPU resource, Trace Integration model</p></li>
+</ul>
+</li>
+<li><p>res_disk: Disk resources, that fuel I/O activities</p></li>
+<li><p>res_host: Host resources agregate CPU, networking and I/O features</p></li>
+<li><p>res_network: Network resources, that fuel communications</p>
+<ul>
+<li><p>res_ns3: Network model based on ns-3</p></li>
+</ul>
+</li>
+<li><p>res_vm: Virtual Machines, containing actors and mobile across hosts</p></li>
+</ul>
+</li>
+<li><p>ker_simcall: transmuting from user request into kernel handlers</p></li>
+<li><p>ker_smo: Mailbox implementation</p></li>
+<li><p>ker_synchro: Kernel synchronization activities (lock/acquire on a mutex, semaphore or condition)</p>
+<ul>
+<li><p>ker_barrier: Barrier kernel-space implementation</p></li>
+<li><p>ker_condition: Condition variables kernel-space implementation</p></li>
+<li><p>ker_mutex: Mutex kernel-space implementation</p></li>
+<li><p>ker_semaphore: Semaphore kernel-space implementation</p></li>
+</ul>
+</li>
+<li><p>link_energy: Logging specific to the LinkEnergy plugin</p></li>
+<li><p>link_energy_wifi: Logging specific to the link energy wifi plugin</p></li>
+<li><p>link_load: Logging specific to the LinkLoad plugin</p></li>
+</ul>
+</li>
+<li><p>mc: All MC categories</p>
+<ul>
+<li><p>mc_befs: BeFS exploration algorithm of the model-checker</p></li>
+<li><p>mc_channel: MC interprocess communication</p></li>
+<li><p>mc_checkerside: MC communication with the application</p></li>
+<li><p>mc_client: MC client logic</p></li>
+<li><p>mc_comm_determinism: Logging specific to MC communication determinism detection</p></li>
+<li><p>mc_ct: Critical transition exploration algorithm. For now, the answer is approximate when used with reduction</p></li>
+<li><p>mc_dfs: DFS exploration algorithm of the model-checker</p></li>
+<li><p>mc_explo: Generic exploration algorithm of the model-checker</p></li>
+<li><p>mc_global: Logging specific to MC (global)</p></li>
+<li><p>mc_observer: Logging specific to MC simcall observation</p>
+<ul>
+<li><p>obs_comm: Logging specific to the Communication simcalls observation</p></li>
+<li><p>obs_mutex: Logging specific to mutex simcalls observation</p></li>
+<li><p>obs_waittest: Logging specific to the wait and test simcalls observation</p></li>
+</ul>
+</li>
+<li><p>mc_parallel: Parallel exploration algorithm of the model-checker</p></li>
+<li><p>mc_record: Logging specific to MC record/replay facility</p></li>
+<li><p>mc_reduction: Logging specific to the reduction algorithms</p>
+<ul>
+<li><p>mc_dpor: Dynamic partial order reduction algorithm</p></li>
+<li><p>mc_odpor: Logging specific to the odpor reduction</p></li>
+<li><p>mc_odpor_execution: ODPOR exploration algorithm of the model-checker</p></li>
+</ul>
+</li>
+<li><p>mc_session: Model-checker session</p></li>
+<li><p>mc_state: Logging specific to MC states</p>
+<ul>
+<li><p>mc_sleepset: DFS exploration algorithm of the model-checker</p></li>
+<li><p>mc_wutstate: States using wakeup tree for ODPOR algorithm</p></li>
+</ul>
+</li>
+<li><p>mc_strategy: Generic exploration algorithm of the model-checker</p></li>
+<li><p>mc_transition: Logging specific to MC transitions</p>
+<ul>
+<li><p>mc_trans_actorlifecycle: Logging specific to MC transitions about actors’ lifecycle: joining, ending</p></li>
+<li><p>mc_trans_any: Logging specific to MC WaitAny / TestAny transitions</p></li>
+<li><p>mc_trans_comm: Logging specific to MC transitions about communications</p></li>
+<li><p>mc_trans_rand: Logging specific to MC Random transitions</p></li>
+<li><p>mc_trans_synchro: Logging specific to MC synchronization transitions</p></li>
+</ul>
+</li>
+<li><p>mc_udpor: Logging specific to verification using UDPOR</p>
+<ul>
+<li><p>mc_event: Logging specific to the unfolding events used in UDPOR</p></li>
+<li><p>mc_extension: Logging specific to the extension computation in UDPOR</p></li>
+</ul>
+</li>
+<li><p>mc_wut: Logging specific to ODPOR WakeupTrees</p></li>
+</ul>
+</li>
+<li><p>plugin: Common category for the logging of all plugins</p>
+<ul>
+<li><p>host_load: Logging specific to the HostLoad plugin</p></li>
+<li><p>vm_load: Logging specific to the VMLoad plugin</p></li>
+</ul>
+</li>
+<li><p>producer_consumer: Producer-Consumer plugin logging category</p></li>
+<li><p>python: python</p></li>
+<li><p>s4u: Log channels of the S4U (SimGrid for you) interface</p>
+<ul>
+<li><p>s4u_activity: S4U activities</p>
+<ul>
+<li><p>s4u_activityset: S4U set of activities</p></li>
+<li><p>s4u_comm: S4U asynchronous communications</p></li>
+<li><p>s4u_exec: S4U asynchronous executions</p></li>
+<li><p>s4u_io: S4U asynchronous I/Os</p></li>
+<li><p>s4u_mess: S4U asynchronous messaging</p></li>
+</ul>
+</li>
+<li><p>s4u_actor: S4U actors</p></li>
+<li><p>s4u_channel: S4U Communication Mailboxes</p></li>
+<li><p>s4u_engine: Logging specific to S4U (engine)</p></li>
+<li><p>s4u_file: S4U files</p></li>
+<li><p>s4u_host: Logging specific to the S4U hosts</p></li>
+<li><p>s4u_jbod: Logging specific to the JBOD implmentation</p></li>
+<li><p>s4u_mqueue: S4U Message Queues</p></li>
+<li><p>s4u_synchro: S4U synchronization objects</p>
+<ul>
+<li><p>s4u_barrier: S4U barrier</p></li>
+<li><p>s4u_sema: S4U semaphores</p></li>
+</ul>
+</li>
+<li><p>s4u_vm: S4U virtual machines</p></li>
+<li><p>vm_live_migration: S4U virtual machines live migration</p></li>
+</ul>
+</li>
+<li><p>smpi: All SMPI categories</p>
+<ul>
+<li><p>smpi_bench: Logging specific to SMPI (benchmarking)</p></li>
+<li><p>smpi_coll: Logging specific to SMPI collectives.</p></li>
+<li><p>smpi_colls: Logging specific to SMPI collectives</p></li>
+<li><p>smpi_comm: Logging specific to SMPI (comm)</p></li>
+<li><p>smpi_config: Logging specific to SMPI (config)</p></li>
+<li><p>smpi_datatype: Logging specific to SMPI (datatype)</p></li>
+<li><p>smpi_host: Logging specific to SMPI (host)</p></li>
+<li><p>smpi_io: Logging specific to SMPI (RMA operations)</p></li>
+<li><p>smpi_kernel: Logging specific to SMPI (kernel)</p></li>
+<li><p>smpi_memory: Memory layout support for SMPI</p></li>
+<li><p>smpi_mpi: Logging specific to SMPI ,(mpi)</p></li>
+<li><p>smpi_op: Logging specific to SMPI (op)</p></li>
+<li><p>smpi_pmpi: Logging specific to SMPI (pmpi)</p></li>
+<li><p>smpi_process: Logging specific to SMPI (kernel)</p></li>
+<li><p>smpi_replay: Trace Replay with SMPI</p></li>
+<li><p>smpi_request: Logging specific to SMPI (request)</p></li>
+<li><p>smpi_rma: Logging specific to SMPI (RMA operations)</p></li>
+<li><p>smpi_shared: Logging specific to SMPI (shared memory macros)</p></li>
+<li><p>smpi_utils: Logging specific to SMPI (utils)</p></li>
+</ul>
+</li>
+<li><p>smpi_python: python</p></li>
+<li><p>sthread: pthread intercepter</p></li>
+<li><p>unit: Unit tests of the Trace Manager</p></li>
+<li><p>xbt: All XBT categories (SimGrid toolbox)</p>
+<ul>
+<li><p>log: Loggings from the logging mechanism itself</p></li>
+<li><p>parse: Parsing functions</p></li>
+<li><p>replay: Replay trace reader</p></li>
+<li><p>xbt_cfg: configuration support</p></li>
+<li><p>xbt_dict: Dictionaries provide the same functionalities as hash tables</p>
+<ul>
+<li><p>xbt_dict_cursor: To traverse dictionaries</p></li>
+</ul>
+</li>
+<li><p>xbt_dyn: Dynamic arrays</p></li>
+<li><p>xbt_exception: Exceptions</p></li>
+<li><p>xbt_graph: Graph</p></li>
+<li><p>xbt_help: Help messages</p></li>
+<li><p>xbt_mallocator: Mallocators</p></li>
+<li><p>xbt_parmap: parmap: parallel map</p></li>
+<li><p>xbt_random: Random</p></li>
+</ul>
+</li>
+</ul>
+</div></blockquote>
+</section>
+<section id="full-example">
+<h3>Full example<a class="headerlink" href="#full-example" title="Permalink to this heading"></a></h3>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;xbt/log.h&quot;</span>
+
+<span class="cm">/* create a category and a default subcategory */</span>
+<span class="n">XBT_LOG_NEW_CATEGORY</span><span class="p">(</span><span class="n">VSS</span><span class="p">);</span>
+<span class="n">XBT_LOG_NEW_DEFAULT_SUBCATEGORY</span><span class="p">(</span><span class="n">SA</span><span class="p">,</span><span class="w"> </span><span class="n">VSS</span><span class="p">);</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* Now set the parent&#39;s priority.  (the string would typically be a runtime option) */</span>
+<span class="w">    </span><span class="n">xbt_log_control_set</span><span class="p">(</span><span class="s">&quot;SA.thresh:info&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="cm">/* This request is enabled, because WARNING &gt;= INFO. */</span>
+<span class="w">    </span><span class="n">XBT_CWARN</span><span class="p">(</span><span class="n">VSS</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Low fuel level.&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="cm">/* This request is disabled, because DEBUG &lt; INFO. */</span>
+<span class="w">    </span><span class="n">XBT_CDEBUG</span><span class="p">(</span><span class="n">VSS</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Starting search for nearest gas station.&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="cm">/* The default category SA inherits its priority from VSS. Thus,</span>
+<span class="cm">       the following request is enabled because INFO &gt;= INFO.  */</span>
+<span class="w">    </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;Located nearest gas station.&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="cm">/* This request is disabled, because DEBUG &lt; INFO. */</span>
+<span class="w">    </span><span class="n">XBT_DEBUG</span><span class="p">(</span><span class="s">&quot;Exiting gas station search&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="performance-concern">
+<h3>Performance concern<a class="headerlink" href="#performance-concern" title="Permalink to this heading"></a></h3>
+<p>This module is highly optimized. Messages that will not be displayed are not even built. For example, using <code class="docutils literal notranslate"><span class="pre">XBT_DEBUG</span></code> in a category that turns debug messages off only costs a
+single integer comparison at runtime, and the parameters are not even evaluated.</p>
+<p>You can even specify a compile-time threshold that will completely remove every logging below the specified priority. Passing <code class="docutils literal notranslate"><span class="pre">-DNDEBUG</span></code> to cmake disables every logging of
+priority below INFO while <code class="docutils literal notranslate"><span class="pre">-DNLOG</span></code> removes any logging at compile time. Note that using this feature may hinder the stability of SimGrid, as we consider the logs to be fast
+enough to not thoughtfully test the case where they are removed at compile time.</p>
+</section>
+</section>
+<section id="dynamic-arrays">
+<h2>Dynamic arrays<a class="headerlink" href="#dynamic-arrays" title="Permalink to this heading"></a></h2>
+<p>As SimGrid used to be written in pure C, it used to rely on custom data containers such as dynamic arrays and dictionnaries. Nowadays, the standard library of
+C++ is used internally, but some part of the interface still rely on the old containers, that are thus still available.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>You should probably not start a new project using these data structures,  as we will <a class="reference internal" href="Installing_SimGrid.html#deprecation-policy"><span class="std std-ref">deprecate them from SimGrid</span></a>
+as soon as possible. Better implementations exist out there anyway, in particular if you’re not writting pure C code.</p>
+</div>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv411xbt_dynar_t">
+<span id="_CPPv311xbt_dynar_t"></span><span id="_CPPv211xbt_dynar_t"></span><span id="xbt_dynar_t"></span><span class="target" id="dynar_8h_1ac826571988d2b63ae225e5c62ecdbc79"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">xbt_dynar_s</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_t</span></span></span><a class="headerlink" href="#_CPPv411xbt_dynar_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Dynar data type (opaque type) </p>
+<p>These are the SimGrid version of the DYNamically sized ARays, which all C programmer recode one day or another. For performance concerns, the content of dynars must be homogeneous (in contrary to <span> <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">xbt_dict_t</span></code> </span> ). You thus have to provide the function which will be used to free the content at structure creation (of type void_f_pvoid_t). </p>
+</dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv417const_xbt_dynar_t">
+<span id="_CPPv317const_xbt_dynar_t"></span><span id="_CPPv217const_xbt_dynar_t"></span><span id="const_xbt_dynar_t"></span><span class="target" id="dynar_8h_1aca265aea62862d0c2d7f9ba99f6b4c8d"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">xbt_dynar_s</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">const_xbt_dynar_t</span></span></span><a class="headerlink" href="#_CPPv417const_xbt_dynar_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>constant dynar </p>
+</dd></dl>
+
+<section id="creation-and-destruction">
+<h3>Creation and destruction<a class="headerlink" href="#creation-and-destruction" title="Permalink to this heading"></a></h3>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv413xbt_dynar_newKm14void_f_pvoid_t">
+<span id="_CPPv313xbt_dynar_newKm14void_f_pvoid_t"></span><span id="_CPPv213xbt_dynar_newKm14void_f_pvoid_t"></span><span id="xbt_dynar_new__unsigned-lC.void_f_pvoid_t"></span><span class="target" id="dynar_8h_1adfba9ac0b4a6c9ccfcf0590a1c05ac83"></span><a class="reference internal" href="#_CPPv411xbt_dynar_t" title="xbt_dynar_t"><span class="n"><span class="pre">xbt_dynar_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_new</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">elm_size</span></span>, <span class="n"><span class="pre">void_f_pvoid_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">free_f</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413xbt_dynar_newKm14void_f_pvoid_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Creates a new dynar. If a <code class="docutils literal notranslate"><span class="pre">free_f</span></code> is provided, the elements have to be pointer of pointer. That is to say that dynars can contain either base types (int, char, double, etc) or pointer of pointers (struct **).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>elmsize</strong> – size of each element in the dynar </p></li>
+<li><p><strong>free_f</strong> – function to call each time we want to get rid of an element (or nullptr if nothing to do). </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv414xbt_dynar_freeP11xbt_dynar_t">
+<span id="_CPPv314xbt_dynar_freeP11xbt_dynar_t"></span><span id="_CPPv214xbt_dynar_freeP11xbt_dynar_t"></span><span id="xbt_dynar_free__xbt_dynar_tP"></span><span class="target" id="dynar_8h_1a9b7808eb7a87dcf331a467f323ae16a6"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_free</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv411xbt_dynar_t" title="xbt_dynar_t"><span class="n"><span class="pre">xbt_dynar_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dynar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414xbt_dynar_freeP11xbt_dynar_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Destructor: kilkil a dynar and its content. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv424xbt_dynar_free_containerP11xbt_dynar_t">
+<span id="_CPPv324xbt_dynar_free_containerP11xbt_dynar_t"></span><span id="_CPPv224xbt_dynar_free_containerP11xbt_dynar_t"></span><span id="xbt_dynar_free_container__xbt_dynar_tP"></span><span class="target" id="dynar_8h_1a7bc3c4dffd7740c9c1ea129d1167c0bc"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_free_container</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv411xbt_dynar_t" title="xbt_dynar_t"><span class="n"><span class="pre">xbt_dynar_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dynar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv424xbt_dynar_free_containerP11xbt_dynar_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Destructor of the structure leaving the content unmodified. Ie, the array is freed, but the content is not touched (the <em>free_f</em> function is not used).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dynar</strong> – poor victim </p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="dynars-as-regular-arrays">
+<h3>Dynars as regular arrays<a class="headerlink" href="#dynars-as-regular-arrays" title="Permalink to this heading"></a></h3>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv417xbt_dynar_get_cpy17const_xbt_dynar_tmPv">
+<span id="_CPPv317xbt_dynar_get_cpy17const_xbt_dynar_tmPv"></span><span id="_CPPv217xbt_dynar_get_cpy17const_xbt_dynar_tmPv"></span><span id="xbt_dynar_get_cpy__const_xbt_dynar_t.unsigned-l.voidP"></span><span class="target" id="dynar_8h_1a3b5384474686ed8dc26445f1dc559e94"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_get_cpy</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv417const_xbt_dynar_t" title="const_xbt_dynar_t"><span class="n"><span class="pre">const_xbt_dynar_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">dynar</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">idx</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dst</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417xbt_dynar_get_cpy17const_xbt_dynar_tmPv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Retrieve a copy of the Nth element of a dynar. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dynar</strong> – information dealer </p></li>
+<li><p><strong>idx</strong> – index of the slot we want to retrieve </p></li>
+<li><p><strong>dst</strong> – <strong>[out]</strong> where to put the result to. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv419xbt_dynar_insert_at11xbt_dynar_tiPKv">
+<span id="_CPPv319xbt_dynar_insert_at11xbt_dynar_tiPKv"></span><span id="_CPPv219xbt_dynar_insert_at11xbt_dynar_tiPKv"></span><span id="xbt_dynar_insert_at__xbt_dynar_t.i.voidCP"></span><span class="target" id="dynar_8h_1a77d245da92e96c3374391ab42d0a51d9"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_insert_at</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv411xbt_dynar_t" title="xbt_dynar_t"><span class="n"><span class="pre">xbt_dynar_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">dynar</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">idx</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">src</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419xbt_dynar_insert_at11xbt_dynar_tiPKv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Set the Nth dynar’s element, expanding the dynar and sliding the previous values to the right. </p>
+<p>Set the Nth element of a dynar, expanding the dynar if needed, and moving the previously existing value and all subsequent ones to one position right in the dynar. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv419xbt_dynar_remove_at11xbt_dynar_tiPv">
+<span id="_CPPv319xbt_dynar_remove_at11xbt_dynar_tiPv"></span><span id="_CPPv219xbt_dynar_remove_at11xbt_dynar_tiPv"></span><span id="xbt_dynar_remove_at__xbt_dynar_t.i.voidP"></span><span class="target" id="dynar_8h_1a32548831cdb58b2e2c3c157659d2dff8"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_remove_at</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv411xbt_dynar_t" title="xbt_dynar_t"><span class="n"><span class="pre">xbt_dynar_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">dynar</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">idx</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dst</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419xbt_dynar_remove_at11xbt_dynar_tiPv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Remove the Nth element, sliding other values to the left. </p>
+<p>Get the Nth element of a dynar, removing it from the dynar and moving all subsequent values to one position left in the dynar.</p>
+<p>If the object argument of this function is a non-null pointer, the removed element is copied to this address. If not, the element is freed using the free_f function passed at dynar creation. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv416xbt_dynar_member17const_xbt_dynar_tPKv">
+<span id="_CPPv316xbt_dynar_member17const_xbt_dynar_tPKv"></span><span id="_CPPv216xbt_dynar_member17const_xbt_dynar_tPKv"></span><span id="xbt_dynar_member__const_xbt_dynar_t.voidCP"></span><span class="target" id="dynar_8h_1af5861e07154a5da2741343373de6c458"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_member</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv417const_xbt_dynar_t" title="const_xbt_dynar_t"><span class="n"><span class="pre">const_xbt_dynar_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">dynar</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">elem</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416xbt_dynar_member17const_xbt_dynar_tPKv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Returns a boolean indicating whether the element is part of the dynar. </p>
+<p>Beware that if your dynar contains pointed values (such as strings) instead of scalar, this function is probably not what you want. It would compare the pointer values, not the pointed elements. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv414xbt_dynar_sort17const_xbt_dynar_t21int_f_cpvoid_cpvoid_t">
+<span id="_CPPv314xbt_dynar_sort17const_xbt_dynar_t21int_f_cpvoid_cpvoid_t"></span><span id="_CPPv214xbt_dynar_sort17const_xbt_dynar_t21int_f_cpvoid_cpvoid_t"></span><span id="xbt_dynar_sort__const_xbt_dynar_t.int_f_cpvoid_cpvoid_t"></span><span class="target" id="dynar_8h_1a235e2961195ec41f55d78fee9b0b7846"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_sort</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv417const_xbt_dynar_t" title="const_xbt_dynar_t"><span class="n"><span class="pre">const_xbt_dynar_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">dynar</span></span>, <span class="n"><span class="pre">int_f_cpvoid_cpvoid_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">compar_fn</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414xbt_dynar_sort17const_xbt_dynar_t21int_f_cpvoid_cpvoid_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Sorts a dynar according to the function <code class="docutils literal notranslate"><span class="pre">compar_fn</span></code> </p>
+<p>This function simply apply the classical qsort(3) function to the data stored in the dynar. You should thus refer to the libc documentation, or to some online tutorial on how to write a comparison function. Here is a quick example if you have integers in your dynar:</p>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">cmpfunc</span> <span class="p">(</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nb">int</span> <span class="n">intA</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="nb">int</span><span class="o">*</span><span class="p">)</span><span class="n">a</span><span class="p">;</span>
+  <span class="nb">int</span> <span class="n">intB</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="nb">int</span><span class="o">*</span><span class="p">)</span><span class="n">b</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">intA</span> <span class="o">-</span> <span class="n">intB</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dynar</strong> – the dynar to sort </p></li>
+<li><p><strong>compar_fn</strong> – comparison function of type (int (compar_fn*) (const void*) (const void*)). </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="dynar-size">
+<h3>Dynar size<a class="headerlink" href="#dynar-size" title="Permalink to this heading"></a></h3>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418xbt_dynar_is_empty17const_xbt_dynar_t">
+<span id="_CPPv318xbt_dynar_is_empty17const_xbt_dynar_t"></span><span id="_CPPv218xbt_dynar_is_empty17const_xbt_dynar_t"></span><span id="xbt_dynar_is_empty__const_xbt_dynar_t"></span><span class="target" id="dynar_8h_1ac5ea1b5451d99f88a5077b7344335e80"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_is_empty</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv417const_xbt_dynar_t" title="const_xbt_dynar_t"><span class="n"><span class="pre">const_xbt_dynar_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">dynar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418xbt_dynar_is_empty17const_xbt_dynar_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>check if a dynar is empty </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv416xbt_dynar_length17const_xbt_dynar_t">
+<span id="_CPPv316xbt_dynar_length17const_xbt_dynar_t"></span><span id="_CPPv216xbt_dynar_length17const_xbt_dynar_t"></span><span id="xbt_dynar_length__const_xbt_dynar_t"></span><span class="target" id="dynar_8h_1a1acd629ad04e7e5127c0a5636d3c30f4"></span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_length</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv417const_xbt_dynar_t" title="const_xbt_dynar_t"><span class="n"><span class="pre">const_xbt_dynar_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">dynar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416xbt_dynar_length17const_xbt_dynar_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Count of dynar’s elements. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv415xbt_dynar_reset11xbt_dynar_t">
+<span id="_CPPv315xbt_dynar_reset11xbt_dynar_t"></span><span id="_CPPv215xbt_dynar_reset11xbt_dynar_t"></span><span id="xbt_dynar_reset__xbt_dynar_t"></span><span class="target" id="dynar_8h_1a4416c53b722e5e6785c51a8e5a44e530"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_reset</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv411xbt_dynar_t" title="xbt_dynar_t"><span class="n"><span class="pre">xbt_dynar_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">dynar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415xbt_dynar_reset11xbt_dynar_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Frees the content and set the size to 0. </p>
+</dd></dl>
+
+</section>
+<section id="perl-like-interface">
+<h3>Perl-like interface<a class="headerlink" href="#perl-like-interface" title="Permalink to this heading"></a></h3>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv414xbt_dynar_push11xbt_dynar_tPKv">
+<span id="_CPPv314xbt_dynar_push11xbt_dynar_tPKv"></span><span id="_CPPv214xbt_dynar_push11xbt_dynar_tPKv"></span><span id="xbt_dynar_push__xbt_dynar_t.voidCP"></span><span class="target" id="dynar_8h_1a1ffedd7d83fb1c3ac8d24fe00f5ae895"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_push</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv411xbt_dynar_t" title="xbt_dynar_t"><span class="n"><span class="pre">xbt_dynar_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">dynar</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">src</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414xbt_dynar_push11xbt_dynar_tPKv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Add an element at the end of the dynar. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv413xbt_dynar_pop11xbt_dynar_tPv">
+<span id="_CPPv313xbt_dynar_pop11xbt_dynar_tPv"></span><span id="_CPPv213xbt_dynar_pop11xbt_dynar_tPv"></span><span id="xbt_dynar_pop__xbt_dynar_t.voidP"></span><span class="target" id="dynar_8h_1a8b974942b4425b4c6b2d40406cebabdb"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_pop</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv411xbt_dynar_t" title="xbt_dynar_t"><span class="n"><span class="pre">xbt_dynar_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">dynar</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dst</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413xbt_dynar_pop11xbt_dynar_tPv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Get and remove the last element of the dynar. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv417xbt_dynar_unshift11xbt_dynar_tPKv">
+<span id="_CPPv317xbt_dynar_unshift11xbt_dynar_tPKv"></span><span id="_CPPv217xbt_dynar_unshift11xbt_dynar_tPKv"></span><span id="xbt_dynar_unshift__xbt_dynar_t.voidCP"></span><span class="target" id="dynar_8h_1a8961f86b2571b115a18cd8bdc76fbc16"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_unshift</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv411xbt_dynar_t" title="xbt_dynar_t"><span class="n"><span class="pre">xbt_dynar_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">dynar</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">src</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417xbt_dynar_unshift11xbt_dynar_tPKv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Add an element at the beginning of the dynar. </p>
+<p>This is less efficient than xbt_dynar_push() </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv415xbt_dynar_shift11xbt_dynar_tPv">
+<span id="_CPPv315xbt_dynar_shift11xbt_dynar_tPv"></span><span id="_CPPv215xbt_dynar_shift11xbt_dynar_tPv"></span><span id="xbt_dynar_shift__xbt_dynar_t.voidP"></span><span class="target" id="dynar_8h_1ae4f9d29e08d4c7013f734585b8734b7d"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_shift</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv411xbt_dynar_t" title="xbt_dynar_t"><span class="n"><span class="pre">xbt_dynar_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">dynar</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dst</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415xbt_dynar_shift11xbt_dynar_tPv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Get and remove the first element of the dynar. </p>
+<p>This is less efficient than xbt_dynar_pop() </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv413xbt_dynar_map17const_xbt_dynar_t14void_f_pvoid_t">
+<span id="_CPPv313xbt_dynar_map17const_xbt_dynar_t14void_f_pvoid_t"></span><span id="_CPPv213xbt_dynar_map17const_xbt_dynar_t14void_f_pvoid_t"></span><span id="xbt_dynar_map__const_xbt_dynar_t.void_f_pvoid_t"></span><span class="target" id="dynar_8h_1a048f1d1deae57d01aa10b7956c1a1073"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_map</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv417const_xbt_dynar_t" title="const_xbt_dynar_t"><span class="n"><span class="pre">const_xbt_dynar_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">dynar</span></span>, <span class="n"><span class="pre">void_f_pvoid_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">op</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413xbt_dynar_map17const_xbt_dynar_t14void_f_pvoid_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Apply a function to each member of a dynar. </p>
+<p>The mapped function may change the value of the element itself, but should not mess with the structure of the dynar. </p>
+</dd></dl>
+
+</section>
+<section id="direct-content-manipulation">
+<h3>Direct content manipulation<a class="headerlink" href="#direct-content-manipulation" title="Permalink to this heading"></a></h3>
+<p>Those functions do not retrieve the content, but only their address.</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv420xbt_dynar_set_at_ptrK11xbt_dynar_tm">
+<span id="_CPPv320xbt_dynar_set_at_ptrK11xbt_dynar_tm"></span><span id="_CPPv220xbt_dynar_set_at_ptrK11xbt_dynar_tm"></span><span id="xbt_dynar_set_at_ptr__xbt_dynar_tC.unsigned-l"></span><span class="target" id="dynar_8h_1aebfe98782751ad899bdd64b6d3bb4425"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_set_at_ptr</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv411xbt_dynar_t" title="xbt_dynar_t"><span class="n"><span class="pre">xbt_dynar_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">dynar</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">idx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420xbt_dynar_set_at_ptrK11xbt_dynar_tm" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv417xbt_dynar_get_ptr17const_xbt_dynar_tm">
+<span id="_CPPv317xbt_dynar_get_ptr17const_xbt_dynar_tm"></span><span id="_CPPv217xbt_dynar_get_ptr17const_xbt_dynar_tm"></span><span id="xbt_dynar_get_ptr__const_xbt_dynar_t.unsigned-l"></span><span class="target" id="dynar_8h_1afb2c0faab467a630e230a384893e93d0"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_get_ptr</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv417const_xbt_dynar_t" title="const_xbt_dynar_t"><span class="n"><span class="pre">const_xbt_dynar_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">dynar</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">idx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417xbt_dynar_get_ptr17const_xbt_dynar_tm" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Retrieve a pointer to the Nth element of a dynar. </p>
+<p>Note that the returned value is the actual content of the dynar. Make a copy before fooling with it. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv423xbt_dynar_insert_at_ptr11xbt_dynar_ti">
+<span id="_CPPv323xbt_dynar_insert_at_ptr11xbt_dynar_ti"></span><span id="_CPPv223xbt_dynar_insert_at_ptr11xbt_dynar_ti"></span><span id="xbt_dynar_insert_at_ptr__xbt_dynar_t.i"></span><span class="target" id="dynar_8h_1a98dd03a312099479f07e3658ecd7bf8c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_insert_at_ptr</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv411xbt_dynar_t" title="xbt_dynar_t"><span class="n"><span class="pre">xbt_dynar_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">dynar</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">idx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423xbt_dynar_insert_at_ptr11xbt_dynar_ti" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Make room for a new element, and return a pointer to it. </p>
+<p>You can then use regular affectation to set its value instead of relying on the slow memcpy. This is what xbt_dynar_insert_at_as() does. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418xbt_dynar_push_ptr11xbt_dynar_t">
+<span id="_CPPv318xbt_dynar_push_ptr11xbt_dynar_t"></span><span id="_CPPv218xbt_dynar_push_ptr11xbt_dynar_t"></span><span id="xbt_dynar_push_ptr__xbt_dynar_t"></span><span class="target" id="dynar_8h_1abbbf37ce19f96c714a962ac74522328e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_push_ptr</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv411xbt_dynar_t" title="xbt_dynar_t"><span class="n"><span class="pre">xbt_dynar_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">dynar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418xbt_dynar_push_ptr11xbt_dynar_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Make room at the end of the dynar for a new element, and return a pointer to it. </p>
+<p>You can then use regular affectation to set its value instead of relying on the slow memcpy. This is what xbt_dynar_push_as() does. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv417xbt_dynar_pop_ptr11xbt_dynar_t">
+<span id="_CPPv317xbt_dynar_pop_ptr11xbt_dynar_t"></span><span id="_CPPv217xbt_dynar_pop_ptr11xbt_dynar_t"></span><span id="xbt_dynar_pop_ptr__xbt_dynar_t"></span><span class="target" id="dynar_8h_1ad98daaef0f6c88964e9cf996c909542b"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_pop_ptr</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv411xbt_dynar_t" title="xbt_dynar_t"><span class="n"><span class="pre">xbt_dynar_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">dynar</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417xbt_dynar_pop_ptr11xbt_dynar_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Mark the last dynar’s element as unused and return a pointer to it. </p>
+<p>You can then use regular affectation to set its value instead of relying on the slow memcpy. This is what xbt_dynar_pop_as() does. </p>
+</dd></dl>
+
+</section>
+<section id="dynars-of-scalars">
+<h3>Dynars of scalars<a class="headerlink" href="#dynars-of-scalars" title="Permalink to this heading"></a></h3>
+<p>While the other functions use a memcpy to retrieve the content into the user provided area, those ones use a
+regular affectation. It only works for scalar values, but should be a little faster.</p>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.xbt_dynar_get_as">
+<span class="target" id="dynar_8h_1a5604d34153e9c96ac193245757f63085"></span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_get_as</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">dynar</span></span>, <span class="n"><span class="pre">idx</span></span>, <span class="n"><span class="pre">type</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xbt_dynar_get_as" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Quick retrieval of scalar content. </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.xbt_dynar_set_as">
+<span class="target" id="dynar_8h_1afee03470eed0dc5e8eb240288ba8b11b"></span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_set_as</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">dynar</span></span>, <span class="n"><span class="pre">idx</span></span>, <span class="n"><span class="pre">type</span></span>, <span class="n"><span class="pre">val</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xbt_dynar_set_as" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Quick setting of scalar content. </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.xbt_dynar_getlast_as">
+<span class="target" id="dynar_8h_1ac056cfe5092e40327377547abd9995ee"></span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_getlast_as</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">dynar</span></span>, <span class="n"><span class="pre">type</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xbt_dynar_getlast_as" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Quick retrieval of scalar content. </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.xbt_dynar_getfirst_as">
+<span class="target" id="dynar_8h_1a209a34611a295f0e3516536e753893c3"></span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_getfirst_as</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">dynar</span></span>, <span class="n"><span class="pre">type</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xbt_dynar_getfirst_as" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Quick retrieval of scalar content. </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.xbt_dynar_push_as">
+<span class="target" id="dynar_8h_1a50d763465a98678a3e83afa6b5ecd243"></span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_push_as</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">dynar</span></span>, <span class="n"><span class="pre">type</span></span>, <span class="n"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xbt_dynar_push_as" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Quick insertion of scalar content. </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.xbt_dynar_pop_as">
+<span class="target" id="dynar_8h_1ab6dd8b8802c7ad0b12a81ecd806370cc"></span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_pop_as</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">dynar</span></span>, <span class="n"><span class="pre">type</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xbt_dynar_pop_as" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Quick removal of scalar content. </p>
+</dd></dl>
+
+</section>
+<section id="iterating-over-dynars">
+<h3>Iterating over Dynars<a class="headerlink" href="#iterating-over-dynars" title="Permalink to this heading"></a></h3>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.xbt_dynar_foreach">
+<span class="target" id="dynar_8h_1a315906139864e84a34aa5610ba0be1fc"></span><span class="sig-name descname"><span class="n"><span class="pre">xbt_dynar_foreach</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">_dynar</span></span>, <span class="n"><span class="pre">_cursor</span></span>, <span class="n"><span class="pre">_data</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xbt_dynar_foreach" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Iterates over the whole dynar. </p>
+<p>
+Here is an example of usage: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xbt_dynar_t</span> <span class="n">dyn</span><span class="p">;</span>
+<span class="n">unsigned</span> <span class="nb">int</span> <span class="n">cpt</span><span class="p">;</span>
+<span class="n">char</span><span class="o">*</span> <span class="nb">str</span><span class="p">;</span>
+<span class="n">xbt_dynar_foreach</span> <span class="p">(</span><span class="n">dyn</span><span class="p">,</span><span class="n">cpt</span><span class="p">,</span><span class="nb">str</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s2">&quot;Seen </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span><span class="nb">str</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</p>
+<p>Note that underneath, that’s a simple for loop with no real black magic involved. It’s perfectly safe to interrupt a foreach with a break or a return statement, but inserting or removing elements during the traversal is probably a bad idea (even if you can fix side effects by manually changing the counter). </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>_dynar</strong> – what to iterate over </p></li>
+<li><p><strong>_cursor</strong> – an unsigned integer used as cursor</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="example-with-scalar-values">
+<h3>Example with scalar values<a class="headerlink" href="#example-with-scalar-values" title="Permalink to this heading"></a></h3>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">xbt_dynar_t</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xbt_dynar_new</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span><span class="w"> </span><span class="n">nullptr</span><span class="p">);</span>
+
+<span class="cm">/* 1. Populate the dynar */</span>
+<span class="n">xbt_dynar_t</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xbt_dynar_new</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span><span class="w"> </span><span class="n">nullptr</span><span class="p">);</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">cpt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">cpt</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NB_ELEM</span><span class="p">;</span><span class="w"> </span><span class="n">cpt</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">xbt_dynar_push_as</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="n">cpt</span><span class="p">);</span><span class="w">     </span><span class="cm">/* This is faster (and possible only with scalars) */</span>
+<span class="w">  </span><span class="cm">/* xbt_dynar_push(d,&amp;cpt);       This would also work */</span>
+<span class="w">  </span><span class="n">xbt_test_log</span><span class="p">(</span><span class="s">&quot;Push %d, length=%lu&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">cpt</span><span class="p">,</span><span class="w"> </span><span class="n">xbt_dynar_length</span><span class="p">(</span><span class="n">d</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="cm">/* 2. Traverse manually the dynar */</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">cursor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">cursor</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NB_ELEM</span><span class="p">;</span><span class="w"> </span><span class="n">cursor</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">int</span><span class="o">*</span><span class="w"> </span><span class="n">iptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="n">xbt_dynar_get_ptr</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">cursor</span><span class="p">);</span>
+<span class="cm">/* 1. Populate further the dynar */</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">cpt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">cpt</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NB_ELEM</span><span class="p">;</span><span class="w"> </span><span class="n">cpt</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">xbt_dynar_insert_at</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">cpt</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">cpt</span><span class="p">);</span>
+<span class="w">  </span><span class="n">xbt_test_log</span><span class="p">(</span><span class="s">&quot;Push %d, length=%lu&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">cpt</span><span class="p">,</span><span class="w"> </span><span class="n">xbt_dynar_length</span><span class="p">(</span><span class="n">d</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="cm">/* 3. Traverse the dynar */</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">cpt</span><span class="p">;</span>
+<span class="n">xbt_dynar_foreach</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">cursor</span><span class="p">,</span><span class="w"> </span><span class="n">cpt</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">xbt_test_assert</span><span class="p">(</span><span class="n">cursor</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="n">cpt</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;The retrieved value is not the same than the injected one (%u!=%d)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">cursor</span><span class="p">,</span><span class="w"> </span><span class="n">cpt</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cm">/* 4. Reset the values */</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NB_ELEM</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">  </span><span class="o">*</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="n">xbt_dynar_get_ptr</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+
+<span class="cm">/* 5. Shift all the values */</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NB_ELEM</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="kt">int</span><span class="w"> </span><span class="n">val</span><span class="p">;</span>
+<span class="w">   </span><span class="n">xbt_dynar_shift</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">val</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">// the dynar is empty after shifting all values</span>
+
+<span class="cm">/* 5. Free the resources */</span>
+<span class="n">xbt_dynar_free</span><span class="p">(</span><span class="o">&amp;</span><span class="n">d</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="example-with-pointed-values">
+<h3>Example with pointed values<a class="headerlink" href="#example-with-pointed-values" title="Permalink to this heading"></a></h3>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">xbt_dynar_t</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xbt_dynar_new</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="o">&amp;</span><span class="n">xbt_free_ref</span><span class="p">);</span>
+
+<span class="c1">/// Push/shift example</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NB_ELEM</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xbt_strdup</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">xbt_dynar_push</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">val</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NB_ELEM</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">val</span><span class="p">;</span>
+<span class="w">  </span><span class="n">xbt_dynar_shift</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">val</span><span class="p">);</span>
+<span class="w">  </span><span class="n">REQUIRE</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">val</span><span class="p">);</span>
+<span class="w">  </span><span class="n">xbt_free</span><span class="p">(</span><span class="n">val</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">xbt_dynar_free</span><span class="p">(</span><span class="o">&amp;</span><span class="n">d</span><span class="p">);</span>
+
+<span class="c1">/// Unshift, traverse and pop example</span>
+<span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xbt_dynar_new</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="o">**</span><span class="p">),</span><span class="w"> </span><span class="o">&amp;</span><span class="n">xbt_free_ref</span><span class="p">);</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NB_ELEM</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">  </span><span class="n">s1</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="n">xbt_strdup</span><span class="p">(</span><span class="n">val</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<span class="w">  </span><span class="n">xbt_dynar_unshift</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">s1</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="cm">/* 2. Traverse the dynar with the macro */</span>
+<span class="n">xbt_dynar_foreach</span><span class="w"> </span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">iter</span><span class="p">,</span><span class="w"> </span><span class="n">s1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">NB_ELEM</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">iter</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">  </span><span class="n">REQUIRE</span><span class="p">(</span><span class="n">s1</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">val</span><span class="p">);</span><span class="w"> </span><span class="c1">// The retrieved value is not the same than the injected one</span>
+<span class="p">}</span>
+<span class="cm">/* 3. Traverse the dynar with the macro */</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NB_ELEM</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">  </span><span class="n">xbt_dynar_pop</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">s2</span><span class="p">);</span>
+<span class="w">  </span><span class="n">REQUIRE</span><span class="p">(</span><span class="n">s2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">val</span><span class="p">);</span><span class="w"> </span><span class="c1">// The retrieved value is not the same than the injected one</span>
+<span class="w">  </span><span class="n">xbt_free</span><span class="p">(</span><span class="n">s2</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="cm">/* 4. Free the resources */</span>
+<span class="n">xbt_dynar_free</span><span class="p">(</span><span class="o">&amp;</span><span class="n">d</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="app_smpi.html" class="btn btn-neutral float-left" title="SMPI: Simulate MPI Applications" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Platform.html" class="btn btn-neutral float-right" title="Describing your Simulated Platform" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2002-2025, The SimGrid Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

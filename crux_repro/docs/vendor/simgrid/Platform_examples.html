@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Network Topology Examples &mdash; SimGrid  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="_static/showfile.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
+        <script src="_static/showfile.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Advanced routing" href="Platform_routing.html" />
+    <link rel="prev" title="Describing your Simulated Platform" href="Platform.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SimGrid
+          </a>
+              <div class="version">
+                4.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Algorithms.html">     Simulating distributed algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_MPI_Applications.html">     Simulating MPI applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Model-checking.html">     Model-checking algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_DAG.html">Simulating DAG</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Manual:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">   Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installing_SimGrid.html">      Installing SimGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Start_your_own_project.html">      Start your own project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="community.html">      The SimGrid community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Release_Notes.html">      Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="application.html">   Describing your application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_s4u.html">      The S4U interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">      S4U examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_smpi.html">      The SMPI interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="The_XBT_toolbox.html">      The XBT toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform.html">   Describing the simulated platform</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">      Network topology examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#simple-example-with-3-hosts">Simple Example with 3 hosts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cluster-with-a-crossbar">Cluster with a Crossbar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cluster-with-a-shared-backbone">Cluster with a Shared Backbone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#torus-cluster">Torus Cluster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fat-tree-cluster">Fat-Tree Cluster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dragonfly-cluster">Dragonfly Cluster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#star-zone">Star Zone</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_routing.html">      Advanced routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="XML_reference.html">      XML reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_cpp.html">      C++ platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Models.html">   The SimGrid models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Modeling_howtos.html">      Modeling hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Calibrating_the_models.html">      Calibrating the models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plugins.html">      SimGrid plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Experimental_setup.html">   Running an experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Configuring_SimGrid.html">      Configuring SimGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Deploying_your_application.html">      Deploying your application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Outcomes.html">      Simulation outcomes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">SimGrid's Internals:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Design_goals.html">   Design goals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Contributors_Documentation.html">   Contributor's documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SimGrid</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Network Topology Examples</li>
+  <li class="wy-breadcrumbs-aside">
+    
+
+      <a href="" class="fa fa-bitbucket"> Edit on FramaGit</a>
+    
+  </li>
+
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <object id="TOC" data="graphical-toc.svg" type="image/svg+xml"></object>
+<script>
+window.onload=function() { // Wait for the SVG to be loaded before changing it
+  var elem=document.querySelector("#TOC").contentDocument.getElementById("ExamplesBox")
+  elem.style="opacity:0.93999999;fill:#ff0000;fill-opacity:0.1;stroke:#000000;stroke-width:0.35277778;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1";
+}
+</script>
+<br/>
+<br/><section id="network-topology-examples">
+<span id="platform-examples"></span><h1>Network Topology Examples<a class="headerlink" href="#network-topology-examples" title="Permalink to this heading"></a></h1>
+<section id="simple-example-with-3-hosts">
+<span id="platform-example-3hosts"></span><h2>Simple Example with 3 hosts<a class="headerlink" href="#simple-example-with-3-hosts" title="Permalink to this heading"></a></h2>
+<p>Imagine you want to describe a little platform with three hosts,
+interconnected as follows:</p>
+<img alt="_images/3hosts.png" class="align-center" src="_images/3hosts.png" />
+<p>This can be done with the following platform file, that considers the
+simulated platform as a graph of hosts and network links.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&#39;1.0&#39;?&gt;</span>
+<span class="cp">&lt;!DOCTYPE platform SYSTEM &quot;https://simgrid.org/simgrid.dtd&quot;&gt;</span>
+<span class="nt">&lt;platform</span><span class="w"> </span><span class="na">version=</span><span class="s">&quot;4.1&quot;</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="nt">&lt;zone</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;AS0&quot;</span><span class="w"> </span><span class="na">routing=</span><span class="s">&quot;Full&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;host</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;host0&quot;</span><span class="w"> </span><span class="na">speed=</span><span class="s">&quot;1Gf&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;host</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;host1&quot;</span><span class="w"> </span><span class="na">speed=</span><span class="s">&quot;2Gf&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;host</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;host2&quot;</span><span class="w"> </span><span class="na">speed=</span><span class="s">&quot;40Gf&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;link</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;link0&quot;</span><span class="w"> </span><span class="na">bandwidth=</span><span class="s">&quot;125MBps&quot;</span><span class="w"> </span><span class="na">latency=</span><span class="s">&quot;100us&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;link</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;link1&quot;</span><span class="w"> </span><span class="na">bandwidth=</span><span class="s">&quot;50MBps&quot;</span><span class="w"> </span><span class="na">latency=</span><span class="s">&quot;150us&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;link</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;link2&quot;</span><span class="w"> </span><span class="na">bandwidth=</span><span class="s">&quot;250MBps&quot;</span><span class="w"> </span><span class="na">latency=</span><span class="s">&quot;50us&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;route</span><span class="w"> </span><span class="na">src=</span><span class="s">&quot;host0&quot;</span><span class="w"> </span><span class="na">dst=</span><span class="s">&quot;host1&quot;</span><span class="nt">&gt;&lt;link_ctn</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;link0&quot;</span><span class="nt">/&gt;&lt;link_ctn</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;link1&quot;</span><span class="nt">/&gt;&lt;/route&gt;</span>
+<span class="w">    </span><span class="nt">&lt;route</span><span class="w"> </span><span class="na">src=</span><span class="s">&quot;host1&quot;</span><span class="w"> </span><span class="na">dst=</span><span class="s">&quot;host2&quot;</span><span class="nt">&gt;&lt;link_ctn</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;link1&quot;</span><span class="nt">/&gt;&lt;link_ctn</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;link2&quot;</span><span class="nt">/&gt;&lt;/route&gt;</span>
+<span class="w">    </span><span class="nt">&lt;route</span><span class="w"> </span><span class="na">src=</span><span class="s">&quot;host0&quot;</span><span class="w"> </span><span class="na">dst=</span><span class="s">&quot;host2&quot;</span><span class="nt">&gt;&lt;link_ctn</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;link0&quot;</span><span class="nt">/&gt;&lt;link_ctn</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;link2&quot;</span><span class="nt">/&gt;&lt;/route&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/zone&gt;</span>
+<span class="nt">&lt;/platform&gt;</span>
+</pre></div>
+</div>
+<p>The elements basic elements (with <a class="reference internal" href="XML_reference.html#pf-tag-host"><span class="std std-ref">&lt;host&gt;</span></a> and
+<a class="reference internal" href="XML_reference.html#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a>) are described first, and then the routes between
+any pair of hosts are explicitly given with <a class="reference internal" href="XML_reference.html#pf-tag-route"><span class="std std-ref">&lt;route&gt;</span></a>.</p>
+<p>Any host must be given a computational speed in flops while links must
+be given a latency and a bandwidth. You can write 1Gf for
+1,000,000,000 flops (full list of units in the reference guide of
+<a class="reference internal" href="XML_reference.html#pf-tag-host"><span class="std std-ref">&lt;host&gt;</span></a> and <a class="reference internal" href="XML_reference.html#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a>).</p>
+<p>Routes defined with <a class="reference internal" href="XML_reference.html#pf-tag-route"><span class="std std-ref">&lt;route&gt;</span></a> are symmetrical by default,
+meaning that the list of traversed links from A to B is the same as
+from B to A. Explicitly define non-symmetrical routes if you prefer.</p>
+<p>The last thing you must know on SimGrid platform files is that the
+root tag must be <a class="reference internal" href="XML_reference.html#pf-tag-platform"><span class="std std-ref">&lt;platform&gt;</span></a>. If the <code class="docutils literal notranslate"><span class="pre">version</span></code> attribute
+does not match what SimGrid expects, you will be hinted to use to the
+<code class="docutils literal notranslate"><span class="pre">simgrid_update_xml</span></code> utility to update your file.</p>
+<p>There is often more than one way to model a given platform. For example, the above platform could also be
+<a class="reference internal" href="Platform_routing.html#platform-rm-shortest"><span class="std std-ref">expressed using a shortest path algorithm</span></a> instead of explicitely listing all routes as in
+the example above.</p>
+</section>
+<section id="cluster-with-a-crossbar">
+<h2>Cluster with a Crossbar<a class="headerlink" href="#cluster-with-a-crossbar" title="Permalink to this heading"></a></h2>
+<p>A very common parallel computing platform is a homogeneous cluster in which hosts are interconnected via a crossbar switch
+with as many ports as hosts, so that any disjoint pairs of hosts can communicate concurrently at full speed. Because there
+is no contention on the switch, it is modeled as if there were a direct link from each host to the outgoing router. For
+instance:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&#39;1.0&#39;?&gt;</span>
+<span class="cp">&lt;!DOCTYPE platform SYSTEM &quot;https://simgrid.org/simgrid.dtd&quot;&gt;</span>
+<span class="nt">&lt;platform</span><span class="w"> </span><span class="na">version=</span><span class="s">&quot;4.1&quot;</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="nt">&lt;zone</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;world&quot;</span><span class="w"> </span><span class="na">routing=</span><span class="s">&quot;Full&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;cluster</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;cluster-crossbar&quot;</span>
+<span class="w">             </span><span class="na">prefix=</span><span class="s">&quot;node-&quot;</span><span class="w"> </span><span class="na">radical=</span><span class="s">&quot;0-65535&quot;</span><span class="w"> </span><span class="na">suffix=</span><span class="s">&quot;.simgrid.org&quot;</span>
+<span class="w">	     </span><span class="na">speed=</span><span class="s">&quot;1Gf&quot;</span><span class="w"> </span><span class="na">bw=</span><span class="s">&quot;125MBps&quot;</span><span class="w"> </span><span class="na">lat=</span><span class="s">&quot;50us&quot;</span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/zone&gt;</span>
+<span class="nt">&lt;/platform&gt;</span>
+</pre></div>
+</div>
+<p>One specifies a name prefix and suffix for each host, and then give an integer range. In the example the cluster contains
+65536 hosts (!), named <code class="docutils literal notranslate"><span class="pre">node-0.simgrid.org</span></code> to <code class="docutils literal notranslate"><span class="pre">node-65535.simgrid.org</span></code>. All hosts have the same power (1 Gflop/sec)
+and are connected directly to the switch via private links with same bandwidth (125 MBytes/sec) and latency (50
+microseconds).</p>
+<p>The outgoing router is named <code class="docutils literal notranslate"><span class="pre">${prefix}${cluster_id}_router${suffix}</span></code> so in this case, this is
+<code class="docutils literal notranslate"><span class="pre">node-cluster-crossbar_router.simgrid.org</span></code>.</p>
+<img alt="_images/cluster_crossbar.svg" class="align-center" src="_images/cluster_crossbar.svg" /></section>
+<section id="cluster-with-a-shared-backbone">
+<h2>Cluster with a Shared Backbone<a class="headerlink" href="#cluster-with-a-shared-backbone" title="Permalink to this heading"></a></h2>
+<p>Another popular model for a parallel platform is that of a set of homogeneous hosts connected to a shared communication
+medium, a backbone, with some limited bandwidth capacity and on which communicating host pairs can experience contention.
+For instance:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&#39;1.0&#39;?&gt;</span>
+<span class="cp">&lt;!DOCTYPE platform SYSTEM &quot;https://simgrid.org/simgrid.dtd&quot;&gt;</span>
+<span class="nt">&lt;platform</span><span class="w"> </span><span class="na">version=</span><span class="s">&quot;4.1&quot;</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="nt">&lt;cluster</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;cluster0&quot;</span><span class="w"> </span><span class="na">prefix=</span><span class="s">&quot;node-&quot;</span><span class="w"> </span><span class="na">radical=</span><span class="s">&quot;0-99&quot;</span><span class="w"> </span><span class="na">suffix=</span><span class="s">&quot;.simgrid.org&quot;</span>
+<span class="w">	   </span><span class="na">speed=</span><span class="s">&quot;1Gf&quot;</span><span class="w"> </span><span class="na">bw=</span><span class="s">&quot;125MBps&quot;</span><span class="w"> </span><span class="na">lat=</span><span class="s">&quot;50us&quot;</span>
+<span class="w">           </span><span class="na">bb_bw=</span><span class="s">&quot;2.25GBps&quot;</span><span class="w">  </span><span class="na">bb_lat=</span><span class="s">&quot;500us&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/platform&gt;</span>
+</pre></div>
+</div>
+<p>The main differences with the crossbar cluster above are the <code class="docutils literal notranslate"><span class="pre">bb_bw</span></code> and <code class="docutils literal notranslate"><span class="pre">bb_lat</span></code> attributes that specify the backbone
+characteristics (here, a 500 microseconds latency and a 2.25 GBytes/sec bandwidth). This link is used for every
+communication within the cluster. The route from <code class="docutils literal notranslate"><span class="pre">node-0.simgrid.org</span></code> to <code class="docutils literal notranslate"><span class="pre">node-1.simgrid.org</span></code> counts 3 links: the
+private link of <code class="docutils literal notranslate"><span class="pre">node-0.simgrid.org</span></code>, the backbone and the private link of <code class="docutils literal notranslate"><span class="pre">node-1.simgrid.org</span></code>. The route from
+<code class="docutils literal notranslate"><span class="pre">node-0.simgrid.org</span></code> to the outer internet counts 2 links: the private link of <code class="docutils literal notranslate"><span class="pre">node-0.simgrid.org</span></code> and the backbone.</p>
+<img alt="_images/cluster_backbone.svg" class="align-center" src="_images/cluster_backbone.svg" /></section>
+<section id="torus-cluster">
+<h2>Torus Cluster<a class="headerlink" href="#torus-cluster" title="Permalink to this heading"></a></h2>
+<p>Many HPC facilities use torus clusters to reduce sharing and
+performance loss on concurrent internal communications. Modeling this
+in SimGrid is very easy. Simply add a <code class="docutils literal notranslate"><span class="pre">topology=&quot;TORUS&quot;</span></code> attribute
+to your cluster. Configure it with the <code class="docutils literal notranslate"><span class="pre">topo_parameters=&quot;X,Y,Z&quot;</span></code>
+attribute, where <code class="docutils literal notranslate"><span class="pre">X</span></code>, <code class="docutils literal notranslate"><span class="pre">Y</span></code> and <code class="docutils literal notranslate"><span class="pre">Z</span></code> are the dimension of your
+torus.</p>
+<img alt="_images/cluster_torus.svg" class="align-center" src="_images/cluster_torus.svg" /><div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&#39;1.0&#39;?&gt;</span>
+<span class="cp">&lt;!DOCTYPE platform SYSTEM &quot;https://simgrid.org/simgrid.dtd&quot;&gt;</span>
+<span class="nt">&lt;platform</span><span class="w"> </span><span class="na">version=</span><span class="s">&quot;4.1&quot;</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="nt">&lt;zone</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;world&quot;</span><span class="w"> </span><span class="na">routing=</span><span class="s">&quot;Full&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;cluster</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;bob_cluster&quot;</span><span class="w"> </span><span class="na">topology=</span><span class="s">&quot;TORUS&quot;</span><span class="w"> </span><span class="na">topo_parameters=</span><span class="s">&quot;3,2,2&quot;</span>
+<span class="w">	     </span><span class="na">prefix=</span><span class="s">&quot;node-&quot;</span><span class="w"> </span><span class="na">radical=</span><span class="s">&quot;0-11&quot;</span><span class="w"> </span><span class="na">suffix=</span><span class="s">&quot;.simgrid.org&quot;</span>
+<span class="w">	     </span><span class="na">speed=</span><span class="s">&quot;1Gf&quot;</span><span class="w"> </span><span class="na">bw=</span><span class="s">&quot;125MBps&quot;</span><span class="w"> </span><span class="na">lat=</span><span class="s">&quot;50us&quot;</span>
+<span class="w">	     </span><span class="na">loopback_bw=</span><span class="s">&quot;100MBps&quot;</span><span class="w"> </span><span class="na">loopback_lat=</span><span class="s">&quot;0&quot;</span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/zone&gt;</span>
+<span class="nt">&lt;/platform&gt;</span>
+</pre></div>
+</div>
+<p>Note that in this example, we used <code class="docutils literal notranslate"><span class="pre">loopback_bw</span></code> and
+<code class="docutils literal notranslate"><span class="pre">loopback_lat</span></code> to specify the characteristics of the loopback link
+of each node (i.e., the link allowing each node to communicate with
+itself). We could have done so in previous example too. When no
+loopback is given, the communication from a node to itself is handled
+as if it were two distinct nodes: it goes twice through the private
+link and through the backbone (if any).</p>
+</section>
+<section id="fat-tree-cluster">
+<span id="platform-examples-fattree"></span><h2>Fat-Tree Cluster<a class="headerlink" href="#fat-tree-cluster" title="Permalink to this heading"></a></h2>
+<p>This topology was introduced to reduce the amount of links in the
+cluster (and thus reduce its price) while maintaining a high bisection
+bandwidth and a relatively low diameter. To model this in SimGrid,
+pass a <code class="docutils literal notranslate"><span class="pre">topology=&quot;FAT_TREE&quot;</span></code> attribute to your cluster. The
+<code class="docutils literal notranslate"><span class="pre">topo_parameters=#levels;#downlinks;#uplinks;link</span> <span class="pre">count</span></code> follows the
+semantic introduced in the <a class="reference external" href="https://ece.technion.ac.il/wp-content/uploads/2021/01/publication_776.pdf">Figure 1(b) of this article</a>.</p>
+<p>Here is the meaning of this example: <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">;</span> <span class="pre">4,4</span> <span class="pre">;</span> <span class="pre">1,2</span> <span class="pre">;</span> <span class="pre">1,2</span></code></p>
+<ul class="simple">
+<li><p>That’s a two-level cluster (thus the initial <code class="docutils literal notranslate"><span class="pre">2</span></code>).</p></li>
+<li><p>Routers are connected to 4 elements below them, regardless of its
+level. Thus the <code class="docutils literal notranslate"><span class="pre">4,4</span></code> component that is used as
+<code class="docutils literal notranslate"><span class="pre">#downlinks</span></code>. This means that the hosts are grouped by 4 on a
+given router, and that there is 4 level-1 routers (in the middle of
+the figure).</p></li>
+<li><p>Hosts are connected to only 1 router above them, while these routers
+are connected to 2 routers above them (thus the <code class="docutils literal notranslate"><span class="pre">1,2</span></code> used as
+<code class="docutils literal notranslate"><span class="pre">#uplink</span></code>).</p></li>
+<li><p>Hosts have only one link to their router while every path between a
+level-1 routers and level-2 routers use 2 parallel links. Thus the
+<code class="docutils literal notranslate"><span class="pre">1,2</span></code> that is used as <code class="docutils literal notranslate"><span class="pre">link</span> <span class="pre">count</span></code>.</p></li>
+</ul>
+<img alt="_images/cluster_fat_tree.svg" class="align-center" src="_images/cluster_fat_tree.svg" /><div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&#39;1.0&#39;?&gt;</span>
+<span class="cp">&lt;!DOCTYPE platform SYSTEM &quot;https://simgrid.org/simgrid.dtd&quot;&gt;</span>
+<span class="nt">&lt;platform</span><span class="w"> </span><span class="na">version=</span><span class="s">&quot;4.1&quot;</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="nt">&lt;zone</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;world&quot;</span><span class="w"> </span><span class="na">routing=</span><span class="s">&quot;Full&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;cluster</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;bob_cluster&quot;</span>
+<span class="w">	     </span><span class="na">prefix=</span><span class="s">&quot;node-&quot;</span><span class="w"> </span><span class="na">radical=</span><span class="s">&quot;0-15&quot;</span><span class="w"> </span><span class="na">suffix=</span><span class="s">&quot;.simgrid.org&quot;</span>
+<span class="w">	     </span><span class="na">speed=</span><span class="s">&quot;1Gf&quot;</span><span class="w"> </span><span class="na">bw=</span><span class="s">&quot;125MBps&quot;</span><span class="w"> </span><span class="na">lat=</span><span class="s">&quot;50us&quot;</span>
+<span class="w">             </span><span class="na">topology=</span><span class="s">&quot;FAT_TREE&quot;</span><span class="w"> </span><span class="na">topo_parameters=</span><span class="s">&quot;2;4,4;1,2;1,2&quot;</span>
+<span class="w">	     </span><span class="na">loopback_bw=</span><span class="s">&quot;100MBps&quot;</span><span class="w"> </span><span class="na">loopback_lat=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/zone&gt;</span>
+<span class="nt">&lt;/platform&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="dragonfly-cluster">
+<h2>Dragonfly Cluster<a class="headerlink" href="#dragonfly-cluster" title="Permalink to this heading"></a></h2>
+<p>This topology was introduced to further reduce the amount of links
+while maintaining a high bandwidth for local communications. To model
+this in SimGrid, pass a <code class="docutils literal notranslate"><span class="pre">topology=&quot;DRAGONFLY&quot;</span></code> attribute to your
+cluster. It’s based on the implementation of the topology used on
+Cray XC systems, described in paper
+<a class="reference external" href="https://dl.acm.org/citation.cfm?id=2389136">Cray Cascade: A scalable HPC system based on a Dragonfly network</a>.</p>
+<p>System description follows the format <code class="docutils literal notranslate"><span class="pre">topo_parameters=#groups;#chassis;#routers;#nodes</span></code>
+For example, <code class="docutils literal notranslate"><span class="pre">3,4</span> <span class="pre">;</span> <span class="pre">3,2</span> <span class="pre">;</span> <span class="pre">3,1</span> <span class="pre">;</span> <span class="pre">2</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">3,4</span></code>: There are 3 groups with 4 links between each (blue level).
+Links to nth group are attached to the nth router of the group
+on our implementation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">3,2</span></code>: In each group, there are 3 chassis with 2 links between each nth router
+of each group (black level)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">3,1</span></code>: In each chassis, 3 routers are connected together with a single link
+(green level)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">2</span></code>: Each router has two nodes attached (single link)</p></li>
+</ul>
+<img alt="_images/cluster_dragonfly.svg" class="align-center" src="_images/cluster_dragonfly.svg" /><div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&#39;1.0&#39;?&gt;</span>
+<span class="cp">&lt;!DOCTYPE platform SYSTEM &quot;https://simgrid.org/simgrid.dtd&quot;&gt;</span>
+<span class="nt">&lt;platform</span><span class="w"> </span><span class="na">version=</span><span class="s">&quot;4.1&quot;</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="nt">&lt;zone</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;world&quot;</span><span class="w"> </span><span class="na">routing=</span><span class="s">&quot;Full&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;cluster</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;bob_cluster&quot;</span><span class="w"> </span><span class="na">topology=</span><span class="s">&quot;DRAGONFLY&quot;</span><span class="w"> </span><span class="na">topo_parameters=</span><span class="s">&quot;3,4;4,3;5,1;2&quot;</span>
+<span class="w">             </span><span class="na">prefix=</span><span class="s">&quot;node-&quot;</span><span class="w"> </span><span class="na">radical=</span><span class="s">&quot;0-119&quot;</span><span class="w"> </span><span class="na">suffix=</span><span class="s">&quot;.simgrid.org&quot;</span>
+<span class="w">	     </span><span class="na">speed=</span><span class="s">&quot;1Gf&quot;</span><span class="w"> </span><span class="na">bw=</span><span class="s">&quot;125MBps&quot;</span><span class="w"> </span><span class="na">lat=</span><span class="s">&quot;50us&quot;</span>
+<span class="w">             </span><span class="na">loopback_bw=</span><span class="s">&quot;100MBps&quot;</span><span class="w"> </span><span class="na">loopback_lat=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">limiter_link=</span><span class="s">&quot;150MBps&quot;</span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/zone&gt;</span>
+<span class="nt">&lt;/platform&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="star-zone">
+<h2>Star Zone<a class="headerlink" href="#star-zone" title="Permalink to this heading"></a></h2>
+<p>A Star topology can be seen as a crossbar cluster that does not interconnect hosts, but subzones. It can for example be
+used to model a cluster of complex hosts, where each host is disaggregated, with CPUs, GPUs and maybe a network on chip. It
+is similar to a cluster topology, with the flexibility to set different route for every component in the star. Because of
+its complexity, this topology is only available from the C++ interface.</p>
+<a class="reference internal image-reference" href="_images/starzone.svg"><img alt="_images/starzone.svg" class="align-center" height="340" src="_images/starzone.svg" width="435" /></a>
+<p>The particularity of this zone is how routes are declared. Instead of declaring the
+source and destination, routes are described from a node to everybody else or from
+everybody else to the node. In the example, the node <em>A</em> uses the <em>Link1</em> and <em>Backbone</em>
+to communicate with other nodes (note that this is valid for both nodes inside or outside
+the zone). More precisely, a communication from node <em>A</em> to <em>B</em> would use links: <em>Link1, Backbone,
+Link3_down</em>. Note that duplicated links are removed from the route, i.e. in this example we’ll use <em>Backbone</em>
+only once.</p>
+<p>Also, note that the nodes (A, B and C) can be either hosts or other zones. In case of using zones,
+set the gateway parameter properly when adding the route.</p>
+<p>The following code illustrates how to create this Star Zone and add the appropriates routes.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">zone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">Engine</span><span class="o">::</span><span class="n">get_instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get_netzone_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">add_netzone_star</span><span class="p">(</span><span class="s">&quot;star&quot;</span><span class="p">);</span>
+<span class="cm">/* create hosts */</span>
+<span class="k">const</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">Host</span><span class="o">*</span><span class="w"> </span><span class="n">hostA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zone</span><span class="o">-&gt;</span><span class="n">add_host</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">1e9</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">seal</span><span class="p">();</span>
+<span class="k">const</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">Host</span><span class="o">*</span><span class="w"> </span><span class="n">hostB</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zone</span><span class="o">-&gt;</span><span class="n">add_host</span><span class="p">(</span><span class="s">&quot;B&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">1e9</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">seal</span><span class="p">();</span>
+
+<span class="cm">/* create links */</span>
+<span class="n">sg4</span><span class="o">::</span><span class="n">Link</span><span class="o">*</span><span class="w"> </span><span class="n">link1</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">zone</span><span class="o">-&gt;</span><span class="n">add_link</span><span class="p">(</span><span class="s">&quot;link1&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">1e6</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">seal</span><span class="p">();</span>
+<span class="n">sg4</span><span class="o">::</span><span class="n">Link</span><span class="o">*</span><span class="w"> </span><span class="n">link3_up</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">zone</span><span class="o">-&gt;</span><span class="n">add_link</span><span class="p">(</span><span class="s">&quot;link3_up&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">1e6</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">seal</span><span class="p">();</span>
+<span class="n">sg4</span><span class="o">::</span><span class="n">Link</span><span class="o">*</span><span class="w"> </span><span class="n">link3_down</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zone</span><span class="o">-&gt;</span><span class="n">add_link</span><span class="p">(</span><span class="s">&quot;link3_down&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">1e6</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">seal</span><span class="p">();</span>
+<span class="n">sg4</span><span class="o">::</span><span class="n">Link</span><span class="o">*</span><span class="w"> </span><span class="n">backbone</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">zone</span><span class="o">-&gt;</span><span class="n">add_link</span><span class="p">(</span><span class="s">&quot;backbone&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">1e9</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">seal</span><span class="p">();</span>
+
+<span class="cm">/* symmetric route route: A-&gt;ALL and ALL-&gt;A, shared link1 */</span>
+<span class="n">zone</span><span class="o">-&gt;</span><span class="n">add_route</span><span class="p">(</span><span class="n">hostA</span><span class="o">-&gt;</span><span class="n">get_netpoint</span><span class="p">(),</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sg4</span><span class="o">::</span><span class="n">Link</span><span class="o">*&gt;</span><span class="p">{</span><span class="n">link1</span><span class="p">,</span><span class="w"> </span><span class="n">backbone</span><span class="p">},</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span>
+<span class="cm">/* route host B -&gt; ALL, split-duplex link3, direction UP */</span>
+<span class="n">zone</span><span class="o">-&gt;</span><span class="n">add_route</span><span class="p">(</span><span class="n">hostB</span><span class="o">-&gt;</span><span class="n">get_netpoint</span><span class="p">(),</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sg4</span><span class="o">::</span><span class="n">Link</span><span class="o">*&gt;</span><span class="p">{</span><span class="n">link3_up</span><span class="p">,</span><span class="w"> </span><span class="n">backbone</span><span class="p">},</span><span class="w"> </span><span class="nb">false</span><span class="p">);</span>
+<span class="cm">/* route host ALL -&gt; B, split-duplex link3, direction DOWN */</span>
+<span class="n">zone</span><span class="o">-&gt;</span><span class="n">add_route</span><span class="p">(</span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">hostB</span><span class="o">-&gt;</span><span class="n">get_netpoint</span><span class="p">(),</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sg4</span><span class="o">::</span><span class="n">Link</span><span class="o">*&gt;</span><span class="p">{</span><span class="n">backbone</span><span class="p">,</span><span class="w"> </span><span class="n">link3_down</span><span class="p">},</span><span class="w"> </span><span class="nb">false</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Complete this page of the manual.</p>
+<p>SimGrid comes with an extensive set of platforms in the
+<a class="reference external" href="https://framagit.org/simgrid/simgrid/tree/master/examples/platforms">examples/platforms</a>
+directory that should be described here.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Platform.html" class="btn btn-neutral float-left" title="Describing your Simulated Platform" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Platform_routing.html" class="btn btn-neutral float-right" title="Advanced routing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2002-2025, The SimGrid Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>创建自己的项目 - SimGrid 中文手册</title><style>
+:root{--bg:#f7f8fb;--sbg:#17182c;--stx:#d6d7e7;--muted:#8d90a8;--accent:#e94560;--txt:#272838;--hd:#16213e;--code:#f1f4f8;--bd:#dfe3ea;--note:#fff8e6}
+*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC",Arial,sans-serif;background:var(--bg);color:var(--txt);line-height:1.7;display:flex}
+nav{width:330px;min-width:330px;height:100vh;position:sticky;top:0;background:var(--sbg);color:var(--stx);overflow:auto;padding:18px 0;font-size:14px} nav h2{font-size:18px;padding:0 20px 12px;margin:0 0 6px;border-bottom:1px solid rgba(255,255,255,.12)} nav h2 a{color:#fff;text-decoration:none} nav h2 small{display:block;color:var(--muted);font-size:11px;font-weight:400;margin-top:2px}.sec{display:block;color:#56b6e8;font-weight:700;text-transform:uppercase;font-size:12px;padding:16px 20px 6px}nav a{display:block;color:var(--stx);text-decoration:none;padding:5px 20px 5px 30px}nav a:hover,nav a.active{background:rgba(233,69,96,.13);color:#ff6b86}main{width:min(1040px,calc(100vw - 330px));padding:34px 52px 90px}h1{font-size:34px;line-height:1.2;color:var(--hd);margin:0 0 18px}h2{font-size:25px;color:var(--hd);margin:42px 0 12px;padding-bottom:7px;border-bottom:2px solid var(--bd)}h3{font-size:20px;color:var(--hd);margin:30px 0 10px}h4{font-size:16px;color:#4b4f63;margin:22px 0 8px}p{margin:9px 0}a{color:#0f5e9c}pre{background:var(--code);border:1px solid var(--bd);border-radius:6px;padding:12px 15px;overflow:auto;line-height:1.45;font-size:12.5px}code{font-family:"SF Mono",Menlo,Consolas,monospace;background:var(--code);padding:1px 4px;border-radius:3px}pre code{background:transparent;padding:0}img{max-width:100%;height:auto;display:block;margin:16px auto}table{border-collapse:collapse;width:100%;margin:14px 0}td,th{border:1px solid var(--bd);padding:7px 9px}th{background:var(--code)}blockquote,.admonition{border-left:4px solid #f0c040;background:var(--note);padding:8px 14px;margin:14px 0}.meta{color:#687085;font-size:13px;margin-bottom:18px}.raw-note{background:#eef7ff;border:1px solid #cbe7ff;border-radius:6px;padding:10px 12px;margin-bottom:18px;font-size:13px}@media(max-width:900px){body{display:block}nav{position:relative;width:100%;min-width:0;height:auto}main{width:100%;padding:20px}}
+</style></head><body>
+<nav><h2><a href="index.html">SimGrid 4.1</a><small>中文本地化镜像</small></h2>
+<span class="sec">教程</span>
+<a href="Tutorial_Algorithms.html">模拟分布式算法</a>
+<a href="Tutorial_MPI_Applications.html">模拟 MPI 应用</a>
+<a href="Tutorial_Model-checking.html">模型检验算法</a>
+<a href="Tutorial_DAG.html">模拟 DAG</a>
+<span class="sec">用户手册</span>
+<a href="Introduction.html">简介</a>
+<a href="Installing_SimGrid.html">安装 SimGrid</a>
+<a class="active" href="Start_your_own_project.html">创建自己的项目</a>
+<a href="community.html">SimGrid 社区</a>
+<a href="Release_Notes.html">发布说明</a>
+<a href="application.html">描述应用程序</a>
+<a href="app_s4u.html">S4U 接口</a>
+<a href="Examples.html">S4U 示例</a>
+<a href="app_smpi.html">SMPI 接口</a>
+<a href="The_XBT_toolbox.html">XBT 工具箱</a>
+<a href="Platform.html">描述模拟平台</a>
+<a href="Platform_examples.html">网络拓扑示例</a>
+<a href="Platform_routing.html">高级路由</a>
+<a href="XML_reference.html">XML 参考</a>
+<a href="Platform_cpp.html">C++ 平台</a>
+<a href="Models.html">SimGrid 模型</a>
+<a href="Modeling_howtos.html">建模提示</a>
+<a href="Calibrating_the_models.html">校准模型</a>
+<a href="Plugins.html">SimGrid 插件</a>
+<a href="Experimental_setup.html">运行实验</a>
+<a href="Configuring_SimGrid.html">配置 SimGrid</a>
+<a href="Deploying_your_application.html">部署应用程序</a>
+<a href="Outcomes.html">模拟输出</a>
+<span class="sec">SimGrid 内部文档</span>
+<a href="Design_goals.html">设计目标</a>
+<a href="Contributors_Documentation.html">贡献者文档</a>
+</nav>
+<main><div class="meta">来源：<a href="https://simgrid.org/doc/latest/Start_your_own_project.html">https://simgrid.org/doc/latest/Start_your_own_project.html</a> · 本地化镜像生成，代码块与图片保留官方内容</div>
+<div class="raw-note">说明：本页采用镜像式本地化，导航和主要标题已中文化；代码块、命令输出和图片按官方页面原样保留，便于逐项核对。</div>
+
+             
+  <section id="start-your-own-project">
+<span id="setup-your-own"></span><h1>创建自己的项目</h1>
+<p>It is not advised to modify the SimGrid source code directly, as it
+would make it difficult to upgrade to the next version of SimGrid.
+Instead, you should create your own working directory somewhere on
+your disk (say <code class="docutils literal notranslate"><span class="pre">/home/joe/MyFirstSimulator/</span></code>), and write your code
+in there.</p>
+<section id="cloning-a-template-project-for-s4u">
+<h2>Cloning a Template Project for S4U</h2>
+<p>If you plan to use the modern S4U interface of SimGrid, the easiest way is
+to clone the <a class="reference external" href="https://framagit.org/simgrid/simgrid-template-s4u">Template Project</a> directly. It
+contains the necessary configuration to use cmake and S4U together.</p>
+<p>Once you forked the project on FramaGit, do not forget to remove the
+fork relationship, as you won’t need it unless you plan to contribute
+to the template itself.</p>
+</section>
+<section id="building-your-project-with-cmake">
+<h2>Building your project with CMake</h2>
+<p>Here follows a <cite>CMakeLists.txt</cite> file that you can use as a starting point for your S4U
+project (see below for MPI projects). It builds two simulators from a given set
+of source files.</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.12</span><span class="p">)</span>
+<span class="nb">project</span><span class="p">(</span><span class="s">MyFirstSimulator</span><span class="p">)</span>
+
+<span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span><span class="w"> </span><span class="s">17</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_FLAGS</span><span class="w"> </span><span class="s2">&quot;${CMAKE_CXX_FLAGS} -O3 -funroll-loops -fno-strict-aliasing -flto=auto&quot;</span><span class="p">)</span>
+
+<span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_MODULE_PATH</span><span class="w"> </span><span class="o">${</span><span class="nv">CMAKE_MODULE_PATH</span><span class="o">}</span><span class="w"> </span><span class="s2">&quot;${CMAKE_SOURCE_DIR}/cmake/Modules/&quot;</span><span class="p">)</span>
+<span class="nb">find_package</span><span class="p">(</span><span class="s">SimGrid</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
+<span class="nb">include_directories</span><span class="p">(</span><span class="o">${</span><span class="nv">SimGrid_INCLUDE_DIR</span><span class="o">}</span><span class="p">)</span>
+
+<span class="nb">set</span><span class="p">(</span><span class="s">SIMULATOR_SOURCES</span><span class="w"> </span><span class="s">main.c</span><span class="w"> </span><span class="s">other.c</span><span class="w"> </span><span class="s">util.c</span><span class="p">)</span>
+<span class="nb">add_executable</span><span class="p">(</span><span class="s">my_simulator</span><span class="w"> </span><span class="o">${</span><span class="nv">SIMULATOR_SOURCES</span><span class="o">}</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">my_simulator</span><span class="w"> </span><span class="o">${</span><span class="nv">SimGrid_LIBRARY</span><span class="o">}</span><span class="p">)</span>
+
+<span class="nb">set</span><span class="p">(</span><span class="s">OTHER_SOURCES</span><span class="w"> </span><span class="s">blah.c</span><span class="w"> </span><span class="s">bar.c</span><span class="w"> </span><span class="s">foo.h</span><span class="p">)</span>
+<span class="nb">add_executable</span><span class="p">(</span><span class="s">other_xp</span><span class="w"> </span><span class="o">${</span><span class="nv">OTHER_SOURCES</span><span class="o">}</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">other_xp</span><span class="w"> </span><span class="o">${</span><span class="nv">SimGrid_LIBRARY</span><span class="o">}</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For that, you need <a class="reference external" href="https://framagit.org/simgrid/simgrid/raw/master/FindSimGrid.cmake">FindSimGrid.cmake</a>,
+which is located at the root of the SimGrid tree. You can either copy
+this file into the <cite>cmake/Modules</cite> directory of your project, or use
+the version installed on the disk. Both solutions present advantages
+and drawbacks: if you copy the file, you have to keep it in sync
+manually but your project will produce relevant error messages when
+trying to compile on a machine where SimGrid is not installed. Please
+also refer to the file header for more information.</p>
+<p>MPI projects should NOT search for MPI as usual in cmake, but instead use the <code class="docutils literal notranslate"><span class="pre">smpi_c_target()</span></code> macro
+to declare that a given target is meant to be executed in <code class="docutils literal notranslate"><span class="pre">smpirun</span></code> (which path is set in <code class="docutils literal notranslate"><span class="pre">${SMPIRUN}</span></code>).
+This macro should work for C and C++ programs. Here is a small example:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="c"># Search FindSimgrid in my sources</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_MODULE_PATH</span><span class="w"> </span><span class="o">${</span><span class="nv">CMAKE_MODULE_PATH</span><span class="o">}</span><span class="w"> </span><span class="s2">&quot;${CMAKE_SOURCE_DIR}&quot;</span><span class="p">)</span>
+<span class="nb">find_package</span><span class="p">(</span><span class="s">SimGrid</span><span class="p">)</span>
+
+<span class="c"># Declare an executable, and specify that it&#39;s meant to run within smpirun</span>
+<span class="nb">add_executable</span><span class="p">(</span><span class="s">roundtrip</span><span class="w"> </span><span class="s">roundtrip.c</span><span class="p">)</span>
+<span class="nb">smpi_c_target</span><span class="p">(</span><span class="s">roundtrip</span><span class="p">)</span>
+
+<span class="c"># Declare a test running our executable in ${SMPIRUN}</span>
+<span class="nb">enable_testing</span><span class="p">()</span>
+<span class="nb">add_test</span><span class="p">(</span><span class="s">NAME</span><span class="w"> </span><span class="s">RoundTrip</span>
+<span class="w">         </span><span class="s">COMMAND</span><span class="w"> </span><span class="o">${</span><span class="nv">SMPIRUN</span><span class="o">}</span><span class="w"> </span><span class="s">-platform</span><span class="w"> </span><span class="o">${</span><span class="nv">CMAKE_SOURCE_DIR</span><span class="o">}</span><span class="s">/../cluster_backbone.xml</span><span class="w"> </span><span class="s">-np</span><span class="w"> </span><span class="s">2</span><span class="w"> </span><span class="s">./roundtrip</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To compile Fortran code with cmake, you must override the <code class="docutils literal notranslate"><span class="pre">MPI_Fortran_COMPILER</span></code> variable as follows, but it will probably
+break some configuration checks, so you should export <code class="docutils literal notranslate"><span class="pre">SMPI_PRETEND_CC=1</span></code> during the configuration (not during the compilation
+nor the execution).</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nv">SMPI_PRETEND_CC</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>cmake<span class="w"> </span>-DMPI_C_COMPILER<span class="o">=</span>/opt/simgrid/bin/smpicc<span class="w"> </span>-DMPI_CXX_COMPILER<span class="o">=</span>/opt/simgrid/bin/smpicxx<span class="w"> </span>-DMPI_Fortran_COMPILER<span class="o">=</span>/opt/simgrid/bin/smpiff<span class="w"> </span>.
+<span class="gp">$ </span>make
+</pre></div>
+</div>
+</section>
+<section id="building-your-project-with-makefile">
+<h2>Building your project with Makefile</h2>
+<p>Here is a Makefile that will work if your project is composed of three
+C files named <code class="docutils literal notranslate"><span class="pre">util.h</span></code>, <code class="docutils literal notranslate"><span class="pre">util.c</span></code> and <code class="docutils literal notranslate"><span class="pre">mysimulator.c</span></code>. You should
+take it as a starting point, and adapt it to your code. There is
+plenty of documentation and tutorials on Makefile if the file’s
+comments are not enough for you.</p>
+<div class="highlight-makefile notranslate"><div class="highlight"><pre><span></span><span class="c"># The first rule of a Makefile is the default target. It will be built when make is called with no parameter</span>
+<span class="c"># Here, we want to build the binary &#39;mysimulator&#39;</span>
+<span class="nf">all</span><span class="o">:</span><span class="w"> </span><span class="n">mysimulator</span>
+
+<span class="c"># This second rule lists the dependencies of the mysimulator binary</span>
+<span class="c"># How this dependencies are linked is described in an implicit rule below</span>
+<span class="nf">mysimulator</span><span class="o">:</span><span class="w"> </span><span class="n">mysimulator</span>.<span class="n">o</span> <span class="n">util</span>.<span class="n">o</span>
+
+<span class="c"># These third give the dependencies of the each source file</span>
+<span class="nf">mysimulator.o</span><span class="o">:</span><span class="w"> </span><span class="n">mysimulator</span>.<span class="n">c</span> <span class="n">util</span>.<span class="n">h</span> <span class="c"># list every .h that you use</span>
+<span class="nf">util.o</span><span class="o">:</span><span class="w"> </span><span class="n">util</span>.<span class="n">c</span> <span class="n">util</span>.<span class="n">h</span>
+
+<span class="c"># Some configuration</span>
+<span class="nv">SIMGRID_INSTALL_PATH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>/opt/simgrid<span class="w"> </span><span class="c1"># Where you installed simgrid</span>
+<span class="nv">CC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>gcc<span class="w">                            </span><span class="c1"># Your compiler</span>
+<span class="nv">WARNING</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>-Wshadow<span class="w"> </span>-Wcast-align<span class="w"> </span>-Waggregate-return<span class="w"> </span>-Wmissing-prototypes<span class="w"> </span><span class="se">\</span>
+<span class="w">          </span>-Wmissing-declarations<span class="w"> </span>-Wstrict-prototypes<span class="w"> </span>-Wmissing-prototypes<span class="w"> </span><span class="se">\</span>
+<span class="w">          </span>-Wmissing-declarations<span class="w"> </span>-Wmissing-noreturn<span class="w"> </span>-Wredundant-decls<span class="w"> </span><span class="se">\</span>
+<span class="w">          </span>-Wnested-externs<span class="w"> </span>-Wpointer-arith<span class="w"> </span>-Wwrite-strings<span class="w"> </span>-finline-functions
+
+<span class="c"># CFLAGS = -g -O0 $(WARNINGS) # Use this line to make debugging easier</span>
+<span class="nv">CFLAGS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>-g<span class="w"> </span>-O2<span class="w"> </span><span class="k">$(</span>WARNINGS<span class="k">)</span><span class="w"> </span><span class="c1"># Use this line to get better performance</span>
+
+<span class="c"># No change should be mandated past that line</span>
+<span class="c">#############################################</span>
+<span class="c"># The following are implicit rules, used by default to actually build</span>
+<span class="c"># the targets for which you listed the dependencies above.</span>
+
+<span class="c"># The blanks before the $(CC) must be a Tab char, not spaces</span>
+<span class="nf">%</span><span class="o">:</span><span class="w"> </span>%.<span class="n">o</span>
+<span class="w">     </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span>-L<span class="k">$(</span>SIMGRID_INSTALL_PATH<span class="k">)</span>/lib/<span class="w">    </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span>$^<span class="w"> </span>-lsimgrid<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
+<span class="nf">%.o</span><span class="o">:</span><span class="w"> </span>%.<span class="n">c</span>
+<span class="w">     </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span>-I<span class="k">$(</span>SIMGRID_INSTALL_PATH<span class="k">)</span>/include<span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span>-c<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span><span class="w"> </span>$&lt;
+
+<span class="nf">clean</span><span class="o">:</span>
+<span class="w">     </span>rm<span class="w"> </span>-f<span class="w"> </span>*.o<span class="w"> </span>*~
+<span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">clean</span>
+</pre></div>
+</div>
+</section>
+<section id="develop-in-c-with-eclipse">
+<h2>用 Eclipse 开发 C++</h2>
+<p>If you wish to develop your plugin or modify SimGrid using
+Eclipse. You have to run cmake and import it as a Makefile project.</p>
+<p>Next, you have to activate C++17 in your build settings, add -std=c++17
+in the CDT GCC Built-in compiler settings.</p>
+<img alt="_images/eclipseScreenShot.png" class="align-center" src="_images/eclipseScreenShot.png" loading="lazy" /></img>
+</section>
+<section id="troubleshooting-your-project-setup">
+<span id="install-yours-troubleshooting"></span><h2>Troubleshooting your Project Setup</h2>
+<section id="library-not-found">
+<h3>Library not found</h3>
+<p>When the library cannot be found, you will get such an error message similar to:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./masterworker1:<span class="w"> </span>error<span class="w"> </span><span class="k">while</span><span class="w"> </span>loading<span class="w"> </span>shared<span class="w"> </span>libraries:<span class="w"> </span>libsimgrid.so:<span class="w"> </span>cannot<span class="w"> </span>open<span class="w"> </span>shared<span class="w"> </span>object<span class="w"> </span>file:<span class="w"> </span>No<span class="w"> </span>such<span class="w"> </span>file<span class="w"> </span>or<span class="w"> </span>directory
+</pre></div>
+</div>
+<p>To fix this, add the path to where you installed the library to the
+<code class="docutils literal notranslate"><span class="pre">LD_LIBRARY_PATH</span></code> variable. You can add the following line to your
+<code class="docutils literal notranslate"><span class="pre">~/.bashrc</span></code> so that it gets executed each time you log into your
+computer.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/opt/simgrid/lib
+</pre></div>
+</div>
+</section>
+<section id="many-undefined-references">
+<h3>Many undefined references</h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">masterworker.c:209: undefined reference to `sg_version_check&#39;</span>
+<span class="gp gp-VirtualEnv">(and many other undefined references)</span>
+</pre></div>
+</div>
+<p>This happens when the linker tries to use the wrong library. Use
+<code class="docutils literal notranslate"><span class="pre">LD_LIBRARY_PATH</span></code> as in the previous item to provide the path to the
+right library.</p>
+</section>
+<section id="only-a-few-undefined-references">
+<h3>Only a few undefined references</h3>
+<p>Sometimes, the compilation only spits very few “undefined reference”
+errors. A possible cause is that the system selected an old version of
+the SimGrid library somewhere on your disk.</p>
+<p>Discover which version is used with <code class="docutils literal notranslate"><span class="pre">ldd</span> <span class="pre">name-of-yoursimulator</span></code>.
+Once you’ve found the obsolete copy of SimGrid, just erase it, and
+recompile and relaunch your program.</p>
+</section>
+</section>
+</section>
+
+
+           
+</main></body></html>

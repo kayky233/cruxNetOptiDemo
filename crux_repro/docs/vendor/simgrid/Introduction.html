@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction &mdash; SimGrid  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="_static/showfile.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
+        <script src="_static/showfile.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installing SimGrid" href="Installing_SimGrid.html" />
+    <link rel="prev" title="Simulating DAG" href="Tutorial_DAG.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SimGrid
+          </a>
+              <div class="version">
+                4.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Algorithms.html">     Simulating distributed algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_MPI_Applications.html">     Simulating MPI applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Model-checking.html">     Model-checking algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_DAG.html">Simulating DAG</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Manual:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">   Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-simgrid">What is SimGrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-simgrid-allows-you-to-do">What SimGrid allows you to do</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#anatomy-of-a-project-that-uses-simgrid">Anatomy of a project that uses SimGrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-simgrid-in-practice">Using SimGrid in practice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#simgrid-success-stories">SimGrid Success Stories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#simgrid-limits">SimGrid Limits</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Installing_SimGrid.html">      Installing SimGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Start_your_own_project.html">      Start your own project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="community.html">      The SimGrid community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Release_Notes.html">      Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="application.html">   Describing your application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_s4u.html">      The S4U interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">      S4U examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_smpi.html">      The SMPI interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="The_XBT_toolbox.html">      The XBT toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform.html">   Describing the simulated platform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_examples.html">      Network topology examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_routing.html">      Advanced routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="XML_reference.html">      XML reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_cpp.html">      C++ platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Models.html">   The SimGrid models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Modeling_howtos.html">      Modeling hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Calibrating_the_models.html">      Calibrating the models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plugins.html">      SimGrid plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Experimental_setup.html">   Running an experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Configuring_SimGrid.html">      Configuring SimGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Deploying_your_application.html">      Deploying your application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Outcomes.html">      Simulation outcomes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">SimGrid's Internals:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Design_goals.html">   Design goals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Contributors_Documentation.html">   Contributor's documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SimGrid</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Introduction</li>
+  <li class="wy-breadcrumbs-aside">
+    
+
+      <a href="" class="fa fa-bitbucket"> Edit on FramaGit</a>
+    
+  </li>
+
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="introduction">
+<span id="intro-concepts"></span><h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h1>
+<object data="graphical-toc.svg" type="image/svg+xml"></object>
+<br/>
+<br/><section id="what-is-simgrid">
+<h2>What is SimGrid<a class="headerlink" href="#what-is-simgrid" title="Permalink to this heading"></a></h2>
+<p>SimGrid is a framework for developing simulators of distributed application executions on distributed platforms. It can
+be used to prototype, evaluate and compare relevant platform configurations, system designs, and algorithmic approaches.</p>
+</section>
+<section id="what-simgrid-allows-you-to-do">
+<h2>What SimGrid allows you to do<a class="headerlink" href="#what-simgrid-allows-you-to-do" title="Permalink to this heading"></a></h2>
+<p>Here are some objectives for which SimGrid is particularly relevant and has been used extensively:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Compare designs</strong>. This is a classical use case for researchers/developers, who use SimGrid to assess how their contributed solution (a platform, system, application, and/or algorithm design) compares to existing solutions from the literature.</p></li>
+<li><p><strong>Design the best [Simulated] Platform for a given Application.</strong> Modifying a platform file use to drive simulations is much easier than building
+real-world platforms for testing purposes. SimGrid also allows for the co-design of the platform and the application, as both can be modified with little work.</p></li>
+<li><p><strong>Debug Real Applications</strong>. With real systems it is often difficult to reproduce the exact run that would lead to a bug that is being tracked.
+With SimGrid, you are <em>clairvoyant</em> about your <em>reproducible experiments</em>: you can explore every part of the
+system, and your exploration will not change the simulated state. It also makes it easy to mock or abstract away parts of the real system that
+are not under study.</p></li>
+<li><p><strong>Formally assess an algorithm</strong>. Inspired by model checking, SimGrid provides an execution mode that does not
+quantify an application’s performance behavior, but that instead explores all causally possible outcomes of the application so as to evaluate application correctness. This exhaustive
+search is ideal for finding bugs that are difficult to trigger experimentally. But because it is exhaustive, there is a limit to the scale of the applications for which it can be used.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="anatomy-of-a-project-that-uses-simgrid">
+<h2>Anatomy of a project that uses SimGrid<a class="headerlink" href="#anatomy-of-a-project-that-uses-simgrid" title="Permalink to this heading"></a></h2>
+<p>Any project that uses SimGrid as its simulation framework comprises the following components:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>An <strong>application</strong>. An application consists of one or more processes that can either implement distributed algorithms described using a simple API (either in C++, Python or
+C) or be part of a full-featured real  parallel application implemented with, for example, the MPI standard <a class="reference internal" href="application.html#application"><span class="std std-ref">(more info)</span></a>.</p></li>
+<li><p>A <strong>simulated platform</strong>. This is a description (in either XML or C++) of a distributed system’s hardware (compute nodes, network links,
+disks, clusters, etc). SimGrid makes it straightforward to augment the simulated platform with dynamic behaviors where, for example, the
+links are slowed down (because of external usage) or the machines fail <a class="reference internal" href="Platform.html#platform"><span class="std std-ref">(more info)</span></a>.</p></li>
+<li><p>An application’s <strong>deployment description</strong>. To simulate the execution of the application on the platform, the way the application is
+deployed on the platform must be described.  This is done by specifying which process is mapped onto which machine <a class="reference internal" href="Experimental_setup.html#scenario"><span class="std std-ref">(more
+info)</span></a>.</p></li>
+<li><p><strong>Platform models</strong>. SimGrid implements models that describe how the simulated platform reacts to the simulated activities performed my</p></li>
+</ul>
+<blockquote>
+<div><p>application processes.  SimGrid provides a range of documented models,
+which the user can select and configure for their particular use case.  A
+big selling point of SimGrid, which sets it apart from its competitors,
+is that it can accurately model the network contention that results from
+concurrent communications. <a class="reference internal" href="Models.html#models"><span class="std std-ref">(more info)</span></a>.</p>
+</div></blockquote>
+</div></blockquote>
+<p>The above components are put together to run a <strong>simulation experiment</strong>
+that produces <strong>outcomes</strong> (logs, visualization, statistics) that help
+users answer their research and development <strong>question</strong>. These outcomes
+typically include a timeline of the application execution and information
+about its energy consumption.</p>
+<p>We work hard to make SimGrid easy to use, but you should not blindly trust your results and always strive to validate
+the simulation outcomes. Assessing the realism of these outcomes will lead you to better <a class="reference internal" href="Calibrating_the_models.html#models-calibration"><span class="std std-ref">calibrate the models</span></a>,
+which is the best way to achieved high simulation accuracy. Please refer to the section <a class="reference internal" href="Modeling_howtos.html#howto-science"><span class="std std-ref">Doing Science with SimGrid</span></a>.</p>
+</section>
+<section id="using-simgrid-in-practice">
+<h2>Using SimGrid in practice<a class="headerlink" href="#using-simgrid-in-practice" title="Permalink to this heading"></a></h2>
+<p>SimGrid is versatile and can be used in many ways, but the most typical setup is to specify your algorithm as a C++ or Python
+program using our API, along with one of the provided XML platform files as shown in the <strong>first tutorial</strong> on
+<a class="reference internal" href="Tutorial_Algorithms.html#usecase-simalgo"><span class="std std-ref">Simulating Algorithms</span></a>. If your application is already written in MPI, then you are in luck because SimGrid comes with MPI support,
+as explained in our <strong>second tutorial</strong> on <a class="reference internal" href="Tutorial_MPI_Applications.html#usecase-smpi"><span class="std std-ref">Simulating MPI Applications</span></a>. The <strong>third tutorial</strong> is on
+<a class="reference internal" href="Tutorial_Model-checking.html#usecase-modelchecking"><span class="std std-ref">Formal Verification and Model checking</span></a>. Docker images are provided to run these tutorials without installing any software, other than Docker, on your machine.</p>
+<p>SimGrid comes with <a class="reference internal" href="Examples.html#s4u-examples"><span class="std std-ref">many examples</span></a>, so that you can quick-start your simulator by
+assembling and modifying some of the provided examples (see <a class="reference internal" href="Start_your_own_project.html#setup-your-own"><span class="std std-ref">this section</span></a> on how to get your own project
+to compile with SimGrid). An extensive documentation is available from the left menu bar. If you want to get an idea of how
+SimGrid works you can read about its <a class="reference internal" href="Design_goals.html#design"><span class="std std-ref">design goals</span></a>.</p>
+</section>
+<section id="simgrid-success-stories">
+<h2>SimGrid Success Stories<a class="headerlink" href="#simgrid-success-stories" title="Permalink to this heading"></a></h2>
+<p>SimGrid was cited in over 3,000 scientific papers (according to Google
+Scholar). Among them,
+<a class="reference external" href="https://simgrid.org/usages.html">over 675 publications</a>
+(written by hundreds of individuals) use SimGrid as a scientific
+instrument to conduct experimental evaluations. These
+numbers do not include those articles that directly contribute to SimGrid itself.
+SimGrid was used in many research communities, such as
+<a class="reference external" href="https://hal.inria.fr/inria-00580599/">High-Performance Computing</a>,
+<a class="reference external" href="http://dx.doi.org/10.1109/CLOUD.2015.125">Cloud Computing</a>,
+<a class="reference external" href="http://dl.acm.org/citation.cfm?id=2310096.2310195">Workflow Scheduling</a>,
+<a class="reference external" href="https://hal.inria.fr/hal-01199200/">Big Data</a> and
+<a class="reference external" href="http://dx.doi.org/10.1109/WSCAD-SSC.2012.18">MapReduce</a>,
+<a class="reference external" href="http://ieeexplore.ieee.org/document/7515695/">Data Grid</a>,
+<a class="reference external" href="http://www.sciencedirect.com/science/article/pii/S1569190X17301028">Volunteer Computing</a>,
+<a class="reference external" href="https://hal.archives-ouvertes.fr/hal-01152469/">Peer-to-Peer Computing</a>,
+<a class="reference external" href="http://dx.doi.org/10.1109/TPDS.2016.2613043">Network Architecture</a>,
+<a class="reference external" href="http://ieeexplore.ieee.org/document/7946412/">Fog Computing</a>, or
+<a class="reference external" href="https://hal.archives-ouvertes.fr/hal-01333471">Batch Scheduling</a>.</p>
+<p>If your platform description is accurate enough (see
+<a class="reference external" href="http://hal.inria.fr/hal-00907887">here</a> or
+<a class="reference external" href="https://hal.inria.fr/hal-01523608">there</a>),
+SimGrid can provide high-quality performance predictions. For example,
+we determined the speedup achieved by the Tibidabo ARM-based
+cluster before its construction
+(<a class="reference external" href="http://hal.inria.fr/hal-00919507">paper</a>). Some
+differences between the simulated and the real timings were observed, and
+turned out to be due to
+misconfigurations in the real platform!
+SimGrid can thus even be used to debug a real platform :)</p>
+<p>SimGrid is also used to debug, improve, and tune several large
+applications.
+<a class="reference external" href="http://bigdft.org">BigDFT</a> (a massively parallel code
+for computing the electronic structure of chemical elements developed by
+the CEA), <a class="reference external" href="http://starpu.gforge.inria.fr/">StarPU</a> (a
+Unified Runtime System for Heterogeneous Multicore Architectures
+developed by Inria Bordeaux), and
+<a class="reference external" href="https://tomp2p.net/dev/simgrid/">TomP2P</a> (a high-performance
+key-value pair storage library developed at the University of Zurich).
+Some of these applications enjoy large user communities themselves.</p>
+</section>
+<section id="simgrid-limits">
+<h2>SimGrid Limits<a class="headerlink" href="#simgrid-limits" title="Permalink to this heading"></a></h2>
+<p>SimGrid is by no means the holy grail that is able to solve every conceivable simulation problem.</p>
+<p><strong>SimGrid’s scope is limited to distributed systems.</strong> Real-time
+multi-threaded systems are out of this scope. You could probably use and/or
+extend SimGrid for this purpose, but another framework that specifically
+targets this use case would probably be more suitable.</p>
+<p><strong>There is currently no support for 5G or LoRa networks</strong>.
+SimGrid could certainly be extended with models for these networks, but this
+yet to be done.</p>
+<p><strong>There is no perfect model, only models adapted to your purposes.</strong> SimGrid’s
+models were designed to make it possible to run fast and accurate
+simulations of large systems. As a result, the models abstract away many
+parameters and phenomena that are often irrelevant for most use cases in the
+field. This means that SimGrid cannot be used to study any phenomenon that our
+model do not capture.  Here are some <strong>phenomena that you currently cannot study with
+SimGrid</strong>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Studying the effect of L3 vs. L2 cache effects on your application;</p></li>
+<li><p>Comparing kernel schedulers and policies;</p></li>
+<li><p>Comparing variants of TCP;</p></li>
+<li><p>Exploring pathological cases where TCP breaks down, resulting in
+abnormal executions;</p></li>
+<li><p>Studying security aspects of your application, in the presence of
+malicious agents.</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Tutorial_DAG.html" class="btn btn-neutral float-left" title="Simulating DAG" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Installing_SimGrid.html" class="btn btn-neutral float-right" title="Installing SimGrid" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2002-2025, The SimGrid Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

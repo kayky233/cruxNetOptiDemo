@@ -1,0 +1,541 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>SimGrid 模型 - SimGrid 中文手册</title><style>
+:root{--bg:#f7f8fb;--sbg:#17182c;--stx:#d6d7e7;--muted:#8d90a8;--accent:#e94560;--txt:#272838;--hd:#16213e;--code:#f1f4f8;--bd:#dfe3ea;--note:#fff8e6}
+*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC",Arial,sans-serif;background:var(--bg);color:var(--txt);line-height:1.7;display:flex}
+nav{width:330px;min-width:330px;height:100vh;position:sticky;top:0;background:var(--sbg);color:var(--stx);overflow:auto;padding:18px 0;font-size:14px} nav h2{font-size:18px;padding:0 20px 12px;margin:0 0 6px;border-bottom:1px solid rgba(255,255,255,.12)} nav h2 a{color:#fff;text-decoration:none} nav h2 small{display:block;color:var(--muted);font-size:11px;font-weight:400;margin-top:2px}.sec{display:block;color:#56b6e8;font-weight:700;text-transform:uppercase;font-size:12px;padding:16px 20px 6px}nav a{display:block;color:var(--stx);text-decoration:none;padding:5px 20px 5px 30px}nav a:hover,nav a.active{background:rgba(233,69,96,.13);color:#ff6b86}main{width:min(1040px,calc(100vw - 330px));padding:34px 52px 90px}h1{font-size:34px;line-height:1.2;color:var(--hd);margin:0 0 18px}h2{font-size:25px;color:var(--hd);margin:42px 0 12px;padding-bottom:7px;border-bottom:2px solid var(--bd)}h3{font-size:20px;color:var(--hd);margin:30px 0 10px}h4{font-size:16px;color:#4b4f63;margin:22px 0 8px}p{margin:9px 0}a{color:#0f5e9c}pre{background:var(--code);border:1px solid var(--bd);border-radius:6px;padding:12px 15px;overflow:auto;line-height:1.45;font-size:12.5px}code{font-family:"SF Mono",Menlo,Consolas,monospace;background:var(--code);padding:1px 4px;border-radius:3px}pre code{background:transparent;padding:0}img{max-width:100%;height:auto;display:block;margin:16px auto}table{border-collapse:collapse;width:100%;margin:14px 0}td,th{border:1px solid var(--bd);padding:7px 9px}th{background:var(--code)}blockquote,.admonition{border-left:4px solid #f0c040;background:var(--note);padding:8px 14px;margin:14px 0}.meta{color:#687085;font-size:13px;margin-bottom:18px}.raw-note{background:#eef7ff;border:1px solid #cbe7ff;border-radius:6px;padding:10px 12px;margin-bottom:18px;font-size:13px}@media(max-width:900px){body{display:block}nav{position:relative;width:100%;min-width:0;height:auto}main{width:100%;padding:20px}}
+</style></head><body>
+<nav><h2><a href="index.html">SimGrid 4.1</a><small>中文本地化镜像</small></h2>
+<span class="sec">教程</span>
+<a href="Tutorial_Algorithms.html">模拟分布式算法</a>
+<a href="Tutorial_MPI_Applications.html">模拟 MPI 应用</a>
+<a href="Tutorial_Model-checking.html">模型检验算法</a>
+<a href="Tutorial_DAG.html">模拟 DAG</a>
+<span class="sec">用户手册</span>
+<a href="Introduction.html">简介</a>
+<a href="Installing_SimGrid.html">安装 SimGrid</a>
+<a href="Start_your_own_project.html">创建自己的项目</a>
+<a href="community.html">SimGrid 社区</a>
+<a href="Release_Notes.html">发布说明</a>
+<a href="application.html">描述应用程序</a>
+<a href="app_s4u.html">S4U 接口</a>
+<a href="Examples.html">S4U 示例</a>
+<a href="app_smpi.html">SMPI 接口</a>
+<a href="The_XBT_toolbox.html">XBT 工具箱</a>
+<a href="Platform.html">描述模拟平台</a>
+<a href="Platform_examples.html">网络拓扑示例</a>
+<a href="Platform_routing.html">高级路由</a>
+<a href="XML_reference.html">XML 参考</a>
+<a href="Platform_cpp.html">C++ 平台</a>
+<a class="active" href="Models.html">SimGrid 模型</a>
+<a href="Modeling_howtos.html">建模提示</a>
+<a href="Calibrating_the_models.html">校准模型</a>
+<a href="Plugins.html">SimGrid 插件</a>
+<a href="Experimental_setup.html">运行实验</a>
+<a href="Configuring_SimGrid.html">配置 SimGrid</a>
+<a href="Deploying_your_application.html">部署应用程序</a>
+<a href="Outcomes.html">模拟输出</a>
+<span class="sec">SimGrid 内部文档</span>
+<a href="Design_goals.html">设计目标</a>
+<a href="Contributors_Documentation.html">贡献者文档</a>
+</nav>
+<main><div class="meta">来源：<a href="https://simgrid.org/doc/latest/Models.html">https://simgrid.org/doc/latest/Models.html</a> · 本地化镜像生成，代码块与图片保留官方内容</div>
+<div class="raw-note">说明：本页采用镜像式本地化，导航和主要标题已中文化；代码块、命令输出和图片按官方页面原样保留，便于逐项核对。</div>
+
+             
+  <object id="TOC" data="graphical-toc.svg" type="image/svg+xml"></object>
+<script>
+window.onload=function() { // Wait for the SVG to be loaded before changing it
+  var elem=document.querySelector("#TOC").contentDocument.getElementById("ModelBox")
+  elem.style="opacity:0.93999999;fill:#ff0000;fill-opacity:0.1;stroke:#000000;stroke-width:0.35277778;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1";
+}
+</script>
+<br></br>
+<br></br><section id="the-simgrid-models">
+<span id="models"></span><h1>SimGrid 模型</h1>
+<p>This page focuses on the <strong>performance models</strong> that compute the duration of <a class="reference internal" href="app_s4u.html#s4u-main-concepts"><span class="std std-ref">all activities</span></a>
+throughout the simulation, based on the platform characteristics and on the other activities that concurrently use the
+resources. If you are looking for information on other kinds of models (such as routing models or compute model), please refer to <a class="reference internal" href="#models-other"><span class="std std-ref">the
+bottom of this page</span></a>.</p>
+<section id="modeled-resources">
+<h2>Modeled resources</h2>
+<p>The primary objective of SimGrid is to provide simulated timing information
+for the usage of three kinds of resources: networks, CPUs, and disks.</p>
+<p>The <strong>network models</strong> have been improved and regularly validated for almost 20 years. It should be possible to get
+accurate simulations once you properly <a class="reference internal" href="Calibrating_the_models.html#models-calibration"><span class="std std-ref">calibrate the models for your settings</span></a>. As detailed
+in the next sections, SimGrid provides several network models. Two plugins can also be used to compute the energy
+consumption of the network: one for <a class="reference internal" href="Plugins.html#plugin-link-energy"><span class="std std-ref">wired networks</span></a> and another one for <a class="reference internal" href="Plugins.html#plugin-link-energy"><span class="std std-ref">Wi-Fi networks</span></a>. Note that at first some users find the way in which SimGrid simulates <a class="reference internal" href="#understanding-lv08"><span class="std std-ref">TCP performance</span></a> to be
+counter-intuitive; in our experience this is due these users misunderstandings the (complex) behavior
+of TCP in real networks.</p>
+<p>The <strong>CPU models</strong> are less developed in SimGrid. Through the S4U API, the user can specify amounts of
+computational work (expressed in FLOPs, for floating point operations) that each computation “consumes”, and the model
+simply divides this amount by a CPU’s FLOP rate to compute the duration of the computation
+(accounting for number of cores and all concurrent computations with a time-sharing model). In SMPI, the user code
+is automatically timed, and the <a class="reference internal" href="Configuring_SimGrid.html#cfg-smpi-host-speed"><span class="std std-ref">computing speed</span></a> of the host machine is used to evaluate
+the corresponding amount of FLOPs. This model should be sufficient for most users, even though assuming a constant FLOP
+rate for each machine remains a crude simplification (in reality, the FLOP rate varies because of I/O, memory, and
+cache effects). It is possible to <a class="reference internal" href="Configuring_SimGrid.html#cfg-smpi-comp-adjustment-file"><span class="std std-ref">overcome this simplification</span></a>, but the
+required calibration process is rather intricate and not documented yet (feel free to
+<a class="reference internal" href="community.html#community"><span class="std std-ref">contact the community</span></a>).
+In the future, more advanced models may be added but the existing model have proven good enough
+over the last two decades. The CPU energy consumption can be computed with the
+<a class="reference internal" href="Plugins.html#plugin-host-energy"><span class="std std-ref">relevant plugin</span></a>.</p>
+<p>The <strong>disk models</strong> in SimGrid have been included more recently than those for networks and CPUs, but they should
+still prove useful to most users. <a class="reference external" href="https://hal.inria.fr/hal-01197128">Studies have shown</a> that these models are sensitive
+to various conditions, and a <a class="reference internal" href="Calibrating_the_models.html#howto-disk"><span class="std std-ref">calibration process</span></a> is provided. As usual, you probably want to
+assess simulation accuracy through an appropriate validation campaign.</p>
+</section>
+<section id="lmm-based-models">
+<span id="models-lmm"></span><h2>LMM-based Models</h2>
+<p>SimGrid aims at the sweet spot between simulation accuracy and simulation speed. In terms of accuracy, the goal is for simulations
+to report correct
+performance trends when comparing competing designs while placing minimal burden on the user. We also want to allow power users to
+fine tune the simulation models to achieve simulation results that are within 5% or less of what would be observed
+on a real platform. For example, we accurately determined the <a class="reference external" href="http://hal.inria.fr/hal-00919507">speedup achieved by the Tibidabo ARM-based cluster</a>
+before it was even built. In terms of simulation speed, the goal it to be fast and scalable enough to allow the study of modern IT systems
+at scale. SimGrid was, for example, used to simulate <a class="reference external" href="https://hal.inria.fr/inria-00602216">a Chord ring with millions of actors</a> (even though results were not really more instructive than those obtained at smaller scales),
+or <a class="reference external" href="https://hal.inria.fr/hal-02096571">a qualification run at full-scale of the Stampede supercomputer</a>.</p>
+<p>Most SimGrid models are based on a linear max-min solver (LMM), as depicted below. The actors’ activities are
+represented by actions in the simulation kernel, accounting for both the initial amount of work of the corresponding
+activity (in FLOPs for CPU activities or bytes for network and disk activities), and the currently remaining
+amount of work to process.</p>
+<p>At each simulation step, the instantaneous speed for each action is computed according
+to the model. A set of constraints is used to express resource capacity constraints, i.e., that the cumulative instantaneous consumption of a
+given resource by a set actions must remain below the nominal capacity of that resource. In the example
+below, it is stated that the compute speed <span class="math notranslate nohighlight">\(\varrho_1\)</span> of activity 1 plus the compute speed <span class="math notranslate nohighlight">\(\varrho_n\)</span>
+of activity <span class="math notranslate nohighlight">\(n\)</span>, which both run on host A, must remain smaller than that host’s total compute speed <span class="math notranslate nohighlight">\(C_A\)</span>.</p>
+<img alt="_images/lmm-overview.svg" src="_images/lmm-overview.svg" loading="lazy" /></img><p>There are many valuations of <span class="math notranslate nohighlight">\(\varrho_1, \ldots{}, \varrho_n\)</span> that must respect sets of constraints.
+SimGrid usually computes the instantaneous speeds according to a Max-Min objective function, that is, maximizing the
+minimum over all <span class="math notranslate nohighlight">\(\varrho_i\)</span>. The coefficients associated to each variable in the inequalities are used to model
+some performance effects, such as the fact that TCP tends to favor communications with small RTTs. These coefficients
+are computed from both hard-coded values and <a class="reference internal" href="Configuring_SimGrid.html#cfg-network-latency-factor"><span class="std std-ref">latency and bandwidth factors</span></a> (more
+details on network performance modeling are given in the next section).</p>
+<p>Once the instantaneous speeds are computed for all acttions, the simulation kernel computes the earliest terminating action
+given their respective speeds and remaining amounts of work. The simulated time is then updated along with remaning
+amounts of work. At this point, some actions have no remaining work and are removed from the LMM. The corresponding activities thus terminate, which in turn
+unblocks the corresponding actors that can then continue executing.</p>
+<p>Most of the SimGrid models build upon the LMM solver, which they adapt and configure in various ways. For CPU
+and disk activities, the LMM-based models are respectively named <strong>Cas01</strong> and <strong>S19</strong>. The existing network models are
+described in the next section.</p>
+</section>
+<section id="the-tcp-models">
+<span id="models-tcp"></span><h2>The TCP models</h2>
+<p>SimGrid provides several network performance models that compute the time taken by each communication in isolation. <strong>raw</strong> is
+the simplest one. It does not capture any fancy effect, and uses overly simplified equations. It is mostly useful when you want
+to model non-TCP communications such as an intra-node PCI communication bus. <strong>CM02</strong> is the simplest model capturing some
+TCP-specific effects, such as windowing effects, but does not introduce any correction factors. This model should be used if you
+prefer human-understandable TCP predictions over realistic ones. <strong>LV08</strong> (the default model) uses constant factors that are
+intended to capture common effects such as slow-start, the fact that TCP headers reduce the <em>effective</em> bandwidth, or TCP’s ACK
+messages. <strong>SMPI</strong> uses more advanced factors that also capture the MPI-specific effects such as the switch between the eager
+vs. rendez-vous communication modes. You can <a class="reference internal" href="Configuring_SimGrid.html#options-model-select"><span class="std std-ref">choose the model</span></a> on via command-line arguments, and
+each model can be <a class="reference internal" href="Configuring_SimGrid.html#options-model"><span class="std std-ref">further configured</span></a>.</p>
+<p>The LMM solver is then used as described above to compute the effect of contention on the communication time when using TCP.
+For the sake of realism, the sharing on saturated links is not necessarily a fair sharing
+(unless when <code class="docutils literal notranslate"><span class="pre">weight-S=0</span></code>, in which case the following mechanism is disabled).
+Instead, flows receive an amount of bandwidth inversely proportional to their round trip time. This is modeled
+in the LMM as a priority that depends on the <a class="reference internal" href="Configuring_SimGrid.html#cfg-network-weight-s"><span class="std std-ref">weight-S</span></a> parameter. More precisely, this
+priority is computed for each flow as <span class="math notranslate nohighlight">\(\displaystyle\sum_{l\in links}\left(Lat(l)+\frac{weightS}{Bandwidth(l)}\right)\)</span>, i.e., as the sum of the
+latencies of all links traversed by the communication, plus the sum of <cite>weight-S</cite> over the bandwidth of each link along
+the path. This dependency on the link bandwidths is for the model to account for the TCP protocol’s reactivity.</p>
+<p>Regardless of the TCP model in used, the latency is paid beforehand. It is as if the communication only starts after a
+small delay that corresponds to the end-to-end latency. During that time, the communication has no impact on the links (i.e., the other
+communications are not slowed down, because there is no contention yet).</p>
+<p>As an alternative to the above LMM-based models, it is possible to use the <a class="reference internal" href="#models-ns3"><span class="std std-ref">ns-3 simulator as a network model</span></a>. ns-3 performs
+a much more detailed, packet-level simulation
+than the above models. As a result is is much slower but will produce more accurate results.
+Both simulators have time complexity that is linear in the size of their input, but ns-3 has a much larger input in case of large communications
+because it considers individual network packets.
+However, the above SimGrid models must be carefully <a class="reference internal" href="Calibrating_the_models.html#models-calibration"><span class="std std-ref">calibrated</span></a> if
+achieve very high accuracy is needed, while ns-3 is less demanding in this regard.</p>
+<section id="raw-network-model">
+<span id="understanding-raw-network-model"></span><h3>Raw network model</h3>
+<p>This simplistic network model states that the bandwidth is fairly shared between competing communications (max-min sharing), and
+the time to send a message is equal to <span class="math notranslate nohighlight">\(latency + \frac{size}{bandwidth}\)</span>. This model is not realistic for TCP
+communications, as the many effects captured by the other SimGrid models are ignored. It is also not really realistic for UDP
+communications as it does not incur any packet loss that a real UDP communication would experience when the amount of exchanged
+data overpass the links capacity. Instead, this model is mostly useful to model the intra-node communication buses such as PCI.
+This allows to model a <a class="reference internal" href="Modeling_howtos.html#howto-multicore-separate-hosts"><span class="std std-ref">multi-CPU machine as a set of separate SimGrid hosts</span></a>
+interconnected by such a raw network link.</p>
+</section>
+<section id="cm02">
+<span id="understanding-cm02"></span><h3>CM02</h3>
+<p>This is a simple model of TCP performance, with two main features. The first one comes from the TCP windowing algorithm
+requesting the sender to stop sending packets when its TCP window is full. If the acknowledgment packets are returned in time to
+the sender, the TCP window has no impact on the performance, which is then only limited by link bandwidths. Otherwise, late
+acknowledgments will reduce the data transfer rate. The second model feature is called cross-traffic. It represents the impact
+of ACKs on the performance of the reverse direction. Indeed, a TCP communication from A to B induces ACK packets going from B to
+A and competing with the user data going from B to A. The impact of cross-traffic is further discussed when presenting the LV08
+model below below.</p>
+<p>SimGrid models the TCP windowing mechanism as follows: <span class="math notranslate nohighlight">\(real\_BW = min(physical\_BW, \frac{TCP\_GAMMA}{2\times latency})\)</span>
+The used bandwidth is either the physical bandwidth that is configured in the platform, or a value that represents a bandwidth
+limit due to late acknowledgments. This value is the maximal TCP window size (noted TCP Gamma in SimGrid) divided by the
+round-trip time (i.e. twice the one-way latency). The default value of TCP Gamma is 4194304. This value can be changed with the
+<a class="reference internal" href="Configuring_SimGrid.html#cfg-network-tcp-gamma"><span class="std std-ref">network/TCP-gamma</span></a> configuration item.</p>
+<p>If you want to disable this mechanism altogether (e.g.,to model UDP or memory operations), you should set TCP-gamma
+to 0. Otherwise, the time it takes to send 10 Gib of data over a 10 Gib/s link that is otherwise unused is computed as
+<span class="math notranslate nohighlight">\(latency + \frac{size}{bandwidth}\)</span>, but the bandwidth in the denominator may be the physical
+one (10Gb/s) or the one induced by the TCP window, depending on the latency:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>If the link latency is 0, the communication, expectedly, takes one second.</p></li>
+<li><p>If the link latency is 0.00001s, <span class="math notranslate nohighlight">\(\frac{gamma}{2\times lat}=209,715,200,000 \approx 209Gib/s\)</span> which is larger than the
+physical bandwidth. So the physical bandwidth is used (the link is fully utilized) and the communication takes 1.00001s</p></li>
+<li><p>If the link latency is 0.001s, <span class="math notranslate nohighlight">\(\frac{gamma}{2\times lat}=2,097,152,000 \approx 2Gib/s\)</span>, which is smaller than the
+physical bandwidth. The communication thus fails to fully utilize the link and takes about 4.77s.</p></li>
+<li><p>With a link latency of 0.1s, <span class="math notranslate nohighlight">\(gamma/2\times lat \approx 21Mb/s\)</span>, so the communication takes about 476.84 + 0.1 seconds!</p></li>
+<li><p>More cases are tested and their validity checked by the test <code class="docutils literal notranslate"><span class="pre">teshsuite/models/cm02-tcpgamma/cm02-tcpgamma.tesh</span></code> in our test suite.</p></li>
+</ul>
+</div></blockquote>
+<p>For more details, please refer to “A Network Model for Simulation of Grid Application” by Henri Casanova and Loris
+Marchal (published in 2002, hence the model name).</p>
+</section>
+<section id="lv08-default">
+<span id="understanding-lv08"></span><h3>LV08 (default)</h3>
+<p>This model builds on CM02 to model TCP windowing (see above). It also introduces corrections factors for further realism:
+latency-factor is 13.01, bandwidth-factor is 0.97 while weight-S is 20537. Lets consider the following platform:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;host</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;A&quot;</span><span class="w"> </span><span class="na">speed=</span><span class="s">&quot;1Gf&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;host</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;B&quot;</span><span class="w"> </span><span class="na">speed=</span><span class="s">&quot;1Gf&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+
+<span class="nt">&lt;link</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;link1&quot;</span><span class="w"> </span><span class="na">latency=</span><span class="s">&quot;10ms&quot;</span><span class="w"> </span><span class="na">bandwidth=</span><span class="s">&quot;1Mbps&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+
+<span class="nt">&lt;route</span><span class="w"> </span><span class="na">src=</span><span class="s">&quot;A&quot;</span><span class="w"> </span><span class="na">dst=</span><span class="s">&quot;B&quot;</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="nt">&lt;link_ctn</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;link1&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/route&gt;</span>
+</pre></div>
+</div>
+<p>If host <cite>A</cite> sends <code class="docutils literal notranslate"><span class="pre">100kB</span></code> (a hundred kilobytes, that is, 8e5 bits) to host <cite>B</cite>, one can expect that this communication would
+take <cite>0.81</cite> seconds to complete according to a simple latency-plus-size-divided-by-bandwidth model (0.01 + 8e5/1e6 = 0.81 – the
+size was converted from bytes to bits) since the latency is small enough to ensure that the physical bandwidth is used (see the
+discussion on CM02 above). However, the LV08 model is more complex to account for three phenomena that directly impact the
+simulation time:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The size of a message at the application level (i.e., 100kB in this example) is not the size that is actually
+transferred over the network. To mimic the fact that TCP and IP headers are added to each packet of the original
+payload, the TCP model of SimGrid empirically considers that <cite>only 97% of the nominal bandwidth</cite> are available. In
+other words, the size of your message is increased by a few percents, whichever this size.</p></li>
+<li><p>In the real world, the TCP protocol is not able to fully exploit the bandwidth of a link from the emission of the
+first packet. To reflect this <cite>slow start</cite> phenomenon, the latency declared in the platform file is multiplied by
+<cite>a factor of 13.01</cite>. Here again, this is an empirically determined value that may not correspond to every TCP
+implementations on every networks. It can be tuned when more realistic simulated times for the transfer of short
+messages are needed though.</p></li>
+<li><p>When data is transferred from A to B, some TCP ACK messages travel in the opposite direction. To reflect the impact
+of this <cite>cross-traffic</cite>, SimGrid simulates a flow from B to A that represents an additional bandwidth consumption
+of <cite>0.05%</cite>. The route from B to A is implicitly declared in the platform file and uses the same link <cite>link1</cite> as if
+the two hosts were connected through a communication bus. The bandwidth share allocated to a data transfer from A
+to B is then the available bandwidth of <cite>link1</cite> (i.e., 97% of the nominal bandwidth of 1Mb/s) divided by 1.05
+(i.e., the total consumption). This feature, activated by default, can be disabled by adding the
+<code class="docutils literal notranslate"><span class="pre">--cfg=network/crosstraffic:0</span></code> flag to the command line.</p></li>
+</ul>
+</div></blockquote>
+<p>As a consequence, the time to transfer 100kB from A to B as simulated by the default TCP model of SimGrid is not 0.81
+seconds but</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="mf">0.01</span> <span class="o">*</span> <span class="mf">13.01</span> <span class="o">+</span> <span class="mi">800000</span> <span class="o">/</span> <span class="p">((</span><span class="mf">0.97</span> <span class="o">*</span> <span class="mf">1e6</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1.05</span><span class="p">)</span> <span class="o">=</span>  <span class="mf">0.996079</span> <span class="n">seconds</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>For more details, please refer to “Accuracy study and improvement of network simulation in the SimGrid framework” by
+Arnaud Legrand and Pedro Velho.</p>
+</section>
+</section>
+<section id="parallel-tasks-l07">
+<span id="models-l07"></span><h2>Parallel tasks (L07)</h2>
+<p>This model is rather different from the other LMM models because it uses another objective function, which is called <em>bottleneck</em>.
+This is because this model is intended to be used for parallel tasks, that is sets of actions that mix flops and bytes, while the
+Max-Min objective function requires that all variables be expressed using the same unit (which is why in the implementation
+we have one LMM system per resource kind).</p>
+<p>Use the <a class="reference internal" href="Configuring_SimGrid.html#options-model-select"><span class="std std-ref">relevant configuration</span></a> to select this model in your simulation.</p>
+</section>
+<section id="wifi-zones">
+<span id="models-wifi"></span><h2>WiFi zones</h2>
+<p>In SimGrid, WiFi networks are modeled with WiFi zones, where a zone contains the access point of the WiFi network and
+the hosts connected to it (called <cite>stations</cite> in the WiFi world). The network inside a WiFi zone is modeled by declaring
+a single regular link with a specific attribute. This link is then added to the routes to and from the stations within
+this WiFi zone. The main difference of WiFi networks, when compared to wired networks, is that performance is not determined by link bandwidths
+and latencies but by both the access point WiFi characteristics and the distance between that access point and a given
+station.</p>
+<p>In SimGrid, WiFi zones can be used with the LMM-based models or the ns-3-based model.</p>
+<section id="declaring-a-wifi-zone">
+<h3>Declaring a WiFi zone</h3>
+<p>To declare a new WiFi network, simply declare a network zone with the <code class="docutils literal notranslate"><span class="pre">WIFI</span></code> routing attribute.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;zone</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;SSID_1&quot;</span><span class="w"> </span><span class="na">routing=</span><span class="s">&quot;WIFI&quot;</span><span class="nt">&gt;</span>
+</pre></div>
+</div>
+<p>Inside this zone you must declare which host or router will be the access point of the WiFi network.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;prop</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;access_point&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;alice&quot;</span><span class="nt">/&gt;</span>
+</pre></div>
+</div>
+<p>Then simply declare the stations (hosts) and routers inside the WiFi network. Remember that one must have the same name
+as the “access point” property.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;router</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;alice&quot;</span><span class="w"> </span><span class="na">speed=</span><span class="s">&quot;1Gf&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;host</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;STA0-0&quot;</span><span class="w"> </span><span class="na">speed=</span><span class="s">&quot;1Gf&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;host</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;STA0-1&quot;</span><span class="w"> </span><span class="na">speed=</span><span class="s">&quot;1Gf&quot;</span><span class="nt">/&gt;</span>
+</pre></div>
+</div>
+<p>Finally, close the WiFi zone.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;/zone&gt;</span>
+</pre></div>
+</div>
+<p>The WiFi zone may be connected to another zone using a traditional link and a zoneRoute. Note that the connection between two
+zones is always wired.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;link</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;wireline&quot;</span><span class="w"> </span><span class="na">bandwidth=</span><span class="s">&quot;100Mbps&quot;</span><span class="w"> </span><span class="na">latency=</span><span class="s">&quot;2ms&quot;</span><span class="w"> </span><span class="na">sharing_policy=</span><span class="s">&quot;SHARED&quot;</span><span class="nt">/&gt;</span>
+
+<span class="nt">&lt;zoneRoute</span><span class="w"> </span><span class="na">src=</span><span class="s">&quot;SSID_1&quot;</span><span class="w"> </span><span class="na">dst=</span><span class="s">&quot;SSID_2&quot;</span><span class="w"> </span><span class="na">gw_src=</span><span class="s">&quot;alice&quot;</span><span class="w"> </span><span class="na">gw_dst=</span><span class="s">&quot;bob&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;link_ctn</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;wireline&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/zoneRoute&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="wifi-network-performance">
+<h3>WiFi network performance</h3>
+<p>The performance of a wifi network is controlled by the three following properties:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mcs</span></code> (<a class="reference external" href="https://en.wikipedia.org/wiki/Link_adaptation">Modulation and Coding Scheme</a>)
+is a property of the WiFi zone. Roughly speaking, it defines the speed at which the access point exchanges data
+with all the stations. It depends on the access point’s model and configuration. Possible values for mcs can be
+found on Wikipedia for example.
+<br></br> By default, <code class="docutils literal notranslate"><span class="pre">mcs=3</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nss</span></code> (Number of Spatial Streams, or <a class="reference external" href="https://en.wikipedia.org/wiki/IEEE_802.11n-2009#Number_of_antennas">number of antennas</a>) is another property of the WiFi zone. It defines the amount of simultaneous data streams that the access
+point can sustain. Not all values of MCS and NSS are valid nor compatible (cf. <a class="reference external" href="https://en.wikipedia.org/wiki/IEEE_802.11n-2009#Data_rates">802.11n standard</a>).
+<br></br> By default, <code class="docutils literal notranslate"><span class="pre">nss=1</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">wifi_distance</span></code> is the distance from a station to the access point. Since each station can have its own specific value
+it is a property of the stations declared inside the WiFi zone.
+<br></br> By default, <code class="docutils literal notranslate"><span class="pre">wifi_distance=10</span></code>.</p></li>
+</ul>
+</div></blockquote>
+<p>Here is an example of a zone with non-default <code class="docutils literal notranslate"><span class="pre">mcs</span></code> and <code class="docutils literal notranslate"><span class="pre">nss</span></code> values.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;zone</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;SSID_1&quot;</span><span class="w"> </span><span class="na">routing=</span><span class="s">&quot;WIFI&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;prop</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;access_point&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;alice&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;prop</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;mcs&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;2&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;prop</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;nss&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;2&quot;</span><span class="nt">/&gt;</span>
+...
+<span class="nt">&lt;/zone&gt;</span>
+</pre></div>
+</div>
+<p>Here is an example of setting the <code class="docutils literal notranslate"><span class="pre">wifi_distance</span></code> of a given station.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;host</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;STA0-0&quot;</span><span class="w"> </span><span class="na">speed=</span><span class="s">&quot;1Gf&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;prop</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;wifi_distance&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;37&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/host&gt;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="constant-time-model">
+<h2>Constant-time model</h2>
+<p>This model is one of the few SimGrid network models that is not based on the LMM solver. In this
+model, all communication take a constant time (one second by default). It provides the lowest level of realism, but is
+faster and much simpler to understand. This model may prove interesting though if you plan to study abstract
+distributed algorithms such as leader election or causal broadcast.</p>
+</section>
+<section id="ns-3-as-a-simgrid-model">
+<span id="models-ns3"></span><h2>ns-3 as a SimGrid model</h2>
+<p>The <strong>ns-3 based model</strong> is the most accurate network model in SimGrid. It relies on the well-known <a class="reference external" href="http://www.nsnam.org">ns-3 packet-level network
+simulator</a> to compute full timing information related to network transfers. This model is much slower
+than the LMM-based models. This is because ns-3 simulates the movement of every network packet involved in every communication,
+while the LMM-based models only recompute the respective instantaneous speeds of the currently ongoing communications when a
+communication starts or stops. In other terms, both SimGrid and ns-3 are fast and highly optimized, but while SimGrid only
+depends on application-level events (starting and stoping of communications), ns-3 depends on network-level events (sending a
+packet).</p>
+<p>You need to install ns-3 and recompile SimGrid accordingly to use this model.</p>
+<p>The SimGrid/ns-3 binding only contains features that are common to both systems. Not all ns-3 models are available from SimGrid
+(only the TCP and WiFi ones are), while not all SimGrid platform files can be used in conjunction with ns-3 (routes must be of
+length 1). Note also that the platform built in ns-3 from the SimGrid description is very basic. Finally, communicating from a
+host to itself is forbidden in ns-3, so every such communication is simulated to take zero time.</p>
+<p>By default, the ns-3 model in SimGrid is not idempotent, unless you patch your version of ns-3 with [this
+patch](<a class="reference external" href="https://gitlab.com/nsnam/ns-3-dev/-/merge_requests/1338">https://gitlab.com/nsnam/ns-3-dev/-/merge_requests/1338</a>). It is perfectly OK to have a non-idempotent model in SimGrid as
+long as you only have only one such model, and as long as you don’t use utterly advanced things in SimGrid. If you do want to
+have an idempotent ns-3, apply the previously mentioned patch, and recompile SimGrid. It should detect the patch and react
+accordingly.</p>
+<section id="compiling-the-ns-3-simgrid-binding">
+<h3>Compiling the ns-3/SimGrid binding</h3>
+<section id="installing-ns-3">
+<h4>Installing ns-3</h4>
+<p>SimGrid requires ns-3 version 3.26 or higher, and you probably want the most
+recent version of both SimGrid and ns-3. While the Debian package of SimGrid
+does not have the ns-3 bindings activated, you can still use the packaged version
+of ns-3 by grabbing the <code class="docutils literal notranslate"><span class="pre">libns3-dev</span> <span class="pre">ns3</span></code> packages. Alternatively, you can
+install ns-3 from scratch (see the <a class="reference external" href="http://www.nsnam.org">ns-3 documentation</a>).</p>
+</section>
+<section id="enabling-ns-3-in-simgrid">
+<h4>Enabling ns-3 in SimGrid</h4>
+<p>SimGrid must be recompiled with the <code class="docutils literal notranslate"><span class="pre">enable_ns3</span></code> option activated in cmake.
+Optionally, use <code class="docutils literal notranslate"><span class="pre">NS3_HINT</span></code> to tell cmake where ns3 is installed on
+your disk.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cmake<span class="w"> </span>.<span class="w"> </span>-Denable_ns3<span class="o">=</span>ON<span class="w"> </span>-DNS3_HINT<span class="o">=</span>/opt/ns3<span class="w"> </span><span class="c1"># or change the path if needed</span>
+</pre></div>
+</div>
+<p>cmake will report whether ns-3 was found,
+and this information is also available in <code class="docutils literal notranslate"><span class="pre">include/simgrid/config.h</span></code>
+If your local copy defines the variable <code class="docutils literal notranslate"><span class="pre">SIMGRID_HAVE_NS3</span></code> to 1, then ns-3
+was correctly detected. Otherwise, explore <code class="docutils literal notranslate"><span class="pre">CMakeFiles/CMakeOutput.log</span></code> and
+<code class="docutils literal notranslate"><span class="pre">CMakeFiles/CMakeError.log</span></code> to diagnose the problem.</p>
+<p>Test that ns-3 was successfully integrated with the following command (executed from your SimGrid
+build directory). It will run all SimGrid tests that are related to the ns-3
+integration. If no test is run at all, then ns-3 is disabled in cmake.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>ctest<span class="w"> </span>-R<span class="w"> </span>ns3
+</pre></div>
+</div>
+</section>
+<section id="troubleshooting">
+<h4>Troubleshooting</h4>
+<p>If you use a version of ns-3 that is not known to SimGrid yet, edit
+<code class="docutils literal notranslate"><span class="pre">tools/cmake/Modules/FindNS3.cmake</span></code> in your SimGrid tree, according to the
+comments on top of this file. Conversely, if something goes wrong with an old
+version of either SimGrid or ns-3, try upgrading everything.</p>
+<p>Note that there is a known bug with the version 3.31 of ns3 when it is built with
+MPI support, like it is with the libns3-dev package in Debian 11 « Bullseye ».
+A simple workaround is to edit the file
+<code class="docutils literal notranslate"><span class="pre">/usr/include/ns3.31/ns3/point-to-point-helper.h</span></code> to remove the <code class="docutils literal notranslate"><span class="pre">#ifdef</span> <span class="pre">NS3_MPI</span></code>
+include guard.  This can be achieved with the following command (as root):</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;/^#ifdef NS3_MPI/,+2s,^#,//&amp;,&#39;</span><span class="w"> </span>/usr/include/ns3.31/ns3/point-to-point-helper.h
+</pre></div>
+</div>
+</section>
+</section>
+<section id="using-ns-3-from-simgrid">
+<span id="ns3-use"></span><h3>Using ns-3 from SimGrid</h3>
+<section id="platform-files-compatibility">
+<h4>Platform files compatibility</h4>
+<p>Any route with more than one hop will be ignored when using ns-3. They are
+harmless, but you still need to connect your hosts using one-hop routes.
+The best solution is to add routers to split your route. Here is an
+example of an invalid platform:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&#39;1.0&#39;?&gt;</span>
+<span class="cp">&lt;!DOCTYPE platform SYSTEM &quot;https://simgrid.org/simgrid.dtd&quot;&gt;</span>
+<span class="nt">&lt;platform</span><span class="w"> </span><span class="na">version=</span><span class="s">&quot;4.1&quot;</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="nt">&lt;zone</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;zone0&quot;</span><span class="w"> </span><span class="na">routing=</span><span class="s">&quot;Floyd&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;host</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;alice&quot;</span><span class="w"> </span><span class="na">speed=</span><span class="s">&quot;1Gf&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;host</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;bob&quot;</span><span class="w">   </span><span class="na">speed=</span><span class="s">&quot;1Gf&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+
+<span class="w">    </span><span class="nt">&lt;link</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;l1&quot;</span><span class="w"> </span><span class="na">bandwidth=</span><span class="s">&quot;1Mbps&quot;</span><span class="w"> </span><span class="na">latency=</span><span class="s">&quot;5ms&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;link</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;l2&quot;</span><span class="w"> </span><span class="na">bandwidth=</span><span class="s">&quot;1Mbps&quot;</span><span class="w"> </span><span class="na">latency=</span><span class="s">&quot;5ms&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+
+<span class="w">    </span><span class="nt">&lt;route</span><span class="w"> </span><span class="na">src=</span><span class="s">&quot;alice&quot;</span><span class="w"> </span><span class="na">dst=</span><span class="s">&quot;bob&quot;</span><span class="nt">&gt;</span>
+<span class="w">      </span><span class="nt">&lt;link_ctn</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;l1&quot;</span><span class="nt">/&gt;</span><span class="w">            </span><span class="cm">&lt;!-- !!!! IGNORED WHEN USED WITH ns-3       !!!! --&gt;</span>
+<span class="w">      </span><span class="nt">&lt;link_ctn</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;l2&quot;</span><span class="nt">/&gt;</span><span class="w">            </span><span class="cm">&lt;!-- !!!! ROUTES MUST CONTAIN ONE LINK ONLY !!!! --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/route&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/zone&gt;</span>
+<span class="nt">&lt;/platform&gt;</span>
+</pre></div>
+</div>
+<p>This platform file can be reformulated as follows to make it usable with the ns-3 binding.
+There is no direct connection from alice to bob, but that’s OK because ns-3
+automatically routes from point to point (using
+<code class="docutils literal notranslate"><span class="pre">ns3::Ipv4GlobalRoutingHelper::PopulateRoutingTables</span></code>).</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&#39;1.0&#39;?&gt;</span>
+<span class="cp">&lt;!DOCTYPE platform SYSTEM &quot;https://simgrid.org/simgrid.dtd&quot;&gt;</span>
+<span class="nt">&lt;platform</span><span class="w"> </span><span class="na">version=</span><span class="s">&quot;4.1&quot;</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="nt">&lt;zone</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;zone0&quot;</span><span class="w"> </span><span class="na">routing=</span><span class="s">&quot;Full&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;host</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;alice&quot;</span><span class="w"> </span><span class="na">speed=</span><span class="s">&quot;1Gf&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;host</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;bob&quot;</span><span class="w">   </span><span class="na">speed=</span><span class="s">&quot;1Gf&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+
+<span class="w">    </span><span class="nt">&lt;router</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;r1&quot;</span><span class="w"> </span><span class="nt">/&gt;</span><span class="w"> </span><span class="cm">&lt;!-- routers are compute-less hosts --&gt;</span>
+
+<span class="w">    </span><span class="nt">&lt;link</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;l1&quot;</span><span class="w"> </span><span class="na">bandwidth=</span><span class="s">&quot;1Mbps&quot;</span><span class="w"> </span><span class="na">latency=</span><span class="s">&quot;5ms&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;link</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;l2&quot;</span><span class="w"> </span><span class="na">bandwidth=</span><span class="s">&quot;1Mbps&quot;</span><span class="w"> </span><span class="na">latency=</span><span class="s">&quot;5ms&quot;</span><span class="nt">/&gt;</span>
+
+<span class="w">    </span><span class="nt">&lt;route</span><span class="w"> </span><span class="na">src=</span><span class="s">&quot;alice&quot;</span><span class="w"> </span><span class="na">dst=</span><span class="s">&quot;r1&quot;</span><span class="nt">&gt;</span>
+<span class="w">      </span><span class="nt">&lt;link_ctn</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;l1&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/route&gt;</span>
+
+<span class="w">    </span><span class="nt">&lt;route</span><span class="w"> </span><span class="na">src=</span><span class="s">&quot;r1&quot;</span><span class="w"> </span><span class="na">dst=</span><span class="s">&quot;bob&quot;</span><span class="nt">&gt;</span>
+<span class="w">      </span><span class="nt">&lt;link_ctn</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;l2&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/route&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/zone&gt;</span>
+<span class="nt">&lt;/platform&gt;</span>
+</pre></div>
+</div>
+<p>Once your platform is OK, just change the <a class="reference internal" href="Configuring_SimGrid.html#options-model-select"><span class="std std-ref">network/model</span></a> configuration option to <cite>ns-3</cite> as follows. The other
+options can be used as usual.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./network-ns3<span class="w"> </span>--cfg<span class="o">=</span>network/model:ns-3<span class="w"> </span><span class="o">(</span>other<span class="w"> </span>parameters<span class="o">)</span>
+</pre></div>
+</div>
+<p>Many other files from the <code class="docutils literal notranslate"><span class="pre">examples/platform</span></code> directory are usable with the
+ns-3 model, such as <a class="reference external" href="https://framagit.org/simgrid/simgrid/tree/master/examples/platforms/dogbone.xml">examples/platforms/dogbone.xml</a>.
+Check the file  <a class="reference external" href="https://framagit.org/simgrid/simgrid/tree/master/examples/cpp/network-ns3/network-ns3.tesh">examples/cpp/network-ns3/network-ns3.tesh</a>
+to see which ones are used in our regression tests.</p>
+<p>Alternatively, you can manually modify the ns-3 settings by retrieving
+the ns-3 node from any given host with the
+<a class="reference internal" href="#_CPPv4N7simgrid23get_ns3node_from_sghostEPKN7simgrid3s4u4HostE" title="simgrid::get_ns3node_from_sghost"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::get_ns3node_from_sghost()</span></code></a> function (defined in
+<code class="docutils literal notranslate"><span class="pre">simgrid/plugins/ns3.hpp</span></code>).</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7simgrid23get_ns3node_from_sghostEPKN7simgrid3s4u4HostE">
+<span id="_CPPv3N7simgrid23get_ns3node_from_sghostEPKN7simgrid3s4u4HostE"></span><span id="_CPPv2N7simgrid23get_ns3node_from_sghostEPKN7simgrid3s4u4HostE"></span><span id="simgrid::get_ns3node_from_sghost__simgrid::s4u::HostCP"></span><span class="target" id="ns3_8hpp_1a05e328c414f9462c1b6e3970e5300e5e"></span><span class="n"><span class="pre">ns3</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Ptr</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">ns3</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Node</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">simgrid</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">get_ns3node_from_sghost</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">simgrid</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">s4u</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4HostE" title="simgrid::s4u::Host"><span class="n"><span class="pre">Host</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">host</span></span><span class="sig-paren">)</span><br></br></dt>
+<dd><p>Returns the ns3 node from a SimGrid host </p>
+</dd></dl>
+
+</section>
+<section id="random-seed">
+<h4>Random seed</h4>
+<p>It is possible to define a fixed or random seed for ns-3’s random number generator using the config tag.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&#39;1.0&#39;?&gt;&lt;!DOCTYPE platform SYSTEM &quot;https://simgrid.org/simgrid.dtd&quot;&gt;</span>
+<span class="nt">&lt;platform</span><span class="w"> </span><span class="na">version=</span><span class="s">&quot;4.1&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;config&gt;</span>
+<span class="w">            </span><span class="nt">&lt;prop</span><span class="w"> </span><span class="na">id =</span><span class="w"> </span><span class="s">&quot;network/model&quot;</span><span class="w"> </span><span class="na">value =</span><span class="w"> </span><span class="s">&quot;ns-3&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">            </span><span class="nt">&lt;prop</span><span class="w"> </span><span class="na">id =</span><span class="w"> </span><span class="s">&quot;ns3/seed&quot;</span><span class="w"> </span><span class="na">value =</span><span class="w"> </span><span class="s">&quot;time&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/config&gt;</span>
+...
+<span class="nt">&lt;/platform&gt;</span>
+</pre></div>
+</div>
+<p>The first property defines that this platform will be used with the ns-3 model.
+The second property defines the seed that will be used. If defined to <code class="docutils literal notranslate"><span class="pre">time</span></code>, as done above,
+it will use a random seed.</p>
+</section>
+</section>
+<section id="limitations">
+<h3>Limitations</h3>
+<p>A ns-3 platform is automatically created based on the provided SimGrid
+platform. However, there are some known caveats:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The default values (e.g., TCP parameters) are the ns-3 default values.</p></li>
+<li><p>ns-3 networks are routed using the shortest path algorithm, using <code class="docutils literal notranslate"><span class="pre">ns3::Ipv4GlobalRoutingHelper::PopulateRoutingTables</span></code>.</p></li>
+<li><p>End hosts cannot have more than one network interface card. So, your SimGrid hosts
+should be connected to the platform through only one link. Otherwise, your
+SimGrid host will be considered as a router (FIXME: is it still true?).</p></li>
+</ul>
+</div></blockquote>
+<p>Our goal is to keep the ns-3 plugin of SimGrid as easy (and hopefully readable)
+as possible. If the current state of development does not fit your needs, you can modify
+this plugin and/or create your own plugin based on the current one. If you come up
+with interesting improvements, please contribute them back.</p>
+</section>
+<section id="id1">
+<h3>Troubleshooting</h3>
+<p>If your simulation hangs in a communication, this is probably because one host
+is sending data that is not routable in your platform. Make sure that you only
+use routes of length 1, and that any host is connected to the platform.
+Arguably, SimGrid could detect this situation and report it, but unfortunately,
+this still has to be done.</p>
+</section>
+</section>
+<section id="fmi-based-models">
+<h2>FMI-based models</h2>
+<p><a class="reference external" href="https://fmi-standard.org/">FMI</a> is a standard to exchange models between simulators. If you want to plug such a model
+into SimGrid, you need the <a class="reference external" href="https://framagit.org/simgrid/simgrid-FMI">SimGrid-FMI external plugin</a>.
+There is a specific <a class="reference external" href="https://simgrid.frama.io/simgrid-FMI/index.html">documentation</a> available for the plugin.
+This was used to accurately study a <em>Smart grid</em> through co-simulation: <a class="reference external" href="http://www.pandapower.org/">PandaPower</a> was
+used to simulate the power grid, <a class="reference external" href="https://nsnam.org/">ns-3</a> was used to simulate the communication network while SimGrid was
+used to simulate the IT infrastructure. Please also refer to the <a class="reference external" href="https://hal.science/hal-03217562">relevant publication</a>
+for more details.</p>
+</section>
+<section id="other-kind-of-models">
+<span id="models-other"></span><h2>Other kind of models</h2>
+<p>Models are key components of SimGrid, as they should be for any simulation framework, and beyond the above performance models
+SimGrid employs other models:</p>
+<p>The <strong>routing models</strong> constitute advanced elements of the platform description. This description naturally entails
+<a class="reference internal" href="Platform.html#platform"><span class="std std-ref">components</span></a> that are very related to the performance models. For instance, determining the execution
+time of a task obviously depends on the characteristics of the machine that executes this task. Furthermore, networking
+zones can be interconnected to compose larger platforms <a class="reference external" href="http://hal.inria.fr/hal-00650233/">in a scalable way</a>. Each
+of these zones can be given a specific <a class="reference internal" href="Platform_routing.html#platform-routing"><span class="std std-ref">routing model</span></a> that efficiently computes the list of
+links forming a network path between two given hosts.</p>
+<p>The model checker uses an abstraction of the performance simulations. Mc SimGrid explores every causally possible
+execution paths of the application, completely abstracting the performance away. The simulated time is not even
+computed in this mode! The abstraction involved in this process also models the mutual impacts among actions, to not
+re-explore histories that only differ by the order of independent and unrelated actions. As with the rest of the model
+checker, these models are unfortunately still to be documented properly.</p>
+</section>
+</section>
+
+
+           
+</main></body></html>

@@ -4,489 +4,128 @@
 #include <iomanip>
 #include <iostream>
 #include <limits>
+#include <map>
 #include <memory>
 #include <numeric>
 #include <random>
 #include <sstream>
 #include <string>
 #include <vector>
-
 #include "simgrid/s4u.hpp"
-
+#include "topology.h"
+#include "comm_plan.h"
 namespace sg4 = simgrid::s4u;
 
 struct Options {
-  std::string scheduler = "random_same";
-  std::string out = "";
-  std::string job_out = "";
-  std::string workload_csv = "";
-  std::string placement_mode = "replay";
-  std::string placement_objective = "throughput";
-  int hosts = 8;
-  int gpus_per_host = 4;
-  int jobs = 12;
-  int ranks = 8;
-  int rounds = 4;
-  int seed = 7;
-  double gpu_tflops = 200.0;
-  double local_gbps = 400.0;
-  double nic_gbps = 100.0;
-  double core_gbps = 320.0;
+  std::string scheduler="random_same",topology="star",comm_plan="ring",out,job_out,link_out,workload_csv,placement_mode="replay",placement_objective="throughput";
+  int hosts=8,gpus_per_host=4,jobs=12,ranks=8,rounds=4,seed=7;
+  double gpu_tflops=200,local_gbps=400,nic_gbps=100,core_gbps=320;
+  double bg_checkpoint_gib=0,bg_inference_mbps=0,bg_dataset_pct=0,perturb_link_gbps=0,perturb_time_s=0,perturb_misplace_pct=0;
 };
+struct RankPlacement{int host=0,gpu=0;};
+struct Job{int id=0,ranks=0;double compute_s=0,tensor_bytes=0,intensity=0,start_s=0;std::string model="synthetic";std::vector<RankPlacement> placement;};
+struct JobMetrics{std::vector<double> start,finish,comm;};
 
-struct RankPlacement {
-  int host = 0;
-  int gpu = 0;
-};
+static Options parse_args(int argc,char** argv){Options o;
+  for(int i=1;i<argc;++i){std::string k=argv[i];auto v=[&]{if(i+1>=argc)throw std::runtime_error("Missing: "+k);return std::string(argv[++i]);};
+    if(k=="--scheduler")o.scheduler=v();else if(k=="--topology")o.topology=v();else if(k=="--comm-plan")o.comm_plan=v();
+    else if(k=="--out")o.out=v();else if(k=="--job-out")o.job_out=v();else if(k=="--link-out")o.link_out=v();
+    else if(k=="--workload-csv")o.workload_csv=v();else if(k=="--placement-mode")o.placement_mode=v();else if(k=="--placement-objective")o.placement_objective=v();
+    else if(k=="--hosts")o.hosts=std::stoi(v());else if(k=="--gpus-per-host")o.gpus_per_host=std::stoi(v());
+    else if(k=="--jobs")o.jobs=std::stoi(v());else if(k=="--ranks")o.ranks=std::stoi(v());else if(k=="--rounds")o.rounds=std::stoi(v());else if(k=="--seed")o.seed=std::stoi(v());
+    else if(k=="--local-gbps")o.local_gbps=std::stod(v());else if(k=="--nic-gbps")o.nic_gbps=std::stod(v());else if(k=="--core-gbps")o.core_gbps=std::stod(v());
+    else if(k=="--bg-checkpoint-gib")o.bg_checkpoint_gib=std::stod(v());else if(k=="--bg-inference-mbps")o.bg_inference_mbps=std::stod(v());else if(k=="--bg-dataset-pct")o.bg_dataset_pct=std::stod(v());
+    else if(k=="--perturb-link-gbps")o.perturb_link_gbps=std::stod(v());else if(k=="--perturb-time-s")o.perturb_time_s=std::stod(v());else if(k=="--perturb-misplace-pct")o.perturb_misplace_pct=std::stod(v());
+    else throw std::runtime_error("Unknown: "+k);}return o;}
 
-struct Job {
-  int id = 0;
-  int ranks = 0;
-  double compute_s = 0;
-  double tensor_bytes = 0;
-  double intensity = 0;
-  double start_s = 0;
-  std::string model = "synthetic";
-  std::vector<RankPlacement> placement;
-};
+static TopologyConfig make_topo(const Options& o){if(o.topology=="star")return make_star(o.hosts,o.gpus_per_host,o.local_gbps,o.nic_gbps,o.core_gbps);
+  if(o.topology=="fat_tree")return make_fat_tree(o.hosts,o.gpus_per_host);if(o.topology=="three_tier_clos")return make_three_tier_clos(o.hosts,o.gpus_per_host);
+  if(o.topology=="dragonfly")return make_dragonfly(o.hosts,o.gpus_per_host);throw std::runtime_error("Unknown topology: "+o.topology);}
+static std::string gn(int host,int gpu){return "h"+std::to_string(host)+"g"+std::to_string(gpu);}
+static std::string hn(int host){return "h"+std::to_string(host)+"g0";}
 
-struct JobMetrics {
-  std::vector<double> start;
-  std::vector<double> finish;
-  std::vector<double> comm;
-};
+static void build_platform(sg4::Engine& engine,const TopologyConfig& cfg){auto* root=engine.get_netzone_root()->add_netzone_full("cluster");
+  std::vector<std::vector<const sg4::Host*>> gpus(cfg.hosts);
+  for(int h=0;h<cfg.hosts;++h)for(int g=0;g<cfg.gpus_per_host;++g)gpus[h].push_back(root->add_host(gn(h,g),cfg.gpu_speed_flops)->set_core_count(1));
+  std::vector<const sg4::Link*> local,nic;for(int h=0;h<cfg.hosts;++h)local.push_back(root->add_link("local"+std::to_string(h),cfg.local_bps)->set_latency(cfg.local_lat_s));
+  for(int h=0;h<cfg.hosts;++h)for(int n=0;n<cfg.nics_per_host;++n)nic.push_back(root->add_link("nic"+std::to_string(h)+"_"+std::to_string(n),cfg.nic_bps)->set_latency(cfg.nic_lat_s));
+  std::vector<std::vector<const sg4::Link*>> sw;for(size_t lvl=0;lvl<cfg.switches.size();++lvl){sw.push_back({});
+    for(int s=0;s<cfg.switches[lvl].count;++s)sw.back().push_back(root->add_link("sw"+std::to_string(lvl)+"_"+std::to_string(s),cfg.switches[lvl].uplink_bps)->set_latency(cfg.switches[lvl].latency_s));}
+  for(int h1=0;h1<cfg.hosts;++h1)for(int g1=0;g1<cfg.gpus_per_host;++g1)for(int h2=h1;h2<cfg.hosts;++h2)for(int g2=0;g2<cfg.gpus_per_host;++g2){
+    if(h1==h2&&g1>=g2)continue;if(h1==h2){root->add_route(gpus[h1][g1],gpus[h2][g2],{local[h1]});}
+    else{std::vector<const sg4::Link*> p;p.push_back(nic[h1*cfg.nics_per_host+0]);
+      for(size_t lvl=0;lvl<sw.size();++lvl)p.push_back(sw[lvl][(h1*31+h2*17+(int)lvl*7)%sw[lvl].size()]);p.push_back(nic[h2*cfg.nics_per_host+0]);root->add_route(gpus[h1][g1],gpus[h2][g2],p);}}
+  g_link_usage.clear();for(auto* l:local){LinkUsage u;u.bandwidth_bps=cfg.local_bps;g_link_usage[l->get_name()]=u;}
+  for(auto* l:nic){LinkUsage u;u.bandwidth_bps=cfg.nic_bps;g_link_usage[l->get_name()]=u;}
+  for(size_t lvl=0;lvl<sw.size();++lvl)for(auto* l:sw[lvl]){LinkUsage u;u.bandwidth_bps=cfg.switches[lvl].uplink_bps;g_link_usage[l->get_name()]=u;}root->seal();}
 
-static Options parse_args(int argc, char** argv)
-{
-  Options opt;
-  for (int i = 1; i < argc; ++i) {
-    std::string k = argv[i];
-    auto need_value = [&](const std::string& name) {
-      if (i + 1 >= argc)
-        throw std::runtime_error("Missing value for " + name);
-      return std::string(argv[++i]);
-    };
-    if (k == "--scheduler")
-      opt.scheduler = need_value(k);
-    else if (k == "--out")
-      opt.out = need_value(k);
-    else if (k == "--job-out")
-      opt.job_out = need_value(k);
-    else if (k == "--workload-csv")
-      opt.workload_csv = need_value(k);
-    else if (k == "--placement-mode")
-      opt.placement_mode = need_value(k);
-    else if (k == "--placement-objective")
-      opt.placement_objective = need_value(k);
-    else if (k == "--hosts")
-      opt.hosts = std::stoi(need_value(k));
-    else if (k == "--gpus-per-host")
-      opt.gpus_per_host = std::stoi(need_value(k));
-    else if (k == "--jobs")
-      opt.jobs = std::stoi(need_value(k));
-    else if (k == "--ranks")
-      opt.ranks = std::stoi(need_value(k));
-    else if (k == "--rounds")
-      opt.rounds = std::stoi(need_value(k));
-    else if (k == "--seed")
-      opt.seed = std::stoi(need_value(k));
-    else if (k == "--local-gbps")
-      opt.local_gbps = std::stod(need_value(k));
-    else if (k == "--nic-gbps")
-      opt.nic_gbps = std::stod(need_value(k));
-    else if (k == "--core-gbps")
-      opt.core_gbps = std::stod(need_value(k));
-    else
-      throw std::runtime_error("Unknown argument: " + k);
-  }
-  return opt;
-}
+static std::vector<Job> make_jobs(const Options& o){std::mt19937 rng(o.seed);std::uniform_real_distribution<double> hc(0.28,0.50),ht(7.0,12.0),lc(1.05,1.75),lt(0.4,1.6);
+  std::vector<Job> jobs;for(int j=0;j<o.jobs;++j){bool hi=(j%3)!=2;Job jb;jb.id=j;jb.ranks=o.ranks;jb.compute_s=hi?hc(rng):lc(rng);jb.tensor_bytes=(hi?ht(rng):lt(rng))*1073741824.0;jb.intensity=jb.tensor_bytes/std::max(1e-9,jb.compute_s);jobs.push_back(jb);}return jobs;}
 
-static std::string gpu_name(int host, int gpu)
-{
-  return "h" + std::to_string(host) + "g" + std::to_string(gpu);
-}
+static std::vector<std::string> split(const std::string& t,char d){std::vector<std::string> o;std::stringstream ss(t);std::string it;
+  while(std::getline(ss,it,d)){while(!it.empty()&&(it.back()=='\r'||it.back()=='\n'||it.back()==' '))it.pop_back();size_t s=0;while(s<it.size()&&it[s]==' ')++s;if(s>0)it.erase(0,s);o.push_back(it);}return o;}
+static int ci(const std::vector<std::string>& h,const std::string& n){auto it=std::find(h.begin(),h.end(),n);if(it==h.end())throw std::runtime_error("csv missing: "+n);return (int)std::distance(h.begin(),it);}
 
-static void build_platform(sg4::Engine& engine, const Options& opt)
-{
-  auto* zone = engine.get_netzone_root()->add_netzone_full("cluster");
-  std::vector<std::vector<const sg4::Host*>> gpus(opt.hosts);
-  for (int h = 0; h < opt.hosts; ++h) {
-    for (int g = 0; g < opt.gpus_per_host; ++g) {
-      auto* host = zone->add_host(gpu_name(h, g), opt.gpu_tflops * 1e12)->set_core_count(1);
-      gpus[h].push_back(host);
-    }
-  }
+static std::vector<Job> read_csv(const Options& o){std::ifstream f(o.workload_csv);if(!f)throw std::runtime_error("open: "+o.workload_csv);std::string l;if(!std::getline(f,l))throw std::runtime_error("empty");
+  auto h=split(l,',');int cj=ci(h,"job_id"),cm=ci(h,"model"),cs=ci(h,"start_s"),cr=ci(h,"ranks"),cc=ci(h,"compute_s"),ct=ci(h,"tensor_gib"),ch=ci(h,"hosts");
+  std::vector<Job> jobs;while(std::getline(f,l)){if(l.empty())continue;auto cols=split(l,',');Job jb;jb.id=std::stoi(cols[cj]);jb.model=cols[cm];jb.start_s=std::stod(cols[cs]);
+    jb.ranks=std::max(2,std::min(std::stoi(cols[cr]),o.hosts*o.gpus_per_host));jb.compute_s=std::stod(cols[cc]);jb.tensor_bytes=std::stod(cols[ct])*1073741824.0;jb.intensity=jb.tensor_bytes/std::max(1e-9,jb.compute_s);
+    auto htoks=split(cols[ch],';');for(int r=0;r<jb.ranks;++r){int th=std::stoi(htoks[r%htoks.size()]);jb.placement.push_back({((th%o.hosts)+o.hosts)%o.hosts,(r/(int)htoks.size())%o.gpus_per_host});}jobs.push_back(jb);}return jobs;}
 
-  const sg4::Link* core = zone->add_link("core", opt.core_gbps * 1e9 / 8.0)->set_latency(4e-6);
-  std::vector<const sg4::Link*> nic;
-  std::vector<const sg4::Link*> local;
-  for (int h = 0; h < opt.hosts; ++h) {
-    nic.push_back(zone->add_link("nic" + std::to_string(h), opt.nic_gbps * 1e9 / 8.0)->set_latency(2e-6));
-    local.push_back(zone->add_link("local" + std::to_string(h), opt.local_gbps * 1e9 / 8.0)->set_latency(1e-6));
-  }
+static std::vector<int> jorder(const std::vector<Job>& jobs,bool i1){std::vector<int> ids(jobs.size());std::iota(ids.begin(),ids.end(),0);if(i1)std::sort(ids.begin(),ids.end(),[&](int a,int b){return jobs[a].intensity>jobs[b].intensity;});return ids;}
+static bool crux_p(const std::string& s){return s=="crux"||s=="crux_no_compress"||s=="place_only";}
 
-  for (int h1 = 0; h1 < opt.hosts; ++h1) {
-    for (int g1 = 0; g1 < opt.gpus_per_host; ++g1) {
-      for (int h2 = h1; h2 < opt.hosts; ++h2) {
-        for (int g2 = 0; g2 < opt.gpus_per_host; ++g2) {
-          if (h1 == h2 && g1 >= g2)
-            continue;
-          if (h1 == h2)
-            zone->add_route(gpus[h1][g1], gpus[h2][g2], {local[h1]});
-          else
-            zone->add_route(gpus[h1][g1], gpus[h2][g2], {nic[h1], core, nic[h2]});
-        }
-      }
-    }
-  }
-  zone->seal();
-}
+static void place_jobs(std::vector<Job>& jobs,const Options& o){int tg=o.hosts*o.gpus_per_host;bool cp=crux_p(o.scheduler);double gbw=o.placement_objective=="balanced"?3.0:0.25;
+  std::vector<double> its;for(auto&j:jobs)its.push_back(j.intensity);std::sort(its.begin(),its.end());double hth=its.empty()?5e9:its[its.size()/2];auto ord=jorder(jobs,cp);std::vector<double> hl(o.hosts,0),gl(tg,0);
+  auto llg=[&](int host){int b=0;double bl=1e308;for(int g=0;g<o.gpus_per_host;++g){int id=host*o.gpus_per_host+g;if(gl[id]<bl){bl=gl[id];b=g;}}return b;};
+  for(size_t p=0;p<ord.size();++p){Job& jb=jobs[ord[p]];jb.placement.clear();std::vector<int> ch;for(int r=0;r<jb.ranks;++r){int idx=0;
+    if(cp){if(jb.intensity>=hth){int nd=std::max(1,(int)std::ceil(jb.ranks/(double)o.gpus_per_host));
+      if(ch.empty()){double bs=1e308;int bb=0;for(int base=0;base<o.hosts;++base){double sc=0;for(int k=0;k<nd;++k){int h2=(base+k)%o.hosts;sc+=hl[h2];for(int g=0;g<o.gpus_per_host;++g)sc+=gbw*gl[h2*o.gpus_per_host+g];}if(sc<bs){bs=sc;bb=base;}}for(int k=0;k<nd;++k)ch.push_back((bb+k)%o.hosts);}
+      int h2=ch[(r/o.gpus_per_host)%ch.size()];idx=h2*o.gpus_per_host+llg(h2);}else{int h2=0,g2=0;double bs=1e308;for(int c=0;c<o.hosts;++c){int cg=llg(c);double sc=hl[c]+gbw*gl[c*o.gpus_per_host+cg];if(sc<bs){bs=sc;h2=c;g2=cg;}}idx=h2*o.gpus_per_host+g2;}}
+    else{idx=(jb.id*7+r*3)%tg;}jb.placement.push_back({idx/o.gpus_per_host,idx%o.gpus_per_host});hl[idx/o.gpus_per_host]+=jb.intensity/std::max(1,jb.ranks);gl[idx]+=jb.compute_s+jb.tensor_bytes/1e10;}}}
 
-static std::vector<Job> make_jobs(const Options& opt)
-{
-  std::mt19937 rng(opt.seed);
-  std::uniform_real_distribution<double> hi_compute(0.28, 0.50);
-  std::uniform_real_distribution<double> hi_tensor(7.0, 12.0);
-  std::uniform_real_distribution<double> lo_compute(1.05, 1.75);
-  std::uniform_real_distribution<double> lo_tensor(0.4, 1.6);
+static void validate(const Options& o){if(o.placement_mode!="replay"&&o.placement_mode!="optimize")throw std::runtime_error("bad placement_mode");}
 
-  std::vector<Job> jobs;
-  for (int j = 0; j < opt.jobs; ++j) {
-    const bool high = (j % 3) != 2;
-    Job job;
-    job.id = j;
-    job.ranks = opt.ranks;
-    job.compute_s = high ? hi_compute(rng) : lo_compute(rng);
-    job.tensor_bytes = (high ? hi_tensor(rng) : lo_tensor(rng)) * 1024.0 * 1024.0 * 1024.0;
-    job.intensity = job.tensor_bytes / job.compute_s;
-    jobs.push_back(job);
-  }
-  return jobs;
-}
+static double rlimit(const Options& o,const Job& job){bool np=(o.scheduler=="random_same"||o.scheduler=="place_only"||o.scheduler=="path_only");if(np||o.scheduler=="crux_no_compress")return -1;double b=o.nic_gbps*1e9/8.0;
+  if(o.scheduler=="random_intensity")return job.intensity>5e9?-1:b*0.65;if(o.scheduler=="crux")return job.intensity>5e9?-1:b*0.40;if(o.scheduler=="priority_only")return job.intensity>5e9?-1:b*0.50;return -1;}
 
-static std::vector<std::string> split(const std::string& text, char delim)
-{
-  std::vector<std::string> out;
-  std::stringstream ss(text);
-  std::string item;
-  while (std::getline(ss, item, delim)) {
-    while (!item.empty() && (item.back() == '\r' || item.back() == '\n' || item.back() == ' '))
-      item.pop_back();
-    size_t start = 0;
-    while (start < item.size() && item[start] == ' ')
-      ++start;
-    if (start > 0)
-      item.erase(0, start);
-    out.push_back(item);
-  }
-  return out;
-}
+static std::string pstr(const Job& job){std::ostringstream ss;for(size_t i=0;i<job.placement.size();++i){if(i>0)ss<<";";ss<<job.placement[i].host<<":"<<job.placement[i].gpu;}return ss.str();}
 
-static int column_index(const std::vector<std::string>& header, const std::string& name)
-{
-  auto it = std::find(header.begin(), header.end(), name);
-  if (it == header.end())
-    throw std::runtime_error("workload csv is missing column: " + name);
-  return static_cast<int>(std::distance(header.begin(), it));
-}
+// Phase 4: background traffic (use Comm::sendto for direct cross-host noise)
+static void bg_actor(int hosts,double check_gib,double inf_mbps,int seed){std::mt19937 rng(seed);auto* my=sg4::this_actor::get_host();
+  while(true){auto now=sg4::Engine::get_clock();
+    if(check_gib>0&&fmod(now,60.0)<0.1){int src=rng()%hosts,dst=rng()%hosts;if(src==dst)dst=(src+1)%hosts;uint64_t bytes=(uint64_t)(check_gib*1073741824);if(auto* dh=sg4::Host::by_name_or_null(hn(dst)))sg4::Comm::sendto(my,dh,bytes);
+      g_link_usage["nic"+std::to_string(src)+"_0"].total_bytes+=bytes;g_link_usage["nic"+std::to_string(dst)+"_0"].total_bytes+=bytes;}
+    if(inf_mbps>0&&fmod(now,0.01)<0.001){int src=rng()%hosts,dst=rng()%hosts;if(src==dst)dst=(src+1)%hosts;uint64_t bytes=(uint64_t)(inf_mbps*1e6/8.0*0.01);if(auto* dh=sg4::Host::by_name_or_null(hn(dst)))sg4::Comm::sendto(my,dh,bytes);
+      g_link_usage["nic"+std::to_string(src)+"_0"].total_bytes+=bytes;g_link_usage["nic"+std::to_string(dst)+"_0"].total_bytes+=bytes;}
+    sg4::this_actor::sleep_for(0.1);}sg4::this_actor::sleep_for(1e9);}
 
-static std::vector<Job> read_workload_csv(const Options& opt)
-{
-  std::ifstream f(opt.workload_csv);
-  if (!f)
-    throw std::runtime_error("cannot open workload csv: " + opt.workload_csv);
+// Phase 4: perturbation
+static void perturb_actor(const Options& o){if(o.perturb_time_s>0){sg4::this_actor::sleep_until(o.perturb_time_s);
+    if(o.perturb_link_gbps>0){double bps=o.perturb_link_gbps*1e9/8.0;for(auto& kv:g_link_usage)if(kv.first.find("sw")==0)kv.second.bandwidth_bps=bps;}}sg4::this_actor::sleep_for(1e9);}
 
-  std::string line;
-  if (!std::getline(f, line))
-    throw std::runtime_error("empty workload csv: " + opt.workload_csv);
-  const auto header = split(line, ',');
-  const int c_job_id = column_index(header, "job_id");
-  const int c_model = column_index(header, "model");
-  const int c_start_s = column_index(header, "start_s");
-  const int c_ranks = column_index(header, "ranks");
-  const int c_compute_s = column_index(header, "compute_s");
-  const int c_tensor_gib = column_index(header, "tensor_gib");
-  const int c_hosts = column_index(header, "hosts");
+// rank actor
+static void rank_actor(std::shared_ptr<Job> job,std::shared_ptr<JobMetrics> metrics,int rank,int rounds,double gpu_tflops,double sr,const TopologyConfig& cfg,const std::string& cpn){
+  double flops=job->compute_s*gpu_tflops*1e12;auto plan=make_comm_plan(cpn);std::vector<std::pair<int,int>> pp;for(auto&p:job->placement)pp.push_back({p.host,p.gpu});
+  if(job->start_s>0)sg4::this_actor::sleep_until(job->start_s);metrics->start[rank]=sg4::Engine::get_clock();
+  for(int r=0;r<rounds;++r){sg4::this_actor::execute(flops);double cb=sg4::Engine::get_clock();plan->execute(job->id,rank,job->ranks,(uint64_t)job->tensor_bytes,sr,pp,cfg);metrics->comm[rank]+=sg4::Engine::get_clock()-cb;}metrics->finish[rank]=sg4::Engine::get_clock();}
 
-  std::vector<Job> jobs;
-  while (std::getline(f, line)) {
-    if (line.empty())
-      continue;
-    const auto cols = split(line, ',');
-    if (static_cast<int>(cols.size()) <= std::max({c_job_id, c_model, c_start_s, c_ranks, c_compute_s, c_tensor_gib, c_hosts}))
-      throw std::runtime_error("malformed workload csv row: " + line);
-    Job job;
-    job.id = std::stoi(cols[c_job_id]);
-    job.model = cols[c_model];
-    job.start_s = std::stod(cols[c_start_s]);
-    job.ranks = std::max(2, std::stoi(cols[c_ranks]));
-    job.ranks = std::min(job.ranks, opt.hosts * opt.gpus_per_host);
-    job.compute_s = std::stod(cols[c_compute_s]);
-    job.tensor_bytes = std::stod(cols[c_tensor_gib]) * 1024.0 * 1024.0 * 1024.0;
-    job.intensity = job.tensor_bytes / std::max(1e-9, job.compute_s);
-
-    const auto host_tokens = split(cols[c_hosts], ';');
-    if (host_tokens.empty())
-      throw std::runtime_error("workload row has no hosts: " + line);
-    for (int r = 0; r < job.ranks; ++r) {
-      const int trace_host = std::stoi(host_tokens[r % host_tokens.size()]);
-      const int h = ((trace_host % opt.hosts) + opt.hosts) % opt.hosts;
-      const int g = (r / static_cast<int>(host_tokens.size())) % opt.gpus_per_host;
-      job.placement.push_back({h, g});
-    }
-    jobs.push_back(job);
-  }
-  if (jobs.empty())
-    throw std::runtime_error("workload csv produced no jobs: " + opt.workload_csv);
-  return jobs;
-}
-
-static std::vector<int> job_order(const std::vector<Job>& jobs, bool intensity_first)
-{
-  std::vector<int> ids(jobs.size());
-  std::iota(ids.begin(), ids.end(), 0);
-  if (intensity_first) {
-    std::sort(ids.begin(), ids.end(), [&](int a, int b) { return jobs[a].intensity > jobs[b].intensity; });
-  }
-  return ids;
-}
-
-static void place_jobs(std::vector<Job>& jobs, const Options& opt)
-{
-  const int total_gpus = opt.hosts * opt.gpus_per_host;
-  const bool crux_place = opt.scheduler == "crux" || opt.scheduler == "crux_no_compress";
-  const double gpu_balance_weight = opt.placement_objective == "balanced" ? 3.0 : 0.25;
-  std::vector<double> intensities;
-  for (const auto& job : jobs)
-    intensities.push_back(job.intensity);
-  std::sort(intensities.begin(), intensities.end());
-  const double high_intensity_threshold = intensities.empty() ? 5.0e9 : intensities[intensities.size() / 2];
-  auto order = job_order(jobs, crux_place);
-  std::vector<double> host_load(opt.hosts, 0.0);
-  std::vector<double> gpu_load(total_gpus, 0.0);
-  auto least_loaded_gpu_on_host = [&](int host) {
-    int best_gpu = 0;
-    double best_load = std::numeric_limits<double>::infinity();
-    for (int g = 0; g < opt.gpus_per_host; ++g) {
-      const int idx = host * opt.gpus_per_host + g;
-      if (gpu_load[idx] < best_load) {
-        best_load = gpu_load[idx];
-        best_gpu = g;
-      }
-    }
-    return best_gpu;
-  };
-  for (size_t pos = 0; pos < order.size(); ++pos) {
-    Job& job = jobs[order[pos]];
-    job.placement.clear();
-    std::vector<int> chosen_hosts;
-    for (int r = 0; r < job.ranks; ++r) {
-      int idx = 0;
-      if (crux_place) {
-        if (job.intensity >= high_intensity_threshold) {
-          const int hosts_needed = std::max(1, static_cast<int>(std::ceil(job.ranks / static_cast<double>(opt.gpus_per_host))));
-          if (chosen_hosts.empty()) {
-            double best_score = std::numeric_limits<double>::infinity();
-            int best_base = 0;
-            for (int base = 0; base < opt.hosts; ++base) {
-              double score = 0.0;
-              for (int k = 0; k < hosts_needed; ++k) {
-                const int h = (base + k) % opt.hosts;
-                score += host_load[h];
-                for (int g = 0; g < opt.gpus_per_host; ++g)
-                  score += gpu_balance_weight * gpu_load[h * opt.gpus_per_host + g];
-              }
-              if (score < best_score) {
-                best_score = score;
-                best_base = base;
-              }
-            }
-            for (int k = 0; k < hosts_needed; ++k)
-              chosen_hosts.push_back((best_base + k) % opt.hosts);
-          }
-          const int h = chosen_hosts[(r / opt.gpus_per_host) % chosen_hosts.size()];
-          const int g = least_loaded_gpu_on_host(h);
-          idx = h * opt.gpus_per_host + g;
-        } else {
-          int h = 0;
-          int g = 0;
-          double best_score = std::numeric_limits<double>::infinity();
-          for (int cand_h = 0; cand_h < opt.hosts; ++cand_h) {
-            const int cand_g = least_loaded_gpu_on_host(cand_h);
-            const double score = host_load[cand_h] + gpu_balance_weight * gpu_load[cand_h * opt.gpus_per_host + cand_g];
-            if (score < best_score) {
-              best_score = score;
-              h = cand_h;
-              g = cand_g;
-            }
-          }
-          idx = h * opt.gpus_per_host + g;
-        }
-      } else {
-        idx = (job.id * 7 + r * 3) % total_gpus;
-      }
-      job.placement.push_back({idx / opt.gpus_per_host, idx % opt.gpus_per_host});
-      host_load[idx / opt.gpus_per_host] += job.intensity / static_cast<double>(std::max(1, job.ranks));
-      gpu_load[idx] += job.compute_s + job.tensor_bytes / 1e10;
-    }
-  }
-}
-
-static void validate_options(const Options& opt)
-{
-  if (opt.placement_mode != "replay" && opt.placement_mode != "optimize")
-    throw std::runtime_error("--placement-mode must be replay or optimize");
-  if (opt.placement_objective != "throughput" && opt.placement_objective != "balanced")
-    throw std::runtime_error("--placement-objective must be throughput or balanced");
-  if (opt.workload_csv.empty() && opt.placement_mode == "replay")
-    return;
-}
-
-static double rate_limit(const Options& opt, const Job& job)
-{
-  if (opt.scheduler == "random_same" || opt.scheduler == "crux_no_compress")
-    return -1.0;
-  const double base = opt.nic_gbps * 1e9 / 8.0;
-  if (opt.scheduler == "random_intensity")
-    return job.intensity > 5.0e9 ? -1.0 : base * 0.65;
-  if (opt.scheduler == "crux")
-    return job.intensity > 5.0e9 ? -1.0 : base * 0.40;
-  return -1.0;
-}
-
-static std::string placement_string(const Job& job)
-{
-  std::ostringstream ss;
-  for (size_t i = 0; i < job.placement.size(); ++i) {
-    if (i > 0)
-      ss << ";";
-    ss << job.placement[i].host << ":" << job.placement[i].gpu;
-  }
-  return ss.str();
-}
-
-static void rank_actor(std::shared_ptr<Job> job, std::shared_ptr<JobMetrics> metrics, int rank, int rounds,
-                       double gpu_tflops, double send_rate)
-{
-  const std::string my_mbox = "job" + std::to_string(job->id) + "_rank" + std::to_string(rank);
-  const int n = job->ranks;
-  const double flops = job->compute_s * gpu_tflops * 1e12;
-  const uint64_t chunk = static_cast<uint64_t>(job->tensor_bytes / static_cast<double>(n));
-
-  if (job->start_s > 0)
-    sg4::this_actor::sleep_until(job->start_s);
-
-  metrics->start[rank] = sg4::Engine::get_clock();
-  for (int round = 0; round < rounds; ++round) {
-    sg4::this_actor::execute(flops);
-    const double comm_begin = sg4::Engine::get_clock();
-    for (int step = 0; step < 2 * (n - 1); ++step) {
-      const int next = (rank + 1) % n;
-      const std::string next_mbox = "job" + std::to_string(job->id) + "_rank" + std::to_string(next);
-      int* received = nullptr;
-      auto recv = sg4::Mailbox::by_name(my_mbox)->get_async<int>(&received);
-      auto send = sg4::Mailbox::by_name(next_mbox)->put_init(new int(step), chunk);
-      if (send_rate > 0)
-        send->set_rate(send_rate);
-      send->start();
-      recv->wait();
-      send->wait();
-      delete received;
-    }
-    metrics->comm[rank] += sg4::Engine::get_clock() - comm_begin;
-  }
-  metrics->finish[rank] = sg4::Engine::get_clock();
-}
-
-int main(int argc, char** argv)
-{
-  try {
-    auto opt = parse_args(argc, argv);
-    validate_options(opt);
-    sg4::Engine engine(&argc, argv);
-    build_platform(engine, opt);
-
-    auto jobs = opt.workload_csv.empty() ? make_jobs(opt) : read_workload_csv(opt);
-    if (opt.workload_csv.empty() || opt.placement_mode == "optimize")
-      place_jobs(jobs, opt);
-
-    std::vector<std::shared_ptr<JobMetrics>> all_metrics;
-    for (const auto& job_value : jobs) {
-      auto job = std::make_shared<Job>(job_value);
-      auto metrics = std::make_shared<JobMetrics>();
-      metrics->start.assign(job->ranks, 0.0);
-      metrics->finish.assign(job->ranks, 0.0);
-      metrics->comm.assign(job->ranks, 0.0);
-      all_metrics.push_back(metrics);
-
-      const double cap = rate_limit(opt, *job);
-      for (int r = 0; r < job->ranks; ++r) {
-        const auto& p = job->placement[r];
-        engine.host_by_name(gpu_name(p.host, p.gpu))->add_actor("j" + std::to_string(job->id) + "r" + std::to_string(r),
-                                                                rank_actor, job, metrics, r, opt.rounds,
-                                                                opt.gpu_tflops, cap);
-      }
-    }
-
-    engine.run();
-
-    const double makespan = sg4::Engine::get_clock();
-    double avg_jct = 0.0;
-    double avg_comm = 0.0;
-    double useful_compute = 0.0;
-    for (size_t i = 0; i < jobs.size(); ++i) {
-      const auto& m = *all_metrics[i];
-      const double start = *std::min_element(m.start.begin(), m.start.end());
-      const double finish = *std::max_element(m.finish.begin(), m.finish.end());
-      avg_jct += finish - start;
-      avg_comm += *std::max_element(m.comm.begin(), m.comm.end());
-      useful_compute += jobs[i].compute_s * opt.rounds * jobs[i].ranks;
-    }
-    avg_jct /= static_cast<double>(jobs.size());
-    avg_comm /= static_cast<double>(jobs.size());
-    const double useful_gpu_fraction = useful_compute / (makespan * opt.hosts * opt.gpus_per_host);
-
-    std::ostream* os = &std::cout;
-    std::ofstream file;
-    if (!opt.out.empty()) {
-      file.open(opt.out, std::ios::app);
-      os = &file;
-      if (file.tellp() == 0)
-        *os << "scheduler,workload,placement_mode,placement_objective,makespan_s,avg_jct_s,avg_comm_s,useful_gpu_fraction,jobs,ranks,rounds,hosts,gpus_per_host\n";
-    }
-    int max_ranks = 0;
-    for (const auto& job : jobs)
-      max_ranks = std::max(max_ranks, job.ranks);
-
-    *os << std::fixed << std::setprecision(6) << opt.scheduler << ","
-        << (opt.workload_csv.empty() ? "synthetic" : "trace") << "," << opt.placement_mode << "," << opt.placement_objective << "," << makespan << "," << avg_jct << ","
-        << avg_comm << "," << useful_gpu_fraction << "," << jobs.size() << "," << max_ranks << "," << opt.rounds << ","
-        << opt.hosts << "," << opt.gpus_per_host << "\n";
-
-    if (!opt.job_out.empty()) {
-      std::ofstream jf(opt.job_out, std::ios::app);
-      if (jf.tellp() == 0) {
-        jf << "scheduler,workload,placement_mode,placement_objective,job_id,model,ranks,trace_start_s,"
-           << "sim_start_s,sim_finish_s,jct_s,comm_s,compute_s,tensor_gib,intensity,placement\n";
-      }
-      for (size_t i = 0; i < jobs.size(); ++i) {
-        const auto& job = jobs[i];
-        const auto& m = *all_metrics[i];
-        const double start = *std::min_element(m.start.begin(), m.start.end());
-        const double finish = *std::max_element(m.finish.begin(), m.finish.end());
-        const double comm = *std::max_element(m.comm.begin(), m.comm.end());
-        jf << std::fixed << std::setprecision(6) << opt.scheduler << ","
-           << (opt.workload_csv.empty() ? "synthetic" : "trace") << "," << opt.placement_mode << ","
-           << opt.placement_objective << "," << job.id << "," << job.model << "," << job.ranks << ","
-           << job.start_s << "," << start << "," << finish << "," << (finish - start) << "," << comm << ","
-           << job.compute_s << "," << (job.tensor_bytes / 1024.0 / 1024.0 / 1024.0) << "," << job.intensity
-           << "," << placement_string(job) << "\n";
-      }
-    }
-  } catch (const std::exception& e) {
-    std::cerr << "ERROR: " << e.what() << "\n";
-    return 1;
-  }
-  return 0;
-}
+int main(int argc,char** argv){try{auto o=parse_args(argc,argv);validate(o);auto topo=make_topo(o);if(o.hosts>0)topo.hosts=o.hosts;if(o.gpus_per_host>0)topo.gpus_per_host=o.gpus_per_host;
+  sg4::Engine engine(&argc,argv);build_platform(engine,topo);auto jobs=o.workload_csv.empty()?make_jobs(o):read_csv(o);if(o.workload_csv.empty()||o.placement_mode=="optimize")place_jobs(jobs,o);
+  if(o.perturb_misplace_pct>0){std::mt19937 rng(o.seed+999);int nm=std::max(1,(int)(jobs.size()*o.perturb_misplace_pct/100.0));for(int i=0;i<nm;++i){int jid=rng()%jobs.size();for(auto&p:jobs[jid].placement)p.host=(p.host+rng()%o.hosts)%o.hosts;}}
+  std::vector<std::shared_ptr<JobMetrics>> am;for(auto&jv:jobs){auto jb=std::make_shared<Job>(jv);auto m=std::make_shared<JobMetrics>();m->start.assign(jb->ranks,0);m->finish.assign(jb->ranks,0);m->comm.assign(jb->ranks,0);am.push_back(m);
+    double cap=rlimit(o,*jb);for(int r=0;r<jb->ranks;++r){auto&p=jb->placement[r];engine.host_by_name(gn(p.host,p.gpu))->add_actor("j"+std::to_string(jb->id)+"r"+std::to_string(r),rank_actor,jb,m,r,o.rounds,o.gpu_tflops,cap,std::cref(topo),o.comm_plan);}}
+  if(o.bg_checkpoint_gib>0||o.bg_inference_mbps>0){for(int h=0;h<o.hosts;++h)engine.host_by_name(hn(h))->add_actor("bg"+std::to_string(h),bg_actor,o.hosts,o.bg_checkpoint_gib,o.bg_inference_mbps,o.seed+100+h);}
+  if(o.bg_dataset_pct>0){int nh=std::max(1,(int)(o.hosts*o.bg_dataset_pct/100.0));std::mt19937 rng(o.seed+300);for(int i=0;i<nh;++i){int src=rng()%o.hosts;for(int d=0;d<o.hosts;++d){if(d==src)continue;uint64_t bytes=10737418240ULL;
+    engine.host_by_name(hn(src))->add_actor("ds"+std::to_string(i)+"_"+std::to_string(d),[](uint64_t bz,const std::string& dh){sg4::Comm::sendto(sg4::this_actor::get_host(),sg4::Host::by_name_or_null(dh),bz);},bytes,hn(d));}}}
+  if(o.perturb_link_gbps>0||o.perturb_time_s>0)engine.host_by_name(hn(0))->add_actor("perturb",perturb_actor,std::cref(o));
+  engine.run();double ms=sg4::Engine::get_clock(),aj=0,ac=0,uc=0;for(size_t i=0;i<jobs.size();++i){auto&m=*am[i];double s=*std::min_element(m.start.begin(),m.start.end()),f=*std::max_element(m.finish.begin(),m.finish.end());aj+=f-s;ac+=*std::max_element(m.comm.begin(),m.comm.end());uc+=jobs[i].compute_s*o.rounds*jobs[i].ranks;}
+  aj/=jobs.size();ac/=jobs.size();double ugf=uc/(ms*o.hosts*o.gpus_per_host);std::ostream* os=&std::cout;std::ofstream file;
+  if(!o.out.empty()){file.open(o.out,std::ios::app);os=&file;if(file.tellp()==0)*os<<"scheduler,topology,comm_plan,workload,placement_mode,placement_objective,makespan_s,avg_jct_s,avg_comm_s,useful_gpu_fraction,jobs,ranks,rounds,hosts,gpus_per_host\n";}
+  int mr=0;for(auto&j:jobs)mr=std::max(mr,j.ranks);*os<<std::fixed<<std::setprecision(6)<<o.scheduler<<","<<o.topology<<","<<o.comm_plan<<","<<(o.workload_csv.empty()?"synthetic":"trace")<<","<<o.placement_mode<<","<<o.placement_objective<<","<<ms<<","<<aj<<","<<ac<<","<<ugf<<","<<jobs.size()<<","<<mr<<","<<o.rounds<<","<<o.hosts<<","<<o.gpus_per_host<<"\n";
+  if(!o.job_out.empty()){std::ofstream jf(o.job_out,std::ios::app);if(jf.tellp()==0)jf<<"scheduler,topology,comm_plan,workload,placement_mode,placement_objective,job_id,model,ranks,trace_start_s,sim_start_s,sim_finish_s,jct_s,comm_s,compute_s,tensor_gib,intensity,placement\n";
+    for(size_t i=0;i<jobs.size();++i){auto&jb=jobs[i];auto&m=*am[i];double s=*std::min_element(m.start.begin(),m.start.end()),f=*std::max_element(m.finish.begin(),m.finish.end()),c=*std::max_element(m.comm.begin(),m.comm.end());
+      jf<<std::fixed<<std::setprecision(6)<<o.scheduler<<","<<o.topology<<","<<o.comm_plan<<","<<(o.workload_csv.empty()?"synthetic":"trace")<<","<<o.placement_mode<<","<<o.placement_objective<<","<<jb.id<<","<<jb.model<<","<<jb.ranks<<","<<jb.start_s<<","<<s<<","<<f<<","<<(f-s)<<","<<c<<","<<jb.compute_s<<","<<(jb.tensor_bytes/1073741824.0)<<","<<jb.intensity<<","<<pstr(jb)<<"\n";}}
+  if(!o.link_out.empty()){std::ofstream lf(o.link_out);lf<<"link_name,bandwidth_bps,total_bytes,utilization,makespan_s\n";for(auto&kv:g_link_usage)lf<<kv.first<<","<<std::fixed<<std::setprecision(1)<<kv.second.bandwidth_bps<<","<<kv.second.total_bytes<<","<<std::setprecision(6)<<kv.second.utilization()<<","<<ms<<"\n";}
+  std::vector<std::pair<std::string,double>> rk;for(auto&kv:g_link_usage)rk.push_back({kv.first,kv.second.utilization()});std::sort(rk.begin(),rk.end(),[](auto&a,auto&b){return a.second>b.second;});
+  std::cerr<<"Top-5 bottleneck links:\n";for(int i=0;i<std::min(5,(int)rk.size());++i)std::cerr<<"  "<<rk[i].first<<" util="<<std::fixed<<std::setprecision(4)<<rk[i].second*100<<"%\n";}catch(const std::exception& e){std::cerr<<"ERROR: "<<e.what()<<"\n";return 1;}return 0;}

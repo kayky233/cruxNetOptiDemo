@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>C++ Platforms &mdash; SimGrid  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="_static/showfile.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
+        <script src="_static/showfile.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="The SimGrid models" href="Models.html" />
+    <link rel="prev" title="Complete XML Reference" href="XML_reference.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SimGrid
+          </a>
+              <div class="version">
+                4.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Algorithms.html">     Simulating distributed algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_MPI_Applications.html">     Simulating MPI applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Model-checking.html">     Model-checking algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_DAG.html">Simulating DAG</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Manual:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">   Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installing_SimGrid.html">      Installing SimGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Start_your_own_project.html">      Start your own project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="community.html">      The SimGrid community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Release_Notes.html">      Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="application.html">   Describing your application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_s4u.html">      The S4U interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">      S4U examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_smpi.html">      The SMPI interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="The_XBT_toolbox.html">      The XBT toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform.html">   Describing the simulated platform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_examples.html">      Network topology examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_routing.html">      Advanced routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="XML_reference.html">      XML reference</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">      C++ platforms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#describing-resources">Describing Resources</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#links">Links</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#loading-the-platform">Loading the platform</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#beyond-the-xml-the-power-of-c-platforms">Beyond the XML: the power of C++ platforms</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Models.html">   The SimGrid models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Modeling_howtos.html">      Modeling hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Calibrating_the_models.html">      Calibrating the models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plugins.html">      SimGrid plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Experimental_setup.html">   Running an experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Configuring_SimGrid.html">      Configuring SimGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Deploying_your_application.html">      Deploying your application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Outcomes.html">      Simulation outcomes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">SimGrid's Internals:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Design_goals.html">   Design goals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Contributors_Documentation.html">   Contributor's documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SimGrid</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">C++ Platforms</li>
+  <li class="wy-breadcrumbs-aside">
+    
+
+      <a href="" class="fa fa-bitbucket"> Edit on FramaGit</a>
+    
+  </li>
+
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <object id="TOC" data="graphical-toc.svg" type="image/svg+xml"></object>
+<script>
+window.onload=function() { // Wait for the SVG to be loaded before changing it
+  var elem=document.querySelector("#TOC").contentDocument.getElementById("ExamplesBox")
+  elem.style="opacity:0.93999999;fill:#ff0000;fill-opacity:0.1;stroke:#000000;stroke-width:0.35277778;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1";
+}
+</script>
+<br/>
+<br/><section id="c-platforms">
+<span id="platform-cpp"></span><h1>C++ Platforms<a class="headerlink" href="#c-platforms" title="Permalink to this heading"></a></h1>
+<p>Using XML to describe the platforms is very convenient. It provides a
+human-readable, quick way to start your experiments. Although, XML format brings
+several drawbacks as your platforms get larger and more complex (see <a class="reference internal" href="#platform-cpp-beyond"><span class="std std-ref">Beyond the XML: the power of C++ platforms</span></a>).</p>
+<p>In this case, it may be more interesting to write your platform directly
+in C++ code. It allows you to programmatically describe your platform and
+remove the intermediate XML parser during simulations. Take care to follow
+the recommendations in <a class="reference internal" href="Modeling_howtos.html#howto"><span class="std std-ref">Modeling Hints</span></a> to keep a clear separation
+of concerns between your platform and your application.</p>
+<section id="describing-resources">
+<h2>Describing Resources<a class="headerlink" href="#describing-resources" title="Permalink to this heading"></a></h2>
+<p>A platform in SimGrid is composed of several resources organized in different
+Netzones. The different resources, such as hosts, disks and links, follow the same
+idiom: add()-&gt;set()-&gt;set()-&gt;seal().</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">NetZone</span><span class="o">*</span><span class="w"> </span><span class="n">zone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">Engine</span><span class="o">::</span><span class="n">get_instance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get_netzone_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">add_netzone_star</span><span class="p">(</span><span class="s">&quot;zone0&quot;</span><span class="p">);</span>
+<span class="n">Link</span><span class="o">*</span><span class="w"> </span><span class="n">l_up</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">zone</span><span class="o">-&gt;</span><span class="n">add_link</span><span class="p">(</span><span class="s">&quot;link_up&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;125MBps&quot;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">set_latency</span><span class="p">(</span><span class="s">&quot;24us&quot;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">seal</span><span class="p">();</span>
+<span class="n">Host</span><span class="o">*</span><span class="w"> </span><span class="n">host</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">zone</span><span class="o">-&gt;</span><span class="n">add_host</span><span class="p">(</span><span class="s">&quot;host0&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;1Gf&quot;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">seal</span><span class="p">();</span>
+<span class="n">zone</span><span class="o">-&gt;</span><span class="n">seal</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>The first NetZone created will be the root zone of your platform. You’re allowed to modified
+an object as long as you did not seal it.</p>
+<p>For more details about how to describe the platforms, please give a look at <a class="reference internal" href="#platform-cpp-example"><span class="std std-ref">examples</span></a>
+or directly at the S4U API.</p>
+<section id="links">
+<h3>Links<a class="headerlink" href="#links" title="Permalink to this heading"></a></h3>
+<p>In the XML, you are allowed to do the following description:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;link</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;1&quot;</span><span class="w"> </span><span class="na">bandwidth=</span><span class="s">&quot;10kBps&quot;</span><span class="w"> </span><span class="na">latency=</span><span class="s">&quot;10ms&quot;</span><span class="w"> </span><span class="na">sharing_policy=</span><span class="s">&quot;SPLITDUPLEX&quot;</span><span class="nt">/&gt;</span>
+
+<span class="nt">&lt;route</span><span class="w"> </span><span class="na">src=</span><span class="s">&quot;S1&quot;</span><span class="w"> </span><span class="na">dst=</span><span class="s">&quot;C1&quot;</span><span class="w"> </span><span class="na">symmetrical=</span><span class="s">&quot;NO&quot;</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="nt">&lt;link_ctn</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;1&quot;</span><span class="w"> </span><span class="na">direction=</span><span class="s">&quot;DOWN&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/route&gt;</span>
+</pre></div>
+</div>
+<p>It is important to notice that this is a syntactic sugar provided by the XML to ease
+the link utilization. A split-duplex link means that upgoing communications do not
+share the bandwidth with downgoing communications. To emulate this behavior,
+under the hood, SimGrid adds 2 links in this case: the <em>1_UP</em>
+link and the <em>1_DOWN</em> link. As you can see, the selection of link to use
+in the &lt;route&gt; tag is done by the <code class="docutils literal notranslate"><span class="pre">direction=</span></code> parameter.</p>
+<p>Using the C++ interface, you can use the specific function to add these 2 links. Note
+that you need to define the direction in the add_route function when adding a route containing
+a split-duplex link. Otherwise, SimGrid cannot know which link (UP/DOWN) to use.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">link</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zone</span><span class="o">-&gt;</span><span class="n">add_split_duplex_link</span><span class="p">(</span><span class="s">&quot;1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;125MBps&quot;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">set_latency</span><span class="p">(</span><span class="s">&quot;24us&quot;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">seal</span><span class="p">();</span>
+
+<span class="n">zone</span><span class="o">-&gt;</span><span class="n">add_route</span><span class="p">(</span><span class="n">S1</span><span class="p">,</span><span class="w"> </span><span class="n">C1</span><span class="p">,</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="p">{{</span><span class="n">link</span><span class="p">,</span><span class="w"> </span><span class="n">LinkInRoute</span><span class="o">::</span><span class="n">Direction</span><span class="o">::</span><span class="n">UP</span><span class="p">}});</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Do not use set_sharing_policy(SharingPolicy::SPLITDUPLEX).
+SimGrid will complain since set_sharing_policy should be used only with (SHARED and FATPIPE)</p>
+</div>
+</section>
+<section id="loading-the-platform">
+<h3>Loading the platform<a class="headerlink" href="#loading-the-platform" title="Permalink to this heading"></a></h3>
+<p>The C++ interface to build the platforms give you freedom to organize your code
+as you wish, separating (or unifying) your application from your platform code.
+However, we provide a small hack if you want to keep the same structure of the
+old code with XML platforms. You can pass a library (.so) file to <code class="docutils literal notranslate"><span class="pre">Engine::load_platform</span></code>
+function, having a predefined function implemented. When loading the platform, the
+Engine will look for a function with this signature: “<strong>void load_platform(const sg4::Engine&amp; e)</strong>”, and
+execute it. It could be an easy way to make the transition between XML and C++ if necessary.</p>
+<p>For more details, please refer to the cpp and CMakeLists.txt files in
+<a class="reference external" href="https://framagit.org/simgrid/simgrid/tree/master/examples/platforms">examples/platform</a>.</p>
+</section>
+</section>
+<section id="example">
+<span id="platform-cpp-example"></span><h2>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h2>
+<p>The best way to build your C++ platform is to start from some examples.
+Give a look in the examples folder in <a class="reference external" href="https://framagit.org/simgrid/simgrid/tree/master/examples/">examples/</a>.
+For instance, the file <a class="reference external" href="https://framagit.org/simgrid/simgrid/-/blob/master/examples/cpp/clusters-multicpu/s4u-clusters-multicpu.cpp">examples/cpp/clusters-multicpu/s4u-clusters-multicpu.cpp</a> shows how to build complex platforms composed of
+clusters of clusters.</p>
+<p>Here, we present a complete example showing how to create 3 regulars clusters
+connected through a shared link.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright (c) 2006-2025. The SimGrid Team. All rights reserved.          */</span>
+
+<span class="cm">/* This program is free software; you can redistribute it and/or modify it</span>
+<span class="cm"> * under the terms of the license (GNU LGPL) which comes with this package. */</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;numeric&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;simgrid/s4u.hpp&gt;</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">sg4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">simgrid</span><span class="o">::</span><span class="nn">s4u</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @brief Create a new cabinet</span>
+<span class="cm"> *</span>
+<span class="cm"> * This function creates the cabinet, adding the hosts and links properly.</span>
+<span class="cm"> * See figure below for more details of each cabinet</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param root Root netzone</span>
+<span class="cm"> * @param name Cabinet name</span>
+<span class="cm"> * @param radicals IDs of nodes inside the cabinet</span>
+<span class="cm"> * @return netzone the created netzone</span>
+<span class="cm"> */</span>
+<span class="k">static</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">NetZone</span><span class="o">*</span><span class="w"> </span><span class="nf">create_cabinet</span><span class="p">(</span><span class="n">sg4</span><span class="o">::</span><span class="n">NetZone</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">radicals</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">cluster</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">add_netzone_star</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;griffon-&quot;</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">suffix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;.nancy.grid5000.fr&quot;</span><span class="p">;</span>
+
+<span class="w">  </span><span class="cm">/* create the backbone link */</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">Link</span><span class="o">*</span><span class="w"> </span><span class="n">l_bb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cluster</span><span class="o">-&gt;</span><span class="n">add_link</span><span class="p">(</span><span class="s">&quot;backbone-&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;1.25GBps&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">sg4</span><span class="o">::</span><span class="n">LinkInRoute</span><span class="w"> </span><span class="n">backbone</span><span class="p">(</span><span class="n">l_bb</span><span class="p">);</span>
+
+<span class="w">  </span><span class="cm">/* create all hosts and connect them to outside world */</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">radicals</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">hostname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prefix</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">suffix</span><span class="p">;</span>
+<span class="w">    </span><span class="cm">/* create host */</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">Host</span><span class="o">*</span><span class="w"> </span><span class="n">host</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cluster</span><span class="o">-&gt;</span><span class="n">add_host</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;286.087kf&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="cm">/* create UP/DOWN link */</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">Link</span><span class="o">*</span><span class="w"> </span><span class="n">link</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cluster</span><span class="o">-&gt;</span><span class="n">add_split_duplex_link</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;125MBps&quot;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">set_latency</span><span class="p">(</span><span class="s">&quot;24us&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="cm">/* add link and backbone for communications from the host */</span>
+<span class="w">    </span><span class="n">cluster</span><span class="o">-&gt;</span><span class="n">add_route</span><span class="p">(</span><span class="n">host</span><span class="p">,</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="p">{{</span><span class="n">link</span><span class="p">,</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">LinkInRoute</span><span class="o">::</span><span class="n">Direction</span><span class="o">::</span><span class="n">UP</span><span class="p">},</span><span class="w"> </span><span class="n">backbone</span><span class="p">},</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="cm">/* create gateway */</span>
+<span class="w">  </span><span class="n">cluster</span><span class="o">-&gt;</span><span class="n">set_gateway</span><span class="p">(</span><span class="n">cluster</span><span class="o">-&gt;</span><span class="n">add_router</span><span class="p">(</span><span class="n">prefix</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;-router&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">suffix</span><span class="p">));</span>
+
+<span class="w">  </span><span class="n">cluster</span><span class="o">-&gt;</span><span class="n">seal</span><span class="p">();</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">cluster</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/** @brief Programmatic version of griffon.xml */</span>
+<span class="k">extern</span><span class="w"> </span><span class="s">&quot;C&quot;</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">load_platform</span><span class="p">(</span><span class="n">sg4</span><span class="o">::</span><span class="n">Engine</span><span class="o">&amp;</span><span class="w"> </span><span class="n">e</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">load_platform</span><span class="p">(</span><span class="n">sg4</span><span class="o">::</span><span class="n">Engine</span><span class="o">&amp;</span><span class="w"> </span><span class="n">e</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * C++ version of griffon.xml</span>
+<span class="cm">   * Old Grid5000 cluster (not available anymore): 3 cabinets containing homogeneous nodes connected through a backbone</span>
+<span class="cm">   *                                  1.25GBps shared link</span>
+<span class="cm">   *                          ___________________________________</span>
+<span class="cm">   *          1              /                |                  \</span>
+<span class="cm">   *                        /                 |                   \</span>
+<span class="cm">   *                       /                  |                    \</span>
+<span class="cm">   *     ________________ /             ______|__________           \_________________</span>
+<span class="cm">   *     |               |              |               |            |               |</span>
+<span class="cm">   *     | cab1 router   |              | cab2 router   |            | cab3 router   |</span>
+<span class="cm">   *     |_______________|              |_______________|            |_______________|</span>
+<span class="cm">   *     ++++++++++++++++               ++++++++++++++++             ++++++++++++++++++  &lt;-- 1.25 backbone</span>
+<span class="cm">   *     / /   | |    \ \              / /    | |    \ \             / /     | |     \ \</span>
+<span class="cm">   *    / /    | |     \ \            / /     | |     \ \           / /      | |      \ \ &lt;-- 125Mbps links</span>
+<span class="cm">   *   / /     | |      \ \          / /      | |      \ \         / /       | |       \ \</span>
+<span class="cm">   * host1     ...      hostN      host1      ...      hostM      host1      ...       hostQ</span>
+<span class="cm">   */</span>
+
+<span class="w">  </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">get_netzone_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">add_netzone_star</span><span class="p">(</span><span class="s">&quot;AS_griffon&quot;</span><span class="p">);</span>
+
+<span class="w">  </span><span class="cm">/* create top link */</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">Link</span><span class="o">*</span><span class="w"> </span><span class="n">l_bb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">add_link</span><span class="p">(</span><span class="s">&quot;backbone&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;1.25GBps&quot;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">set_latency</span><span class="p">(</span><span class="s">&quot;24us&quot;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">seal</span><span class="p">();</span>
+<span class="w">  </span><span class="n">sg4</span><span class="o">::</span><span class="n">LinkInRoute</span><span class="w"> </span><span class="n">backbone</span><span class="p">{</span><span class="n">l_bb</span><span class="p">};</span>
+
+<span class="w">  </span><span class="cm">/* create cabinet1 */</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">rad</span><span class="p">(</span><span class="mi">32</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">iota</span><span class="p">(</span><span class="n">rad</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">rad</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span><span class="w"> </span><span class="c1">// 1-29,58,59,60</span>
+<span class="w">  </span><span class="n">rad</span><span class="p">[</span><span class="n">rad</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">60</span><span class="p">;</span>
+<span class="w">  </span><span class="n">rad</span><span class="p">[</span><span class="n">rad</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">]</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">59</span><span class="p">;</span>
+<span class="w">  </span><span class="n">rad</span><span class="p">[</span><span class="n">rad</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">3</span><span class="p">]</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">58</span><span class="p">;</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">NetZone</span><span class="o">*</span><span class="w"> </span><span class="n">cab_zone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">create_cabinet</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;cabinet1&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rad</span><span class="p">);</span>
+<span class="w">  </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">add_route</span><span class="p">(</span><span class="n">cab_zone</span><span class="p">,</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">backbone</span><span class="p">});</span>
+
+<span class="w">  </span><span class="cm">/* create cabinet2 */</span>
+<span class="w">  </span><span class="n">rad</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">28</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">iota</span><span class="p">(</span><span class="n">rad</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">rad</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="w"> </span><span class="mi">30</span><span class="p">);</span><span class="w"> </span><span class="c1">// 30-57</span>
+<span class="w">  </span><span class="n">cab_zone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">create_cabinet</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;cabinet2&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rad</span><span class="p">);</span>
+<span class="w">  </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">add_route</span><span class="p">(</span><span class="n">cab_zone</span><span class="p">,</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">backbone</span><span class="p">});</span>
+
+<span class="w">  </span><span class="cm">/* create cabinet3 */</span>
+<span class="w">  </span><span class="n">rad</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">32</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">iota</span><span class="p">(</span><span class="n">rad</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">rad</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="w"> </span><span class="mi">61</span><span class="p">);</span><span class="w"> </span><span class="c1">// 61-92</span>
+<span class="w">  </span><span class="n">cab_zone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">create_cabinet</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;cabinet3&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rad</span><span class="p">);</span>
+<span class="w">  </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">add_route</span><span class="p">(</span><span class="n">cab_zone</span><span class="p">,</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">backbone</span><span class="p">});</span>
+
+<span class="w">  </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">seal</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="beyond-the-xml-the-power-of-c-platforms">
+<span id="platform-cpp-beyond"></span><h2>Beyond the XML: the power of C++ platforms<a class="headerlink" href="#beyond-the-xml-the-power-of-c-platforms" title="Permalink to this heading"></a></h2>
+<p>This section describes one of the advantages of using C++ code to write your platforms.</p>
+<p>Let’s see an example of the description of a Fat-Tree in XML (<a class="reference internal" href="Platform_examples.html#platform-examples-fattree"><span class="std std-ref">Fat-Tree Cluster</span></a>)</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&#39;1.0&#39;?&gt;</span>
+<span class="cp">&lt;!DOCTYPE platform SYSTEM &quot;https://simgrid.org/simgrid.dtd&quot;&gt;</span>
+<span class="nt">&lt;platform</span><span class="w"> </span><span class="na">version=</span><span class="s">&quot;4.1&quot;</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="nt">&lt;zone</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;world&quot;</span><span class="w"> </span><span class="na">routing=</span><span class="s">&quot;Full&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;cluster</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;bob_cluster&quot;</span>
+<span class="w">	     </span><span class="na">prefix=</span><span class="s">&quot;node-&quot;</span><span class="w"> </span><span class="na">radical=</span><span class="s">&quot;0-15&quot;</span><span class="w"> </span><span class="na">suffix=</span><span class="s">&quot;.simgrid.org&quot;</span>
+<span class="w">	     </span><span class="na">speed=</span><span class="s">&quot;1Gf&quot;</span><span class="w"> </span><span class="na">bw=</span><span class="s">&quot;125MBps&quot;</span><span class="w"> </span><span class="na">lat=</span><span class="s">&quot;50us&quot;</span>
+<span class="w">             </span><span class="na">topology=</span><span class="s">&quot;FAT_TREE&quot;</span><span class="w"> </span><span class="na">topo_parameters=</span><span class="s">&quot;2;4,4;1,2;1,2&quot;</span>
+<span class="w">	     </span><span class="na">loopback_bw=</span><span class="s">&quot;100MBps&quot;</span><span class="w"> </span><span class="na">loopback_lat=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/zone&gt;</span>
+<span class="nt">&lt;/platform&gt;</span>
+</pre></div>
+</div>
+<p>Our cluster <em>bob</em> is composed of 16 hosts with the same 1Gf CPU power.</p>
+<p>Imagine now that you want to simulate the same <strong>Fat-Tree topology with</strong> more complex <strong>hosts</strong>,
+composed of <strong>1 CPU, 1 GPU and some interconnecting bus</strong>.</p>
+<p>Unfortunately, this is not possible with the XML description since its syntax obliges
+that the leaves in your Fat-Tree to be single Hosts. However, with the C++ API, your
+leaves can be composed of other zones, creating a <strong>Fat-Tree of FullZones</strong> for example.</p>
+<p>Consequently, you can describe the desired platform as follows:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">sg4</span><span class="o">::</span><span class="n">Engine</span><span class="w"> </span><span class="nf">e</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="n">argv</span><span class="p">);</span>
+<span class="n">e</span><span class="p">.</span><span class="n">get_netzone_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">add_netzone_fatTree</span><span class="p">(</span><span class="s">&quot;bob&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">get_netzone_root</span><span class="p">(),</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">},</span><span class="w"> </span><span class="s">&quot;100Mbps&quot;</span><span class="p">,</span>
+<span class="w">                       </span><span class="s">&quot;50us&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">Link</span><span class="o">::</span><span class="n">SharingPolicy</span><span class="o">::</span><span class="n">SPLITDUPLEX</span><span class="p">)</span>
+<span class="w">                    </span><span class="o">-&gt;</span><span class="n">set_netzone_cb</span><span class="p">(</span><span class="n">create_hostzone</span><span class="p">)</span>
+<span class="w">                    </span><span class="o">-&gt;</span><span class="n">set_loopback_cb</span><span class="p">(</span><span class="n">create_loopback</span><span class="p">)</span>
+<span class="w">                    </span><span class="o">-&gt;</span><span class="n">seal</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Note that the leaves and loopback links are defined through callbacks, as follows:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cm">/* create the loopback link for each leaf in the Fat-Tree */</span>
+<span class="k">static</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">Link</span><span class="o">*</span><span class="w"> </span><span class="nf">create_loopback</span><span class="p">(</span><span class="n">sg4</span><span class="o">::</span><span class="n">NetZone</span><span class="o">*</span><span class="w"> </span><span class="n">zone</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="cm">/*coord*/</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">id</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// note that you could set different loopback links for each leaf</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">zone</span><span class="o">-&gt;</span><span class="n">add_link</span><span class="p">(</span><span class="s">&quot;limiter-&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">id</span><span class="p">),</span><span class="w"> </span><span class="mf">1e6</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">seal</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="cm">/* create each leaf in the Fat-Tree, return a pair composed of: &lt;object (host, zone), gateway&gt; */</span>
+<span class="k">static</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">simgrid</span><span class="o">::</span><span class="n">kernel</span><span class="o">::</span><span class="n">routing</span><span class="o">::</span><span class="n">NetPoint</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="n">simgrid</span><span class="o">::</span><span class="n">kernel</span><span class="o">::</span><span class="n">routing</span><span class="o">::</span><span class="n">NetPoint</span><span class="o">*&gt;</span>
+<span class="n">create_hostzone</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">NetZone</span><span class="o">*</span><span class="w"> </span><span class="n">zone</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="cm">/*coord*/</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">id</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="cm">/* Adding zone */</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">hostname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;host&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+<span class="w">  </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">host_zone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zone</span><span class="o">-&gt;</span><span class="n">add_netzone_full</span><span class="p">(</span><span class="n">hostname</span><span class="p">);</span>
+
+<span class="w">  </span><span class="cm">/* Adding CPU */</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">cpu_name</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">hostname</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;-cpu&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">Host</span><span class="o">*</span><span class="w"> </span><span class="n">cpu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">host_zone</span><span class="o">-&gt;</span><span class="n">add_host</span><span class="p">(</span><span class="n">cpu_name</span><span class="p">,</span><span class="w"> </span><span class="mf">1e9</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">seal</span><span class="p">();</span>
+<span class="w">  </span><span class="cm">/* Adding GPU */</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">gpu_name</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">hostname</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;-gpu&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">sg4</span><span class="o">::</span><span class="n">Host</span><span class="o">*</span><span class="w"> </span><span class="n">gpu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">host_zone</span><span class="o">-&gt;</span><span class="n">add_host</span><span class="p">(</span><span class="n">gpu_name</span><span class="p">,</span><span class="w"> </span><span class="mf">1e12</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">seal</span><span class="p">();</span>
+<span class="w">  </span><span class="cm">/* connecting them */</span>
+<span class="w">  </span><span class="n">sg4</span><span class="o">::</span><span class="n">Link</span><span class="o">*</span><span class="w"> </span><span class="n">link</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">host_zone</span><span class="o">-&gt;</span><span class="n">add_link</span><span class="p">(</span><span class="s">&quot;link-&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">cpu_name</span><span class="p">,</span><span class="w"> </span><span class="mf">10e9</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">set_latency</span><span class="p">(</span><span class="mf">10e-9</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">seal</span><span class="p">();</span>
+<span class="w">  </span><span class="n">host_zone</span><span class="o">-&gt;</span><span class="n">add_route</span><span class="p">(</span><span class="n">cpu</span><span class="o">-&gt;</span><span class="n">get_netpoint</span><span class="p">(),</span><span class="w"> </span><span class="n">gpu</span><span class="o">-&gt;</span><span class="n">get_netpoint</span><span class="p">(),</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">sg4</span><span class="o">::</span><span class="n">LinkInRoute</span><span class="p">(</span><span class="n">link</span><span class="p">)});</span>
+
+<span class="w">  </span><span class="n">host_zone</span><span class="o">-&gt;</span><span class="n">seal</span><span class="p">();</span>
+<span class="w">  </span><span class="cm">/* cpu is the gateway for this host */</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span><span class="n">host_zone</span><span class="o">-&gt;</span><span class="n">get_netpoint</span><span class="p">(),</span><span class="w"> </span><span class="n">cpu</span><span class="o">-&gt;</span><span class="n">get_netpoint</span><span class="p">());</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The code is straightforward and can be easily adapted to more complex environments thanks to the flexibility
+provided by the C++ API.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="XML_reference.html" class="btn btn-neutral float-left" title="Complete XML Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Models.html" class="btn btn-neutral float-right" title="The SimGrid models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2002-2025, The SimGrid Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

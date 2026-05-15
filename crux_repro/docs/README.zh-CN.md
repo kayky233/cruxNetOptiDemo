@@ -14,13 +14,19 @@
    - 当前实验结果；
    - 后续优化路线。
 
-3. [开发设计文档](DEVELOPMENT_DESIGN.zh-CN.md)
+3. [实机环境拓扑与网络时延接入方案](REAL_ENV_TOPOLOGY_INTEGRATION.zh-CN.md)
+   - 华为接口采集；
+   - TDSQL/Redis 本地环境快照；
+   - 优化器读取本地拓扑；
+   - 通过华为接口执行链路/拓扑调整。
+
+4. [开发设计文档](DEVELOPMENT_DESIGN.zh-CN.md)
    - 轻量 Crux 模拟器的数据结构、流程、策略实现。
 
-4. [实现映射说明](IMPLEMENTATION_MAP.zh-CN.md)
+5. [实现映射说明](IMPLEMENTATION_MAP.zh-CN.md)
    - 代码与 Crux 论文概念的对应关系。
 
-5. [训练/推理优化建模](TRAINING_INFERENCE_OPTIMIZATION_MODEL.zh-CN.md)
+6. [训练/推理优化建模](TRAINING_INFERENCE_OPTIMIZATION_MODEL.zh-CN.md)
    - 训练和推理场景下的统一问题建模与优化方向。
 
 ## 文档说明
@@ -28,6 +34,7 @@
 | 文档 | 作用 |
 |---|---|
 | `SIMGRID_COLLECTIVE_SIMULATION_PLAN.zh-CN.md` | 当前最重要的方案文档，覆盖真实 SimGrid 模拟和实验结果 |
+| `REAL_ENV_TOPOLOGY_INTEGRATION.zh-CN.md` | 实机拓扑/时延采集、本地存储和华为接口闭环方案 |
 | `DEVELOPMENT_DESIGN.zh-CN.md` | 轻量模拟器的详细开发设计 |
 | `IMPLEMENTATION_MAP.zh-CN.md` | 中文实现映射 |
 | `IMPLEMENTATION_MAP.md` | 英文实现映射 |

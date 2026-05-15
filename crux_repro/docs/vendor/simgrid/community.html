@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The SimGrid Community &mdash; SimGrid  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="_static/showfile.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
+        <script src="_static/showfile.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="SimGrid 4.x Release Notes" href="Release_Notes.html" />
+    <link rel="prev" title="Start your Own Project" href="Start_your_own_project.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SimGrid
+          </a>
+              <div class="version">
+                4.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Algorithms.html">     Simulating distributed algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_MPI_Applications.html">     Simulating MPI applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Model-checking.html">     Model-checking algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_DAG.html">Simulating DAG</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Manual:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">   Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installing_SimGrid.html">      Installing SimGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Start_your_own_project.html">      Start your own project</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">      The SimGrid community</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#contacting-the-community">Contacting the community</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#giving-back-to-simgrid">Giving back to SimGrid</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#provide-fresh-eyes-feedback">Provide fresh-eyes feedback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#spread-the-word">Spread the word</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#report-and-fix-issues">Report (and fix) issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#extending-simgrid-and-its-ecosystem">Extending SimGrid and its Ecosystem</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#contributing-code">Contributing Code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#possible-enhancements">Possible Enhancements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#time-and-duration">Time and duration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#futures-and-promises">Futures and Promises</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mc-overhaul-the-state-comparison-code">MC: Overhaul the state comparison code</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mc-hashing-the-states">MC: Hashing the states</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interface-with-the-model-checked-processes">Interface with the model-checked processes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generic-simcalls">Generic simcalls</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#defining-an-api-for-writing-model-checking-algorithms">Defining an API for writing Model-Checking algorithms</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Release_Notes.html">      Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="application.html">   Describing your application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_s4u.html">      The S4U interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">      S4U examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_smpi.html">      The SMPI interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="The_XBT_toolbox.html">      The XBT toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform.html">   Describing the simulated platform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_examples.html">      Network topology examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_routing.html">      Advanced routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="XML_reference.html">      XML reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_cpp.html">      C++ platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Models.html">   The SimGrid models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Modeling_howtos.html">      Modeling hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Calibrating_the_models.html">      Calibrating the models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plugins.html">      SimGrid plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Experimental_setup.html">   Running an experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Configuring_SimGrid.html">      Configuring SimGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Deploying_your_application.html">      Deploying your application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Outcomes.html">      Simulation outcomes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">SimGrid's Internals:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Design_goals.html">   Design goals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Contributors_Documentation.html">   Contributor's documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SimGrid</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">The SimGrid Community</li>
+  <li class="wy-breadcrumbs-aside">
+    
+
+      <a href="" class="fa fa-bitbucket"> Edit on FramaGit</a>
+    
+  </li>
+
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="the-simgrid-community">
+<span id="community"></span><h1>The SimGrid Community<a class="headerlink" href="#the-simgrid-community" title="Permalink to this heading"></a></h1>
+<p>SimGrid is a free software, written by a community of people. It
+started as a little software to help ourselves in our own research,
+and as more people put their input into the pot, it turned into
+something that we hope to be valuable to many people. So yes. We hope
+that SimGrid is helping you doing what you want, and that you will
+join our community of happy simgriders.</p>
+<section id="contacting-the-community">
+<h2>Contacting the community<a class="headerlink" href="#contacting-the-community" title="Permalink to this heading"></a></h2>
+<p>There are several locations where you can connect and discuss about
+SimGrid. If you have a question, please have a look at the
+documentation and examples first, but if some remain don’t hesitate to
+ask the community for help. If you do not have a question, just come
+to us and say hello! We love earing about how people use SimGrid.</p>
+<blockquote>
+<div><ul>
+<li><p>For questions or remarks, drop us an email on the <a class="reference external" href="mailto:simgrid-community&#37;&#52;&#48;inria&#46;fr">user mailing
+list</a> (to subscribe,
+visit the <a class="reference external" href="https://sympa.inria.fr/sympa/info/simgrid-community">web interface</a>).
+We prefer you to <strong>not use private emails</strong>. SimGrid is an open
+framework, and you never know who have the time and knowledge to
+answer your question, so please keep messages on the public mailing
+list.</p></li>
+<li><p>If you want to chat with the community, join us on <a class="reference external" href="https://framateam.org/simgrid/channels/town-square">Mattermost</a>. Be warned
+that even if many people are connected to the channel, they may not
+be staring at their chat windows. So don’t be surprised if you
+don’t get an answer in the second, and please be patient.</p>
+<p>If you prefer, you can reach us on IRC on #simgrid at
+<code class="docutils literal notranslate"><span class="pre">irc.debian.org</span></code> (the <a class="reference external" href="http://colabti.org/irclogger/irclogger_logs/simgrid">logs are available</a>). When no
+non-french speaker are connected, we usually chat in french on
+these channel, but we do switch back to english when we have a
+guest.</p>
+</li>
+<li><p>Asking your question on
+<a class="reference external" href="http://stackoverflow.com/questions/tagged/simgrid">StackOverflow</a>
+is also a good idea, as this
+site is very well indexed. We answer questions there too (don’t
+forget to use the SimGrid tag in your question so that we can see
+it), and they remain usable for the next users.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="giving-back-to-simgrid">
+<h2>Giving back to SimGrid<a class="headerlink" href="#giving-back-to-simgrid" title="Permalink to this heading"></a></h2>
+<p>We are sometimes asked by users how to give back to the project. Here
+are some ideas, but if you have new ones, feel free to share them with us.</p>
+<section id="provide-fresh-eyes-feedback">
+<h3>Provide fresh-eyes feedback<a class="headerlink" href="#provide-fresh-eyes-feedback" title="Permalink to this heading"></a></h3>
+<p>We are working on the project since years. We take for granted things that are hard to infer at first, and traps we don’t even see anymore.
+Likewise, it’s hard for us to maintain the documentation uptodate with the current situation, because we don’t rely on the doc when navigating the project.
+This is why your first impression as a newcomer to the project is utterly precious for us.
+Please make sure to write a <a class="reference external" href="https://diff.wikimedia.org/2014/03/25/seeing-through-the-eyes-of-new-technical-contributors/">discovery report</a> to enlight us.
+You can send it either as a bug report, as a mail on the list or simply post it as is to the Mattermost channel.</p>
+</section>
+<section id="spread-the-word">
+<h3>Spread the word<a class="headerlink" href="#spread-the-word" title="Permalink to this heading"></a></h3>
+<p>A simple way to help the SimGrid project is to <strong>use SimGrid for your research, and say so</strong>.
+<a class="reference external" href="https://simgrid.org/publications.html">Cite the SimGrid framework</a> in your papers and speak of it with your colleagues to spread the word.
+The number of publications enabled by SimGrid is really important when asking for further fundings to sustain the project:
+The more you use the framework, the better for us.</p>
+<p>Add a link to the <a class="reference external" href="https://simgrid.org">SimGrid homepage</a> on your site to improve our ranking in search engines.</p>
+<p>You can also <strong>help us constituting an active and welcoming user community</strong>. Answer to the question sent to the mailing lists if you can, gently pointing to
+the relevant part of the documentation on need, and help newscomers becoming part of our community too.</p>
+<p>Finally, you can invite us for a talk on SimGrid to events you organize.
+We have various format, ranging from a focused <a class="reference external" href="http://people.irisa.fr/Martin.Quinson/blog/2020/1124/SimGrid_presentations">20 minute talks</a>
+to a <a class="reference external" href="http://people.irisa.fr/Martin.Quinson/blog/2012/1120/Simgrid_at_Louvain/">45mn dense tutorial</a>,
+to a <a class="reference external" href="http://people.irisa.fr/Martin.Quinson/blog/2016/0524/Experimental_methodology_for_distributed_systems">2 hours seminar</a>, or
+even to <a class="reference external" href="https://simgrid.org/tutorials.html">multi-days events</a>.
+Note that even if most of these examples are from the same individual, several people in the team can present the project.
+It’s just that I wrote this paragraph so took the examples I knew, from my own experience :)</p>
+</section>
+<section id="report-and-fix-issues">
+<h3>Report (and fix) issues<a class="headerlink" href="#report-and-fix-issues" title="Permalink to this heading"></a></h3>
+<p>Because of its size and complexity, SimGrid far from perfect and
+contains a large amount of glitches and issues. When you find one,
+don’t assume that it’s here because we don’t care. It survived only
+because nobody told us. We unfortunately cannot endlessly review our
+large code and documentation base. So please, <strong>report any issue you
+find</strong>, be it a typo in the documentation, a paragraph that needs to
+be reworded, a bug in the code, or any other problem. The best way to
+do so is to open an issue on our
+<a class="reference external" href="https://framagit.org/simgrid/simgrid/issues">Bug Tracker</a> so
+that we don’t forget about it.</p>
+<p>The worst way to report such issues is to go through private emails.
+These are unreliable, and we are trying to develop SimGrid openly, so
+private discussions are to be avoided if possible.</p>
+<p>If you can provide a patch fixing the issue you report, that’s even
+better. If you cannot, then you need to give us a minimal working
+example (MWE), that is a ready to use solution that reproduces the
+problem you face. Your bug will take much more time
+for us to reproduce and fix if you don’t give us the MWE, so you want
+to help us helping you to get things efficient.</p>
+<p>Of course, a very good way to give back to the SimGrid community is to
+triage and fix the bugs in the Bug Tracking Systems. If the bug report
+has no MWE, we’d love you to contribute one. If you can come up with a
+patch, we will be more than happy to apply your changes so that the
+whole community enjoys them.</p>
+</section>
+</section>
+<section id="extending-simgrid-and-its-ecosystem">
+<h2>Extending SimGrid and its Ecosystem<a class="headerlink" href="#extending-simgrid-and-its-ecosystem" title="Permalink to this heading"></a></h2>
+<section id="contributing-code">
+<h3>Contributing Code<a class="headerlink" href="#contributing-code" title="Permalink to this heading"></a></h3>
+<p>If you deeply miss a feature in the framework, you should consider
+implementing it yourself. SimGrid is free software, meaning that you are
+free to help yourself. Of course, we’ll do our best to assist you in
+this task, so don’t hesitate to contact us with your idea.</p>
+<p>You could write a new plugin extending SimGrid in some way, or a
+routing model for another kind of network. But even if you write your own
+platform file, this is probably interesting to other users too, and
+could be included to SimGrid. Modeling accurately a given platform is
+a difficult work, which outcome is very precious to us.</p>
+<p>Or maybe you developed an independent tool on top of SimGrid. We’d
+love helping you gaining visibility by listing it in our
+<a class="reference external" href="https://simgrid.org/contrib.html">Contrib</a>.</p>
+</section>
+<section id="possible-enhancements">
+<h3>Possible Enhancements<a class="headerlink" href="#possible-enhancements" title="Permalink to this heading"></a></h3>
+<p>If you want to start working on the SimGrid codebase, here are a few
+ideas of things that could be done to improve the current code (not all of them
+are difficult, do trust yourself ;)</p>
+<section id="time-and-duration">
+<h4>Time and duration<a class="headerlink" href="#time-and-duration" title="Permalink to this heading"></a></h4>
+<p>We should avoir using “-1” to mean “forever” at least in S4U and in
+the internal code.  We should probably always use separate functions
+(<cite>wait</cite> vs <cite>wait_for</cite>).</p>
+</section>
+<section id="futures-and-promises">
+<h4>Futures and Promises<a class="headerlink" href="#futures-and-promises" title="Permalink to this heading"></a></h4>
+<blockquote>
+<div><ul class="simple">
+<li><p>Some features are missing in the Maestro future implementation
+(<cite>simgrid::kernel::Future</cite>, <cite>simgrid::kernel::Promise</cite>)
+could be extended to support additional features:
+<cite>when_any</cite>, <cite>shared_future</cite>, etc.</p></li>
+<li><p>The corresponding feature might then be implemented in the user process
+futures (<cite>simgrid::simix::Future</cite>).</p></li>
+<li><p>Currently <cite>.then()</cite> is not available for user futures. We would need to add
+a basic user event loop in order to queue the pending continuations.</p></li>
+<li><p>We might need to provide an option to cancel a pending operation. This
+might be achieved by defining some <cite>Action</cite> or <cite>Operation</cite> class with an
+API compatible with <cite>Future</cite> (and convertible to it) but with an
+additional <cite>.cancel()</cite> method.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="mc-overhaul-the-state-comparison-code">
+<h4>MC: Overhaul the state comparison code<a class="headerlink" href="#mc-overhaul-the-state-comparison-code" title="Permalink to this heading"></a></h4>
+<p>The state comparison code is quite complicated. It has very long functions and
+is programmed mostly using C idioms and is difficult to understand and debug.
+It is in need of an overhaul:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>cleanup, refactoring, usage of C++ features.</p></li>
+<li><p>The state comparison code works by inferring types of blocks allocated on the
+heap by following pointers from known roots (global variables, local
+variables). Usually the first type found for a given block is used even if
+a better one could be found later. By using a first pass of type inference,
+on each snapshot before comparing the states, we might use a better type
+information on the different blocks.</p></li>
+<li><p>We might benefit from adding logic for handling some known types. For
+example, both <cite>std::string</cite> and <cite>std::vector</cite> have a capacity which might
+be larger than the current size of the container. We should ignore
+the corresponding elements when comparing the states and inferring the types.</p></li>
+<li><p>Another difficulty in the state comparison code is the detection of
+dangling pointers. We cannot easily know if a pointer is dangling and
+dangling pointers might lead us to choose the wrong type when inferring
+heap blocks. We might mitigate this problem by delaying the reallocation of
+a freed block until there is no blocks pointing to it anymore using some
+sort of basic garbage-collector.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="mc-hashing-the-states">
+<h4>MC: Hashing the states<a class="headerlink" href="#mc-hashing-the-states" title="Permalink to this heading"></a></h4>
+<p>In order to speed up the state comparison an idea was to create a hash of the
+state. Only states with the same hash would need to be compared using the
+state comparison algorithm. Some information should not be included in the
+hash in order to avoid considering different states which would otherwise
+would have been considered equal.</p>
+<p>The states could be indexed by their hash. Currently they are indexed
+by the number of processes and the amount of heap currently allocated
+(see <cite>DerefAndCompareByNbProcessesAndUsedHeap</cite>).</p>
+<p>Good candidate information for the state hashing:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>number of processes;</p></li>
+<li><p>their backtraces (instruction addresses);</p></li>
+<li><p>their current simcall numbers;</p></li>
+<li><p>some simcall arguments (eg. number of elements in a waitany);</p></li>
+<li><p>number of pending communications;</p></li>
+<li><p>etc.</p></li>
+</ul>
+</div></blockquote>
+<p>Some basic infrastructure for this is already in the code (see <cite>mc_hash.cpp</cite>)
+but it is currently disabled.</p>
+</section>
+<section id="interface-with-the-model-checked-processes">
+<h4>Interface with the model-checked processes<a class="headerlink" href="#interface-with-the-model-checked-processes" title="Permalink to this heading"></a></h4>
+<p>The model checker reads many information about the model-checked process by
+<cite>process_vm_readv()</cite>-ing brutally the data structure of the model-checked
+process leading to some inefficient code such as maintaining copies of complex
+C++ structures in XBT dynars. We need a sane way to expose the relevant
+information to the model checker.</p>
+</section>
+<section id="generic-simcalls">
+<h4>Generic simcalls<a class="headerlink" href="#generic-simcalls" title="Permalink to this heading"></a></h4>
+<p>We have introduced some generic simcalls which can be used to execute a
+callback in a SimGrid Maestro context. It makes it a lot easier to interface
+the simulated process with the maestro. However, the callbacks for the
+model checker which cannot decide how it should handle them. We would need a
+solution for this if we want to be able to replace the simcalls the
+model checker cares about by generic simcalls.</p>
+</section>
+<section id="defining-an-api-for-writing-model-checking-algorithms">
+<h4>Defining an API for writing Model-Checking algorithms<a class="headerlink" href="#defining-an-api-for-writing-model-checking-algorithms" title="Permalink to this heading"></a></h4>
+<p>Currently, writing a new model-checking algorithms in SimGridMC is quite
+difficult: the logic of the model-checking algorithm is mixed with a lot of
+low-level concerns about the way the model checker is implemented. This makes it
+difficult to write new algorithms and difficult to understand, debug, and modify
+the existing ones. We need a clean API to express the model-checking algorithms
+in a form which is closer to the text-book/paper description. This API must
+be exposed in a language which is more adequate to this task.</p>
+<p>Tasks:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Design and implement a clean API to express model-checking algorithms.
+A <cite>Session</cite> class currently exists for this but is not feature complete
+and should probably be rewritten. It should be easy to create bindings
+for different languages on top of this API.</p></li>
+<li><p>Create a binding to some better suited, dynamic, scripting language
+(e.g., Lua).</p></li>
+<li><p>Rewrite the existing model-checking algorithms in this language using the
+new API.</p></li>
+</ol>
+</div></blockquote>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Start_your_own_project.html" class="btn btn-neutral float-left" title="Start your Own Project" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Release_Notes.html" class="btn btn-neutral float-right" title="SimGrid 4.x Release Notes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2002-2025, The SimGrid Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

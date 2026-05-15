@@ -1,0 +1,68 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>运行实验 - SimGrid 中文手册</title><style>
+:root{--bg:#f7f8fb;--sbg:#17182c;--stx:#d6d7e7;--muted:#8d90a8;--accent:#e94560;--txt:#272838;--hd:#16213e;--code:#f1f4f8;--bd:#dfe3ea;--note:#fff8e6}
+*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC",Arial,sans-serif;background:var(--bg);color:var(--txt);line-height:1.7;display:flex}
+nav{width:330px;min-width:330px;height:100vh;position:sticky;top:0;background:var(--sbg);color:var(--stx);overflow:auto;padding:18px 0;font-size:14px} nav h2{font-size:18px;padding:0 20px 12px;margin:0 0 6px;border-bottom:1px solid rgba(255,255,255,.12)} nav h2 a{color:#fff;text-decoration:none} nav h2 small{display:block;color:var(--muted);font-size:11px;font-weight:400;margin-top:2px}.sec{display:block;color:#56b6e8;font-weight:700;text-transform:uppercase;font-size:12px;padding:16px 20px 6px}nav a{display:block;color:var(--stx);text-decoration:none;padding:5px 20px 5px 30px}nav a:hover,nav a.active{background:rgba(233,69,96,.13);color:#ff6b86}main{width:min(1040px,calc(100vw - 330px));padding:34px 52px 90px}h1{font-size:34px;line-height:1.2;color:var(--hd);margin:0 0 18px}h2{font-size:25px;color:var(--hd);margin:42px 0 12px;padding-bottom:7px;border-bottom:2px solid var(--bd)}h3{font-size:20px;color:var(--hd);margin:30px 0 10px}h4{font-size:16px;color:#4b4f63;margin:22px 0 8px}p{margin:9px 0}a{color:#0f5e9c}pre{background:var(--code);border:1px solid var(--bd);border-radius:6px;padding:12px 15px;overflow:auto;line-height:1.45;font-size:12.5px}code{font-family:"SF Mono",Menlo,Consolas,monospace;background:var(--code);padding:1px 4px;border-radius:3px}pre code{background:transparent;padding:0}img{max-width:100%;height:auto;display:block;margin:16px auto}table{border-collapse:collapse;width:100%;margin:14px 0}td,th{border:1px solid var(--bd);padding:7px 9px}th{background:var(--code)}blockquote,.admonition{border-left:4px solid #f0c040;background:var(--note);padding:8px 14px;margin:14px 0}.meta{color:#687085;font-size:13px;margin-bottom:18px}.raw-note{background:#eef7ff;border:1px solid #cbe7ff;border-radius:6px;padding:10px 12px;margin-bottom:18px;font-size:13px}@media(max-width:900px){body{display:block}nav{position:relative;width:100%;min-width:0;height:auto}main{width:100%;padding:20px}}
+</style></head><body>
+<nav><h2><a href="index.html">SimGrid 4.1</a><small>中文本地化镜像</small></h2>
+<span class="sec">教程</span>
+<a href="Tutorial_Algorithms.html">模拟分布式算法</a>
+<a href="Tutorial_MPI_Applications.html">模拟 MPI 应用</a>
+<a href="Tutorial_Model-checking.html">模型检验算法</a>
+<a href="Tutorial_DAG.html">模拟 DAG</a>
+<span class="sec">用户手册</span>
+<a href="Introduction.html">简介</a>
+<a href="Installing_SimGrid.html">安装 SimGrid</a>
+<a href="Start_your_own_project.html">创建自己的项目</a>
+<a href="community.html">SimGrid 社区</a>
+<a href="Release_Notes.html">发布说明</a>
+<a href="application.html">描述应用程序</a>
+<a href="app_s4u.html">S4U 接口</a>
+<a href="Examples.html">S4U 示例</a>
+<a href="app_smpi.html">SMPI 接口</a>
+<a href="The_XBT_toolbox.html">XBT 工具箱</a>
+<a href="Platform.html">描述模拟平台</a>
+<a href="Platform_examples.html">网络拓扑示例</a>
+<a href="Platform_routing.html">高级路由</a>
+<a href="XML_reference.html">XML 参考</a>
+<a href="Platform_cpp.html">C++ 平台</a>
+<a href="Models.html">SimGrid 模型</a>
+<a href="Modeling_howtos.html">建模提示</a>
+<a href="Calibrating_the_models.html">校准模型</a>
+<a href="Plugins.html">SimGrid 插件</a>
+<a class="active" href="Experimental_setup.html">运行实验</a>
+<a href="Configuring_SimGrid.html">配置 SimGrid</a>
+<a href="Deploying_your_application.html">部署应用程序</a>
+<a href="Outcomes.html">模拟输出</a>
+<span class="sec">SimGrid 内部文档</span>
+<a href="Design_goals.html">设计目标</a>
+<a href="Contributors_Documentation.html">贡献者文档</a>
+</nav>
+<main><div class="meta">来源：<a href="https://simgrid.org/doc/latest/Experimental_setup.html">https://simgrid.org/doc/latest/Experimental_setup.html</a> · 本地化镜像生成，代码块与图片保留官方内容</div>
+<div class="raw-note">说明：本页采用镜像式本地化，导航和主要标题已中文化；代码块、命令输出和图片按官方页面原样保留，便于逐项核对。</div>
+
+             
+  <object id="TOC" data="graphical-toc.svg" type="image/svg+xml"></object>
+<script>
+window.onload=function() { // Wait for the SVG to be loaded before changing it
+  var elem=document.querySelector("#TOC").contentDocument.getElementById("XPSetupBox")
+  elem.style="opacity:0.93999999;fill:#ff0000;fill-opacity:0.1;stroke:#000000;stroke-width:0.35277778;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1";
+}
+</script>
+<br></br>
+<br></br><section id="describing-the-experimental-setup">
+<h1>Describing the Experimental Setup</h1>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Main concepts:</p>
+<ul class="simple">
+<li><p>Deployment file</p></li>
+<li><p>Availability and state profiles</p></li>
+<li><p>Reproducible random number generation</p></li>
+<li><p>Command line options, in particular on the model switching</p></li>
+</ul>
+</div>
+</section>
+
+
+           
+</main></body></html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SimGrid Design Goals &mdash; SimGrid  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="_static/showfile.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
+        <script src="_static/showfile.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contributor’s Documentation" href="Contributors_Documentation.html" />
+    <link rel="prev" title="Simulation outcomes" href="Outcomes.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SimGrid
+          </a>
+              <div class="version">
+                4.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Algorithms.html">     Simulating distributed algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_MPI_Applications.html">     Simulating MPI applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Model-checking.html">     Model-checking algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_DAG.html">Simulating DAG</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Manual:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">   Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installing_SimGrid.html">      Installing SimGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Start_your_own_project.html">      Start your own project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="community.html">      The SimGrid community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Release_Notes.html">      Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="application.html">   Describing your application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_s4u.html">      The S4U interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">      S4U examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_smpi.html">      The SMPI interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="The_XBT_toolbox.html">      The XBT toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform.html">   Describing the simulated platform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_examples.html">      Network topology examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_routing.html">      Advanced routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="XML_reference.html">      XML reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_cpp.html">      C++ platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Models.html">   The SimGrid models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Modeling_howtos.html">      Modeling hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Calibrating_the_models.html">      Calibrating the models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plugins.html">      SimGrid plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Experimental_setup.html">   Running an experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Configuring_SimGrid.html">      Configuring SimGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Deploying_your_application.html">      Deploying your application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Outcomes.html">      Simulation outcomes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">SimGrid's Internals:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">   Design goals</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#actors-and-activities">Actors and activities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parsimonious-model-versatility">Parsimonious model versatility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#model-checking">Model-checking</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Contributors_Documentation.html">   Contributor's documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SimGrid</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">SimGrid Design Goals</li>
+  <li class="wy-breadcrumbs-aside">
+    
+
+      <a href="" class="fa fa-bitbucket"> Edit on FramaGit</a>
+    
+  </li>
+
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="simgrid-design-goals">
+<span id="design"></span><h1>SimGrid Design Goals<a class="headerlink" href="#simgrid-design-goals" title="Permalink to this heading"></a></h1>
+<p>A SimGrid simulation boils down to a set of <strong>actors</strong> that use
+<strong>resources</strong> by performing <strong>activities</strong>. SimGrid provides several kinds of
+resources (link, CPU, disk, and synchronization objects such as mutexes
+and semaphores) along with the corresponding kinds of activities
+(communication, execution, I/O, synchronization). SimGrid users provide a
+platform instantiation (sets of interconnected resources) and an
+application (the code executed by actors) along with the actors’
+placement on the platform.</p>
+<p>The actors (i.e., the user code) can only interact with the platform
+through activities, which are somewhat similar to synchronizations.  Some
+are very natural (locking a mutex is a synchronization with the other
+actors that use the same mutex). Others activities implement more atypical
+kinds of synchronization: execution, communication, and I/O have a
+quantitative component that depends on the resources. Regardless, in
+SimGrid writing some data to disk, for instance, is seen as a
+synchronization with the other actors that use the same disk. When you lock
+a mutex, you can proceed only when that mutex gets unlocked by someone
+else.  Similarly, when you do an I/O, you can proceed only once the disk
+has delivered enough performance to fulfill your demand (while competing
+with concurrent demands for that same disk made by other actors).
+Communication activities have both a qualitative component (the actual
+communication starts only when both the sender and receiver are ready to
+proceed) and a quantitative component (consuming the communication power of
+the link resources).</p>
+<p>The design of SimGrid is driven by several design goals:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>reproducibility</strong>: re-executing the same simulation must lead to
+the exact same outcome, even if it runs on another computer or
+operating system. When possible, this should also be true across different
+versions of SimGrid.</p></li>
+<li><p><strong>sweet spot between simulation accuracy and simulation speed</strong>: running a given simulation should be as fast as possible but predict
+correct performance trends (or even provide accurate predictions when correctly calibrated).</p></li>
+<li><p><strong>versatility</strong>: ability to simulate many kinds of distributed system and application, while remaining parsimonious so as to not hinder usability. SimGrid tries to provide sane
+default settings along with the possibility to augment and modify
+the provided models and their settings for each relevant use case.</p></li>
+<li><p><strong>scalability</strong>: ability to deal with very large simulations in terms of the
+number of actors, the size of the platform, the number of
+events, or all all the above.</p></li>
+</ul>
+</div></blockquote>
+<section id="actors-and-activities">
+<h2>Actors and activities<a class="headerlink" href="#actors-and-activities" title="Permalink to this heading"></a></h2>
+<p>At the core of the SimGrid design lies the interactions between actors and
+activities. For the sake of reproducibility, the actors cannot interact
+directly with their environment: every interaction is serialized through a
+central component that processes them in a reproducible order. For the sake
+of speed, SimGrid is designed as an operating system: the actors issue
+<strong>simcalls</strong> (akin to system calls) to a simulation kernel (akin to an OS
+kernel) called the <strong>maestro</strong> that decides which actors can proceed and
+which ones must wait.</p>
+<p>A SimGrid simulation proceeds as a sequence of <strong>scheduling
+rounds</strong>. At each round, all actors that are not currently blocked on a
+simcall get executed. This is done by the maestro, which passes the control flow to the
+code of each actor, written by the user in either C++, C, Fortran or Python.
+The control flow is returned to the maestro when the actor
+blocks on its next simcall. If the time it takes to
+execute the actor’s code is of import to the simulator, it has to be the object
+of execution activities.  SMPI programs are automatically benchmarked, but
+these execution activities must be manually created if using S4U. The simulated
+time is discrete in SimGrid and only progresses between scheduling
+rounds. So all events occurring during a given scheduling round occur
+at the exact same simulated time, even if the actors are usually
+executed sequentially on a real platform.</p>
+<a class="reference internal image-reference" href="_images/design-scheduling-simulatedtime.svg"><img alt="_images/design-scheduling-simulatedtime.svg" class="align-center" height="156" src="_images/design-scheduling-simulatedtime.svg" width="603" /></a>
+<p>To modify their environment actors issue either <strong>immediate
+simcalls</strong> that take no time in the simulation (e.g., spawning another
+actor), or <strong>blocking simcalls</strong> that must wait for future events (e.g.,
+mutex locks require the mutex to be unlocked by its owner;
+communications wait for the network to provide have provided enough communication
+bandwidth to transfer the data). A given scheduling round is
+usually composed of several sub-scheduling rounds during which
+immediate simcalls are resolved. This ends when all actors are either
+terminated or within a blocking simcall. The simulation models are
+then used to compute the time at which the first pending simcall
+terminates. Time is advanced to that point, and a new scheduling
+round begins with all actors that became unblocked at that timestamp.</p>
+<p>Context switching between the actors and maestro is highly optimized
+for the sake of simulation performance. SimGrid provides several
+implementations of this mechanism, called <strong>context factories</strong>. These
+implementations fall into two categories: Preemptive contexts are
+based on standard system threads from the libstdc library.
+They are usually better supported by external
+debuggers and profiling tools, but less efficient. The most efficient
+factory use a non-preemptive mechanism that is written in assembly language and hand-tuned. This is possible because a given actor is never
+interrupted between consecutive simcalls in SimGrid.</p>
+<a class="reference internal image-reference" href="_images/design-scheduling-wallclock.svg"><img alt="_images/design-scheduling-wallclock.svg" class="align-center" height="76" src="_images/design-scheduling-wallclock.svg" width="489" /></a>
+<p>For the sake of performance, actors can be executed in parallel using several system threads which execute all actors in
+turn. In our experience, however, this rarely leads to significant performance improvement because most applications simulated with
+SimGrid are fine-grained: it’s often not worth simulating actors in parallel because the amount of work performed by each actor is too
+small. This is because the users tend to abstract away any large computations to simulate the control flow of their
+application efficiently. In addition, parallel simulation puts restrictions on the user’s code.
+For example, the existing SMPI implementation cannot be used in parallel yet.</p>
+<a class="reference internal image-reference" href="_images/design-scheduling-parallel.svg"><img alt="_images/design-scheduling-parallel.svg" class="align-center" height="104" src="_images/design-scheduling-parallel.svg" width="422" /></a>
+</section>
+<section id="parsimonious-model-versatility">
+<h2>Parsimonious model versatility<a class="headerlink" href="#parsimonious-model-versatility" title="Permalink to this heading"></a></h2>
+<p>Another main design goal of SimGrid is parsimonious versatility in
+modeling, that is, aiming to simulate very different things using the same
+simulation abstractions. To achieve this goal, the SimGrid implementation
+tends to unify all resource kinds and activity kinds. For instance, the
+classical notion of <strong>computational power</strong> is mirrored for
+<strong>communication power</strong> and <strong>I/O power</strong>. Asynchronous executions are less
+common than the asynchronous communications that proliferate in MPI but
+they are still provided for sake of symmetry: they even prove useful to
+simulate thread pools efficiently. SimGrid also provides asynchronous mutex
+locks for symmetry. The notion of <strong>pstate</strong> was introduced to model the
+step-wise variation of computational speed depending on the DVFS, and was
+reused to model the bootup and shutdown phases of a CPU: the computational
+speed is 0 at these specific pstates. This pstate notion was extended to
+represent the fact that the bandwidth provided by a wifi link to a given
+station depends on its signal-noise ratio (SNR). In summary, simulation
+abstractions are re-used and/or generalized as much as possible to serve a
+wide range of purposes.</p>
+<p>Furthermore, all provided resource models are very similar internally. They
+<a class="reference internal" href="Models.html#models-lmm"><span class="std std-ref">rely on linear inequation systems</span></a>, stating for example
+that the sum of the computational power received by all computation
+activities located on a given CPU cannot exceed the computational power
+provided by this CPU. This extends nicely to multi-resources activities
+such as communications that use several links, and also to parallel tasks
+(abstract activities representing a parallel execution kernel that consumes
+both the communication and computational power of a set of machines) or
+fluid I/O streams (abstract activities representing a data stream from disk
+to disk through the network). Specific coefficients are added to the linear
+system to mimic how the resources behavior in the real world. The resulting
+system is then solved using a max-min objective function that maximizes the
+minimum of all shares allocated to activities. Our experience shows that
+this approach can successfully be used for fast yet accurate simulations of
+complex phenomena, provided that the model’s coefficients and constants are
+carefully <a class="reference internal" href="Calibrating_the_models.html#models-calibration"><span class="std std-ref">calibrated</span></a>, i.e. tailored and
+instantiated to that phenomenon.</p>
+</section>
+<section id="model-checking">
+<h2>Model-checking<a class="headerlink" href="#model-checking" title="Permalink to this heading"></a></h2>
+<p>Even if it was not in its original goals, SimGrid now
+integrates a full-featured model-checker (dubbed MC or Mc SimGrid)
+that can exhaustively explore all execution paths that the application
+could experience. Conceptually, Mc SimGrid is built upon the ideas
+presented previously. Instead of using the resource models to compute
+the order of simcall terminations, it explores every order that is
+causally possible. In a simulation entailing only three concurrent
+events (i.e., simcalls) A, B, and C, it will first explore the
+scenario where the activities order is ABC, then ACB, then
+BAC, then BCA, then CAB and finally CBA. Of course, the number of
+scenarios to explore grows exponentially with the number of simcalls
+in the simulation. Mc SimGrid leverages reduction techniques to avoid
+re-exploring redundant traces.</p>
+<p>In practice, Mc SimGrid can be used to verify classical <a class="reference external" href="https://en.wikipedia.org/wiki/Linear_time_property">safety and
+liveness properties</a>, but also
+<a class="reference external" href="https://hal.inria.fr/hal-01953167/document">communication determinism</a>, a property that allows
+more efficient solutions toward fault-tolerance. It can alleviate the
+state space explosion problem through <a class="reference external" href="https://en.wikipedia.org/wiki/Partial_order_reduction">Dynamic Partial Ordering
+Reduction (DPOR)</a> and <a class="reference external" href="https://hal.inria.fr/hal-01900120/document">state
+equality</a>.</p>
+<p>Mc SimGrid is more experimental than other parts of SimGrid, such as SMPI that can now be used to run many full-featured
+MPI codes out of the box, but it’s constantly improving.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Outcomes.html" class="btn btn-neutral float-left" title="Simulation outcomes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Contributors_Documentation.html" class="btn btn-neutral float-right" title="Contributor’s Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2002-2025, The SimGrid Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

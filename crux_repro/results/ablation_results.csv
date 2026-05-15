@@ -1,0 +1,8 @@
+scheduler,topology,comm_plan,workload,placement_mode,placement_objective,makespan_s,avg_jct_s,avg_comm_s,useful_gpu_fraction,jobs,ranks,rounds,hosts,gpus_per_host
+random_same,star,ring,synthetic,replay,throughput,107.579156,75.983440,72.602627,0.076816,12,8,4,8,4
+random_intensity,star,ring,synthetic,replay,throughput,107.579114,75.983246,72.605020,0.076816,12,8,4,8,4
+place_only,star,ring,synthetic,replay,throughput,81.141146,46.452864,42.644567,0.101845,12,8,4,8,4
+path_only,star,ring,synthetic,replay,throughput,107.579156,75.983440,72.602627,0.076816,12,8,4,8,4
+priority_only,star,ring,synthetic,replay,throughput,107.579109,75.983195,72.605933,0.076816,12,8,4,8,4
+crux_no_compress,star,ring,synthetic,replay,throughput,81.141146,46.452864,42.644567,0.101845,12,8,4,8,4
+crux,star,ring,synthetic,replay,throughput,81.141146,46.452864,42.644567,0.101845,12,8,4,8,4

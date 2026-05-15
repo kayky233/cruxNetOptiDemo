@@ -537,6 +537,18 @@ crux_repro/results/simgrid_collective_congested_results.csv
 
 优先级：最高。拓扑可信度决定后续所有调度结论是否能和实机沟通。
 
+实机拓扑和网络时延接入的独立工程方案见：
+
+[实机环境拓扑与网络时延接入方案](REAL_ENV_TOPOLOGY_INTEGRATION.zh-CN.md)
+
+该方案把数据闭环拆成：
+
+```text
+华为接口 -> Collector -> TDSQL/Redis -> 优化器 -> Guardrails -> 华为控制接口
+```
+
+其中 TDSQL 保存权威历史与审计记录，Redis 保存低延迟在线环境快照；优化器只读取本地数据，不在调度关键路径上直接调用华为接口。网络链路选择和拓扑调整通过华为 Actuator Adapter 执行，具体接口待定。
+
 ### 11.2 优化二：用 HCCL benchmark 校准 collective 通信模型
 
 需要采集：
@@ -786,13 +798,15 @@ model_template -> compute_time / tensor_bytes / collective_plan
 
 建议按这个顺序推进：
 
-1. 拓扑配置化：把当前 C++ 内置拓扑抽成配置文件；
-2. HCCL benchmark 校准：先让单 job collective 时间可信；
-3. 增加 collective plan：Ring、Tree、Hierarchical、ReduceScatter、AllGather；
-4. 策略消融：区分 placement/path/priority/compression 的独立贡献；
-5. 接入 trace-driven workload：从 synthetic 走向生产轨迹；
-6. 加背景流和扰动：验证鲁棒性；
-7. 做可视化报告：把结果变成可以评审的材料。
+1. 实机只读采集：通过华为接口获取拓扑/链路/时延，落 TDSQL/Redis；
+2. 拓扑配置化：把当前 C++ 内置拓扑抽成配置文件，并支持从实机快照生成 SimGrid platform；
+3. HCCL benchmark 校准：先让单 job collective 时间可信；
+4. 增加 collective plan：Ring、Tree、Hierarchical、ReduceScatter、AllGather；
+5. 策略消融：区分 placement/path/priority/compression 的独立贡献；
+6. 接入 trace-driven workload：从 synthetic 走向生产轨迹；
+7. 加背景流和扰动：验证鲁棒性；
+8. 做可视化报告：把结果变成可以评审的材料；
+9. 小范围闭环控制：通过华为接口对测试集群/白名单 job 下发路径或拓扑调整，必须具备 dry-run、审计和回滚。
 
 一个比较现实的里程碑：
 

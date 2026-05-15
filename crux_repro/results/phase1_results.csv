@@ -1,0 +1,17 @@
+scheduler,topology,workload,placement_mode,placement_objective,makespan_s,avg_jct_s,avg_comm_s,useful_gpu_fraction,jobs,ranks,rounds,hosts,gpus_per_host
+random_same,star,synthetic,replay,throughput,107.579156,75.983440,72.602627,0.076816,12,8,4,8,4
+random_intensity,star,synthetic,replay,throughput,107.579114,75.983246,72.605020,0.076816,12,8,4,8,4
+crux_no_compress,star,synthetic,replay,throughput,81.141146,46.452864,42.644567,0.101845,12,8,4,8,4
+crux,star,synthetic,replay,throughput,81.141146,46.452864,42.644567,0.101845,12,8,4,8,4
+random_same,fat_tree,synthetic,replay,throughput,139.579172,97.557072,94.190816,0.059205,12,8,4,8,4
+random_intensity,fat_tree,synthetic,replay,throughput,139.579172,97.556829,94.192244,0.059205,12,8,4,8,4
+crux_no_compress,fat_tree,synthetic,replay,throughput,89.128830,63.386371,59.585826,0.092717,12,8,4,8,4
+crux,fat_tree,synthetic,replay,throughput,89.128830,63.386371,59.585826,0.092717,12,8,4,8,4
+random_same,three_tier_clos,synthetic,replay,throughput,129.744838,91.062087,87.692888,0.063693,12,8,4,8,4
+random_intensity,three_tier_clos,synthetic,replay,throughput,129.744839,91.061315,87.694667,0.063693,12,8,4,8,4
+crux_no_compress,three_tier_clos,synthetic,replay,throughput,89.129382,63.387617,59.587202,0.092717,12,8,4,8,4
+crux,three_tier_clos,synthetic,replay,throughput,89.129382,63.387617,59.587202,0.092717,12,8,4,8,4
+random_same,dragonfly,synthetic,replay,throughput,139.579251,97.557717,94.191454,0.059205,12,8,4,8,4
+random_intensity,dragonfly,synthetic,replay,throughput,139.579251,97.557470,94.192880,0.059205,12,8,4,8,4
+crux_no_compress,dragonfly,synthetic,replay,throughput,89.129028,63.386844,59.586346,0.092717,12,8,4,8,4
+crux,dragonfly,synthetic,replay,throughput,89.129028,63.386844,59.586346,0.092717,12,8,4,8,4

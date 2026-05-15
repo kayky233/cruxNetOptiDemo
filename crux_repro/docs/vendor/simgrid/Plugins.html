@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SimGrid Plugins &mdash; SimGrid  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="_static/showfile.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
+        <script src="_static/showfile.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Describing the Experimental Setup" href="Experimental_setup.html" />
+    <link rel="prev" title="Calibrating the models" href="Calibrating_the_models.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SimGrid
+          </a>
+              <div class="version">
+                4.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Algorithms.html">     Simulating distributed algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_MPI_Applications.html">     Simulating MPI applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Model-checking.html">     Model-checking algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_DAG.html">Simulating DAG</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Manual:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">   Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installing_SimGrid.html">      Installing SimGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Start_your_own_project.html">      Start your own project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="community.html">      The SimGrid community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Release_Notes.html">      Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="application.html">   Describing your application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_s4u.html">      The S4U interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">      S4U examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_smpi.html">      The SMPI interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="The_XBT_toolbox.html">      The XBT toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform.html">   Describing the simulated platform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_examples.html">      Network topology examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_routing.html">      Advanced routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="XML_reference.html">      XML reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_cpp.html">      C++ platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Models.html">   The SimGrid models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Modeling_howtos.html">      Modeling hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Calibrating_the_models.html">      Calibrating the models</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">      SimGrid plugins</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#defining-a-plugin">Defining a Plugin</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#existing-signals">Existing signals</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#existing-plugins">Existing Plugins</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#host-energy">Host Energy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#link-energy">Link Energy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#wifi-energy">WiFi Energy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#host-load">Host Load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#file-system">File System</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#battery">Battery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#solar-panel">Solar Panel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#chiller">Chiller</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Experimental_setup.html">   Running an experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Configuring_SimGrid.html">      Configuring SimGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Deploying_your_application.html">      Deploying your application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Outcomes.html">      Simulation outcomes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">SimGrid's Internals:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Design_goals.html">   Design goals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Contributors_Documentation.html">   Contributor's documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SimGrid</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">SimGrid Plugins</li>
+  <li class="wy-breadcrumbs-aside">
+    
+
+      <a href="" class="fa fa-bitbucket"> Edit on FramaGit</a>
+    
+  </li>
+
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="simgrid-plugins">
+<span id="plugins"></span><h1>SimGrid Plugins<a class="headerlink" href="#simgrid-plugins" title="Permalink to this heading"></a></h1>
+<object id="TOC" data="graphical-toc.svg" type="image/svg+xml"></object>
+<script>
+window.onload=function() { // Wait for the SVG to be loaded before changing it
+  var elem=document.querySelector("#TOC").contentDocument.getElementById("PluginsBox")
+  elem.style="opacity:0.93999999;fill:#ff0000;fill-opacity:0.1;stroke:#000000;stroke-width:0.35277778;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1";
+}
+</script>
+<br>
+<br><p>You can extend SimGrid without modifying it, thanks to our plugin
+mechanism. This page describes how to write your own plugin, and
+documents some of the plugins distributed with SimGrid:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="#plugin-host-load"><span class="std std-ref">Host Load</span></a>: monitors the load of the compute units.</p></li>
+<li><p><a class="reference internal" href="#plugin-host-energy"><span class="std std-ref">Host Energy</span></a>: models the energy dissipation of the compute units.</p></li>
+<li><p><a class="reference internal" href="#plugin-link-energy"><span class="std std-ref">Link Energy</span></a>: models the energy dissipation of the network.</p></li>
+<li><p><a class="reference internal" href="#plugin-link-energy-wifi"><span class="std std-ref">WiFi Energy</span></a>: models the energy dissipation of wifi links.</p></li>
+<li><p><a class="reference internal" href="#plugin-battery"><span class="std std-ref">Battery</span></a>: models batteries that get discharged by the energy consumption of a given host.</p></li>
+<li><p><a class="reference internal" href="#plugin-solar-panel"><span class="std std-ref">Solar Panel</span></a>: models solar panels which energy production depends on the solar irradiance.</p></li>
+<li><p><a class="reference internal" href="#plugin-chiller"><span class="std std-ref">Chiller</span></a>: models chillers which dissipate heat by consuming energy.</p></li>
+</ul>
+</div></blockquote>
+<p>You can activate these plugins with the <a class="reference internal" href="Configuring_SimGrid.html#cfg-plugin"><span class="std std-ref">–cfg=plugin</span></a> command
+line option, for example with <code class="docutils literal notranslate"><span class="pre">--cfg=plugin:host_energy</span></code>. You can get the full
+list of existing plugins with <code class="docutils literal notranslate"><span class="pre">--cfg=plugin:help</span></code>.</p>
+<section id="defining-a-plugin">
+<h2>Defining a Plugin<a class="headerlink" href="#defining-a-plugin" title="Permalink to this heading"></a></h2>
+<p>A plugin can get some additional code executed within the SimGrid
+kernel, and attach the data needed by that code to the SimGrid
+objects.</p>
+<p>The host load plugin in
+<a class="reference external" href="https://framagit.org/simgrid/simgrid/tree/master/src/plugins/host_load.cpp">src/plugins/host_load.cpp</a>
+constitutes a good introductory example. It defines a class
+<code class="docutils literal notranslate"><span class="pre">HostLoad</span></code> that is meant to be attached to each host. This class
+contains a <code class="docutils literal notranslate"><span class="pre">EXTENSION_ID</span></code> field that is mandatory to our extension
+mechanism. Then, the function <code class="docutils literal notranslate"><span class="pre">sg_host_load_plugin_init</span></code>
+initializes the plugin. It first calls
+<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Host::extension_create()</span></code> to register its
+extension to the <code class="docutils literal notranslate"><span class="pre">s4u::Host</span></code> objects, and then attaches some
+callbacks to signals.</p>
+<p>You can attach your own extension to most kinds of s4u object:
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u5ActorE" title="simgrid::s4u::Actor"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">Actors</span></code></a>,
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4DiskE" title="simgrid::s4u::Disk"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">Disks</span></code></a>,
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4HostE" title="simgrid::s4u::Host"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">Hosts</span></code></a> and
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4LinkE" title="simgrid::s4u::Link"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">Links</span></code></a>. If you need to extend another
+kind of objects, please let us now.</p>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4I0DpEN7simgrid3xbt6signalIF1RDp1PEEE">
+<span id="_CPPv3I0DpEN7simgrid3xbt6signalIF1RDp1PEEE"></span><span id="_CPPv2I0DpEN7simgrid3xbt6signalIF1RDp1PEEE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">R</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="sig-name descname"><span class="n"><span class="pre">P</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">simgrid</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">xbt</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">signal</span></span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0DpEN7simgrid3xbt6signalIF1RDp1PEEE" title="simgrid::xbt::signal&lt;R(P...)&gt;::R"><span class="n"><span class="pre">R</span></span></a><span class="p"><span class="pre">(</span></span><a class="reference internal" href="#_CPPv4I0DpEN7simgrid3xbt6signalIF1RDp1PEEE" title="simgrid::xbt::signal&lt;R(P...)&gt;::P"><span class="n"><span class="pre">P</span></span></a><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I0DpEN7simgrid3xbt6signalIF1RDp1PEEE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>A signal/slot mechanism, where you can attach callbacks to a given signal, and then fire the signal.</p>
+<p>The template parameter is the function signature of the signal (the return value currently ignored).</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0DpEN7simgrid3xbt6signalIF1RDp1PEEclEDp1P">
+<span id="_CPPv3I0DpEN7simgrid3xbt6signalIF1RDp1PEEclEDp1P"></span><span id="_CPPv2I0DpEN7simgrid3xbt6signalIF1RDp1PEEclEDp1P"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">R</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="sig-name descname"><span class="n"><span class="pre">P</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="sig-prename descclassname"><span class="n"><span class="pre">simgrid</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">xbt</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4I0DpEN7simgrid3xbt6signalIF1RDp1PEEE" title="simgrid::xbt::signal&lt;R(P...)&gt;"><span class="n"><span class="pre">signal</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0DpEN7simgrid3xbt6signalIF1RDp1PEEE" title="simgrid::xbt::signal&lt;R(P...)&gt;::R"><span class="n"><span class="pre">R</span></span></a><span class="p"><span class="pre">(</span></span><a class="reference internal" href="#_CPPv4I0DpEN7simgrid3xbt6signalIF1RDp1PEEE" title="simgrid::xbt::signal&lt;R(P...)&gt;::P"><span class="n"><span class="pre">P</span></span></a><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">()</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0DpEN7simgrid3xbt6signalIF1RDp1PEEE" title="simgrid::xbt::signal&lt;R(P...)&gt;::P"><span class="n"><span class="pre">P</span></span></a><span class="p"><span class="pre">...</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">args</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0DpEN7simgrid3xbt6signalIF1RDp1PEEclEDp1P" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Fire that signal, invoking all callbacks.</p>
+</dd></dl>
+
+<section id="existing-signals">
+<span id="s4u-api-signals"></span><h3>Existing signals<a class="headerlink" href="#existing-signals" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>In actors:
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u5Actor14on_creation_cbERKNSt8functionIFvR5ActorEEE" title="simgrid::s4u::Actor::on_creation_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Actor::on_creation</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u5Actor13on_suspend_cbERKNSt8functionIFvRK5ActorEEE" title="simgrid::s4u::Actor::on_suspend_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Actor::on_suspend</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u5Actor18on_this_suspend_cbERKNSt8functionIFvRK5ActorEEE" title="simgrid::s4u::Actor::on_this_suspend_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Actor::on_this_suspend</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u5Actor12on_resume_cbERKNSt8functionIFvRK5ActorEEE" title="simgrid::s4u::Actor::on_resume_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Actor::on_resume</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u5Actor17on_this_resume_cbERKNSt8functionIFvRK5ActorEEE" title="simgrid::s4u::Actor::on_this_resume_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Actor::on_this_resume</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u5Actor11on_sleep_cbERKNSt8functionIFvRK5ActorEEE" title="simgrid::s4u::Actor::on_sleep_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Actor::on_sleep</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u5Actor16on_this_sleep_cbERKNSt8functionIFvRK5ActorEEE" title="simgrid::s4u::Actor::on_this_sleep_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Actor::on_this_sleep</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u5Actor13on_wake_up_cbERKNSt8functionIFvRK5ActorEEE" title="simgrid::s4u::Actor::on_wake_up_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Actor::on_wake_up</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u5Actor18on_this_wake_up_cbERKNSt8functionIFvRK5ActorEEE" title="simgrid::s4u::Actor::on_this_wake_up_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Actor::on_this_wake_up</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u5Actor17on_host_change_cbERKNSt8functionIFvRK5ActorRK4HostEEE" title="simgrid::s4u::Actor::on_host_change_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Actor::on_host_change</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u5Actor22on_this_host_change_cbERKNSt8functionIFvRK5ActorRK4HostEEE" title="simgrid::s4u::Actor::on_this_host_change_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Actor::on_this_host_change</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u5Actor17on_termination_cbERKNSt8functionIFvRK5ActorEEE" title="simgrid::s4u::Actor::on_termination_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Actor::on_termination</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u5Actor22on_this_termination_cbERKNSt8functionIFvRK5ActorEEE" title="simgrid::s4u::Actor::on_this_termination_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Actor::on_this_termination</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u5Actor17on_destruction_cbERKNSt8functionIFvRK5ActorEEE" title="simgrid::s4u::Actor::on_destruction_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Actor::on_destruction</span></code></a></p></li>
+<li><p>In the engine:
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u6Engine23on_platform_creation_cbERKNSt8functionIFvvEEE" title="simgrid::s4u::Engine::on_platform_creation_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Engine::on_platform_creation</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u6Engine22on_platform_created_cbERKNSt8functionIFvvEEE" title="simgrid::s4u::Engine::on_platform_created_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Engine::on_platform_created</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u6Engine18on_time_advance_cbERKNSt8functionIFvdEEE" title="simgrid::s4u::Engine::on_time_advance_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Engine::on_time_advance</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u6Engine20on_simulation_end_cbERKNSt8functionIFvvEEE" title="simgrid::s4u::Engine::on_simulation_end_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Engine::on_simulation_end</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u6Engine14on_deadlock_cbERKNSt8functionIFvvEEE" title="simgrid::s4u::Engine::on_deadlock_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Engine::on_deadlock</span></code></a></p></li>
+<li><p>In resources:</p>
+<ul>
+<li><p><a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Disk14on_creation_cbERKNSt8functionIFvR4DiskEEE" title="simgrid::s4u::Disk::on_creation_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Disk::on_creation</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Disk17on_destruction_cbERKNSt8functionIFvRK4DiskEEE" title="simgrid::s4u::Disk::on_destruction_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Disk::on_destruction</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Disk22on_this_destruction_cbERKNSt8functionIFvRK4DiskEEE" title="simgrid::s4u::Disk::on_this_destruction_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Disk::on_this_destruction</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Disk11on_onoff_cbERKNSt8functionIFvRK4DiskEEE" title="simgrid::s4u::Disk::on_onoff_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Disk::on_onoff</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Disk16on_this_onoff_cbERKNSt8functionIFvRK4DiskEEE" title="simgrid::s4u::Disk::on_this_onoff_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Disk::on_this_onoff</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Disk27on_read_bandwidth_change_cbERKNSt8functionIFvRK4DiskEEE" title="simgrid::s4u::Disk::on_read_bandwidth_change_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Disk::on_read_bandwidth_change</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Disk32on_this_read_bandwidth_change_cbERKNSt8functionIFvRK4DiskEEE" title="simgrid::s4u::Disk::on_this_read_bandwidth_change_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Disk::on_this_read_bandwidth_change</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Disk28on_write_bandwidth_change_cbERKNSt8functionIFvRK4DiskEEE" title="simgrid::s4u::Disk::on_write_bandwidth_change_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Disk::on_write_bandwidth_change</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Disk33on_this_write_bandwidth_change_cbERKNSt8functionIFvRK4DiskEEE" title="simgrid::s4u::Disk::on_this_write_bandwidth_change_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Disk::on_this_write_bandwidth_change</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Disk21on_io_state_change_cbERKNSt8functionIFvRN6kernel8resource10DiskActionEN6kernel8resource6Action5StateEEEE" title="simgrid::s4u::Disk::on_io_state_change_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Disk::on_io_state_change</span></code></a></p></li>
+<li><p><a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Host14on_creation_cbERKNSt8functionIFvR4HostEEE" title="simgrid::s4u::Host::on_creation_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Host::on_creation</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Host17on_destruction_cbERKNSt8functionIFvRK4HostEEE" title="simgrid::s4u::Host::on_destruction_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Host::on_destruction</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Host22on_this_destruction_cbERKNSt8functionIFvRK4HostEEE" title="simgrid::s4u::Host::on_this_destruction_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Host::on_this_destruction</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Host11on_onoff_cbERKNSt8functionIFvRK4HostEEE" title="simgrid::s4u::Host::on_onoff_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Host::on_onoff</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Host16on_this_onoff_cbERKNSt8functionIFvRK4HostEEE" title="simgrid::s4u::Host::on_this_onoff_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Host::on_this_onoff</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Host18on_speed_change_cbERKNSt8functionIFvRK4HostEEE" title="simgrid::s4u::Host::on_speed_change_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Host::on_speed_change</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Host23on_this_speed_change_cbERKNSt8functionIFvRK4HostEEE" title="simgrid::s4u::Host::on_this_speed_change_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Host::on_this_speed_change</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Host23on_exec_state_change_cbERKNSt8functionIFvRN6kernel8resource9CpuActionEN6kernel8resource6Action5StateEEEE" title="simgrid::s4u::Host::on_exec_state_change_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Host::on_exec_state_change</span></code></a></p></li>
+<li><p><a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Link14on_creation_cbERKNSt8functionIFvR4LinkEEE" title="simgrid::s4u::Link::on_creation_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Link::on_creation</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Link17on_destruction_cbERKNSt8functionIFvRK4LinkEEE" title="simgrid::s4u::Link::on_destruction_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Link::on_destruction</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Link22on_this_destruction_cbERKNSt8functionIFvRK4LinkEEE" title="simgrid::s4u::Link::on_this_destruction_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Link::on_this_destruction</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Link11on_onoff_cbERKNSt8functionIFvRK4LinkEEE" title="simgrid::s4u::Link::on_onoff_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Link::on_onoff</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Link16on_this_onoff_cbERKNSt8functionIFvRK4LinkEEE" title="simgrid::s4u::Link::on_this_onoff_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Link::on_this_onoff</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Link22on_bandwidth_change_cbERKNSt8functionIFvRK4LinkEEE" title="simgrid::s4u::Link::on_bandwidth_change_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Link::on_bandwidth_change</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Link27on_this_bandwidth_change_cbERKNSt8functionIFvRK4LinkEEE" title="simgrid::s4u::Link::on_this_bandwidth_change_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Link::on_this_bandwidth_change</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Link32on_communication_state_change_cbERKNSt8functionIFvRN6kernel8resource13NetworkActionEN6kernel8resource6Action5StateEEEE" title="simgrid::s4u::Link::on_communication_state_change_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Link::on_communication_state_change</span></code></a></p></li>
+<li><p><a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u7NetZone14on_creation_cbERKNSt8functionIFvRK7NetZoneEEE" title="simgrid::s4u::NetZone::on_creation_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">NetZone::on_creation</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u7NetZone10on_seal_cbERKNSt8functionIFvRK7NetZoneEEE" title="simgrid::s4u::NetZone::on_seal_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">NetZone::on_seal</span></code></a></p></li>
+<li><p><a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u14VirtualMachine11on_start_cbERKNSt8functionIFvRK14VirtualMachineEEE" title="simgrid::s4u::VirtualMachine::on_start_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VirtualMachine::on_start</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u14VirtualMachine16on_this_start_cbERKNSt8functionIFvRK14VirtualMachineEEE" title="simgrid::s4u::VirtualMachine::on_this_start_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VirtualMachine::on_this_start</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u14VirtualMachine13on_started_cbERKNSt8functionIFvRK14VirtualMachineEEE" title="simgrid::s4u::VirtualMachine::on_started_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VirtualMachine::on_started</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u14VirtualMachine18on_this_started_cbERKNSt8functionIFvRK14VirtualMachineEEE" title="simgrid::s4u::VirtualMachine::on_this_started_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VirtualMachine::on_this_started</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u14VirtualMachine13on_suspend_cbERKNSt8functionIFvRK14VirtualMachineEEE" title="simgrid::s4u::VirtualMachine::on_suspend_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VirtualMachine::on_suspend</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u14VirtualMachine18on_this_suspend_cbERKNSt8functionIFvRK14VirtualMachineEEE" title="simgrid::s4u::VirtualMachine::on_this_suspend_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VirtualMachine::on_this_suspend</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u14VirtualMachine12on_resume_cbERKNSt8functionIFvRK14VirtualMachineEEE" title="simgrid::s4u::VirtualMachine::on_resume_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VirtualMachine::on_resume</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u14VirtualMachine17on_this_resume_cbERKNSt8functionIFvRK14VirtualMachineEEE" title="simgrid::s4u::VirtualMachine::on_this_resume_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VirtualMachine::on_this_resume</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u14VirtualMachine21on_migration_start_cbERKNSt8functionIFvRK14VirtualMachineEEE" title="simgrid::s4u::VirtualMachine::on_migration_start_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VirtualMachine::on_migration_start</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u14VirtualMachine26on_this_migration_start_cbERKNSt8functionIFvRK14VirtualMachineEEE" title="simgrid::s4u::VirtualMachine::on_this_migration_start_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VirtualMachine::on_this_migration_start</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u14VirtualMachine19on_migration_end_cbERKNSt8functionIFvRK14VirtualMachineEEE" title="simgrid::s4u::VirtualMachine::on_migration_end_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VirtualMachine::on_migration_end</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u14VirtualMachine24on_this_migration_end_cbERKNSt8functionIFvRK14VirtualMachineEEE" title="simgrid::s4u::VirtualMachine::on_this_migration_end_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VirtualMachine::on_this_migration_end</span></code></a></p></li>
+</ul>
+</li>
+<li><p>In activities:</p>
+<ul>
+<li><p><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Activity::on_veto</span></code>
+<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Activity::on_this_veto</span></code>
+<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Activity::on_start</span></code>
+<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Activity::on_this_start</span></code>
+<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Activity::on_suspend</span></code>
+<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Activity::on_this_suspend</span></code>
+<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Activity::on_resume</span></code>
+<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Activity::on_this_resume</span></code>
+<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Activity::on_completion</span></code>
+<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Activity::on_this_completion</span></code></p></li>
+<li><p><a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Comm10on_send_cbERKNSt8functionIFvRK4CommEEE" title="simgrid::s4u::Comm::on_send_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Comm::on_send</span></code></a>
+<a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Comm10on_recv_cbERKNSt8functionIFvRK4CommEEE" title="simgrid::s4u::Comm::on_recv_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Comm::on_recv</span></code></a></p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="existing-plugins">
+<h2>Existing Plugins<a class="headerlink" href="#existing-plugins" title="Permalink to this heading"></a></h2>
+<p>Only the major plugins are described here. Please check in src/plugins
+to explore the other ones.</p>
+<section id="host-energy">
+<span id="plugin-host-energy"></span><h3>Host Energy<a class="headerlink" href="#host-energy" title="Permalink to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object cpp">
+<span class="target" id="group__plugin__host__energy"></span><em><span class="pre">group</span></em> <span class="sig-name descname"><span class="pre">plugin_host_energy</span></span></dt>
+<dd><p><p><p>This is the energy plugin, enabling to account not only for computation time, but also for the dissipated energy in the
+simulated platform.
+To activate this plugin, first call <a class="reference internal" href="#_CPPv426sg_host_energy_plugin_initv" title="sg_host_energy_plugin_init"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">sg_host_energy_plugin_init()</span></code></a> before your loading your platform, and
+then use <a class="reference internal" href="#_CPPv427sg_host_get_consumed_energy15const_sg_host_t" title="sg_host_get_consumed_energy"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">sg_host_get_consumed_energy()</span></code></a> to retrieve the consumption of a given host.</p>
+<p>When the host is on, this energy consumption naturally depends on both the current CPU load and the host energy profile.
+According to our measurements, the consumption is somehow linear in the amount of cores at full speed, with an
+abnormality when all the cores are idle. The full details are in <a class="reference external" href="https://hal.inria.fr/hal-01523608">our scientific paper</a> on that topic.</p>
+<p>As a result, our energy model takes 4 parameters:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Idle</span></code> wattage (i.e., instantaneous consumption in Watt) when your host is up and running, but without anything to
+do.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Epsilon</span></code> wattage when all cores are at 0 or epsilon%, but not in Idle state.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AllCores</span></code> wattage when all cores of the host are at 100%.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Off</span></code> wattage when the host is turned off.</p></li>
+</ul>
+</div></blockquote>
+<p>Here is an example of XML declaration:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;host</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;HostA&quot;</span><span class="w"> </span><span class="na">speed=</span><span class="s">&quot;100.0Mf&quot;</span><span class="w"> </span><span class="na">core=</span><span class="s">&quot;4&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;prop</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;wattage_per_state&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;100.0:120.0:200.0&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;prop</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;wattage_off&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;10&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/host&gt;</span>
+</pre></div>
+</div>
+<p>If only two values are given, <code class="docutils literal notranslate"><span class="pre">Idle</span></code> is used for the missing <code class="docutils literal notranslate"><span class="pre">Epsilon</span></code> value.</p>
+<p>This example gives the following parameters: <code class="docutils literal notranslate"><span class="pre">Off</span></code> is 10 Watts; <code class="docutils literal notranslate"><span class="pre">Idle</span></code> is 100 Watts; <code class="docutils literal notranslate"><span class="pre">Epsilon</span></code> is 120 Watts and
+<code class="docutils literal notranslate"><span class="pre">AllCores</span></code> is 200 Watts.
+This is enough to compute the wattage as a function of the amount of loaded cores:</p>
+<table border="1">
+<tr><th>#Cores loaded</th><th>Wattage</th><th>Explanation</th></tr>
+<tr><td>0 (idle)</td><td> 100 Watts&nbsp;</td><td>Idle value</td></tr>
+<tr><td>1</td><td> 140 Watts</td><td> Linear extrapolation between Epsilon and AllCores</td></tr>
+<tr><td>2</td><td> 160 Watts</td><td> Linear extrapolation between Epsilon and AllCores</td></tr>
+<tr><td>3</td><td> 180 Watts</td><td> Linear extrapolation between Epsilon and AllCores</td></tr>
+<tr><td>4</td><td> 200 Watts</td><td> AllCores value</td></tr>
+</table><p>Here is how it looks graphically:</p>
+<a class="reference internal" href="_images/plugin-energy.svg"><img alt="_images/plugin-energy.svg" class="align-center" height="361" src="_images/plugin-energy.svg" width="401" /></a><p>As you can see, the <code class="docutils literal notranslate"><span class="pre">Epsilon</span></code> parameter allows to freely specify the slope you want, while using the 2 parameters
+version of the model (with only <code class="docutils literal notranslate"><span class="pre">Idle</span></code> and <code class="docutils literal notranslate"><span class="pre">AllCores</span></code>) requires that the <code class="docutils literal notranslate"><span class="pre">Idle</span></code> value is on the extension of the
+line crossing the consumption you mesure for each core amount. Please note that specifying the consumption for each core
+amount separately was not a solution because parallel tasks can use an amount of cores that is not an integer. The good
+news is that it was not necessary, as our experiments (detailed in the paper) show that the proposed linear model is
+sufficient to capture reality.</p>
+<h4>How does DVFS interact with the host energy model?</h4><p>If your host has several DVFS levels (several pstates), then you should give the energetic profile of each pstate level:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;host</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;HostC&quot;</span><span class="w"> </span><span class="na">speed=</span><span class="s">&quot;100.0Mf,50.0Mf,20.0Mf&quot;</span><span class="w"> </span><span class="na">core=</span><span class="s">&quot;4&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;prop</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;wattage_per_state&quot;</span>
+<span class="w">          </span><span class="na">value=</span><span class="s">&quot;95.0:120.0:200.0, 93.0:115.0:170.0, 90.0:110.0:150.0&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;prop</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;wattage_off&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;10&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/host&gt;</span>
+</pre></div>
+</div>
+<p>This encodes the following values:</p>
+<table border="1">
+<tr><th>pstate</th><th>Performance</th><th>Idle</th><th>Epsilon</th><th>AllCores</th></tr>
+<tr><td>0</td><td>100 Mflop/s</td><td>95 Watts</td><td>120 Watts</td><td>200 Watts</td></tr>
+<tr><td>1</td><td>50 Mflop/s</td><td>93 Watts</td><td>115 Watts</td><td>170 Watts</td></tr>
+<tr><td>2</td><td>20 Mflop/s</td><td>90 Watts</td><td>110 Watts</td><td>150 Watts</td></tr>
+</table><p>To change the pstate of a given CPU, use the following functions:
+<a class="reference internal" href="app_s4u.html#_CPPv422sg_host_get_nb_pstates15const_sg_host_t" title="sg_host_get_nb_pstates"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">sg_host_get_nb_pstates()</span></code></a>, <a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Host10set_pstateEm" title="simgrid::s4u::Host::set_pstate"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Host::set_pstate()</span></code></a>,
+<a class="reference internal" href="app_s4u.html#_CPPv424sg_host_get_pstate_speed15const_sg_host_tm" title="sg_host_get_pstate_speed"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">sg_host_get_pstate_speed()</span></code></a>.</p>
+<h4>How accurate are these models?</h4><p>This model cannot be more accurate than your instantiation: with the default values, your result will not be accurate at
+all. You can still get accurate energy prediction, provided that you carefully instantiate the model.
+The first step is to ensure that your timing prediction match perfectly. But this is only the first step of the path,
+and you really want to read <a class="reference external" href="https://hal.inria.fr/hal-01523608">this paper</a> to see all what you need to do
+before you can get accurate energy predictions.</p>
+</p>
+ </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv426sg_host_energy_plugin_initv">
+<span id="_CPPv326sg_host_energy_plugin_initv"></span><span id="_CPPv226sg_host_energy_plugin_initv"></span><span id="sg_host_energy_plugin_init"></span><span class="target" id="group__plugin__host__energy_1ga9f6ea89437ff1c73f0fea3460e2c32af"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_host_energy_plugin_init</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv426sg_host_energy_plugin_initv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Enable host energy plugin. </p>
+<p>Enable energy plugin to get joules consumption of each cpu. Call this function before loading your platform. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv425sg_host_energy_update_allv">
+<span id="_CPPv325sg_host_energy_update_allv"></span><span id="_CPPv225sg_host_energy_update_allv"></span><span id="sg_host_energy_update_all"></span><span class="target" id="group__plugin__host__energy_1gacd80921546311ea410b909eb13350585"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_host_energy_update_all</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv425sg_host_energy_update_allv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>updates the consumption of all hosts </p>
+<p>After this call, sg_host_get_consumed_energy() will not interrupt your process (until after the next clock update). </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv427sg_host_get_consumed_energy15const_sg_host_t">
+<span id="_CPPv327sg_host_get_consumed_energy15const_sg_host_t"></span><span id="_CPPv227sg_host_get_consumed_energy15const_sg_host_t"></span><span id="sg_host_get_consumed_energy__const_sg_host_t"></span><span class="target" id="group__plugin__host__energy_1gaa31034c51ec8205d3eec4c29290cfb6d"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_host_get_consumed_energy</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="app_s4u.html#_CPPv415const_sg_host_t" title="const_sg_host_t"><span class="n"><span class="pre">const_sg_host_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">host</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv427sg_host_get_consumed_energy15const_sg_host_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Returns the total energy consumed by the host so far (in Joules) </p>
+<p>Please note that since the consumption is lazily updated, it may require a simcall to update it. The result is that the actor requesting this value will be interrupted, the value will be updated in kernel mode before returning the control to the requesting actor. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv428sg_host_get_idle_consumption15const_sg_host_t">
+<span id="_CPPv328sg_host_get_idle_consumption15const_sg_host_t"></span><span id="_CPPv228sg_host_get_idle_consumption15const_sg_host_t"></span><span id="sg_host_get_idle_consumption__const_sg_host_t"></span><span class="target" id="group__plugin__host__energy_1gaa4d0d01377fcf46f45eefd666f1a5418"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_host_get_idle_consumption</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="app_s4u.html#_CPPv415const_sg_host_t" title="const_sg_host_t"><span class="n"><span class="pre">const_sg_host_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">host</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv428sg_host_get_idle_consumption15const_sg_host_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Get the amount of watt dissipated when the host is idling. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv431sg_host_get_idle_consumption_at15const_sg_host_ti">
+<span id="_CPPv331sg_host_get_idle_consumption_at15const_sg_host_ti"></span><span id="_CPPv231sg_host_get_idle_consumption_at15const_sg_host_ti"></span><span id="sg_host_get_idle_consumption_at__const_sg_host_t.i"></span><span class="target" id="group__plugin__host__energy_1gae3b93cc798df3f5a1c4be88e501e1b8e"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_host_get_idle_consumption_at</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="app_s4u.html#_CPPv415const_sg_host_t" title="const_sg_host_t"><span class="n"><span class="pre">const_sg_host_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">host</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">pstate</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv431sg_host_get_idle_consumption_at15const_sg_host_ti" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Get the amount of watt dissipated at the given pstate when the host is idling. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv422sg_host_get_wattmin_at15const_sg_host_ti">
+<span id="_CPPv322sg_host_get_wattmin_at15const_sg_host_ti"></span><span id="_CPPv222sg_host_get_wattmin_at15const_sg_host_ti"></span><span id="sg_host_get_wattmin_at__const_sg_host_t.i"></span><span class="target" id="group__plugin__host__energy_1ga6aa67d91f58de9a878e5b863fd4632de"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_host_get_wattmin_at</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="app_s4u.html#_CPPv415const_sg_host_t" title="const_sg_host_t"><span class="n"><span class="pre">const_sg_host_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">host</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">pstate</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422sg_host_get_wattmin_at15const_sg_host_ti" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Get the amount of watt dissipated at the given pstate when the host is at 0 or epsilon% CPU usage. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv422sg_host_get_wattmax_at15const_sg_host_ti">
+<span id="_CPPv322sg_host_get_wattmax_at15const_sg_host_ti"></span><span id="_CPPv222sg_host_get_wattmax_at15const_sg_host_ti"></span><span id="sg_host_get_wattmax_at__const_sg_host_t.i"></span><span class="target" id="group__plugin__host__energy_1gad0c8414cf230d10ad875eeaa3202f140"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_host_get_wattmax_at</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="app_s4u.html#_CPPv415const_sg_host_t" title="const_sg_host_t"><span class="n"><span class="pre">const_sg_host_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">host</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">pstate</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422sg_host_get_wattmax_at15const_sg_host_ti" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Returns the amount of watt dissipated at the given pstate when the host burns CPU at 100%. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv432sg_host_get_power_range_slope_at15const_sg_host_ti">
+<span id="_CPPv332sg_host_get_power_range_slope_at15const_sg_host_ti"></span><span id="_CPPv232sg_host_get_power_range_slope_at15const_sg_host_ti"></span><span id="sg_host_get_power_range_slope_at__const_sg_host_t.i"></span><span class="target" id="group__plugin__host__energy_1gabdac53747dc815cae2b466b7699dace3"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_host_get_power_range_slope_at</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="app_s4u.html#_CPPv415const_sg_host_t" title="const_sg_host_t"><span class="n"><span class="pre">const_sg_host_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">host</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">pstate</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv432sg_host_get_power_range_slope_at15const_sg_host_ti" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Returns the power slope at the given pstate. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv431sg_host_get_current_consumption15const_sg_host_t">
+<span id="_CPPv331sg_host_get_current_consumption15const_sg_host_t"></span><span id="_CPPv231sg_host_get_current_consumption15const_sg_host_t"></span><span id="sg_host_get_current_consumption__const_sg_host_t"></span><span class="target" id="group__plugin__host__energy_1ga95df58dff85d8af769e8a70bc051b05f"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_host_get_current_consumption</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="app_s4u.html#_CPPv415const_sg_host_t" title="const_sg_host_t"><span class="n"><span class="pre">const_sg_host_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">host</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv431sg_host_get_current_consumption15const_sg_host_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Returns the current consumption of the host. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="link-energy">
+<span id="plugin-link-energy"></span><h3>Link Energy<a class="headerlink" href="#link-energy" title="Permalink to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object cpp">
+<span class="target" id="group__plugin__link__energy"></span><em><span class="pre">group</span></em> <span class="sig-name descname"><span class="pre">plugin_link_energy</span></span></dt>
+<dd><p>This is the link energy plugin, accounting for the dissipated energy in the simulated platform.</p>
+<p>The energy consumption of a link depends directly on its current traffic load. Specify that consumption in your platform file as follows:</p>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">link</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;SWITCH1&quot;</span> <span class="n">bandwidth</span><span class="o">=</span><span class="s2">&quot;125Mbps&quot;</span> <span class="n">latency</span><span class="o">=</span><span class="s2">&quot;5us&quot;</span> <span class="n">sharing_policy</span><span class="o">=</span><span class="s2">&quot;SHARED&quot;</span> <span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">prop</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;wattage_range&quot;</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;100.0:200.0&quot;</span> <span class="o">/&gt;</span>
+<span class="o">&lt;</span><span class="n">prop</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;wattage_off&quot;</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;10&quot;</span> <span class="o">/&gt;</span>
+<span class="o">&lt;/</span><span class="n">link</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</p>
+<p>The first property means that when your link is switched on, but without anything to do, it will dissipate 100 Watts. If it’s fully loaded, it will dissipate 200 Watts. If its load is at 50%, then it will dissipate 150 Watts. The second property means that when your host is turned off, it will dissipate only 10 Watts (please note that these values are arbitrary).</p>
+<p>To simulate the energy-related elements, first call the sg_link_energy_plugin_init() before loading the platform and then use the following function to retrieve the consumption of a given link: sg_link_get_consumed_energy(). </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv426sg_link_energy_plugin_initv">
+<span id="_CPPv326sg_link_energy_plugin_initv"></span><span id="_CPPv226sg_link_energy_plugin_initv"></span><span id="sg_link_energy_plugin_init"></span><span class="target" id="group__plugin__link__energy_1ga485120e38318eeb616a3391118ee1a2b"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_link_energy_plugin_init</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv426sg_link_energy_plugin_initv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Enable energy plugin. </p>
+<p>Enable energy plugin to get joules consumption of each cpu. You should call this function before loading your platform. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv427sg_link_get_consumed_energy15const_sg_link_t">
+<span id="_CPPv327sg_link_get_consumed_energy15const_sg_link_t"></span><span id="_CPPv227sg_link_get_consumed_energy15const_sg_link_t"></span><span id="sg_link_get_consumed_energy__const_sg_link_t"></span><span class="target" id="group__plugin__link__energy_1ga150c5facace2c31ec1cb64830716eb5f"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_link_get_consumed_energy</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="app_s4u.html#_CPPv415const_sg_link_t" title="const_sg_link_t"><span class="n"><span class="pre">const_sg_link_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">link</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv427sg_link_get_consumed_energy15const_sg_link_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Returns the total energy consumed by the link so far (in Joules) </p>
+<p>Please note that since the consumption is lazily updated, it may require a simcall to update it. The result is that the actor requesting this value will be interrupted, the value will be updated in kernel mode before returning the control to the requesting actor. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="wifi-energy">
+<span id="plugin-link-energy-wifi"></span><h3>WiFi Energy<a class="headerlink" href="#wifi-energy" title="Permalink to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object cpp">
+<span class="target" id="group__plugin__link__energy__wifi"></span><em><span class="pre">group</span></em> <span class="sig-name descname"><span class="pre">plugin_link_energy_wifi</span></span></dt>
+<dd><p>This is the WiFi energy plugin, accounting for the dissipated energy of WiFi links. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv426sg_wifi_energy_plugin_initv">
+<span id="_CPPv326sg_wifi_energy_plugin_initv"></span><span id="_CPPv226sg_wifi_energy_plugin_initv"></span><span id="sg_wifi_energy_plugin_init"></span><span class="target" id="group__plugin__link__energy__wifi_1gaf7ebb858deb7c46a5a9f670fb31db624"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_wifi_energy_plugin_init</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv426sg_wifi_energy_plugin_initv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Initialize the wifi energy plugin. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="host-load">
+<span id="plugin-host-load"></span><h3>Host Load<a class="headerlink" href="#host-load" title="Permalink to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object cpp">
+<span class="target" id="group__plugin__host__load"></span><em><span class="pre">group</span></em> <span class="sig-name descname"><span class="pre">plugin_host_load</span></span></dt>
+<dd><p><p><p>In addition, this constitutes a good introductory example on how to write a plugin.
+It attaches an extension to each host to store some data, and places callbacks in the following signals:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Host14on_creation_cbERKNSt8functionIFvR4HostEEE" title="simgrid::s4u::Host::on_creation_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Host::on_creation_cb()</span></code></a>: Attach a new extension to the newly created host.</p></li>
+<li><p><a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Exec11on_start_cbERKNSt8functionIFvRK4ExecEEE" title="simgrid::s4u::Exec::on_start_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Exec::on_start_cb()</span></code></a>: Make note that a new execution started, increasing the load.</p></li>
+<li><p><a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Exec16on_completion_cbERKNSt8functionIFvRK4ExecEEE" title="simgrid::s4u::Exec::on_completion_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Exec::on_completion_cb()</span></code></a>: Make note that an execution completed, decreasing the load.</p></li>
+<li><p><a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Host11on_onoff_cbERKNSt8functionIFvRK4HostEEE" title="simgrid::s4u::Host::on_onoff_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Host::on_onoff_cb()</span></code></a>: Do what is appropriate when the host gets turned off or on.</p></li>
+<li><p><a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4Host18on_speed_change_cbERKNSt8functionIFvRK4HostEEE" title="simgrid::s4u::Host::on_speed_change_cb"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Host::on_speed_change_cb()</span></code></a>: Do what is appropriate when the DVFS is modified.</p></li>
+</ul>
+<p>Note that extensions are automatically destroyed when the host gets destroyed.</p>
+</div></blockquote>
+</p>
+ </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv424sg_host_load_plugin_initv">
+<span id="_CPPv324sg_host_load_plugin_initv"></span><span id="_CPPv224sg_host_load_plugin_initv"></span><span id="sg_host_load_plugin_init"></span><span class="target" id="group__plugin__host__load_1ga57678bbcb2ab8934569631772859ec5c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_host_load_plugin_init</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv424sg_host_load_plugin_initv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Initializes the HostLoad plugin. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv424sg_host_get_current_load15const_sg_host_t">
+<span id="_CPPv324sg_host_get_current_load15const_sg_host_t"></span><span id="_CPPv224sg_host_get_current_load15const_sg_host_t"></span><span id="sg_host_get_current_load__const_sg_host_t"></span><span class="target" id="group__plugin__host__load_1ga249d27751e58b0135630b98d93173eb8"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_host_get_current_load</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="app_s4u.html#_CPPv415const_sg_host_t" title="const_sg_host_t"><span class="n"><span class="pre">const_sg_host_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">host</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv424sg_host_get_current_load15const_sg_host_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Returns the current load of that host, as a ratio = achieved_flops / (core_current_speed * core_amount) </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv420sg_host_get_avg_load15const_sg_host_t">
+<span id="_CPPv320sg_host_get_avg_load15const_sg_host_t"></span><span id="_CPPv220sg_host_get_avg_load15const_sg_host_t"></span><span id="sg_host_get_avg_load__const_sg_host_t"></span><span class="target" id="group__plugin__host__load_1ga4ce8876aa626c1cb9ee36456c220b86f"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_host_get_avg_load</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="app_s4u.html#_CPPv415const_sg_host_t" title="const_sg_host_t"><span class="n"><span class="pre">const_sg_host_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">host</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420sg_host_get_avg_load15const_sg_host_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Returns the current load of that host. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv421sg_host_get_idle_time15const_sg_host_t">
+<span id="_CPPv321sg_host_get_idle_time15const_sg_host_t"></span><span id="_CPPv221sg_host_get_idle_time15const_sg_host_t"></span><span id="sg_host_get_idle_time__const_sg_host_t"></span><span class="target" id="group__plugin__host__load_1ga279c3cba588ff304ebd6886d897f5cf1"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_host_get_idle_time</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="app_s4u.html#_CPPv415const_sg_host_t" title="const_sg_host_t"><span class="n"><span class="pre">const_sg_host_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">host</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421sg_host_get_idle_time15const_sg_host_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Returns the time this host was idle since the last reset. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv427sg_host_get_total_idle_time15const_sg_host_t">
+<span id="_CPPv327sg_host_get_total_idle_time15const_sg_host_t"></span><span id="_CPPv227sg_host_get_total_idle_time15const_sg_host_t"></span><span id="sg_host_get_total_idle_time__const_sg_host_t"></span><span class="target" id="group__plugin__host__load_1gad981921a9beb61aeb6b137995751399c"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_host_get_total_idle_time</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="app_s4u.html#_CPPv415const_sg_host_t" title="const_sg_host_t"><span class="n"><span class="pre">const_sg_host_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">host</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv427sg_host_get_total_idle_time15const_sg_host_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Returns the time this host was idle since the beginning of the simulation. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv426sg_host_get_computed_flops15const_sg_host_t">
+<span id="_CPPv326sg_host_get_computed_flops15const_sg_host_t"></span><span id="_CPPv226sg_host_get_computed_flops15const_sg_host_t"></span><span id="sg_host_get_computed_flops__const_sg_host_t"></span><span class="target" id="group__plugin__host__load_1ga5f77f8f0c7e8c09ea475f9d156d8c1ff"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_host_get_computed_flops</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="app_s4u.html#_CPPv415const_sg_host_t" title="const_sg_host_t"><span class="n"><span class="pre">const_sg_host_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">host</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv426sg_host_get_computed_flops15const_sg_host_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Returns the amount of flops computed by that host since the last reset. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418sg_host_load_reset15const_sg_host_t">
+<span id="_CPPv318sg_host_load_reset15const_sg_host_t"></span><span id="_CPPv218sg_host_load_reset15const_sg_host_t"></span><span id="sg_host_load_reset__const_sg_host_t"></span><span class="target" id="group__plugin__host__load_1ga763ca29519a9c26123017b396a67383c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_host_load_reset</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="app_s4u.html#_CPPv415const_sg_host_t" title="const_sg_host_t"><span class="n"><span class="pre">const_sg_host_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">host</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418sg_host_load_reset15const_sg_host_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Resets the idle time and flops amount of that host. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv422sg_vm_load_plugin_initv">
+<span id="_CPPv322sg_vm_load_plugin_initv"></span><span id="_CPPv222sg_vm_load_plugin_initv"></span><span id="sg_vm_load_plugin_init"></span><span class="target" id="group__plugin__host__load_1gae9df466870f5a79f5ef35a2186befde0"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_vm_load_plugin_init</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422sg_vm_load_plugin_initv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Initializes the HostLoad plugin. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv422sg_vm_get_current_load15const_sg_host_t">
+<span id="_CPPv322sg_vm_get_current_load15const_sg_host_t"></span><span id="_CPPv222sg_vm_get_current_load15const_sg_host_t"></span><span id="sg_vm_get_current_load__const_sg_host_t"></span><span class="target" id="group__plugin__host__load_1ga43d992e8901527a1a3833e696cceecbd"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_vm_get_current_load</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="app_s4u.html#_CPPv415const_sg_host_t" title="const_sg_host_t"><span class="n"><span class="pre">const_sg_host_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">host</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422sg_vm_get_current_load15const_sg_host_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Returns the current load of that host, as a ratio = achieved_flops / (core_current_speed * core_amount) </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418sg_vm_get_avg_load15const_sg_host_t">
+<span id="_CPPv318sg_vm_get_avg_load15const_sg_host_t"></span><span id="_CPPv218sg_vm_get_avg_load15const_sg_host_t"></span><span id="sg_vm_get_avg_load__const_sg_host_t"></span><span class="target" id="group__plugin__host__load_1ga9d72418667658394e16403ed6615ba97"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_vm_get_avg_load</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="app_s4u.html#_CPPv415const_sg_host_t" title="const_sg_host_t"><span class="n"><span class="pre">const_sg_host_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">host</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418sg_vm_get_avg_load15const_sg_host_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Returns the current load of that host. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv419sg_vm_get_idle_time15const_sg_host_t">
+<span id="_CPPv319sg_vm_get_idle_time15const_sg_host_t"></span><span id="_CPPv219sg_vm_get_idle_time15const_sg_host_t"></span><span id="sg_vm_get_idle_time__const_sg_host_t"></span><span class="target" id="group__plugin__host__load_1gabb846961150e55ae9cbebbe1ca8d1af2"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_vm_get_idle_time</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="app_s4u.html#_CPPv415const_sg_host_t" title="const_sg_host_t"><span class="n"><span class="pre">const_sg_host_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">host</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419sg_vm_get_idle_time15const_sg_host_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Returns the time this host was idle since the last reset. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv425sg_vm_get_total_idle_time15const_sg_host_t">
+<span id="_CPPv325sg_vm_get_total_idle_time15const_sg_host_t"></span><span id="_CPPv225sg_vm_get_total_idle_time15const_sg_host_t"></span><span id="sg_vm_get_total_idle_time__const_sg_host_t"></span><span class="target" id="group__plugin__host__load_1gaf4fd4909dd23038da0de6b44c8d6a9c2"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_vm_get_total_idle_time</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="app_s4u.html#_CPPv415const_sg_host_t" title="const_sg_host_t"><span class="n"><span class="pre">const_sg_host_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">host</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv425sg_vm_get_total_idle_time15const_sg_host_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Returns the time this host was idle since the beginning of the simulation. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv424sg_vm_get_computed_flops15const_sg_host_t">
+<span id="_CPPv324sg_vm_get_computed_flops15const_sg_host_t"></span><span id="_CPPv224sg_vm_get_computed_flops15const_sg_host_t"></span><span id="sg_vm_get_computed_flops__const_sg_host_t"></span><span class="target" id="group__plugin__host__load_1gab13e96c360266c15a7f3c8236e19fea2"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_vm_get_computed_flops</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="app_s4u.html#_CPPv415const_sg_host_t" title="const_sg_host_t"><span class="n"><span class="pre">const_sg_host_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">host</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv424sg_vm_get_computed_flops15const_sg_host_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Returns the amount of flops computed by that host since the last reset. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv416sg_vm_load_reset15const_sg_host_t">
+<span id="_CPPv316sg_vm_load_reset15const_sg_host_t"></span><span id="_CPPv216sg_vm_load_reset15const_sg_host_t"></span><span id="sg_vm_load_reset__const_sg_host_t"></span><span class="target" id="group__plugin__host__load_1ga3dbff3192cd9d83333696882453d9098"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_vm_load_reset</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="app_s4u.html#_CPPv415const_sg_host_t" title="const_sg_host_t"><span class="n"><span class="pre">const_sg_host_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">host</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416sg_vm_load_reset15const_sg_host_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Resets the idle time and flops amount of that host. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="file-system">
+<span id="plugin-filesystem"></span><h3>File System<a class="headerlink" href="#file-system" title="Permalink to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object cpp">
+<span class="target" id="group__plugin__filesystem"></span><em><span class="pre">group</span></em> <span class="sig-name descname"><span class="pre">plugin_filesystem</span></span></dt>
+<dd><p>This adds the notion of Files on top of the storage notion that provided by the core of SimGrid. Activate this plugin at will. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-typedefs">Typedefs</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv49sg_file_t">
+<span id="_CPPv39sg_file_t"></span><span id="_CPPv29sg_file_t"></span><span id="sg_file_t"></span><span class="target" id="group__plugin__filesystem_1ga761ada56d185b27c9f36fb7635bc81bc"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="n"><span class="pre">s4u_File</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">sg_file_t</span></span></span><a class="headerlink" href="#_CPPv49sg_file_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Pointer to a SimGrid file object </p>
+</dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv415const_sg_file_t">
+<span id="_CPPv315const_sg_file_t"></span><span id="_CPPv215const_sg_file_t"></span><span id="const_sg_file_t"></span><span class="target" id="group__plugin__filesystem_1ga8292802c5535f9116a42a1fbe663b8bb"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">s4u_File</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">const_sg_file_t</span></span></span><a class="headerlink" href="#_CPPv415const_sg_file_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Constant pointer to a SimGrid file object </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv427sg_storage_file_system_initv">
+<span id="_CPPv327sg_storage_file_system_initv"></span><span id="_CPPv227sg_storage_file_system_initv"></span><span id="sg_storage_file_system_init"></span><span class="target" id="group__plugin__filesystem_1ga0a66e3b831ce6cd80a5b9ca12170c00d"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_storage_file_system_init</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv427sg_storage_file_system_initv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Initialize the file system plugin. </p>
+<p><p>See the examples in <a class="reference internal" href="Examples.html#s4u-ex-disk-io"><span class="std std-ref">I/O on Disks and Files</span></a>.</p>
+ </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv416sg_file_get_name15const_sg_file_t">
+<span id="_CPPv316sg_file_get_name15const_sg_file_t"></span><span id="_CPPv216sg_file_get_name15const_sg_file_t"></span><span id="sg_file_get_name__const_sg_file_t"></span><span class="target" id="group__plugin__filesystem_1gad3a304dff5b3fddb233af50b7b5051ab"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">sg_file_get_name</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv415const_sg_file_t" title="const_sg_file_t"><span class="n"><span class="pre">const_sg_file_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">fd</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416sg_file_get_name15const_sg_file_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Retrieves the path to the file </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv416sg_file_get_size15const_sg_file_t">
+<span id="_CPPv316sg_file_get_size15const_sg_file_t"></span><span id="_CPPv216sg_file_get_size15const_sg_file_t"></span><span id="sg_file_get_size__const_sg_file_t"></span><span class="target" id="group__plugin__filesystem_1ga929c2b5810b4063abc2245982e3ae442"></span><span class="n"><span class="pre">sg_size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_file_get_size</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv415const_sg_file_t" title="const_sg_file_t"><span class="n"><span class="pre">const_sg_file_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">fd</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416sg_file_get_size15const_sg_file_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Retrieves the size of the file </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv416sg_file_get_data15const_sg_file_t">
+<span id="_CPPv316sg_file_get_data15const_sg_file_t"></span><span id="_CPPv216sg_file_get_data15const_sg_file_t"></span><span id="sg_file_get_data__const_sg_file_t"></span><span class="target" id="group__plugin__filesystem_1ga8327ad5d95b0329807d013c94d47e470"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">sg_file_get_data</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv415const_sg_file_t" title="const_sg_file_t"><span class="n"><span class="pre">const_sg_file_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">fd</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416sg_file_get_data15const_sg_file_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Retrieves the user data associated with the file </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv416sg_file_set_data9sg_file_tPv">
+<span id="_CPPv316sg_file_set_data9sg_file_tPv"></span><span id="_CPPv216sg_file_set_data9sg_file_tPv"></span><span id="sg_file_set_data__sg_file_t.voidP"></span><span class="target" id="group__plugin__filesystem_1ga1632068579a5b131014067ad6fadf55e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_file_set_data</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv49sg_file_t" title="sg_file_t"><span class="n"><span class="pre">sg_file_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">fd</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416sg_file_set_data9sg_file_tPv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Changes the user data associated with the file </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv412sg_file_seek9sg_file_t11sg_offset_ti">
+<span id="_CPPv312sg_file_seek9sg_file_t11sg_offset_ti"></span><span id="_CPPv212sg_file_seek9sg_file_t11sg_offset_ti"></span><span id="sg_file_seek__sg_file_t.sg_offset_t.i"></span><span class="target" id="group__plugin__filesystem_1ga5c978b09c3e901b604095ac21fcc0a47"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_file_seek</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv49sg_file_t" title="sg_file_t"><span class="n"><span class="pre">sg_file_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">fd</span></span>, <span class="n"><span class="pre">sg_offset_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">offset</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">origin</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412sg_file_seek9sg_file_t11sg_offset_ti" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Set the file position indicator in the sg_file_t by adding offset bytes to the position specified by origin (either SEEK_SET, SEEK_CUR, or SEEK_END). </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fd</strong> – : file object that identifies the stream </p></li>
+<li><p><strong>offset</strong> – : number of bytes to offset from origin </p></li>
+<li><p><strong>origin</strong> – : Position used as reference for the offset. It is specified by one of the following constants defined in &lt;stdio.h&gt; exclusively to be used as arguments for this function (SEEK_SET = beginning of file, SEEK_CUR = current position of the file pointer, SEEK_END = end of file) </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv413sg_file_rcopy9sg_file_t9sg_host_tPKc">
+<span id="_CPPv313sg_file_rcopy9sg_file_t9sg_host_tPKc"></span><span id="_CPPv213sg_file_rcopy9sg_file_t9sg_host_tPKc"></span><span id="sg_file_rcopy__sg_file_t.sg_host_t.cCP"></span><span class="target" id="group__plugin__filesystem_1ga7eb26b34eec3e19f5673118bec4b5a03"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_file_rcopy</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv49sg_file_t" title="sg_file_t"><span class="n"><span class="pre">sg_file_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">file</span></span>, <a class="reference internal" href="app_s4u.html#_CPPv49sg_host_t" title="sg_host_t"><span class="n"><span class="pre">sg_host_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">host</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fullpath</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413sg_file_rcopy9sg_file_t9sg_host_tPKc" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Copy a file to another location on a remote host. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file</strong> – : the file to move </p></li>
+<li><p><strong>host</strong> – : the remote host where the file has to be copied </p></li>
+<li><p><strong>fullpath</strong> – : the complete path destination on the remote host </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>If successful, the function returns 0. Otherwise, it returns -1. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv413sg_file_rmove9sg_file_t9sg_host_tPKc">
+<span id="_CPPv313sg_file_rmove9sg_file_t9sg_host_tPKc"></span><span id="_CPPv213sg_file_rmove9sg_file_t9sg_host_tPKc"></span><span id="sg_file_rmove__sg_file_t.sg_host_t.cCP"></span><span class="target" id="group__plugin__filesystem_1ga5f4bdf4a1d5abd7dff4d59f07cf171c6"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sg_file_rmove</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv49sg_file_t" title="sg_file_t"><span class="n"><span class="pre">sg_file_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">file</span></span>, <a class="reference internal" href="app_s4u.html#_CPPv49sg_host_t" title="sg_host_t"><span class="n"><span class="pre">sg_host_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">host</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fullpath</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413sg_file_rmove9sg_file_t9sg_host_tPKc" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Move a file to another location on a remote host. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file</strong> – : the file to move </p></li>
+<li><p><strong>host</strong> – : the remote host where the file has to be moved </p></li>
+<li><p><strong>fullpath</strong> – : the complete path destination on the remote host </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>If successful, the function returns 0. Otherwise, it returns -1. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv45write9sg_size_tb">
+<span id="_CPPv35write9sg_size_tb"></span><span id="_CPPv25write9sg_size_tb"></span><span id="write__sg_size_t.b"></span><span class="target" id="group__plugin__filesystem_1gafcad90fc74d17f41607592f9844635c9"></span><span class="n"><span class="pre">sg_size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">write</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">sg_size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">size</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">write_inside</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv45write9sg_size_tb" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Write into a file (local or remote) </p>
+<p>Simulates a write action. Returns the size of data actually written.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>size</strong> – of the file to write </p></li>
+<li><p><strong>write_inside</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the number of bytes successfully write or -1 if an error occurred </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N7simgrid3s4u4FileE">
+<span id="_CPPv3N7simgrid3s4u4FileE"></span><span id="_CPPv2N7simgrid3s4u4FileE"></span><span id="simgrid::s4u::File"></span><span class="target" id="classsimgrid_1_1s4u_1_1File"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">File</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">simgrid</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">xbt</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Extendable</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N7simgrid3s4u4FileE" title="simgrid::s4u::File"><span class="n"><span class="pre">File</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N7simgrid3s4u4FileE" title="Permalink to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;file_system.h&gt;</em></div>
+<p>A simulated file. </p>
+<p>Used to simulate the time it takes to access to a file, but does not really store any information.</p>
+<p>They are located on <a class="reference internal" href="app_s4u.html#classsimgrid_1_1s4u_1_1Disk"><span class="std std-ref">simgrid::s4u::Disk</span></a> that are accessed from a given <a class="reference internal" href="app_s4u.html#classsimgrid_1_1s4u_1_1Host"><span class="std std-ref">simgrid::s4u::Host</span></a> </p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="battery">
+<span id="plugin-battery"></span><h3>Battery<a class="headerlink" href="#battery" title="Permalink to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object cpp">
+<span class="target" id="group__plugin__battery"></span><em><span class="pre">group</span></em> <span class="sig-name descname"><span class="pre">plugin_battery</span></span></dt>
+<dd><p><p><p>This is the battery plugin, enabling management of batteries.</p>
+<section id="batteries">
+<h4>Batteries<a class="headerlink" href="#batteries" title="Permalink to this heading"></a></h4>
+<p>A battery has an initial State of Charge <span class="math notranslate nohighlight">\(SoC\)</span>, a nominal charge power, a nominal discharge power, a charge
+efficiency <span class="math notranslate nohighlight">\(\eta_{charge}\)</span>, a discharge efficiency <span class="math notranslate nohighlight">\(\eta_{discharge}\)</span>, an initial capacity
+<span class="math notranslate nohighlight">\(C_{initial}\)</span> and a number of cycle <span class="math notranslate nohighlight">\(N\)</span>.</p>
+<p>The nominal charge(discharge) power is the maximum power the Battery can consume(provide), before application of the
+charge(discharge) efficiency factor. For instance, if a load provides(consumes) 100W to(from) the Battery with a nominal
+charge(discharge) power of 50W and a charge(discharge) efficiency of 0.9, the Battery will only gain(provide) 45W.</p>
+<p>We distinguish the energy provided <span class="math notranslate nohighlight">\(E_{provided}\)</span> / consumed <span class="math notranslate nohighlight">\(E_{consumed}\)</span> from the energy lost
+<span class="math notranslate nohighlight">\(E_{lost}\)</span> / gained <span class="math notranslate nohighlight">\(E_{gained}\)</span>. The energy provided / consumed shows the external point of view, and the
+energy lost / gained shows the internal point of view:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}E_{lost} = {E_{provided} \over \eta_{discharge}}\\E_{gained} = E_{consumed} \times \eta_{charge}\end{aligned}\end{align} \]</div>
+<p>For instance, if you apply a load of 100W to a battery for 10s with a discharge efficiency of 0.8, the energy provided
+will be equal to 10kJ, and the energy lost will be equal to 12.5kJ.</p>
+<p>All the energies are positive, but loads connected to a Battery may be positive or negative, as explained in the next
+section.</p>
+<p>Use the battery reduces its State of Health <span class="math notranslate nohighlight">\(SoH\)</span> and its capacity <span class="math notranslate nohighlight">\(C\)</span> linearly in consequence:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}SoH = 1 - {E_{lost} + E_{gained} \over E_{budget}}\\C = C_{initial} \times SoH\end{aligned}\end{align} \]</div>
+<p>With:</p>
+<div class="math notranslate nohighlight">
+\[E_{budget} = C_{initial} \times N \times 2\]</div>
+<p>Plotting the output of the example “battery-degradation” highlights the linear decrease of the <span class="math notranslate nohighlight">\(SoH\)</span> due to a
+continuous use of the battery alternating between charge and discharge:</p>
+<img alt="_images/battery_degradation.svg" class="align-center" src="_images/battery_degradation.svg" /><p>The natural depletion of batteries over time is not taken into account.</p>
+</section>
+<section id="loads-hosts">
+<h4>Loads &amp; Hosts<a class="headerlink" href="#loads-hosts" title="Permalink to this heading"></a></h4>
+<p>You can add named loads to a battery. Those loads may be positive and consume energy from the battery, or negative and
+provide energy to the battery. You can also connect hosts to a battery. Theses hosts will consume their energy from the
+battery until the battery is empty or until the connection between the hosts and the battery is set inactive.</p>
+</section>
+<section id="handlers">
+<h4>Handlers<a class="headerlink" href="#handlers" title="Permalink to this heading"></a></h4>
+<p>You can schedule handlers that will happen at specific SoC of the battery and trigger a callback.
+Theses handlers may be recurrent, for instance you may want to always set all loads to zero and deactivate all hosts
+connections when the battery reaches 20% SoC.</p>
+</section>
+<section id="connector">
+<h4>Connector<a class="headerlink" href="#connector" title="Permalink to this heading"></a></h4>
+<p>A Battery can act as a connector to connect Solar Panels direcly to loads. Such Battery is created without any
+parameter, cannot store energy and has a transfer efficiency of 100%.</p>
+</section>
+</p>
+ </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK19get_state_of_chargeEv">
+<span id="_CPPv3NK19get_state_of_chargeEv"></span><span id="_CPPv2NK19get_state_of_chargeEv"></span><span id="get_state_of_chargeC"></span><span class="target" id="group__plugin__battery_1ga043a82df7c769097b3944a58cd12da46"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_state_of_charge</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK19get_state_of_chargeEv" title="Permalink to this definition"></a><br /></dt>
+<dd><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For Battery::Handler objects </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The state of charge at which the Handler will happen. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK8get_flowEv">
+<span id="_CPPv3NK8get_flowEv"></span><span id="_CPPv2NK8get_flowEv"></span><span id="get_flowC"></span><span class="target" id="group__plugin__battery_1gae42307394e401fbe01f31fc529a99f77"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">Flow</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_flow</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK8get_flowEv" title="Permalink to this definition"></a><br /></dt>
+<dd><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For Battery::Handler objects </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The flow in which the Handler will happen, either when the Battery is charging or discharging. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK14get_time_deltaEv">
+<span id="_CPPv3NK14get_time_deltaEv"></span><span id="_CPPv2NK14get_time_deltaEv"></span><span id="get_time_deltaC"></span><span class="target" id="group__plugin__battery_1ga94f65df0bbce89ffdf2ff0a350ae69b7"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_time_delta</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK14get_time_deltaEv" title="Permalink to this definition"></a><br /></dt>
+<dd><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For Battery::Handler objects </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The time delta until the Handler happen. -1 means that is will never happen with the current state the Battery, for instance when there is no load connected to the Battery. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv412get_callbackv">
+<span id="_CPPv312get_callbackv"></span><span id="_CPPv212get_callbackv"></span><span id="get_callback"></span><span class="target" id="group__plugin__battery_1ga6ca01f12582910de7e47555bbf7abe61"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_callback</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412get_callbackv" title="Permalink to this definition"></a><br /></dt>
+<dd><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For Battery::Handler objects </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The callback to trigger when the Handler happen. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK15get_persistancyEv">
+<span id="_CPPv3NK15get_persistancyEv"></span><span id="_CPPv2NK15get_persistancyEv"></span><span id="get_persistancyC"></span><span class="target" id="group__plugin__battery_1ga3e2e3072112c4604a38fcad5936efcc8"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">Persistancy</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_persistancy</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK15get_persistancyEv" title="Permalink to this definition"></a><br /></dt>
+<dd><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For Battery::Handler objects </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>true if its a recurrent Handler. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv44initv">
+<span id="_CPPv34initv"></span><span id="_CPPv24initv"></span><span id="init"></span><span class="target" id="group__plugin__battery_1gab5e098186fb7d094dba1c75d3fa47367"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">BatteryPtr</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">init</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv44initv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Init a Battery with this constructor makes it only usable as a connector. A connector has no capacity and only delivers as much power as it receives with a transfer efficiency of 100%. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A BatteryPtr pointing to the new Battery. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv44initRKNSt6stringEddddddi">
+<span id="_CPPv34initRKNSt6stringEddddddi"></span><span id="_CPPv24initRKNSt6stringEddddddi"></span><span id="init__ssCR.double.double.double.double.double.double.i"></span><span class="target" id="group__plugin__battery_1ga06e5ac70009dee1975748cd309b2674f"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">BatteryPtr</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">init</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">name</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">state_of_charge</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">nominal_charge_power_w</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">nominal_discharge_power_w</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">charge_efficiency</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">discharge_efficiency</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">initial_capacity_wh</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cycles</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv44initRKNSt6stringEddddddi" title="Permalink to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – The name of the Battery. </p></li>
+<li><p><strong>state_of_charge</strong> – The initial state of charge of the Battery [0,1]. </p></li>
+<li><p><strong>nominal_charge_power_w</strong> – The maximum power absorbed by the Battery in W (&lt;= 0). </p></li>
+<li><p><strong>nominal_discharge_power_w</strong> – The maximum power delivered by the Battery in W (&gt;= 0). </p></li>
+<li><p><strong>charge_efficiency</strong> – The charge efficiency of the Battery [0,1]. </p></li>
+<li><p><strong>discharge_efficiency</strong> – The discharge efficiency of the Battery [0,1]. </p></li>
+<li><p><strong>initial_capacity_wh</strong> – The initial capacity of the Battery in Wh (&gt;0). </p></li>
+<li><p><strong>cycles</strong> – The number of charge-discharge cycles until complete depletion of the Battery capacity. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A BatteryPtr pointing to the new Battery. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv48set_loadRKNSt6stringEd">
+<span id="_CPPv38set_loadRKNSt6stringEd"></span><span id="_CPPv28set_loadRKNSt6stringEd"></span><span id="set_load__ssCR.double"></span><span class="target" id="group__plugin__battery_1gabb10e09fe115f71eabca226f64484e47"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_load</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">name</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">power_w</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48set_loadRKNSt6stringEd" title="Permalink to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – The name of the load </p></li>
+<li><p><strong>power_w</strong> – Power of the load in W. A positive value discharges the Battery while a negative value charges it. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv48set_loadRKNSt6stringEb">
+<span id="_CPPv38set_loadRKNSt6stringEb"></span><span id="_CPPv28set_loadRKNSt6stringEb"></span><span id="set_load__ssCR.b"></span><span class="target" id="group__plugin__battery_1gae4c6990c4d77c675d34f49441edcd10e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_load</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">name</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">active</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48set_loadRKNSt6stringEb" title="Permalink to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – The name of the load </p></li>
+<li><p><strong>active</strong> – Status of the load. If false then the load is ignored by the Battery. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv412connect_hostPKN3s4u4HostEb">
+<span id="_CPPv312connect_hostPKN3s4u4HostEb"></span><span id="_CPPv212connect_hostPKN3s4u4HostEb"></span><span id="connect_host__s4u::HostCP.b"></span><span class="target" id="group__plugin__battery_1ga6793afa9cb203dc03a39f1aee257cc53"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">connect_host</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">s4u</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Host</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">host</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">active</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">true</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412connect_hostPKN3s4u4HostEb" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Connect a Host to the Battery with the status active. As long as the status is true the Host takes its energy from the Battery. To modify this status connect again the same Host with a different status. </p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Do NOT connect the same Host to multiple Batteries with the status true at the same time. In this case all Batteries would have the full consumption from this Host. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>host</strong> – The Host to connect. </p></li>
+<li><p><strong>active</strong> – Status of the connected Host (default true). </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="group__plugin__battery_1ga0fe5360dcb014c8d9cd923013783ff4f"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_state_of_charge</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The state of charge of the battery. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK19get_state_of_healthEv">
+<span id="_CPPv3NK19get_state_of_healthEv"></span><span id="_CPPv2NK19get_state_of_healthEv"></span><span id="get_state_of_healthC"></span><span class="target" id="group__plugin__battery_1gad71db9ace071899b7cfec2dd48e706f4"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_state_of_health</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK19get_state_of_healthEv" title="Permalink to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The state of health of the Battery. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK12get_capacityEv">
+<span id="_CPPv3NK12get_capacityEv"></span><span id="_CPPv2NK12get_capacityEv"></span><span id="get_capacityC"></span><span class="target" id="group__plugin__battery_1ga2ce21077a8b6df9610f12113c593ad65"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_capacity</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK12get_capacityEv" title="Permalink to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The current capacity of the Battery. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK19get_energy_providedEv">
+<span id="_CPPv3NK19get_energy_providedEv"></span><span id="_CPPv2NK19get_energy_providedEv"></span><span id="get_energy_providedC"></span><span class="target" id="group__plugin__battery_1ga5750ece909f109bcd20c055dc2cb6f7b"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_energy_provided</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK19get_energy_providedEv" title="Permalink to this definition"></a><br /></dt>
+<dd><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is the energy provided from an external point of view, after application of the discharge efficiency. It means that the Battery lost more energy than it has provided. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The energy provided by the Battery. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK19get_energy_consumedEv">
+<span id="_CPPv3NK19get_energy_consumedEv"></span><span id="_CPPv2NK19get_energy_consumedEv"></span><span id="get_energy_consumedC"></span><span class="target" id="group__plugin__battery_1ga8acea7b7b2fbe9b40c954db0b6455cc7"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_energy_consumed</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK19get_energy_consumedEv" title="Permalink to this definition"></a><br /></dt>
+<dd><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is the energy consumed from an external point of view, before application of the charge efficiency. It means that the Battery consumed more energy than is has absorbed. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The energy consumed by the Battery. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK17get_energy_storedERKNSt6stringE">
+<span id="_CPPv3NK17get_energy_storedERKNSt6stringE"></span><span id="_CPPv2NK17get_energy_storedERKNSt6stringE"></span><span id="get_energy_stored__ssCRC"></span><span class="target" id="group__plugin__battery_1ga56a4d48f11c7edc72b4c4bcdc66609a2"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_energy_stored</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">unit</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;J&quot;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK17get_energy_storedERKNSt6stringE" title="Permalink to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>unit</strong> – Valid units are J (default) and Wh. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Energy stored in the Battery. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv416schedule_handlerd4FlowN7Handler11PersistancyENSt8functionIFvvEEE">
+<span id="_CPPv316schedule_handlerd4FlowN7Handler11PersistancyENSt8functionIFvvEEE"></span><span id="_CPPv216schedule_handlerd4FlowN7Handler11PersistancyENSt8functionIFvvEEE"></span><span class="target" id="group__plugin__battery_1ga1b69c221942309892db4ed7b5f193580"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">Handler</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">schedule_handler</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">state_of_charge</span></span>, <span class="n"><span class="pre">Flow</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">flow</span></span>, <span class="n"><span class="pre">Handler</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Persistancy</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">p</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">callback</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416schedule_handlerd4FlowN7Handler11PersistancyENSt8functionIFvvEEE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Schedule a new Handler. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_of_charge</strong> – The state of charge at which the Handler will happen. </p></li>
+<li><p><strong>flow</strong> – The flow in which the Handler will happen, either when the Battery is charging or discharging. </p></li>
+<li><p><strong>callback</strong> – The callable to trigger when the Handler happen. </p></li>
+<li><p><strong>p</strong> – If the Handler is recurrent or unique. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A shared pointer of the new Handler. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv412get_handlersv">
+<span id="_CPPv312get_handlersv"></span><span id="_CPPv212get_handlersv"></span><span id="get_handlers"></span><span class="target" id="group__plugin__battery_1gaefa24157e278491636283def7a60db21"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">Handler</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_handlers</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412get_handlersv" title="Permalink to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A vector containing the Handlers associated to the Battery. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv414delete_handlerNSt10shared_ptrI7HandlerEE">
+<span id="_CPPv314delete_handlerNSt10shared_ptrI7HandlerEE"></span><span id="_CPPv214delete_handlerNSt10shared_ptrI7HandlerEE"></span><span id="delete_handler__std::shared_ptr:Handler:"></span><span class="target" id="group__plugin__battery_1ga4f63d192ecdd18d8c59cfc352b2477a5"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">delete_handler</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">Handler</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">handler</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414delete_handlerNSt10shared_ptrI7HandlerEE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Remove an Handler from the Battery. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="solar-panel">
+<span id="plugin-solar-panel"></span><h3>Solar Panel<a class="headerlink" href="#solar-panel" title="Permalink to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object cpp">
+<span class="target" id="group__plugin__solar__panel"></span><em><span class="pre">group</span></em> <span class="sig-name descname"><span class="pre">plugin_solar_panel</span></span></dt>
+<dd><p><p><p>This is the solar panel plugin, enabling management of solar panels on hosts.</p>
+<p>This plugin allows the use of solar panels to generate power during simulation depending on size, solar
+irradiance and conversion factor.</p>
+<p>The power model is taken from the paper <a class="reference external" href="https://dro.dur.ac.uk/33395/1/33395.pdf?DDD280+kkgc95+vbdv77">“Reinforcement Learning Based Load Balancing for
+Geographically Distributed Data Centres”</a> by Max Mackie
+et. al.</p>
+<section id="id1">
+<h4>Solar Panel<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h4>
+<p>A solar panel has an area <span class="math notranslate nohighlight">\(A\)</span> in m², a conversion efficiency <span class="math notranslate nohighlight">\(\eta\)</span> and a solar irradiance <span class="math notranslate nohighlight">\(S\)</span> in
+W/m². The power generated <span class="math notranslate nohighlight">\(P\)</span> in W by a solar panel is given by the following equation:</p>
+<div class="math notranslate nohighlight">
+\[P = A \times \eta \times S\]</div>
+</section>
+</p>
+ </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-typedefs">Typedefs</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv413SolarPanelPtr">
+<span id="_CPPv313SolarPanelPtr"></span><span id="_CPPv213SolarPanelPtr"></span><span class="target" id="group__plugin__solar__panel_1ga66c59dbf268f66763c54c9e6e87191f1"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SolarPanelPtr</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">boost</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">intrusive_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">SolarPanel</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv413SolarPanelPtr" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv44initRKNSt6stringEddddd">
+<span id="_CPPv34initRKNSt6stringEddddd"></span><span id="_CPPv24initRKNSt6stringEddddd"></span><span id="init__ssCR.double.double.double.double.double"></span><span class="target" id="group__plugin__solar__panel_1ga06c0cd36fe673802d597e7717cc31647"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv413SolarPanelPtr" title="SolarPanelPtr"><span class="n"><span class="pre">SolarPanelPtr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">init</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">name</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">area_m2</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">conversion_efficiency</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">solar_irradiance_w_per_m2</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">min_power_w</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">max_power_w</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv44initRKNSt6stringEddddd" title="Permalink to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – The name of the Solar Panel. </p></li>
+<li><p><strong>area_m2</strong> – The area of the Solar Panel in m² (&gt; 0). </p></li>
+<li><p><strong>conversion_efficiency</strong> – The conversion efficiency of the Solar Panel [0,1]. </p></li>
+<li><p><strong>solar_irradiance_w_per_m2</strong> – The solar irradiance of the Solar Panel in W/m² (&gt; 0). </p></li>
+<li><p><strong>min_power_w</strong> – The minimal power delivered by the Solar Panel in W (&gt; 0 and &lt; max_power_w). </p></li>
+<li><p><strong>max_power_w</strong> – The maximal power delivered by the Solar Panel in W (&gt; 0 and &gt; min_power_w). </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SolarPanelPtr pointing to the new SolarPanel. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv48set_nameNSt6stringE">
+<span id="_CPPv38set_nameNSt6stringE"></span><span id="_CPPv28set_nameNSt6stringE"></span><span id="set_name__ss"></span><span class="target" id="group__plugin__solar__panel_1ga6a5d9b9966a2f8178cc45570cdba5876"></span><a class="reference internal" href="#_CPPv413SolarPanelPtr" title="SolarPanelPtr"><span class="n"><span class="pre">SolarPanelPtr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_name</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48set_nameNSt6stringE" title="Permalink to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – The new name of the Solar Panel. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SolarPanelPtr pointing to the modified SolarPanel. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv48set_aread">
+<span id="_CPPv38set_aread"></span><span id="_CPPv28set_aread"></span><span id="set_area__double"></span><span class="target" id="group__plugin__solar__panel_1ga5a6258b2e92e25ba49dc87804e98e1ce"></span><a class="reference internal" href="#_CPPv413SolarPanelPtr" title="SolarPanelPtr"><span class="n"><span class="pre">SolarPanelPtr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_area</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">area_m2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48set_aread" title="Permalink to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>area_m2</strong> – The new area of the Solar Panel in m². </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SolarPanelPtr pointing to the modified SolarPanel. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv425set_conversion_efficiencyd">
+<span id="_CPPv325set_conversion_efficiencyd"></span><span id="_CPPv225set_conversion_efficiencyd"></span><span id="set_conversion_efficiency__double"></span><span class="target" id="group__plugin__solar__panel_1ga9094ee525ac2b3c6dc4ea316e690db61"></span><a class="reference internal" href="#_CPPv413SolarPanelPtr" title="SolarPanelPtr"><span class="n"><span class="pre">SolarPanelPtr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_conversion_efficiency</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">e</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv425set_conversion_efficiencyd" title="Permalink to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>e</strong> – The new convesion efficiency of the Solar Panel. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SolarPanelPtr pointing to the modified SolarPanel. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv420set_solar_irradianced">
+<span id="_CPPv320set_solar_irradianced"></span><span id="_CPPv220set_solar_irradianced"></span><span id="set_solar_irradiance__double"></span><span class="target" id="group__plugin__solar__panel_1gabff379c8fda2d97445c44e3a774dd977"></span><a class="reference internal" href="#_CPPv413SolarPanelPtr" title="SolarPanelPtr"><span class="n"><span class="pre">SolarPanelPtr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_solar_irradiance</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">solar_irradiance_w_per_m2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420set_solar_irradianced" title="Permalink to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>solar_irradiance_w_per_m2</strong> – The new solar irradiance of the Solar Panel in W/m². </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SolarPanelPtr pointing to the modified SolarPanel. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv413set_min_powerd">
+<span id="_CPPv313set_min_powerd"></span><span id="_CPPv213set_min_powerd"></span><span id="set_min_power__double"></span><span class="target" id="group__plugin__solar__panel_1gaf5f285dadd789e3c6240e697760832a5"></span><a class="reference internal" href="#_CPPv413SolarPanelPtr" title="SolarPanelPtr"><span class="n"><span class="pre">SolarPanelPtr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_min_power</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">power_w</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413set_min_powerd" title="Permalink to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>power_w</strong> – The new minimal power of the Solar Panel in W. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SolarPanelPtr pointing to the modified SolarPanel. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv413set_max_powerd">
+<span id="_CPPv313set_max_powerd"></span><span id="_CPPv213set_max_powerd"></span><span id="set_max_power__double"></span><span class="target" id="group__plugin__solar__panel_1ga04b31dfe91ca24387434bb9df105dcd5"></span><a class="reference internal" href="#_CPPv413SolarPanelPtr" title="SolarPanelPtr"><span class="n"><span class="pre">SolarPanelPtr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_max_power</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">power_w</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413set_max_powerd" title="Permalink to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>power_w</strong> – The new maximal power of the Solar Panel in W. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SolarPanelPtr pointing to the modified SolarPanel. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="chiller">
+<span id="plugin-chiller"></span><h3>Chiller<a class="headerlink" href="#chiller" title="Permalink to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object cpp">
+<span class="target" id="group__plugin__chiller"></span><em><span class="pre">group</span></em> <span class="sig-name descname"><span class="pre">plugin_chiller</span></span></dt>
+<dd><p><p><p>This is the chiller plugin, enabling management of chillers.</p>
+<section id="id2">
+<h4>Chiller<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h4>
+<p>A chiller is placed inside a room with several machines. The role of the chiller is to keep the temperature of the room
+below a threshold. This plugin and its equations are based on the paper “Co-simulation of FMUs and Distributed
+Applications with SimGrid” by Camus et al. (<a class="reference external" href="https://hal.science/hal-01762540">https://hal.science/hal-01762540</a>).</p>
+<p>The heat generated inside the room <span class="math notranslate nohighlight">\(Q_{room}\)</span> depends on the heat from the machines <span class="math notranslate nohighlight">\(Q_{machines}\)</span> and
+from the heat of the other devices, such as lighing, accounted using a factor <span class="math notranslate nohighlight">\(\alpha\)</span> such as:</p>
+<div class="math notranslate nohighlight">
+\[Q_{room} = (1 + \alpha) \times Q_{machines}\]</div>
+<p>This energy heats the input temperature <span class="math notranslate nohighlight">\(T_{in}\)</span> and gives an output temperature <span class="math notranslate nohighlight">\(T_{out}\)</span> based on the
+mass of air inside the room <span class="math notranslate nohighlight">\(m_{air}\)</span> and its specific heat <span class="math notranslate nohighlight">\(C_{p}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[T_{out} = T_{in} + {Q_{room} \over m_{air} \times C_{p}}\]</div>
+<p>If the output temperature is above the goal temperature <span class="math notranslate nohighlight">\(T_{goal}\)</span> the chiller compensates the excessive heat
+using electrical energy <span class="math notranslate nohighlight">\(Q_{cooling}\)</span> depending on its cooling efficiency <span class="math notranslate nohighlight">\(\eta_{cooling}\)</span> :</p>
+<div class="math notranslate nohighlight">
+\[Q_{cooling} = (T_{out} - T_{goal}) \times m_{air} \times C_{p} / \eta_{cooling}\]</div>
+<p>The chiller has a power threshold that cannot be exceeded. If the power needed is above this threshold, or if the
+chiller is not active, the temperature of the room increases.</p>
+</section>
+</p>
+ </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-typedefs">Typedefs</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv410ChillerPtr">
+<span id="_CPPv310ChillerPtr"></span><span id="_CPPv210ChillerPtr"></span><span class="target" id="group__plugin__chiller_1ga98714c8be2e607307e7ddb87683e2f62"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ChillerPtr</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">boost</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">intrusive_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">Chiller</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv410ChillerPtr" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv44initRKNSt6stringEddddddd">
+<span id="_CPPv34initRKNSt6stringEddddddd"></span><span id="_CPPv24initRKNSt6stringEddddddd"></span><span id="init__ssCR.double.double.double.double.double.double.double"></span><span class="target" id="group__plugin__chiller_1ga19b6c05926420e4c8b311dc14e27e676"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410ChillerPtr" title="ChillerPtr"><span class="n"><span class="pre">ChillerPtr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">init</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">name</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">air_mass_kg</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">specific_heat_j_per_kg_per_c</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">alpha</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cooling_efficiency</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">initial_temp_c</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">goal_temp_c</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">max_power_w</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv44initRKNSt6stringEddddddd" title="Permalink to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – The name of the Chiller. </p></li>
+<li><p><strong>air_mass_kg</strong> – The air mass of the room managed by the Chiller in kg (&gt; 0). </p></li>
+<li><p><strong>specific_heat_j_per_kg_per_c</strong> – The specific heat of air in J per kg per °C (&gt; 0). </p></li>
+<li><p><strong>alpha</strong> – The ratio of the other devices in the total heat dissipation (e.g. lighting, Power Distribution Unit) (&gt;= 0). </p></li>
+<li><p><strong>cooling_efficiency</strong> – The cooling efficiency of the Chiller [0, 1]. </p></li>
+<li><p><strong>initial_temp_c</strong> – The initial temperature of the room managed by the Chiller. </p></li>
+<li><p><strong>goal_temp_c</strong> – The goal temperature of the room. The Chiller is idle below this temperature. </p></li>
+<li><p><strong>max_power_w</strong> – The maximal power delivered by the Chiller in W (&gt; 0). If this power is reached the room temperature will raise above the goal temperature. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A ChillerPtr pointing to the new Chiller. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="group__plugin__chiller_1ga95fca43f258473fdf679436952f5fe24"></span><a class="reference internal" href="#_CPPv410ChillerPtr" title="ChillerPtr"><span class="n"><span class="pre">ChillerPtr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_name</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">name</span></span><span class="sig-paren">)</span><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – The new name of the Chiller. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A ChillerPtr pointing to the modified Chiller. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv412set_air_massd">
+<span id="_CPPv312set_air_massd"></span><span id="_CPPv212set_air_massd"></span><span id="set_air_mass__double"></span><span class="target" id="group__plugin__chiller_1gab738dea2a5dbadcec76202d6c8746c91"></span><a class="reference internal" href="#_CPPv410ChillerPtr" title="ChillerPtr"><span class="n"><span class="pre">ChillerPtr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_air_mass</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">air_mass_kg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412set_air_massd" title="Permalink to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>air_mass_kg</strong> – The new air mass of the Chiller in kg. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A ChillerPtr pointing to the modified Chiller. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv417set_specific_heatd">
+<span id="_CPPv317set_specific_heatd"></span><span id="_CPPv217set_specific_heatd"></span><span id="set_specific_heat__double"></span><span class="target" id="group__plugin__chiller_1ga27ad99714311bc64cb784b2d35c06984"></span><a class="reference internal" href="#_CPPv410ChillerPtr" title="ChillerPtr"><span class="n"><span class="pre">ChillerPtr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_specific_heat</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">specific_heat_j_per_kg_per_c</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417set_specific_heatd" title="Permalink to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>specific_heat_j_per_kg_per_c</strong> – The specific heat of the Chiller in J per kg per °C. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A ChillerPtr pointing to the modified Chiller. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv49set_alphad">
+<span id="_CPPv39set_alphad"></span><span id="_CPPv29set_alphad"></span><span id="set_alpha__double"></span><span class="target" id="group__plugin__chiller_1gad249e9dc90ae7c4834b25df5fae8ad12"></span><a class="reference internal" href="#_CPPv410ChillerPtr" title="ChillerPtr"><span class="n"><span class="pre">ChillerPtr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_alpha</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">alpha</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49set_alphad" title="Permalink to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>alpha</strong> – The new alpha of the Chiller. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A ChillerPtr pointing to the modified Chiller. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv422set_cooling_efficiencyd">
+<span id="_CPPv322set_cooling_efficiencyd"></span><span id="_CPPv222set_cooling_efficiencyd"></span><span id="set_cooling_efficiency__double"></span><span class="target" id="group__plugin__chiller_1ga0fa12fb06134f1753f807ca993d022f6"></span><a class="reference internal" href="#_CPPv410ChillerPtr" title="ChillerPtr"><span class="n"><span class="pre">ChillerPtr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_cooling_efficiency</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cooling_efficiency</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422set_cooling_efficiencyd" title="Permalink to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cooling_efficiency</strong> – The new coolingefficiency of the Chiller. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A ChillerPtr pointing to the modified Chiller. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv413set_goal_tempd">
+<span id="_CPPv313set_goal_tempd"></span><span id="_CPPv213set_goal_tempd"></span><span id="set_goal_temp__double"></span><span class="target" id="group__plugin__chiller_1ga68191d6cdbf02084f24f2e2112e8d145"></span><a class="reference internal" href="#_CPPv410ChillerPtr" title="ChillerPtr"><span class="n"><span class="pre">ChillerPtr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_goal_temp</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">goal_temp_c</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413set_goal_tempd" title="Permalink to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>goal_temp_c</strong> – The new goal temperature of the Chiller in °C. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A ChillerPtr pointing to the modified Chiller. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="group__plugin__chiller_1gab11b4ac028341c30229c029bea5898f4"></span><a class="reference internal" href="#_CPPv410ChillerPtr" title="ChillerPtr"><span class="n"><span class="pre">ChillerPtr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_max_power</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">max_power_w</span></span><span class="sig-paren">)</span><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>max_power_w</strong> – The new maximal power of the Chiller in W. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A ChillerPtr pointing to the modified Chiller. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv410set_activeb">
+<span id="_CPPv310set_activeb"></span><span id="_CPPv210set_activeb"></span><span id="set_active__b"></span><span class="target" id="group__plugin__chiller_1ga44a8623724a07458b8dbb42eff7ea256"></span><a class="reference internal" href="#_CPPv410ChillerPtr" title="ChillerPtr"><span class="n"><span class="pre">ChillerPtr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_active</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">active</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410set_activeb" title="Permalink to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>active</strong> – The new active status of the Chiller. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A ChillerPtr pointing to the modified Chiller. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv48add_hostPKN7simgrid3s4u4HostE">
+<span id="_CPPv38add_hostPKN7simgrid3s4u4HostE"></span><span id="_CPPv28add_hostPKN7simgrid3s4u4HostE"></span><span id="add_host__simgrid::s4u::HostCP"></span><span class="target" id="group__plugin__chiller_1ga6e554612958c390ab7fe2b578d0a3aa6"></span><a class="reference internal" href="#_CPPv410ChillerPtr" title="ChillerPtr"><span class="n"><span class="pre">ChillerPtr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">add_host</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">simgrid</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">s4u</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4HostE" title="simgrid::s4u::Host"><span class="n"><span class="pre">Host</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">host</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48add_hostPKN7simgrid3s4u4HostE" title="Permalink to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>host</strong> – The host to add to the room managed by the Chiller. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A ChillerPtr pointing to the modified Chiller. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv411remove_hostPKN7simgrid3s4u4HostE">
+<span id="_CPPv311remove_hostPKN7simgrid3s4u4HostE"></span><span id="_CPPv211remove_hostPKN7simgrid3s4u4HostE"></span><span id="remove_host__simgrid::s4u::HostCP"></span><span class="target" id="group__plugin__chiller_1gae74b7446e7f0f7dcc5ba5ac8ab35ba1b"></span><a class="reference internal" href="#_CPPv410ChillerPtr" title="ChillerPtr"><span class="n"><span class="pre">ChillerPtr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">remove_host</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">simgrid</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">s4u</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4HostE" title="simgrid::s4u::Host"><span class="n"><span class="pre">Host</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">host</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411remove_hostPKN7simgrid3s4u4HostE" title="Permalink to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>host</strong> – The host to remove from the room managed by the Chiller. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A ChillerPtr pointing to the modified Chiller. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK21get_time_to_goal_tempEv">
+<span id="_CPPv3NK21get_time_to_goal_tempEv"></span><span id="_CPPv2NK21get_time_to_goal_tempEv"></span><span id="get_time_to_goal_tempC"></span><span class="target" id="group__plugin__chiller_1ga6e1cd3543acf27c2f673132e6b3a8a0c"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_time_to_goal_temp</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK21get_time_to_goal_tempEv" title="Permalink to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The time to reach to goal temp, assuming that the system remain in the same state. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Calibrating_the_models.html" class="btn btn-neutral float-left" title="Calibrating the models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Experimental_setup.html" class="btn btn-neutral float-right" title="Describing the Experimental Setup" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2002-2025, The SimGrid Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

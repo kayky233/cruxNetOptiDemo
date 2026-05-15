@@ -1,0 +1,232 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>贡献者文档 - SimGrid 中文手册</title><style>
+:root{--bg:#f7f8fb;--sbg:#17182c;--stx:#d6d7e7;--muted:#8d90a8;--accent:#e94560;--txt:#272838;--hd:#16213e;--code:#f1f4f8;--bd:#dfe3ea;--note:#fff8e6}
+*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC",Arial,sans-serif;background:var(--bg);color:var(--txt);line-height:1.7;display:flex}
+nav{width:330px;min-width:330px;height:100vh;position:sticky;top:0;background:var(--sbg);color:var(--stx);overflow:auto;padding:18px 0;font-size:14px} nav h2{font-size:18px;padding:0 20px 12px;margin:0 0 6px;border-bottom:1px solid rgba(255,255,255,.12)} nav h2 a{color:#fff;text-decoration:none} nav h2 small{display:block;color:var(--muted);font-size:11px;font-weight:400;margin-top:2px}.sec{display:block;color:#56b6e8;font-weight:700;text-transform:uppercase;font-size:12px;padding:16px 20px 6px}nav a{display:block;color:var(--stx);text-decoration:none;padding:5px 20px 5px 30px}nav a:hover,nav a.active{background:rgba(233,69,96,.13);color:#ff6b86}main{width:min(1040px,calc(100vw - 330px));padding:34px 52px 90px}h1{font-size:34px;line-height:1.2;color:var(--hd);margin:0 0 18px}h2{font-size:25px;color:var(--hd);margin:42px 0 12px;padding-bottom:7px;border-bottom:2px solid var(--bd)}h3{font-size:20px;color:var(--hd);margin:30px 0 10px}h4{font-size:16px;color:#4b4f63;margin:22px 0 8px}p{margin:9px 0}a{color:#0f5e9c}pre{background:var(--code);border:1px solid var(--bd);border-radius:6px;padding:12px 15px;overflow:auto;line-height:1.45;font-size:12.5px}code{font-family:"SF Mono",Menlo,Consolas,monospace;background:var(--code);padding:1px 4px;border-radius:3px}pre code{background:transparent;padding:0}img{max-width:100%;height:auto;display:block;margin:16px auto}table{border-collapse:collapse;width:100%;margin:14px 0}td,th{border:1px solid var(--bd);padding:7px 9px}th{background:var(--code)}blockquote,.admonition{border-left:4px solid #f0c040;background:var(--note);padding:8px 14px;margin:14px 0}.meta{color:#687085;font-size:13px;margin-bottom:18px}.raw-note{background:#eef7ff;border:1px solid #cbe7ff;border-radius:6px;padding:10px 12px;margin-bottom:18px;font-size:13px}@media(max-width:900px){body{display:block}nav{position:relative;width:100%;min-width:0;height:auto}main{width:100%;padding:20px}}
+</style></head><body>
+<nav><h2><a href="index.html">SimGrid 4.1</a><small>中文本地化镜像</small></h2>
+<span class="sec">教程</span>
+<a href="Tutorial_Algorithms.html">模拟分布式算法</a>
+<a href="Tutorial_MPI_Applications.html">模拟 MPI 应用</a>
+<a href="Tutorial_Model-checking.html">模型检验算法</a>
+<a href="Tutorial_DAG.html">模拟 DAG</a>
+<span class="sec">用户手册</span>
+<a href="Introduction.html">简介</a>
+<a href="Installing_SimGrid.html">安装 SimGrid</a>
+<a href="Start_your_own_project.html">创建自己的项目</a>
+<a href="community.html">SimGrid 社区</a>
+<a href="Release_Notes.html">发布说明</a>
+<a href="application.html">描述应用程序</a>
+<a href="app_s4u.html">S4U 接口</a>
+<a href="Examples.html">S4U 示例</a>
+<a href="app_smpi.html">SMPI 接口</a>
+<a href="The_XBT_toolbox.html">XBT 工具箱</a>
+<a href="Platform.html">描述模拟平台</a>
+<a href="Platform_examples.html">网络拓扑示例</a>
+<a href="Platform_routing.html">高级路由</a>
+<a href="XML_reference.html">XML 参考</a>
+<a href="Platform_cpp.html">C++ 平台</a>
+<a href="Models.html">SimGrid 模型</a>
+<a href="Modeling_howtos.html">建模提示</a>
+<a href="Calibrating_the_models.html">校准模型</a>
+<a href="Plugins.html">SimGrid 插件</a>
+<a href="Experimental_setup.html">运行实验</a>
+<a href="Configuring_SimGrid.html">配置 SimGrid</a>
+<a href="Deploying_your_application.html">部署应用程序</a>
+<a href="Outcomes.html">模拟输出</a>
+<span class="sec">SimGrid 内部文档</span>
+<a href="Design_goals.html">设计目标</a>
+<a class="active" href="Contributors_Documentation.html">贡献者文档</a>
+</nav>
+<main><div class="meta">来源：<a href="https://simgrid.org/doc/latest/Contributors_Documentation.html">https://simgrid.org/doc/latest/Contributors_Documentation.html</a> · 本地化镜像生成，代码块与图片保留官方内容</div>
+<div class="raw-note">说明：本页采用镜像式本地化，导航和主要标题已中文化；代码块、命令输出和图片按官方页面原样保留，便于逐项核对。</div>
+
+             
+  <section id="contributor-s-documentation">
+<span id="contrib-doc"></span><h1>Contributor’s Documentation</h1>
+<p>This page describes the software infrastructure for SimGrid potential contributors. It is particularly interesting if you plan to send some patches for
+inclusion in the project code.</p>
+<section id="enforcing-the-coding-standards">
+<h2>Enforcing the coding standards</h2>
+<p>If you plan to contribute code to the SimGrid project, you must ensure that your changes follow our coding standards. For that, simply install the relevant
+tools and scripts.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>install<span class="w"> </span>clang-format
+<span class="go">sudo apt-get install clang-format # debian/ubuntu</span>
+
+<span class="gp"># </span>tell<span class="w"> </span>git<span class="w"> </span>to<span class="w"> </span>call<span class="w"> </span>the<span class="w"> </span>script<span class="w"> </span>on<span class="w"> </span>each<span class="w"> </span>commit
+<span class="go">ln -s $(realpath tools/git-hooks/clang-format.pre-commit) .git/hooks/pre-commit</span>
+</pre></div>
+</div>
+<p>This will add an extra verification before integrating any commit that you could prepare. If your code does not respects our formatting code, git will say so,
+and provide a ready to use patch that you can apply to improve your commit. Just read the error message you get to find how to apply the fix after review.</p>
+<p>If you prefer not to apply the fix on a specific commit (because the formatter fails on this case), then add <code class="docutils literal notranslate"><span class="pre">--no-verify</span></code> to your git commit command line.</p>
+</section>
+<section id="interacting-with-cmake">
+<h2>Interacting with cmake</h2>
+<section id="configuring">
+<h3>Configuring</h3>
+<p>The <a class="reference internal" href="Installing_SimGrid.html#install-src-config"><span class="std std-ref">default build configuration</span></a> is intended for users, but contributors should change these settings for their comfort, and to
+produce better code. In particular, the default is to build highly optimized binaries, at the price of high compilation time and somewhat harder debug sessions.
+Instead, contributors want to disable the <code class="docutils literal notranslate"><span class="pre">enable_compile_optimizations</span></code> compile option. Likewise, <code class="docutils literal notranslate"><span class="pre">enable_compile_warnings</span></code> is off by default to not bother
+the users, but the contributors should really enable it, as your code will not be integrated if it raises warnings from the compiler.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cmake -Denable_compile_optimizations=OFF -Denable_compile_warnings=ON \</span>
+<span class="go">      -GNinja .</span>
+</pre></div>
+</div>
+<p>As you can see, we advise to use Ninja instead of the good old Makefiles. In our experience, Ninja is a bit faster because it does not fork as many external
+commands as make for basic operations.</p>
+</section>
+<section id="adding-a-new-file">
+<h3>Adding a new file</h3>
+<p>The content of the archive is mostly built from the lists given in <code class="docutils literal notranslate"><span class="pre">tools/cmake/DefinePackages.cmake</span></code>. The only exceptions are the files related to the
+examples, that are listed in the relevant <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> file, e.g. <code class="docutils literal notranslate"><span class="pre">examples/cpp/CMakeLists.txt</span></code>. This information is duplicated in <code class="docutils literal notranslate"><span class="pre">MANIFEST.in</span></code> for
+the python building process, that does not use cmake to build the archive.</p>
+<p>When you add a new file, you should use the relevant build target to check that every files followed by git are included in the archive or properly excluded (by
+being listed in <code class="docutils literal notranslate"><span class="pre">tools/internal/check_dist_archive.exclude</span></code>), and that all settings are consistent.</p>
+</section>
+</section>
+<section id="interacting-with-the-tests">
+<h2>Interacting with the tests</h2>
+<p>Breaking tests once in a while is completely OK in SimGrid. We accept temporarily breakages because we want things to evolve, but if you break something, it is
+your duty to fix it within 24 hours to not hinder the work of others.</p>
+<p>Note that need to build the tests with <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">examples</span></code> or <code class="docutils literal notranslate"><span class="pre">ninja</span> <span class="pre">examples</span></code> before running the tests with <code class="docutils literal notranslate"><span class="pre">ctest</span></code>. Calling
+<code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">all</span></code> is not enough for that. We never managed to explain CMake that it should build the binaries before running the
+tests: any hint is welcome.</p>
+<section id="understanding-the-existing-tests">
+<h3>Understanding the existing tests</h3>
+<p>We use unit tests based on <a class="reference external" href="https://github.com/catchorg/Catch2/">Catch2</a>, but most of our testing is done through integration tests that launch a specific
+simulation example and enforce that the output remains unchanged. Since SimGrid displays the timestamp of every logged event, such integration tests ensure that
+every change of the models’ prediction will be noticed. We designed a specific tool for these integration tests, called TESH (the TEsting SHell). <code class="docutils literal notranslate"><span class="pre">ctest</span></code> is
+used to run both unit and integration tests. You can <a class="reference internal" href="Installing_SimGrid.html#install-src-test"><span class="std std-ref">run only some of the tests</span></a> if you prefer. To launch the unit tests out of ctest,
+build and execute the <code class="docutils literal notranslate"><span class="pre">./unit-tests</span></code> binary (it accepts a <code class="docutils literal notranslate"><span class="pre">--help</span></code> parameter). To rebuild and run all tests, use the <code class="docutils literal notranslate"><span class="pre">./BuildSimGrid.sh</span></code> script.</p>
+<p>The SimGrid code base contains a lot of tests for a coverage well over 80%. We want the contributors to feel confident, and improve the code without fearing of
+breaking something without noticing. Tests must be fast (because we run them very often), the should stress many aspects of the code (to actually catch problems) and
+clear to read (understanding and debugging failures should be easy).</p>
+<p>In fact, our integration tests fall in two categories. The ones located in <code class="docutils literal notranslate"><span class="pre">examples/</span></code> are part of the documentation, so readability is utterly important
+here. The goal is that novice users could grab some of the provided examples and assemble them to constitute a first version of their simulator. These files can
+only load public header files, and we tend to avoid advanced C++ constructs that would hinder the readability of these files. On the other hand, the integration
+tests located in <code class="docutils literal notranslate"><span class="pre">teshsuite/</span></code> are usually torture tests trying to exhaustively cover all cases. They may be less readable and some even rely on a small DSL to
+describe all test cases and the expected result (check for example <code class="docutils literal notranslate"><span class="pre">teshsuite/models/cloud-sharing</span></code>), but they should still be rather easy to debug on need.
+For this reason, we tend to avoid random testing that is difficult to reproduce. For example, the tests under <code class="docutils literal notranslate"><span class="pre">teshsuite/models/</span></code> try to be very verbose to
+make the model intend clear, and the code easier to debug on need. The WiFi tests seem to be a good example of that trend.</p>
+</section>
+<section id="adding-a-test">
+<h3>Adding a test</h3>
+<p>We often say that a feature that is not tested is a feature that could soon disappear. So you want to write tests for the features you add. To add new unit
+tests, please refer to the end of <code class="docutils literal notranslate"><span class="pre">tools/cmake/Tests.cmake</span></code>) for some examples. Catch2 comes with a good documentation and many examples online. If you add a
+new feature, you should add an integration test in <code class="docutils literal notranslate"><span class="pre">examples/</span></code>. Your code should be instructive, documented, reusable, and its output must be perfectly
+reproducible. Some debugging information can be hidden when run from TESH with the <a class="reference internal" href="The_XBT_toolbox.html#c.XBT_LOG_ISENABLED" title="XBT_LOG_ISENABLED"><code class="xref c c-macro docutils literal notranslate"><span class="pre">XBT_LOG_ISENABLED</span></code></a> macro. You then need to write a tesh file,
+following the syntax described in this man page: <code class="docutils literal notranslate"><span class="pre">man</span> <span class="pre">-l</span> <span class="pre">manpages/tesh.1</span></code> Finally, you should add your source code and tesh file to the cmake infrastructure
+by modifying for example the <code class="docutils literal notranslate"><span class="pre">examples/cpp/CMakeLists.txt</span></code> file. The test name shall allow the filtering of tests with <code class="docutils literal notranslate"><span class="pre">ctest</span> <span class="pre">-R</span></code>. Do not forget to run
+<code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">distcheck</span></code> once you’re done to check that you did not forget to add your new files to the distribution.</p>
+</section>
+<section id="noteworthy-tests">
+<h3>Noteworthy tests</h3>
+<p>Here is a short list of some typical tests in SimGrid, in the hope that they can give you some inspiration for your own tests.
+Note that good tests rarely involve randomness, which makes it difficult to understand and fix problems when they occur.</p>
+<ul>
+<li><p>Several <strong>model tests</strong> display the full computation and expected results for some simple cases. Check for example the tesh files
+of <a class="reference external" href="https://framagit.org/simgrid/simgrid/-/tree/master/teshsuite/models/cm02-tcpgamma">teshsuite/models/cm02-tcpgamma/</a>
+(about the impact of the <a class="reference internal" href="Configuring_SimGrid.html#cfg-network-tcp-gamma"><span class="std std-ref">Maximal TCP Window Size</span></a> parameter), <a class="reference external" href="https://framagit.org/simgrid/simgrid/-/tree/master/teshsuite/models/wifi_usage">teshsuite/models/wifi_usage/</a> (on the wifi network model),
+<a class="reference external" href="https://framagit.org/simgrid/simgrid/-/tree/master/teshsuite/models/wifi_usage_decay">teshsuite/models/wifi_usage_decay/</a>
+(on the decay component of the wifi model, for highly congestioned APs), or <a class="reference external" href="https://framagit.org/simgrid/simgrid/-/tree/master/teshsuite/models/ptask_L07_usage">teshsuite/models/ptask_L07_usage/</a> (on parallel tasks). The goal of these tests
+is to be easy to understand just by reading their output.</p>
+<p><a class="reference external" href="https://framagit.org/simgrid/simgrid/-/tree/master/teshsuite/models/cloud-sharing">teshsuite/models/cloud-sharing/</a> is a
+bit special here, because it introduces a mini-DSL. Its purpose is to test the CPU sharing between competing tasks with and
+without VMs. The model is not very complex, but the corresponding code is somewhat intricated, thus the need for such an
+extensive testing. In this test, <code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">[o]2</span> <span class="pre">)4</span></code> denotes a test with only one task (only one <code class="docutils literal notranslate"><span class="pre">o</span></code>) on a VM with two cores (<code class="docutils literal notranslate"><span class="pre">[</span>
+<span class="pre">]2</span></code>), which is itself on a PM with four cores (<code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">)4</span></code>). Likewise, <code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">[oo]1</span> <span class="pre">[</span> <span class="pre">]1</span> <span class="pre">)2</span></code> tests 2 VMs with one core each, one of
+them being empty and the other containing 2 active tasks. Both VMs are located on a PM with two cores.  <br></br>
+For each of these tests, we ensure that the performance delivered to each task matches our expectations, and that the reported
+amount of used cores is also correct to ensure correct energy predictions.</p>
+</li>
+<li><p>We also have several <strong>torture tests</strong>, such as <a class="reference external" href="https://framagit.org/simgrid/simgrid/-/tree/master/teshsuite/s4u/comm-pt2pt/comm-pt2pt.cpp">teshsuite/s4u/comm-pt2pt/comm-pt2pt.cpp</a> which tests exhaustively each
+case of a communication matching when no error is involved. Regular, asynchronous, detached communications, and communications
+with a permanent receiver declared are tests, both with the send first and with the receive first. Again, we have a tiny DSL
+to specify the tests to do (see the <code class="docutils literal notranslate"><span class="pre">usage()</span></code> function).</p>
+<p><a class="reference external" href="https://framagit.org/simgrid/simgrid/-/tree/master/teshsuite/s4u/activity-lifecycle">teshsuite/s4u/activity-lifecycle/</a>
+tortures all kind of activities (sleep, exec, comm and direct-comm). It kills their ressource at several instants, kills the
+host hosting the running actor, test the activity after death, etc. This time also, we have a little DSL but this time in the
+code: the source is heavily loaded with templates to make it easier to write many such tests, at the expense of readability.</p>
+<p>SimGrid also features a <a class="reference external" href="https://en.wikipedia.org/wiki/Chaos_engineering">chaos monkey</a> to apply torture testing to complex
+applications. It is composed of a plugin (embeeded in any SimGrid simulation) that can be used to get info about the resources
+and the timestamps at which actions happens, or to kill a given resource at a given time. It also features <a class="reference external" href="https://framagit.org/simgrid/simgrid/-/blob/master/tools/simgrid-monkey">a script</a> that uses this information to launch a given
+simulation many times, killing each resource at each timestamp to see how SimGrid and your code react to these failures. The
+monkey can even run your simulation in Valgrind to detect problems that would be silent otherwise. Try passing
+<code class="docutils literal notranslate"><span class="pre">--cfg=plugin:cmonkey</span></code> to your simulations for more information. We currently have a master-workers example (in both C++ and
+Python) and a semaphore example (in C++ only) in <code class="docutils literal notranslate"><span class="pre">teshsuite/s4u</span></code>.</p>
+</li>
+</ul>
+</section>
+<section id="continuous-integrations">
+<h3>Continuous integrations</h3>
+<p>We have many online build bots that launch the tests on various configurations and operating systems. The results are centralized on two Jenkins jobs: <a class="reference external" href="https://ci.inria.fr/simgrid/job/SimGrid/">the main
+one</a> runs all tests on a variety of systems for each commit, while <a class="reference external" href="https://ci.inria.fr/simgrid/job/SimGrid-Nightly/">Nightly</a> runs some additional code analysis every night. Several sister projects built on top of SimGrid regularly
+test our git too. The FramaGit project gathers some additional <a class="reference external" href="https://framagit.org/simgrid/simgrid">build badges</a>, and results are posted on the <a class="reference external" href="https://framateam.org/simgrid/channels/bot-office">bot-office
+channel</a> on Mattermost. Our code quality is tested every night using <a class="reference external" href="https://sonarcloud.io/dashboard?id=simgrid_simgrid">SonarQube</a> , and the <a class="reference external" href="https://buildd.debian.org/status/package.php?p=simgrid">Debian build daemon</a> test each
+release on several CPU architectures. We maintain some scripts to interact with these tools under <code class="docutils literal notranslate"><span class="pre">tools/cmake</span></code>.</p>
+</section>
+</section>
+<section id="interacting-with-git">
+<h2>Interacting with git</h2>
+<p>The SimGrid community is relatively small and active. We are not used to maintain long-standing branches but instead, we strive to do our changes in an
+incremental way, commiting all intermediary steps to the main branch. The only thing is to ensure that you don’t break things on the path, i.e. that all tests
+pass for all commits. If you prefer to do a branch to accumulate some commits in a branch, you should strive to make so for a short period of time to reduce the
+burden of the branch maintenance. Large changes happen from time to time to the SimGrid source code, and your branch may become hard to rebase.</p>
+<p>It is nice if your commit message could follow the git habits, explained in this <a class="reference external" href="http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html">blog post</a>, or in the <a class="reference external" href="https://github.com/atom/atom/blob/master/CONTRIBUTING.md#git-commit-messages">style guide of Atom</a>.</p>
+</section>
+<section id="type-naming-standard">
+<h2>Type naming standard</h2>
+<ul class="simple">
+<li><p>Filenames shall be unique in the whole project (because of a bug in Sonar coverage computation).</p></li>
+</ul>
+<p>In C++:</p>
+<ul class="simple">
+<li><p>Fields, methods and variables are in snake_case();</p></li>
+<li><p>Classes and Enum names are in UpperCamelCase;</p></li>
+<li><p>Enum values are in UPPER_SNAKE_CASE, just as constants.</p></li>
+<li><p>Files of public modules are usually named <code class="docutils literal notranslate"><span class="pre">api_Class.cpp</span></code> and <code class="docutils literal notranslate"><span class="pre">api/Class.hpp</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">src/s4u/s4u_ConditionVariable.cpp</span></code> and
+<code class="docutils literal notranslate"><span class="pre">include/simgrid/s4u/ConditionVariable.hpp</span></code>).</p></li>
+<li><p>Files of internal modules are usually named <code class="docutils literal notranslate"><span class="pre">Class.cpp</span></code> and <code class="docutils literal notranslate"><span class="pre">Class.hpp</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">src/kernel/activity/Activity.cpp</span></code> and
+<code class="docutils literal notranslate"><span class="pre">src/kernel/activity/Activity.hpp</span></code>) unless it raises name conflicts.</p></li>
+</ul>
+<p>In C:</p>
+<ul class="simple">
+<li><p>Getters and setters are named <code class="docutils literal notranslate"><span class="pre">sg_object_get_field()</span></code> and <code class="docutils literal notranslate"><span class="pre">sg_object_field()</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">sg_link_get_name()</span></code> and <code class="docutils literal notranslate"><span class="pre">sg_link_set_data()</span></code>);</p></li>
+<li><p>Variables and functions are snake_case();</p></li>
+<li><p>Typedefs do not hide the pointers, i.e. the * must be explicit. <code class="docutils literal notranslate"><span class="pre">char*</span> <span class="pre">sg_host_get_name(sg_host_t*</span> <span class="pre">host)</span></code>.</p></li>
+</ul>
+</section>
+<section id="unsorted-hints">
+<h2>Unsorted hints</h2>
+<ul>
+<li><p>To thoroughly test your changes before pushing your commits, use several cmake configurations under sub-trees of <code class="docutils literal notranslate"><span class="pre">build/</span></code>
+(that is ignored by git) as explained in <a class="reference internal" href="Installing_SimGrid.html#install-cmake-outsrc"><span class="std std-ref">Out of Tree Compilation</span></a>. For example, I have the following directories:
+build/clang build/full build/mc (but YMMV).</p></li>
+<li><p>If you add or remove a file, you can check that everything is correctly setup with <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">distcheck</span></code>.</p></li>
+<li><p>If everything gets crazy, as if it were not using the code that you actually compile, well, maybe it’s using another version
+of SimGrid on your disk. Use <code class="docutils literal notranslate"><span class="pre">ldd</span></code> on any simulator to check which library gets used. If you installed a SimGrid package,
+you probably need to uninstall it.</p></li>
+<li><p>If you break the logs, you want to define XBT_LOG_MAYDAY at the beginning of log.h. It deactivates the whole logging
+mechanism, switching to printfs instead. SimGrid then becomes incredibly verbose, but it you let you fixing things.</p></li>
+<li><p>To run the JVM within the address sanitizer, you have to compile simgrid with ASan as usual with the
+<code class="docutils literal notranslate"><span class="pre">enable_address_sanitizer</span></code> parameter of cmake, and then you have to LD_PRELOAD asan within the JVM (the other approach would
+be to recompile the JVM with ASan, but it would also show the many bugs of the JVM). This only works if you also PRELOAD the
+stdc++ library (see <a class="reference external" href="https://github.com/google/sanitizers/issues/934">https://github.com/google/sanitizers/issues/934</a> for the details I didn’t read).</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nv">LD_PRELOAD</span><span class="o">=</span>/usr/lib/x86_64-linux-gnu/libasan.so.8:/usr/lib/x86_64-linux-gnu/libstdc++.so.6<span class="w"> </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>../../lib/<span class="w"> </span>/usr/bin/java<span class="w"> </span>-cp<span class="w"> </span>../../simgrid.jar:actor_kill.jar<span class="w"> </span>actor_kill<span class="w"> </span>../platforms/small_platform.xml
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference external" href="https://github.com/firecow/gitlab-ci-local">https://github.com/firecow/gitlab-ci-local</a> is very helpful to test a gitlab-ci pipeline locally, before pushing your commits.
+You need to have docker configured properly on your machine, and then you simply start the build as follows.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>gitlab-ci-local<span class="w"> </span>--file<span class="w"> </span>.gitlab-ci-inria.yml<span class="w"> </span>--list<span class="w">    </span><span class="c1"># to retrieve the existing jobs</span>
+<span class="gp">$ </span>gitlab-ci-local<span class="w"> </span>--file<span class="w"> </span>.gitlab-ci-inria.yml<span class="w"> </span>&lt;jobname&gt;<span class="w"> </span><span class="c1"># to build a given job</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+
+
+           
+</main></body></html>

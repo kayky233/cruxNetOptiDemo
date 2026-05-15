@@ -1,0 +1,832 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>XML 参考 - SimGrid 中文手册</title><style>
+:root{--bg:#f7f8fb;--sbg:#17182c;--stx:#d6d7e7;--muted:#8d90a8;--accent:#e94560;--txt:#272838;--hd:#16213e;--code:#f1f4f8;--bd:#dfe3ea;--note:#fff8e6}
+*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC",Arial,sans-serif;background:var(--bg);color:var(--txt);line-height:1.7;display:flex}
+nav{width:330px;min-width:330px;height:100vh;position:sticky;top:0;background:var(--sbg);color:var(--stx);overflow:auto;padding:18px 0;font-size:14px} nav h2{font-size:18px;padding:0 20px 12px;margin:0 0 6px;border-bottom:1px solid rgba(255,255,255,.12)} nav h2 a{color:#fff;text-decoration:none} nav h2 small{display:block;color:var(--muted);font-size:11px;font-weight:400;margin-top:2px}.sec{display:block;color:#56b6e8;font-weight:700;text-transform:uppercase;font-size:12px;padding:16px 20px 6px}nav a{display:block;color:var(--stx);text-decoration:none;padding:5px 20px 5px 30px}nav a:hover,nav a.active{background:rgba(233,69,96,.13);color:#ff6b86}main{width:min(1040px,calc(100vw - 330px));padding:34px 52px 90px}h1{font-size:34px;line-height:1.2;color:var(--hd);margin:0 0 18px}h2{font-size:25px;color:var(--hd);margin:42px 0 12px;padding-bottom:7px;border-bottom:2px solid var(--bd)}h3{font-size:20px;color:var(--hd);margin:30px 0 10px}h4{font-size:16px;color:#4b4f63;margin:22px 0 8px}p{margin:9px 0}a{color:#0f5e9c}pre{background:var(--code);border:1px solid var(--bd);border-radius:6px;padding:12px 15px;overflow:auto;line-height:1.45;font-size:12.5px}code{font-family:"SF Mono",Menlo,Consolas,monospace;background:var(--code);padding:1px 4px;border-radius:3px}pre code{background:transparent;padding:0}img{max-width:100%;height:auto;display:block;margin:16px auto}table{border-collapse:collapse;width:100%;margin:14px 0}td,th{border:1px solid var(--bd);padding:7px 9px}th{background:var(--code)}blockquote,.admonition{border-left:4px solid #f0c040;background:var(--note);padding:8px 14px;margin:14px 0}.meta{color:#687085;font-size:13px;margin-bottom:18px}.raw-note{background:#eef7ff;border:1px solid #cbe7ff;border-radius:6px;padding:10px 12px;margin-bottom:18px;font-size:13px}@media(max-width:900px){body{display:block}nav{position:relative;width:100%;min-width:0;height:auto}main{width:100%;padding:20px}}
+</style></head><body>
+<nav><h2><a href="index.html">SimGrid 4.1</a><small>中文本地化镜像</small></h2>
+<span class="sec">教程</span>
+<a href="Tutorial_Algorithms.html">模拟分布式算法</a>
+<a href="Tutorial_MPI_Applications.html">模拟 MPI 应用</a>
+<a href="Tutorial_Model-checking.html">模型检验算法</a>
+<a href="Tutorial_DAG.html">模拟 DAG</a>
+<span class="sec">用户手册</span>
+<a href="Introduction.html">简介</a>
+<a href="Installing_SimGrid.html">安装 SimGrid</a>
+<a href="Start_your_own_project.html">创建自己的项目</a>
+<a href="community.html">SimGrid 社区</a>
+<a href="Release_Notes.html">发布说明</a>
+<a href="application.html">描述应用程序</a>
+<a href="app_s4u.html">S4U 接口</a>
+<a href="Examples.html">S4U 示例</a>
+<a href="app_smpi.html">SMPI 接口</a>
+<a href="The_XBT_toolbox.html">XBT 工具箱</a>
+<a href="Platform.html">描述模拟平台</a>
+<a href="Platform_examples.html">网络拓扑示例</a>
+<a href="Platform_routing.html">高级路由</a>
+<a class="active" href="XML_reference.html">XML 参考</a>
+<a href="Platform_cpp.html">C++ 平台</a>
+<a href="Models.html">SimGrid 模型</a>
+<a href="Modeling_howtos.html">建模提示</a>
+<a href="Calibrating_the_models.html">校准模型</a>
+<a href="Plugins.html">SimGrid 插件</a>
+<a href="Experimental_setup.html">运行实验</a>
+<a href="Configuring_SimGrid.html">配置 SimGrid</a>
+<a href="Deploying_your_application.html">部署应用程序</a>
+<a href="Outcomes.html">模拟输出</a>
+<span class="sec">SimGrid 内部文档</span>
+<a href="Design_goals.html">设计目标</a>
+<a href="Contributors_Documentation.html">贡献者文档</a>
+</nav>
+<main><div class="meta">来源：<a href="https://simgrid.org/doc/latest/XML_reference.html">https://simgrid.org/doc/latest/XML_reference.html</a> · 本地化镜像生成，代码块与图片保留官方内容</div>
+<div class="raw-note">说明：本页采用镜像式本地化，导航和主要标题已中文化；代码块、命令输出和图片按官方页面原样保留，便于逐项核对。</div>
+
+             
+  <object id="TOC" data="graphical-toc.svg" type="image/svg+xml"></object>
+<script>
+window.onload=function() { // Wait for the SVG to be loaded before changing it
+  var elem=document.querySelector("#TOC").contentDocument.getElementById("ReferenceBox")
+  elem.style="opacity:0.93999999;fill:#ff0000;fill-opacity:0.1;stroke:#000000;stroke-width:0.35277778;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1";
+}
+</script>
+<br></br>
+<br></br><section id="complete-xml-reference">
+<span id="platform-reference"></span><h1>Complete XML Reference</h1>
+<p>Your platform description should follow the specification presented in the
+<a class="reference external" href="https://simgrid.org/simgrid.dtd">simgrid.dtd</a> DTD file. The same DTD is used for both platform and deployment files.</p>
+<p>Here is the complete list of all existing tags in the DTD:</p>
+<p><a class="reference internal" href="Deploying_your_application.html#pf-tag-actor"><span class="std std-ref">&lt;actor&gt;</span></a>: request the creation of an actor (deployment file, not in the platform). <br></br>
+<a class="reference internal" href="Deploying_your_application.html#pf-tag-argument"><span class="std std-ref">&lt;argument&gt;</span></a>: pass parameters to the created actors (deployment file, not in the platform). <br></br>
+<a class="reference internal" href="#pf-tag-backbone"><span class="std std-ref">&lt;backbone&gt;</span></a>: building clusters manually from the XML (deprecated, please use the C++ API). <br></br>
+<a class="reference internal" href="#pf-tag-bypassroute"><span class="std std-ref">&lt;bypassRoute&gt;</span></a>: tweeking the routing (advanced tag). <br></br>
+<a class="reference internal" href="#pf-tag-bypasszoneroute"><span class="std std-ref">&lt;bypassZoneRoute&gt;</span></a>: tweeking the routing (expert-only tag). <br></br>
+<a class="reference internal" href="#pf-tag-cabinet"><span class="std std-ref">&lt;cabinet&gt;</span></a>: building clusters manually from the XML (deprecated, please use the C++ API). <br></br>
+<a class="reference internal" href="#pf-tag-cluster"><span class="std std-ref">&lt;cluster&gt;</span></a>: building a cluster (aka, a full zone in one tag only). <br></br>
+<a class="reference internal" href="#pf-tag-config"><span class="std std-ref">&lt;config&gt;</span></a>: pass simulation parameters from the XML file. <br></br>
+<a class="reference internal" href="#pf-tag-disk"><span class="std std-ref">&lt;disk&gt;</span></a>: storage resource. <br></br>
+<a class="reference internal" href="#pf-tag-host"><span class="std std-ref">&lt;host&gt;</span></a>: computing resource. <br></br>
+<a class="reference internal" href="#pf-tag-host-link"><span class="std std-ref">&lt;host_link&gt;</span></a>: building clusters manually from the XML (deprecated, please use the C++ API). <br></br>
+<a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a>: communication resource. <br></br>
+<a class="reference internal" href="#pf-tag-link-ctn"><span class="std std-ref">&lt;link_ctn&gt;</span></a>: name of a link to be included in a route. <br></br>
+<a class="reference internal" href="#pf-tag-peer"><span class="std std-ref">&lt;peer&gt;</span></a>: host located in a <a class="reference internal" href="Platform_routing.html#pf-rm-vivaldi"><span class="std std-ref">Vivaldi</span></a> zone. <br></br>
+<a class="reference internal" href="#pf-tag-platform"><span class="std std-ref">&lt;platform&gt;</span></a>: root tag of any platform description. <br></br>
+<a class="reference internal" href="#pf-tag-prop"><span class="std std-ref">&lt;prop&gt;</span></a>: attach used-defined properties to your <a class="reference internal" href="Deploying_your_application.html#pf-tag-actor"><span class="std std-ref">&lt;actor&gt;</span></a>, <a class="reference internal" href="#pf-tag-disk"><span class="std std-ref">&lt;disk&gt;</span></a>, <a class="reference internal" href="#pf-tag-host"><span class="std std-ref">&lt;host&gt;</span></a>, <a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a> or <a class="reference internal" href="#pf-tag-zone"><span class="std std-ref">&lt;zone&gt;</span></a>. <br></br>
+<a class="reference internal" href="#pf-tag-route"><span class="std std-ref">&lt;route&gt;</span></a>: intra-zone network path. <br></br>
+<a class="reference internal" href="#pf-tag-router"><span class="std std-ref">&lt;router&gt;</span></a>: like an <a class="reference internal" href="#pf-tag-host"><span class="std std-ref">&lt;host&gt;</span></a> that cannot host actors (for network routing algorithms). <br></br>
+<a class="reference internal" href="#pf-tag-zone"><span class="std std-ref">&lt;zone&gt;</span></a>: area of the network containing elements (<a class="reference internal" href="#pf-tag-disk"><span class="std std-ref">&lt;disk&gt;</span></a>, <a class="reference internal" href="#pf-tag-host"><span class="std std-ref">&lt;host&gt;</span></a>, <a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a> and sub-<a class="reference internal" href="#pf-tag-zone"><span class="std std-ref">&lt;zone&gt;</span></a>). <br></br>
+<a class="reference internal" href="#pf-tag-zoneroute"><span class="std std-ref">&lt;zoneRoute&gt;</span></a>: inter-zone network path.</p>
+<hr class="docutils"></hr>
+<section id="cluster">
+<span id="pf-tag-cluster"></span><h2>&lt;cluster&gt;</h2>
+<p>This complex tag builds a full zone, with some hosts, links, a router, and the relevant routing algorithm. There is several
+kind of specifically tailored cluster types: crossbar clusters (contention-free internal network), backbone clusters
+(constrained internal network), fat-trees, DragonFly and Torus (star clusters are similar, but can only be created from the
+C++ code). The <code class="docutils literal notranslate"><span class="pre">topology</span></code> attribute is used to choose the type of cluster while the <code class="docutils literal notranslate"><span class="pre">topo_parameters</span></code> attribute is used
+to configure the topology. Please refer to the  <a class="reference internal" href="Platform_examples.html#platform-examples"><span class="std std-ref">examples in the documentation</span></a> for all details.</p>
+<p>Regardless of its topology, each cluster comes with a router that can be used for inter-zone routing. Its name is defined
+as <code class="docutils literal notranslate"><span class="pre">${prefix}${clusterId}_router${suffix}</span></code>.</p>
+<p><strong>Parent tags:</strong> <a class="reference internal" href="#pf-tag-platform"><span class="std std-ref">&lt;platform&gt;</span></a>, <a class="reference internal" href="#pf-tag-zone"><span class="std std-ref">&lt;zone&gt;</span></a> <br></br>
+<strong>Children tags:</strong> none <br></br>
+<strong>Attributes:</strong></p>
+<dl class="field-list">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">id</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>The identifier of the cluster. Facilitates referring to this cluster.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">prefix</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Each node of the cluster has to have a name. This name will be prefixed with this prefix.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">suffix</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Each node of the cluster will be suffixed with this suffix</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">radical</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Regexp used to generate cluster nodes name.</p>
+<p>Syntax: “10-20” will give you 11 machines numbered from 10 to 20, “10-20;2” will give you 12 machines, one with the number 2, others numbered as before.</p>
+<p>The produced number is concatenated between prefix and suffix to form machine names.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">speed</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Same as the <code class="docutils literal notranslate"><span class="pre">speed</span></code> attribute of the <a class="reference internal" href="#pf-tag-host"><span class="std std-ref">&lt;host&gt;</span></a> tag.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">core</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Same as the <code class="docutils literal notranslate"><span class="pre">core</span></code> attribute of the <a class="reference internal" href="#pf-tag-host"><span class="std std-ref">&lt;host&gt;</span></a> tag.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">bw</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Bandwidth for the links between nodes and backbone (if any). See <a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a> for syntax/details.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">lat</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Latency for the links between nodes and backbone (if any). See <a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a> for syntax/details.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">sharing_policy</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Sharing policy for the links between nodes and backbone (if any). See <a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a> for syntax/details.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">bb_bw</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Bandwidth for backbone (if any). See <a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a> for syntax/details.</p>
+<p>If bb_bw and bb_lat attributes are omitted, no backbone is created (alternative cluster architecture described earlier).</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">bb_lat</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Latency for backbone (if any). See <a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a> section for syntax/details.</p>
+<p>If bb_lat and bb_bw attributes are omitted, no backbone is created (alternative cluster architecture described earlier).</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">bb_sharing_policy</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Sharing policy for the backbone (if any). See <a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a> section for syntax/details.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">limiter_link</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Bandwidth for limiter link (if any).</p>
+<p>This adds a specific link for each node, to set the maximum bandwidth reached when communicating in both directions at the same time.</p>
+<p>In theory this value should be 2*bw for splitduplex links, but in reality this might be less. This value will depend heavily on the communication model, and on the cluster’s hardware, so no default value can be set, this has to be measured.</p>
+<p>More details can be obtained in <a class="reference external" href="https://hal.inria.fr/hal-00919507/">Toward Better Simulation of MPI Applications on Ethernet/TCP Networks</a></p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">loopback_bw</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Bandwidth for loopback (if any). See <a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a> section for syntax/details.</p>
+<p>If loopback_bw and loopback_lat attributes are omitted, no loopback link is created and all intra-node communication will use the main network link of the node.</p>
+<p>The sharing policy of a loopback link is <strong>FATPIPE</strong> <a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a>.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">loopback_lat</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Latency for loopback (if any). See loopback_bw for more info.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">topology</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Network topology to use.</p>
+<p>SimGrid currently supports FLAT (with or without backbone, as described before), TORUS, FAT_TREE and DRAGONFLY attributes for this tag.</p>
+<p>See <a class="reference internal" href="Platform_examples.html#platform-examples"><span class="std std-ref">Network Topology Examples</span></a> for more details.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">topo_parameters</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Specific parameters to pass for the topology defined in the topology tag.</p>
+<p>For torus networks, comma-separated list of the number of nodes in each dimension of the torus.</p>
+<p>Please refer to <a class="reference internal" href="Platform_examples.html#platform-examples"><span class="std std-ref">Network Topology Examples</span></a>.</p>
+</dd>
+</dl>
+<hr class="docutils"></hr>
+</section>
+<section id="config">
+<span id="pf-tag-config"></span><h2>&lt;config&gt;</h2>
+<p>Adding configuration flags directly into the platform file becomes particularly
+useful when the realism of the described platform depends on some specific
+flags. For example, this could help you to finely tune SMPI. Almost all
+<a class="reference internal" href="Configuring_SimGrid.html#options-list"><span class="std std-ref">command-line configuration items</span></a> can be configured this
+way.</p>
+<p>Each configuration flag is described as a <a class="reference internal" href="#pf-tag-prop"><span class="std std-ref">&lt;prop&gt;</span></a> whose <code class="docutils literal notranslate"><span class="pre">id</span></code> is the
+name of the flag and <code class="docutils literal notranslate"><span class="pre">value</span></code> is what it has to be set to.</p>
+<p><strong>Parent tags:</strong> <a class="reference internal" href="#pf-tag-platform"><span class="std std-ref">&lt;platform&gt;</span></a> (must appear before any other tags) <br></br>
+<strong>Children tags:</strong> <a class="reference internal" href="#pf-tag-prop"><span class="std std-ref">&lt;prop&gt;</span></a> <br></br>
+<strong>Attributes:</strong> none</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version = &#39;1.0&#39;?&gt;</span>
+<span class="cp">&lt;!DOCTYPE platform SYSTEM &quot;https://simgrid.org/simgrid.dtd&quot;&gt;</span>
+<span class="nt">&lt;platform</span><span class="w"> </span><span class="na">version =</span><span class="w"> </span><span class="s">&quot;4.1&quot;</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="nt">&lt;config&gt;</span>
+<span class="w">    </span><span class="nt">&lt;prop</span><span class="w"> </span><span class="na">id =</span><span class="w"> </span><span class="s">&quot;precision/work-amount&quot;</span><span class="w"> </span><span class="na">value =</span><span class="w"> </span><span class="s">&quot;0.000010&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;prop</span><span class="w"> </span><span class="na">id =</span><span class="w"> </span><span class="s">&quot;cpu/optim&quot;</span><span class="w"> </span><span class="na">value =</span><span class="w"> </span><span class="s">&quot;TI&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;prop</span><span class="w"> </span><span class="na">id =</span><span class="w"> </span><span class="s">&quot;network/model&quot;</span><span class="w"> </span><span class="na">value =</span><span class="w"> </span><span class="s">&quot;SMPI&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;prop</span><span class="w"> </span><span class="na">id =</span><span class="w"> </span><span class="s">&quot;network/bandwidth-factor&quot;</span><span class="w"> </span><span class="na">value =</span><span class="w"> </span><span class="s">&quot;65472:0.940694;15424:0.697866;9376:0.58729&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/config&gt;</span>
+
+<span class="w">  </span><span class="cm">&lt;!-- The rest of your platform --&gt;</span>
+<span class="nt">&lt;/platform&gt;</span>
+</pre></div>
+</div>
+<hr class="docutils"></hr>
+</section>
+<section id="disk">
+<span id="pf-tag-disk"></span><h2>&lt;disk&gt;</h2>
+<p>SimGrid can simulate the time it takes to read or write data on disk, even if the stored data is not made persistent in
+any way by SimGrid. This means that your application will correctly be slowed down when doing simulated I/O, but there
+is no way to get the data stored this way.</p>
+<p>We decided to not model anything beyond raw access in SimGrid because we believe that there is not single way of doing so.
+We provide an example model of file system as a plugin, (sparsely) documented in <a class="reference internal" href="Plugins.html#plugin-filesystem"><span class="std std-ref">File System</span></a>.</p>
+<p><strong>Parent tags:</strong> <a class="reference internal" href="#pf-tag-host"><span class="std std-ref">&lt;host&gt;</span></a> <br></br>
+<strong>Children tags:</strong> <a class="reference internal" href="#pf-tag-prop"><span class="std std-ref">&lt;prop&gt;</span></a> <br></br>
+<strong>Attributes:</strong></p>
+<dl class="field-list">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">id</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>A name of your choice (must be unique on this host).</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">read_bw</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Read bandwidth for this disk. You must specify a unit as follows.</p>
+<dl class="simple">
+<dt><strong>Units in bytes and powers of 2</strong> (1 KiBps = 1,024 Bps):</dt><dd><p>Bps, KiBps, MiBps, GiBps, TiBps, PiBps, or EiBps. <br></br></p>
+</dd>
+<dt><strong>Units in bits  and powers of 2</strong> (1 Bps = 8 bps):</dt><dd><p>bps, Kibps, Mibps, Gibps, Tibps, Pibps, or Eibps. <br></br></p>
+</dd>
+<dt><strong>Units in bytes and powers of 10</strong>  (1 KBps = 1,000 Bps):</dt><dd><p>Bps, KBps, MBps, GBps, TBps, PBps, or EBps. <br></br></p>
+</dd>
+<dt><strong>Units in bits  and powers of 10:</strong></dt><dd><p>bps, Kbps, Mbps, Gbps, Tbps, Pbps, or Ebps.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">write_bw</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Write bandwidth for this disk. You must specify a unit as for the read bandwidth.</p>
+</dd>
+</dl>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;host</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;alice&quot;</span><span class="w"> </span><span class="na">speed=</span><span class="s">&quot;1Gf&quot;</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="nt">&lt;disk</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;Disk1&quot;</span><span class="w"> </span><span class="na">read_bw=</span><span class="s">&quot;200MBps&quot;</span><span class="w"> </span><span class="na">write_bw=</span><span class="s">&quot;80MBps&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="cm">&lt;!-- you can add properties for anything you want: they are not used by SimGrid --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;prop</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;content&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;storage/content/small_content.txt&quot;</span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/disk&gt;</span>
+<span class="w">  </span><span class="nt">&lt;prop</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;ram&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;100B&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/host&gt;</span>
+</pre></div>
+</div>
+<hr class="docutils"></hr>
+</section>
+<section id="host">
+<span id="pf-tag-host"></span><h2>&lt;host&gt;</h2>
+<p>A host is the computing resource on which an actor can run. See <a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4HostE" title="simgrid::s4u::Host"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">simgrid::s4u::Host</span></code></a>.</p>
+<p><strong>Parent tags:</strong> <a class="reference internal" href="#pf-tag-zone"><span class="std std-ref">&lt;zone&gt;</span></a> (only leaf zones, i.e., zones containing neither inner zones nor clusters) <br></br>
+<strong>Children tags:</strong> <a class="reference internal" href="#pf-tag-prop"><span class="std std-ref">&lt;prop&gt;</span></a>, <a class="reference internal" href="#pf-tag-disk"><span class="std std-ref">&lt;disk&gt;</span></a> <br></br>
+<strong>Attributes:</strong></p>
+<dl class="field-list">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">id</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Host name.
+Must be unique over the whole platform.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">speed</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Computational power (per core, in flop/s).
+If you use DVFS, provide a comma-separated list of values for each pstate (see <a class="reference internal" href="app_s4u.html#api-s4u-host-dvfs"><span class="std std-ref">DVFS</span></a>).</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">core</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Amount of cores (default: 1).
+See <a class="reference internal" href="Modeling_howtos.html#howto-multicore"><span class="std std-ref">Modeling multicore machines</span></a>.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">availability_file</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>File containing the availability profile.
+Almost every lines of such files describe timed events as <code class="docutils literal notranslate"><span class="pre">date</span> <span class="pre">ratio</span></code>.
+Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mf">0.5</span>
+<span class="mi">2</span> <span class="mf">0.2</span>
+<span class="mi">5</span> <span class="mi">1</span>
+<span class="n">LOOPAFTER</span> <span class="mi">5</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>At time t = 1, half of the host computational power (0.5 means 50%) is used to process some background load, hence
+only 50% of this initial power remains available to your own simulation.</p></li>
+<li><p>At time t = 2, the available power drops at 20% of the initial value.</p></li>
+<li><p>At time t = 5, the host can compute at full speed again.</p></li>
+<li><p>At time t = 10, the profile is reset (as we are 5 seconds after the last event). Then the available speed will drop
+again to 50% at time t = 11.</p></li>
+</ul>
+<p>If your profile does not contain any LOOPAFTER line, then it will
+be executed only once and not repeated.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Don’t get fooled: Bandwidth and Latency profiles of a <a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a> contain absolute values, while
+Availability profiles of a <a class="reference internal" href="#pf-tag-host"><span class="std std-ref">&lt;host&gt;</span></a> contain ratios.</p>
+</div>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">state_file</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>File containing the state profile.
+Almost every lines of such files describe timed events as <code class="docutils literal notranslate"><span class="pre">date</span> <span class="pre">boolean</span></code>.
+Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">0</span>
+<span class="mi">2</span> <span class="mi">1</span>
+<span class="n">LOOPAFTER</span> <span class="mi">8</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>At time t = 1, the host is turned off (a zero value means OFF)</p></li>
+<li><p>At time t = 2, the host is turned back on (any other value than zero means ON)</p></li>
+<li><p>At time t = 10, the profile is reset (as we are 8 seconds after the last event). Then the host will be turned off
+again at time t = 11.</p></li>
+</ul>
+<p>If your profile does not contain any LOOPAFTER line, then it will
+be executed only once and not repeated.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">coordinates</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Vivaldi coordinates (meaningful for Vivaldi zones only).
+See <a class="reference internal" href="#pf-tag-peer"><span class="std std-ref">&lt;peer&gt;</span></a>.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">pstate</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Initial pstate (default: 0, the first one).
+See <a class="reference internal" href="app_s4u.html#api-s4u-host-dvfs"><span class="std std-ref">DVFS</span></a>.</p>
+</dd>
+</dl>
+<hr class="docutils"></hr>
+</section>
+<section id="link">
+<span id="pf-tag-link"></span><h2>&lt;link&gt;</h2>
+<p>SimGrid links usually represent one-hop network connections (see <a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4LinkE" title="simgrid::s4u::Link"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">simgrid::s4u::Link</span></code></a>), i.e., a single wire.
+They can also be used to abstract a larger network interconnect, e.g., the entire transcontinental network, into a
+single element. Links are characterized by their bandwidth and latency, and their sharing is realistic wrt TCP connexions.
+Another unusual point is that SimGrid links can be used to connect more than two elements, just like
+hyperlinks in an <a class="reference external" href="https://en.wikipedia.org/wiki/Hypergraph">hypergraph</a>.</p>
+<p><strong>Parent tags:</strong> <a class="reference internal" href="#pf-tag-zone"><span class="std std-ref">&lt;zone&gt;</span></a> (both leaf zones and inner zones) <br></br>
+<strong>Children tags:</strong> <a class="reference internal" href="#pf-tag-prop"><span class="std std-ref">&lt;prop&gt;</span></a> <br></br>
+<strong>Attributes:</strong></p>
+<dl class="field-list">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">id</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Link name. Must be unique over the whole platform.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">bandwidth</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Maximum bandwidth for this link. You must specify a unit as follows.</p>
+<dl class="simple">
+<dt><strong>Units in bytes and powers of 2</strong> (1 KiBps = 1,024 Bps):</dt><dd><p>Bps, KiBps, MiBps, GiBps, TiBps, PiBps, or EiBps. <br></br></p>
+</dd>
+<dt><strong>Units in bits  and powers of 2</strong> (1 Bps = 8 bps):</dt><dd><p>bps, Kibps, Mibps, Gibps, Tibps, Pibps, or Eibps. <br></br></p>
+</dd>
+<dt><strong>Units in bytes and powers of 10</strong>  (1 KBps = 1,000 Bps):</dt><dd><p>Bps, KBps, MBps, GBps, TBps, PBps, or EBps. <br></br></p>
+</dd>
+<dt><strong>Units in bits  and powers of 10:</strong></dt><dd><p>bps, Kbps, Mbps, Gbps, Tbps, Pbps, or Ebps.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">latency</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Latency for this link (default: 0.0). You must specify a unit as follows.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Unit</p></th>
+<th class="head"><p>Meaning</p></th>
+<th class="head"><p>Duration in seconds</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ps</p></td>
+<td><p>picosecond</p></td>
+<td><p>10⁻¹² = 0.000000000001</p></td>
+</tr>
+<tr class="row-odd"><td><p>ns</p></td>
+<td><p>nanosecond</p></td>
+<td><p>10⁻⁹ = 0.000000001</p></td>
+</tr>
+<tr class="row-even"><td><p>us</p></td>
+<td><p>microsecond</p></td>
+<td><p>10⁻⁶ = 0.000001</p></td>
+</tr>
+<tr class="row-odd"><td><p>ms</p></td>
+<td><p>millisecond</p></td>
+<td><p>10⁻³ = 0.001</p></td>
+</tr>
+<tr class="row-even"><td><p>s</p></td>
+<td><p>second</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>m</p></td>
+<td><p>minute</p></td>
+<td><p>60</p></td>
+</tr>
+<tr class="row-even"><td><p>h</p></td>
+<td><p>hour</p></td>
+<td><p>60 * 60</p></td>
+</tr>
+<tr class="row-odd"><td><p>d</p></td>
+<td><p>day</p></td>
+<td><p>60 * 60 * 24</p></td>
+</tr>
+<tr class="row-even"><td><p>w</p></td>
+<td><p>week</p></td>
+<td><p>60 * 60 * 24 * 7</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">sharing_policy</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Sharing policy for the link. Possible values are <code class="docutils literal notranslate"><span class="pre">SHARED</span></code>, <code class="docutils literal notranslate"><span class="pre">FATPIPE</span></code> or <code class="docutils literal notranslate"><span class="pre">SPLITDUPLEX</span></code>
+(default: <code class="docutils literal notranslate"><span class="pre">SPLITDUPLEX</span></code>).</p>
+<p>If set to <code class="docutils literal notranslate"><span class="pre">SPLITDUPLEX</span></code>, the link models the full-duplex
+behavior, as meant in TCP or UDP. To that extend, the link is
+actually split in two links whose names are suffixed with “_UP” and
+“_DOWN”. You should then specify the direction to use when
+referring to that link in a <a class="reference internal" href="#pf-tag-link-ctn"><span class="std std-ref">&lt;link_ctn&gt;</span></a>.</p>
+<p>If set to <code class="docutils literal notranslate"><span class="pre">FATPIPE</span></code>, flows have no impact on each other, hence
+each flow can exploit the full bandwidth. This models Internet
+backbones that cannot get saturated by your application. From your
+application point of view, there is no congestion on these
+backbones.</p>
+<p>If set to <code class="docutils literal notranslate"><span class="pre">SHARED</span></code>, the available bandwidth is fairly shared
+among ALL flows traversing this link. The resulting link is not
+full-duplex (as UDP or TCP would be): communications in both
+directions share the same link. Prefer <code class="docutils literal notranslate"><span class="pre">SPLITDUPLEX</span></code> for TCP flows.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">bandwidth_file</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>File containing the bandwidth profile.
+Almost every lines of such files describe timed events as <code class="docutils literal notranslate"><span class="pre">date</span>
+<span class="pre">bandwidth</span></code> (in bytes per second).
+Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="mf">4.0</span> <span class="mi">40000000</span>
+<span class="mf">8.0</span> <span class="mi">60000000</span>
+<span class="n">LOOPAFTER</span> <span class="mf">12.0</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>At time t = 4, the bandwidth is of 40 Mb/s.</p></li>
+<li><p>At time t = 8, it raises to 60 Mb/s.</p></li>
+<li><p>At time t = 24, it drops at 40 MBps again.</p></li>
+</ul>
+<p>If your profile does not contain any LOOPAFTER line, then it will
+be executed only once and not repeated.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Don’t get fooled: Bandwidth and Latency profiles of a <a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a> contain absolute values, while
+Availability profiles of a <a class="reference internal" href="#pf-tag-host"><span class="std std-ref">&lt;host&gt;</span></a> contain ratios.</p>
+</div>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">latency_file</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt>File containing the latency profile.</dt><dd><p>Almost every lines of such files describe timed events as <code class="docutils literal notranslate"><span class="pre">date</span>
+<span class="pre">latency</span></code> (in seconds).
+Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="mf">1.0</span> <span class="mf">0.001</span>
+<span class="mf">3.0</span> <span class="mf">0.1</span>
+<span class="n">LOOPAFTER</span> <span class="mf">5.0</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>At time t = 1, the latency is of 1ms (0.001 second)</p></li>
+<li><p>At time t = 3, the latency is of 100ms (0.1 second)</p></li>
+<li><p>At time t = 8 (5 seconds after the last event), the profile loops.</p></li>
+<li><p>At time t = 9 (1 second after the loop reset), the latency is back at 1ms.</p></li>
+</ul>
+<p>If your profile does not contain any LOOPAFTER line, then it will
+be executed only once and not repeated.</p>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Don’t get fooled: Bandwidth and Latency profiles of a <a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a> contain absolute values, while
+Availability profiles of a <a class="reference internal" href="#pf-tag-host"><span class="std std-ref">&lt;host&gt;</span></a> contain ratios.</p>
+</div>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">state_file</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>File containing the state profile. See <a class="reference internal" href="#pf-tag-host"><span class="std std-ref">&lt;host&gt;</span></a>.</p>
+</dd>
+</dl>
+<hr class="docutils"></hr>
+</section>
+<section id="link-ctn">
+<span id="pf-tag-link-ctn"></span><h2>&lt;link_ctn&gt;</h2>
+<p>An element in a route, representing a previously defined link.</p>
+<p><strong>Parent tags:</strong> <a class="reference internal" href="#pf-tag-route"><span class="std std-ref">&lt;route&gt;</span></a> <br></br>
+<strong>Children tags:</strong> none <br></br>
+<strong>Attributes:</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">id</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Link that is to be included in this route.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">direction</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>either <code class="docutils literal notranslate"><span class="pre">UP</span></code> (by default) or <code class="docutils literal notranslate"><span class="pre">DOWN</span></code>, specifying whether to
+use the uplink or downlink component of the link (that must
+follow the <code class="docutils literal notranslate"><span class="pre">SPLITDUPLEX</span></code> sharing policy). <br></br>
+Please refer to the <code class="docutils literal notranslate"><span class="pre">sharing_policy</span></code> attribute in
+<a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a>.</p>
+</dd>
+</dl>
+<hr class="docutils"></hr>
+</section>
+<section id="peer">
+<span id="pf-tag-peer"></span><h2>&lt;peer&gt;</h2>
+<p>This tag represents a peer, as in Peer-to-Peer (P2P) networks. It is
+handy to model situations where hosts have an asymmetric
+connectivity. Computers connected through set-top-boxes usually have a
+much better download rate than their upload rate.  To model this,
+&lt;peer&gt; creates and connects several elements: a host, an upload link
+and a download link.</p>
+<p><strong>Parent tags:</strong> <a class="reference internal" href="#pf-tag-zone"><span class="std std-ref">&lt;zone&gt;</span></a> (only with Vivaldi routing) <br></br>
+<strong>Children tags:</strong> none <br></br>
+<strong>Attributes:</strong></p>
+<dl class="field-list">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">id</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Name of the host. Must be unique on the whole platform.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">speed</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Computational power (in flop/s).</p>
+<p>If you use DVFS, provide a comma-separated list of values for each pstate (see <a class="reference internal" href="app_s4u.html#api-s4u-host-dvfs"><span class="std std-ref">DVFS</span></a>).</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">bw_in</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Bandwidth of the private downstream link, along with its
+unit. See <a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a>.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">bw_out</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Bandwidth of the private upstream link, along with its
+unit. See <a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a>.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">lat</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Latency of both private links. See <a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a>.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">coordinates</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Coordinates of the gateway for this peer.</p>
+<p>The communication latency between a host A = (xA,yA,zA) and a host B = (xB,yB,zB) is computed as follows:</p>
+<p>latency = sqrt( (xA-xB)² + (yA-yB)² ) + zA + zB</p>
+<p>See the documentation of
+<code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">simgrid::kernel::routing::VivaldiZone</span></code> for details on
+how the latency is computed from the coordinates, and on how the up
+and down bandwidth are used.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">availability_file</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>File containing the availability profile.
+See the full description in <a class="reference internal" href="#pf-tag-host"><span class="std std-ref">&lt;host&gt;</span></a></p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">state_file</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>File containing the state profile.
+See the full description in <a class="reference internal" href="#pf-tag-host"><span class="std std-ref">&lt;host&gt;</span></a></p>
+</dd>
+</dl>
+<hr class="docutils"></hr>
+</section>
+<section id="platform">
+<span id="pf-tag-platform"></span><h2>&lt;platform&gt;</h2>
+<p><strong>Parent tags:</strong> none (this is the root tag of every file) <br></br>
+<strong>Children tags:</strong> <a class="reference internal" href="#pf-tag-config"><span class="std std-ref">&lt;config&gt;</span></a> (must come first),
+<a class="reference internal" href="#pf-tag-cluster"><span class="std std-ref">&lt;cluster&gt;</span></a>, <a class="reference internal" href="#pf-tag-cabinet"><span class="std std-ref">&lt;cabinet&gt;</span></a>, <a class="reference internal" href="#pf-tag-peer"><span class="std std-ref">&lt;peer&gt;</span></a>,
+<a class="reference internal" href="#pf-tag-zone"><span class="std std-ref">&lt;zone&gt;</span></a>, <span class="xref std std-ref">pf_tag_trace</span>, <span class="xref std std-ref">pf_tag_trace_connect</span>, or
+<a class="reference internal" href="Deploying_your_application.html#pf-tag-actor"><span class="std std-ref">&lt;actor&gt;</span></a> in <a class="reference internal" href="Deploying_your_application.html#deploy"><span class="std std-ref">deployment</span></a> files. <br></br>
+<strong>Attributes:</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">version</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Version of the DTD, describing the whole XML format.
+This versioning allow future evolutions, even if we
+avoid backward-incompatible changes. The current version
+is <strong>4.1</strong>. The <code class="docutils literal notranslate"><span class="pre">simgrid_update_xml</span></code> program can
+upgrade most of the past platform files to the most recent
+formalism.</p>
+</dd>
+</dl>
+<hr class="docutils"></hr>
+</section>
+<section id="prop">
+<span id="pf-tag-prop"></span><h2>&lt;prop&gt;</h2>
+<p>This tag can be used to attach user-defined properties to some
+platform elements. Both the name and the value can be any string of
+your wish. You can use this to pass extra parameters to your code and
+the plugins.</p>
+<p>From your code, you can interact with these properties using the
+following functions:</p>
+<ul class="simple">
+<li><p>Actor: <a class="reference internal" href="app_s4u.html#_CPPv4NK7simgrid3s4u5Actor12get_propertyERKNSt6stringE" title="simgrid::s4u::Actor::get_property"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Actor::get_property()</span></code></a></p></li>
+<li><p>Cluster: this is a zone, see below.</p></li>
+<li><p>Disk: <a class="reference internal" href="app_s4u.html#_CPPv4NK7simgrid3s4u4Disk12get_propertyERKNSt6stringE" title="simgrid::s4u::Disk::get_property"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Disk::get_property()</span></code></a></p></li>
+<li><p>Host: <a class="reference internal" href="app_s4u.html#_CPPv4NK7simgrid3s4u4Host12get_propertyERKNSt6stringE" title="simgrid::s4u::Host::get_property"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Host::get_property()</span></code></a></p></li>
+<li><p>Link: <a class="reference internal" href="app_s4u.html#_CPPv4NK7simgrid3s4u4Link12get_propertyERKNSt6stringE" title="simgrid::s4u::Link::get_property"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::Link::get_property()</span></code></a></p></li>
+<li><p>Zone: <a class="reference internal" href="app_s4u.html#_CPPv4NK7simgrid3s4u7NetZone12get_propertyERKNSt6stringE" title="simgrid::s4u::NetZone::get_property"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">simgrid::s4u::NetZone::get_property()</span></code></a></p></li>
+</ul>
+<p><strong>Parent tags:</strong> <a class="reference internal" href="Deploying_your_application.html#pf-tag-actor"><span class="std std-ref">&lt;actor&gt;</span></a>, <a class="reference internal" href="#pf-tag-config"><span class="std std-ref">&lt;config&gt;</span></a>, <a class="reference internal" href="#pf-tag-cluster"><span class="std std-ref">&lt;cluster&gt;</span></a>, <a class="reference internal" href="#pf-tag-host"><span class="std std-ref">&lt;host&gt;</span></a>,
+<a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a>, <a class="reference internal" href="#pf-tag-disk"><span class="std std-ref">&lt;disk&gt;</span></a>,:ref:<cite>pf_tag_zone</cite> <br></br>
+<strong>Children tags:</strong> none <br></br>
+<strong>Attributes:</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">id</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Name of the defined property.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">value</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Value of the defined property.</p>
+</dd>
+</dl>
+<hr class="docutils"></hr>
+</section>
+<section id="route">
+<span id="pf-tag-route"></span><h2>&lt;route&gt;</h2>
+<p>A path between two network locations, composed of several occurrences of <a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a>. It is only relevant for
+intra-<a class="reference internal" href="#pf-tag-zone"><span class="std std-ref">&lt;zone&gt;</span></a> routes. Inter-zone routes must be declared with <a class="reference internal" href="#pf-tag-zoneroute"><span class="std std-ref">&lt;zoneRoute&gt;</span></a>. More detail can be
+found in the following sections <a class="reference internal" href="Platform_routing.html#pf-routes"><span class="std std-ref">Describing routes</span></a> and <a class="reference internal" href="Platform_routing.html#pf-route-usage"><span class="std std-ref">Calculating network paths</span></a>.</p>
+<p><strong>Parent tags:</strong> <a class="reference internal" href="#pf-tag-zone"><span class="std std-ref">&lt;zone&gt;</span></a> <br></br>
+<strong>Children tags:</strong> <a class="reference internal" href="#pf-tag-link-ctn"><span class="std std-ref">&lt;link_ctn&gt;</span></a> <br></br>
+<strong>Attributes:</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">src</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Host from which this route starts. Must be the name of an existing host.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">dst</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Host to which this route leads. Must be the name of an existing host.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">symmetrical</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Whether this route is symmetrical, ie, whether we
+are defining the route <code class="docutils literal notranslate"><span class="pre">dst</span> <span class="pre">-&gt;</span> <span class="pre">src</span></code> at the same
+time. Valid values: <code class="docutils literal notranslate"><span class="pre">yes</span></code>, <code class="docutils literal notranslate"><span class="pre">no</span></code>, <code class="docutils literal notranslate"><span class="pre">YES</span></code>, <code class="docutils literal notranslate"><span class="pre">NO</span></code>
+(default: YES).</p>
+</dd>
+</dl>
+<hr class="docutils"></hr>
+</section>
+<section id="router">
+<span id="pf-tag-router"></span><h2>&lt;router&gt;</h2>
+<p>A router is similar to a <a class="reference internal" href="#pf-tag-host"><span class="std std-ref">&lt;host&gt;</span></a>, but it cannot contain any actor. It is only useful to some routing
+algorithms. In particular, they are useful when you want to use the NS3 bindings to break the routes that are longer
+than 1 hop.</p>
+<p><strong>Parent tags:</strong> <a class="reference internal" href="#pf-tag-zone"><span class="std std-ref">&lt;zone&gt;</span></a> (only leaf zones, i.e., zones containing neither inner zones nor clusters) <br></br>
+<strong>Attributes:</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">id</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Router name.
+No other host or router may have the same name over the whole platform.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">coordinates</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Vivaldi coordinates. See <a class="reference internal" href="#pf-tag-peer"><span class="std std-ref">&lt;peer&gt;</span></a>.</p>
+</dd>
+</dl>
+<hr class="docutils"></hr>
+</section>
+<section id="zone">
+<span id="pf-tag-zone"></span><h2>&lt;zone&gt;</h2>
+<p>A networking zone is an area in which elements are located. See <a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u7NetZoneE" title="simgrid::s4u::NetZone"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">simgrid::s4u::NetZone</span></code></a>.</p>
+<p><strong>Parent tags:</strong> <a class="reference internal" href="#pf-tag-platform"><span class="std std-ref">&lt;platform&gt;</span></a>, <a class="reference internal" href="#pf-tag-zone"><span class="std std-ref">&lt;zone&gt;</span></a> (only internal nodes, i.e., zones
+containing only inner zones or clusters but no basic
+elements such as host or peer) <br></br>
+<strong>Children tags (if internal zone):</strong> <a class="reference internal" href="#pf-tag-cluster"><span class="std std-ref">&lt;cluster&gt;</span></a>, <a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a>, <a class="reference internal" href="#pf-tag-zone"><span class="std std-ref">&lt;zone&gt;</span></a> <br></br>
+<strong>Children tags (if leaf zone):</strong> <a class="reference internal" href="#pf-tag-host"><span class="std std-ref">&lt;host&gt;</span></a>, <a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a>, <a class="reference internal" href="#pf-tag-peer"><span class="std std-ref">&lt;peer&gt;</span></a> <br></br>
+<strong>Attributes:</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">id</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Zone name.
+No other zone may have the same name over the whole platform.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">routing</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Routing algorithm to use.</p>
+</dd>
+</dl>
+<hr class="docutils"></hr>
+</section>
+<section id="zoneroute">
+<span id="pf-tag-zoneroute"></span><h2>&lt;zoneRoute&gt;</h2>
+<p>All information to factorize the routes between two zones; intra-zone paths must be declared with <a class="reference internal" href="#pf-tag-route"><span class="std std-ref">&lt;route&gt;</span></a>.
+Since zones form a tree, <a class="reference internal" href="#pf-tag-zoneroute"><span class="std std-ref">&lt;zoneRoute&gt;</span></a> is probably best used to connect sibling zones.</p>
+<p>When declaring a zoneRoute, you must give the source and destination zones, along with the gateway in each zone (i.e.,
+the point to reach within that zone to reach the declared route), and the list of links to go from one zone to another.
+More detail can be found in the following sections <a class="reference internal" href="Platform_routing.html#pf-routes"><span class="std std-ref">Describing routes</span></a> and <a class="reference internal" href="Platform_routing.html#pf-route-usage"><span class="std std-ref">Calculating network paths</span></a>.</p>
+<p><strong>Parent tags:</strong> <a class="reference internal" href="#pf-tag-zone"><span class="std std-ref">&lt;zone&gt;</span></a> <br></br>
+<strong>Children tags:</strong> <a class="reference internal" href="#pf-tag-link-ctn"><span class="std std-ref">&lt;link_ctn&gt;</span></a> <br></br>
+<strong>Attributes:</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">src</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Zone from which this route starts. Must be an existing zone.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">dst</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Zone to which this route leads. Must be an existing zone.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">gw_src</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Netpoint (within src zone) from which this route starts. Must be an existing host/router.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">gw_dst</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Netpoint (within dst zone) to which this route leads. Must be an existing host/router.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">symmetrical</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Whether this route is symmetrical, ie, whether we are defining the route <code class="docutils literal notranslate"><span class="pre">dst</span> <span class="pre">-&gt;</span> <span class="pre">src</span></code> at the same
+time. Valid values: <code class="docutils literal notranslate"><span class="pre">yes</span></code>, <code class="docutils literal notranslate"><span class="pre">no</span></code>, <code class="docutils literal notranslate"><span class="pre">YES</span></code>, <code class="docutils literal notranslate"><span class="pre">NO</span></code>.</p>
+</dd>
+</dl>
+</section>
+<hr class="docutils"></hr>
+<section id="advanced-tags">
+<h2>Advanced tags</h2>
+<p>The following list contains some tags that are less often used. They are still valid, but unless you know what you are
+doing, there is a good chance that you don’t really want to use them.</p>
+<hr class="docutils"></hr>
+<section id="bypassroute">
+<span id="pf-tag-bypassroute"></span><h3>&lt;bypassRoute&gt;</h3>
+<p>This tag can be used to completely bypass the classical <a class="reference internal" href="Platform_routing.html#pf-route-usage"><span class="std std-ref">routing algorithm</span></a> for a pair of hosts. The
+provided list of links will be used directly, with no further routing computation. This is an advanced tag that is rarely
+used in practice.</p>
+<p><strong>Parent tags:</strong> <a class="reference internal" href="#pf-tag-zone"><span class="std std-ref">&lt;zone&gt;</span></a> <br></br>
+<strong>Children tags:</strong> <a class="reference internal" href="#pf-tag-link-ctn"><span class="std std-ref">&lt;link_ctn&gt;</span></a> <br></br>
+<strong>Attributes:</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">src</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Host from which this route starts. Must be the name of an existing host.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">dst</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Host to which this route leads. Must be the name of an existing host.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">symmetrical</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Whether this route is symmetrical, ie, whether we are defining the route <code class="docutils literal notranslate"><span class="pre">dst</span> <span class="pre">-&gt;</span> <span class="pre">src</span></code> at the same time.
+Valid values: <code class="docutils literal notranslate"><span class="pre">yes</span></code>, <code class="docutils literal notranslate"><span class="pre">no</span></code>, <code class="docutils literal notranslate"><span class="pre">YES</span></code>, <code class="docutils literal notranslate"><span class="pre">NO</span></code> (default: YES).</p>
+</dd>
+</dl>
+<hr class="docutils"></hr>
+</section>
+<section id="bypasszoneroute">
+<span id="pf-tag-bypasszoneroute"></span><h3>&lt;bypassZoneRoute&gt;</h3>
+<p>This tag can be used to completely bypass the classical <a class="reference internal" href="Platform_routing.html#pf-route-usage"><span class="std std-ref">routing algorithm</span></a> between two zones. When
+provided, it breaks the recursive search and the provided links will be used instead. This tag should probably be reserved
+to experts.</p>
+<p><strong>Parent tags:</strong> <a class="reference internal" href="#pf-tag-zone"><span class="std std-ref">&lt;zone&gt;</span></a> <br></br>
+<strong>Children tags:</strong> <a class="reference internal" href="#pf-tag-link-ctn"><span class="std std-ref">&lt;link_ctn&gt;</span></a> <br></br>
+<strong>Attributes:</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">src</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Zone from which this route starts. Must be an existing zone.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">dst</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Zone to which this route leads. Must be an existing zone.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">gw_src</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Netpoint (within src zone) from which this route starts. Must be an existing host/router.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">gw_dst</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Netpoint (within dst zone) to which this route leads. Must be an existing host/router.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">symmetrical</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Whether this route is symmetrical, ie, whether we are defining the route <code class="docutils literal notranslate"><span class="pre">dst</span> <span class="pre">-&gt;</span> <span class="pre">src</span></code> at the same
+time. Valid values: <code class="docutils literal notranslate"><span class="pre">yes</span></code>, <code class="docutils literal notranslate"><span class="pre">no</span></code>, <code class="docutils literal notranslate"><span class="pre">YES</span></code>, <code class="docutils literal notranslate"><span class="pre">NO</span></code>.</p>
+</dd>
+</dl>
+<hr class="docutils"></hr>
+</section>
+<section id="backbone">
+<span id="pf-tag-backbone"></span><h3>&lt;backbone&gt;</h3>
+<p>Within a manually-built cluster, specify the backbone to use. See the documentation of <a class="reference internal" href="#pf-tag-cabinet"><span class="std std-ref">&lt;cabinet&gt;</span></a> for all
+details, even if you should probably stop using this tag and switch to the C++ interface.</p>
+<p><strong>Parent tags:</strong> <a class="reference internal" href="#pf-tag-zone"><span class="std std-ref">&lt;zone&gt;</span></a> with <code class="docutils literal notranslate"><span class="pre">routing=&quot;Cluster&quot;</span></code> attribute <br></br>
+<strong>Children tags:</strong> none <br></br>
+<strong>Attributes:</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">id</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>No other link in the platform shall have the same identifier.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">bw</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Bandwidth, see the <a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a> for syntax/details.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">lat</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Latency, see the <a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a> for syntax/details.</p>
+</dd>
+</dl>
+<hr class="docutils"></hr>
+</section>
+<section id="cabinet">
+<span id="pf-tag-cabinet"></span><h3>&lt;cabinet&gt;</h3>
+<p>The cabinet tag is a shortcut for creating a set of (homogenous) hosts and links quickly, as in cabinets of data centers.
+This is mostly useful when manually describing a cluster, i.e. a <code class="docutils literal notranslate"><span class="pre">&lt;zone</span> <span class="pre">routing=&quot;Cluster&quot;&gt;</span></code> where you manually specify
+the content with <a class="reference internal" href="#pf-tag-cabinet"><span class="std std-ref">&lt;cabinet&gt;</span></a>, <a class="reference internal" href="#pf-tag-backbone"><span class="std std-ref">&lt;backbone&gt;</span></a> and maybe <a class="reference internal" href="#pf-tag-host-link"><span class="std std-ref">&lt;host_link&gt;</span></a>.</p>
+<p>But this approach is somewhat deprecated now, as the C++ interface is both more convinient and more powerful. For example,
+the core amount or link characteristics cannot be changed with this tag.</p>
+<p><strong>Parent tags:</strong> <a class="reference internal" href="#pf-tag-zone"><span class="std std-ref">&lt;zone&gt;</span></a> with <code class="docutils literal notranslate"><span class="pre">routing=&quot;Cluster&quot;</span></code> attribute <br></br>
+<strong>Children tags:</strong> none <br></br>
+<strong>Attributes:</strong></p>
+<dl class="field-list">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">id</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>The identifier of the cabinet. Facilitates referring to it.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">prefix</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Each node of the cabinet has to have a name. This name will be prefixed with this prefix.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">suffix</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Each node of the cabinet will be suffixed with this suffix.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">radical</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Regexp used to generate cabinet nodes name.
+Syntax: “10-20” will give you 11 machines numbered from 10 to 20, “10-20;2” will give you 12 machines, one with the number 2, others numbered as before.</p>
+<p>The produced number is concatenated between prefix and suffix to form machine names.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">speed</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Same as the <code class="docutils literal notranslate"><span class="pre">speed</span></code> attribute of the <a class="reference internal" href="#pf-tag-host"><span class="std std-ref">&lt;host&gt;</span></a> tag.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">bw</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Bandwidth for the links between nodes and backbone (if any). See the <a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a> for syntax/details.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">lat</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Latency for the links between nodes and backbone (if any). See the <a class="reference internal" href="#pf-tag-link"><span class="std std-ref">&lt;link&gt;</span></a> for syntax/details.</p>
+</dd>
+</dl>
+<p><strong>Example</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;?xml version=&#39;1.0&#39;?&gt;
+&lt;!DOCTYPE platform SYSTEM &quot;https://simgrid.org/simgrid.dtd&quot;&gt;
+&lt;platform version=&quot;4.1&quot;&gt;
+  &lt;zone id=&quot;AS0&quot; routing=&quot;Full&quot;&gt;
+    &lt;zone  id=&quot;my_cluster1&quot;  routing=&quot;Cluster&quot;&gt;
+      &lt;cabinet id=&quot;cabinet1&quot; prefix=&quot;host-&quot; suffix=&quot;.cluster1&quot; speed=&quot;1Gf&quot; bw=&quot;125MBps&quot; lat=&quot;100us&quot; radical=&quot;1-10&quot;/&gt;
+      &lt;cabinet id=&quot;cabinet2&quot; prefix=&quot;host-&quot; suffix=&quot;.cluster1&quot; speed=&quot;1Gf&quot; bw=&quot;125MBps&quot; lat=&quot;100us&quot; radical=&quot;11-20&quot;/&gt;
+      &lt;cabinet id=&quot;cabinet3&quot; prefix=&quot;host-&quot; suffix=&quot;.cluster1&quot; speed=&quot;1Gf&quot; bw=&quot;125MBps&quot; lat=&quot;100us&quot; radical=&quot;21-30&quot;/&gt;
+
+      &lt;router  id=&quot;router1&quot;/&gt;
+      &lt;backbone id=&quot;backbone1&quot; bandwidth=&quot;2.25GBps&quot; latency=&quot;500us&quot;/&gt;
+    &lt;/zone&gt;
+
+    &lt;zone  id=&quot;my_cluster2&quot;  routing=&quot;Cluster&quot;&gt;
+      &lt;cabinet id=&quot;cabinet1&quot; prefix=&quot;host-&quot; suffix=&quot;.cluster2&quot; speed=&quot;1Gf&quot; bw=&quot;125MBps&quot; lat=&quot;100us&quot; radical=&quot;1-10&quot;/&gt;
+      &lt;cabinet id=&quot;cabinet2&quot; prefix=&quot;host-&quot; suffix=&quot;.cluster2&quot; speed=&quot;1Gf&quot; bw=&quot;125MBps&quot; lat=&quot;100us&quot; radical=&quot;11-20&quot;/&gt;
+      &lt;cabinet id=&quot;cabinet3&quot; prefix=&quot;host-&quot; suffix=&quot;.cluster2&quot; speed=&quot;1Gf&quot; bw=&quot;125MBps&quot; lat=&quot;100us&quot; radical=&quot;21-30&quot;/&gt;
+
+      &lt;router  id=&quot;router2&quot;/&gt;
+      &lt;backbone id=&quot;backbone2&quot; bandwidth=&quot;2.25GBps&quot; latency=&quot;500us&quot;/&gt;
+    &lt;/zone&gt;
+
+    &lt;link id=&quot;link1-2&quot; bandwidth=&quot;2.25GBps&quot; latency=&quot;500us&quot;/&gt;
+
+    &lt;zoneRoute src=&quot;my_cluster1&quot; dst=&quot;my_cluster2&quot; gw_src=&quot;router1&quot; gw_dst=&quot;router2&quot;&gt;
+      &lt;link_ctn id=&quot;link1-2&quot; /&gt;
+    &lt;/zoneRoute&gt;
+  &lt;/zone&gt;
+&lt;/platform&gt;
+</pre></div>
+</div>
+<p>The hosts generated in the above example are named host-1.cluster, host-2.cluster1
+etc.</p>
+<hr class="docutils"></hr>
+</section>
+<section id="host-link">
+<span id="pf-tag-host-link"></span><h3>&lt;host_link&gt;</h3>
+<p>Specify the up and down private links of a given host, which must be in a Cluster zone.</p>
+<p><strong>Parent tags:</strong> <a class="reference internal" href="#pf-tag-zone"><span class="std std-ref">&lt;zone&gt;</span></a> with <code class="docutils literal notranslate"><span class="pre">routing=&quot;Cluster&quot;</span></code> attribute <br></br>
+<strong>Children tags:</strong> none <br></br>
+<strong>Attributes:</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">id</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Identifier of the host to be connected.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">up</span></code><span class="colon">:</span></dt>
+<dd class="field-even"><p>Link id to be used for the outgoing communications.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">down</span></code><span class="colon">:</span></dt>
+<dd class="field-odd"><p>Link id to be used for the incoming communications.</p>
+</dd>
+</dl>
+</section>
+</section>
+</section>
+
+
+           
+</main></body></html>

@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SMPI: Simulate MPI Applications &mdash; SimGrid  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="_static/showfile.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
+        <script src="_static/tabs.js"></script>
+        <script src="_static/showfile.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="The XBT toolbox" href="The_XBT_toolbox.html" />
+    <link rel="prev" title="S4U Examples" href="Examples.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SimGrid
+          </a>
+              <div class="version">
+                4.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Algorithms.html">     Simulating distributed algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_MPI_Applications.html">     Simulating MPI applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Model-checking.html">     Model-checking algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_DAG.html">Simulating DAG</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Manual:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">   Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installing_SimGrid.html">      Installing SimGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Start_your_own_project.html">      Start your own project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="community.html">      The SimGrid community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Release_Notes.html">      Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="application.html">   Describing your application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_s4u.html">      The S4U interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">      S4U examples</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">      The SMPI interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-can-run-within-smpi">What can run within SMPI?</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#mpi-coverage-of-smpi">MPI coverage of SMPI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#privatization-of-global-variables">Privatization of global variables</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#online-smpi-live-execution">Online SMPI: live execution</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#compiling-your-code">Compiling your Code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#simulating-your-code">Simulating your Code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#debugging-your-code-within-smpi">Debugging your Code within SMPI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#simulating-collective-operations">Simulating Collective Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#available-algorithms">Available Algorithms</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#mpi-alltoall">MPI_Alltoall</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mpi-alltoallv">MPI_Alltoallv</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mpi-gather">MPI_Gather</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mpi-barrier">MPI_Barrier</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mpi-scatter">MPI_Scatter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mpi-reduce">MPI_Reduce</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mpi-allreduce">MPI_Allreduce</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mpi-reduce-scatter">MPI_Reduce_scatter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mpi-allgather">MPI_Allgather</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mpi-allgatherv">MPI_Allgatherv</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mpi-bcast">MPI_Bcast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#automatic-evaluation">Automatic Evaluation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#adding-an-algorithm">Adding an algorithm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tracing-of-internal-communications">Tracing of Internal Communications</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#adapting-your-mpi-code-for-further-scalability">Adapting your MPI code for further scalability</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#reducing-your-memory-footprint">Reducing your memory footprint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#toward-faster-simulations">Toward Faster Simulations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ensuring-accurate-simulations">Ensuring Accurate Simulations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#examples-of-smpi-usage">Examples of SMPI Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#offline-smpi-trace-replay">Offline SMPI: Trace Replay</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mixing-s4u-and-mpi-simulation">Mixing S4U and MPI simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting-with-smpi">Troubleshooting with SMPI</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configure-or-cmake-refuse-to-use-smpicc">./configure or cmake refuse to use smpicc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configure-or-cmake-do-not-pick-smpicc-as-a-compiler">./configure or cmake do not pick smpicc as a compiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#error-unknown-type-name-useconds-t">error: unknown type name ‘useconds_t’</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="The_XBT_toolbox.html">      The XBT toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform.html">   Describing the simulated platform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_examples.html">      Network topology examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_routing.html">      Advanced routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="XML_reference.html">      XML reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_cpp.html">      C++ platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Models.html">   The SimGrid models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Modeling_howtos.html">      Modeling hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Calibrating_the_models.html">      Calibrating the models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plugins.html">      SimGrid plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Experimental_setup.html">   Running an experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Configuring_SimGrid.html">      Configuring SimGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Deploying_your_application.html">      Deploying your application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Outcomes.html">      Simulation outcomes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">SimGrid's Internals:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Design_goals.html">   Design goals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Contributors_Documentation.html">   Contributor's documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SimGrid</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">SMPI: Simulate MPI Applications</li>
+  <li class="wy-breadcrumbs-aside">
+    
+
+      <a href="" class="fa fa-bitbucket"> Edit on FramaGit</a>
+    
+  </li>
+
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="smpi-simulate-mpi-applications">
+<span id="smpi-doc"></span><h1>SMPI: Simulate MPI Applications<a class="headerlink" href="#smpi-simulate-mpi-applications" title="Permalink to this heading"></a></h1>
+<object id="TOC" data="graphical-toc.svg" type="image/svg+xml"></object>
+<script>
+window.onload=function() { // Wait for the SVG to be loaded before changing it
+  var elem=document.querySelector("#TOC").contentDocument.getElementById("SMPIBox")
+  elem.style="opacity:0.93999999;fill:#ff0000;fill-opacity:0.1";
+  elem.style="opacity:0.93999999;fill:#ff0000;fill-opacity:0.1;stroke:#000000;stroke-width:0.35277778;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1";
+}
+</script>
+<br/>
+<br/><p>SMPI enables the study of MPI application by emulating them on top of
+the SimGrid simulator. This is particularly interesting to study
+existing MPI applications within the comfort of the simulator.</p>
+<p>To get started with SMPI, you should head to <a class="reference internal" href="Tutorial_MPI_Applications.html#usecase-smpi"><span class="std std-ref">the SMPI tutorial</span></a>. You may also want to read the <a class="reference external" href="https://hal.inria.fr/hal-01415484">SMPI reference
+article</a> or these <a class="reference external" href="http://simgrid.org/tutorials/simgrid-smpi-101.pdf">introductory
+slides</a>.  If you
+are new to MPI, you should first take our online <a class="reference external" href="https://simgrid.github.io/SMPI_CourseWare/">SMPI CourseWare</a>. It consists in several
+projects that progressively introduce the MPI concepts. It proposes to
+use SimGrid and SMPI to run the experiments, but the learning
+objectives are centered on MPI itself.</p>
+<p>Our goal is to enable the study of <strong>unmodified MPI applications</strong>.
+Some constructs and features are still missing, but we can probably
+add them on demand.  If you already used MPI before, SMPI should sound
+very familiar to you: Use smpicc instead of mpicc, and smpirun instead
+of mpirun. The main difference is that smpirun takes a <a class="reference internal" href="Platform.html#platform"><span class="std std-ref">simulated
+platform</span></a> as an extra parameter.</p>
+<p>For <strong>further scalability</strong>, you may modify your code to speed up your
+studies or save memory space.  Maximal <strong>simulation accuracy</strong>
+requires some specific care from you.</p>
+<section id="what-can-run-within-smpi">
+<h2>What can run within SMPI?<a class="headerlink" href="#what-can-run-within-smpi" title="Permalink to this heading"></a></h2>
+<p>You can run unmodified MPI applications (both C/C++ and Fortran) within
+SMPI, provided that you only use MPI calls that we implemented. Global
+variables should be handled correctly on Linux systems.</p>
+<section id="mpi-coverage-of-smpi">
+<h3>MPI coverage of SMPI<a class="headerlink" href="#mpi-coverage-of-smpi" title="Permalink to this heading"></a></h3>
+<p>SMPI support a large faction of the MPI interface: we pass many of the MPICH coverage tests, and many of the existing
+<a class="reference internal" href="#smpi-proxy-apps"><span class="std std-ref">proxy apps</span></a> run almost unmodified on top of SMPI. But our support is still incomplete, with I/O
+primitives the being one of the major missing feature.</p>
+<p>The full list of functions that remain to be implemented is documented in the file <a class="reference external" href="https://framagit.org/simgrid/simgrid/tree/master/include/smpi/smpi.h">include/smpi/smpi.h</a> in your version of SimGrid, between two lines
+containing the <code class="docutils literal notranslate"><span class="pre">FIXME</span></code> marker. If you miss a feature, please get in touch with us: we can guide you through the SimGrid
+code to help you implementing it, and we’d be glad to integrate your contribution to the main project.</p>
+</section>
+<section id="privatization-of-global-variables">
+<span id="smpi-what-globals"></span><h3>Privatization of global variables<a class="headerlink" href="#privatization-of-global-variables" title="Permalink to this heading"></a></h3>
+<p>Concerning the globals, the problem comes from the fact that usually,
+MPI processes run as real UNIX processes while they are all folded
+into threads of a unique system process in SMPI. Global variables are
+usually private to each MPI process while they become shared between
+the processes in SMPI.  The problem and some potential solutions are
+discussed in this article: <cite>Automatic Handling of Global Variables for
+Multi-threaded MPI Programs
+&lt;http://charm.cs.illinois.edu/newPapers/11-23/paper.pdf&gt;</cite> (note that
+this article does not deal with SMPI but with a competing solution
+called AMPI that suffers of the same issue).  This point used to be
+problematic in SimGrid, but the problem should now be handled
+automatically on Linux.</p>
+<p>Older versions of SimGrid came with a script that automatically
+privatized the globals through static analysis of the source code. But
+our implementation was not robust enough to be used in production, so
+it was removed at some point. Currently, SMPI comes with two
+privatization mechanisms that you can <a class="reference internal" href="Configuring_SimGrid.html#cfg-smpi-privatization"><span class="std std-ref">select at runtime</span></a>.  The dlopen approach is used by
+default as it is much faster and still very robust.  The mmap approach
+is an older approach that proves to be slower.</p>
+<p>With the <strong>mmap approach</strong>, SMPI duplicates and dynamically switch the
+<code class="docutils literal notranslate"><span class="pre">.data</span></code> and <code class="docutils literal notranslate"><span class="pre">.bss</span></code> segments of the ELF process when switching the
+MPI ranks. This allows each ranks to have its own copy of the global
+variables.  No copy actually occurs as this mechanism uses <code class="docutils literal notranslate"><span class="pre">mmap()</span></code>
+for efficiency. This mechanism is considered to be very robust on all
+systems supporting <code class="docutils literal notranslate"><span class="pre">mmap()</span></code> (Linux and most BSDs). Its performance
+is questionable since each context switch between MPI ranks induces
+several syscalls to change the <code class="docutils literal notranslate"><span class="pre">mmap</span></code> that redirects the <code class="docutils literal notranslate"><span class="pre">.data</span></code>
+and <code class="docutils literal notranslate"><span class="pre">.bss</span></code> segments to the copies of the new rank. The code will
+also be copied several times in memory, inducing a slight increase of
+memory occupation.</p>
+<p>Another limitation is that SMPI only accounts for global variables
+defined in the executable. If the processes use external global
+variables from dynamic libraries, they won’t be switched
+correctly. The easiest way to solve this is to statically link against
+the library with these globals. This way, each MPI rank will get its
+own copy of these libraries. Of course you should never statically
+link against the SimGrid library itself.</p>
+<p>With the <strong>dlopen approach</strong>, SMPI loads several copies of the same
+executable in memory as if it were a library, so that the global
+variables get naturally duplicated. It first requires the executable
+to be compiled as a relocatable binary, which is less common for
+programs than for libraries. But most distributions are now compiled
+this way for security reason as it allows one to randomize the address
+space layout. It should thus be safe to compile most (any?) program
+this way.  The second trick is that the dynamic linker refuses to link
+the exact same file several times, be it a library or a relocatable
+executable. It makes perfectly sense in the general case, but we need
+to circumvent this rule of thumb in our case. To that extend, the
+binary is copied in a temporary file before being re-linked against.
+<code class="docutils literal notranslate"><span class="pre">dlmopen()</span></code> cannot be used as it only allows 256 contexts, and as it
+would also duplicate SimGrid itself.</p>
+<p>This approach greatly speeds up the context switching, down to about
+40 CPU cycles with our raw contexts, instead of requesting several
+syscalls with the <code class="docutils literal notranslate"><span class="pre">mmap()</span></code> approach. Another advantage is that it
+permits one to run the SMPI contexts in parallel, which is obviously not
+possible with the <code class="docutils literal notranslate"><span class="pre">mmap()</span></code> approach. It was tricky to implement, but
+we are not aware of any flaws, so smpirun activates it by default.</p>
+<p>In the future, it may be possible to further reduce the memory and
+disk consumption. It seems that we could <a class="reference external" href="https://lwn.net/Articles/415889/">punch holes</a> in the files before dl-loading
+them to remove the code and constants, and mmap these area onto a
+unique copy. If done correctly, this would reduce the disk- and
+memory- usage to the bare minimum, and would also reduce the pressure
+on the CPU instruction cache. See the <a class="reference external" href="https://github.com/simgrid/simgrid/issues/137">relevant bug</a> on github for
+implementation leads.n</p>
+<p>Also, currently, only the binary is copied and dlopen-ed for each MPI
+rank. We could probably extend this to external dependencies, but for
+now, any external dependencies must be statically linked into your
+application. As usual, SimGrid itself shall never be statically linked
+in your app. You don’t want to give a copy of SimGrid to each MPI rank:
+that’s ways too much for them to deal with.</p>
+</section>
+</section>
+<section id="online-smpi-live-execution">
+<span id="smpi-online"></span><h2>Online SMPI: live execution<a class="headerlink" href="#online-smpi-live-execution" title="Permalink to this heading"></a></h2>
+<p>In this mode, your application is actually executed. Every computation
+occurs for real while every communication is simulated. In addition,
+the executions are automatically benchmarked so that their timings can
+be applied within the simulator.</p>
+<p>SMPI can also go offline by replaying a trace. <a class="reference internal" href="#smpi-offline"><span class="std std-ref">Trace replay</span></a> is usually ways faster than online simulation (because
+the computation are skipped), but it can only applied to applications
+with constant execution and communication patterns (for the exact same
+reason).</p>
+<section id="compiling-your-code">
+<h3>Compiling your Code<a class="headerlink" href="#compiling-your-code" title="Permalink to this heading"></a></h3>
+<p>If your application is in C, then simply use <code class="docutils literal notranslate"><span class="pre">smpicc</span></code> as a
+compiler just like you use mpicc with other MPI implementations. This
+script still calls your default compiler (gcc, clang, …) and adds
+the right compilation flags along the way. If your application is in
+C++, Fortran 77 or Fortran 90, use respectively <code class="docutils literal notranslate"><span class="pre">smpicxx</span></code>,
+<code class="docutils literal notranslate"><span class="pre">smpiff</span></code> or <code class="docutils literal notranslate"><span class="pre">smpif90</span></code>.</p>
+<p>If you use cmake, set the variables <code class="docutils literal notranslate"><span class="pre">MPI_C_COMPILER</span></code>, <code class="docutils literal notranslate"><span class="pre">MPI_CXX_COMPILER</span></code> and
+<code class="docutils literal notranslate"><span class="pre">MPI_Fortran_COMPILER</span></code> to the full path of smpicc, smpicxx and smpiff (or
+smpif90), respectively. Example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cmake<span class="w"> </span>-DMPI_C_COMPILER<span class="o">=</span>/opt/simgrid/bin/smpicc<span class="w"> </span>-DMPI_CXX_COMPILER<span class="o">=</span>/opt/simgrid/bin/smpicxx<span class="w"> </span>-DMPI_Fortran_COMPILER<span class="o">=</span>/opt/simgrid/bin/smpiff<span class="w"> </span>.
+</pre></div>
+</div>
+</section>
+<section id="simulating-your-code">
+<h3>Simulating your Code<a class="headerlink" href="#simulating-your-code" title="Permalink to this heading"></a></h3>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">smpirun</span></code> script as follows:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>smpirun<span class="w"> </span>-hostfile<span class="w"> </span>my_hostfile.txt<span class="w"> </span>-platform<span class="w"> </span>my_platform.xml<span class="w"> </span>./program<span class="w"> </span>-blah
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">my_hostfile.txt</span></code> is a classical MPI hostfile (that is, this file
+lists the machines on which the processes must be dispatched, one
+per line). Using the <code class="docutils literal notranslate"><span class="pre">hostname:num_procs</span></code> syntax will deploy num_procs
+MPI processes on the host, sharing available cores (equivalent to listing
+the same host num_procs times on different lines).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">my_platform.xml</span></code> is a classical SimGrid platform file. Of course,
+the hosts of the hostfile must exist in the provided platform.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">./program</span></code> is the MPI program to simulate, that you compiled with <code class="docutils literal notranslate"><span class="pre">smpicc</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-blah</span></code> is a command-line parameter passed to this program.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">smpirun</span></code> accepts other parameters, such as <code class="docutils literal notranslate"><span class="pre">-np</span></code> if you don’t
+want to use all the hosts defined in the hostfile, <code class="docutils literal notranslate"><span class="pre">-map</span></code> to display
+on which host each rank gets mapped of <code class="docutils literal notranslate"><span class="pre">-trace</span></code> to activate the
+tracing during the simulation. You can get the full list by running
+<code class="docutils literal notranslate"><span class="pre">smpirun</span> <span class="pre">-help</span></code></p>
+<p>Finally, you can pass <a class="reference internal" href="Configuring_SimGrid.html#options"><span class="std std-ref">any valid SimGrid parameter</span></a> to your
+program. In particular, you can pass <code class="docutils literal notranslate"><span class="pre">--cfg=network/model:ns-3</span></code> to
+switch to use <a class="reference internal" href="Models.html#models-ns3"><span class="std std-ref">ns-3 as a SimGrid model</span></a>. These parameters should be placed after
+the name of your binary on the command line.</p>
+</section>
+<section id="debugging-your-code-within-smpi">
+<h3>Debugging your Code within SMPI<a class="headerlink" href="#debugging-your-code-within-smpi" title="Permalink to this heading"></a></h3>
+<p>If you want to explore the automatic platform and deployment files
+that are generated by <code class="docutils literal notranslate"><span class="pre">smpirun</span></code>, add <code class="docutils literal notranslate"><span class="pre">-keep-temps</span></code> to the command
+line.</p>
+<p>You can also run your simulation within valgrind or gdb using the
+following commands. Once in GDB, each MPI ranks will be represented as
+a regular thread, and you can explore the state of each of them as
+usual.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>smpirun<span class="w"> </span>-wrapper<span class="w"> </span>valgrind<span class="w"> </span>...other<span class="w"> </span>args...
+<span class="gp">$ </span>smpirun<span class="w"> </span>-wrapper<span class="w"> </span><span class="s2">&quot;gdb --args&quot;</span><span class="w"> </span>--cfg<span class="o">=</span>contexts/factory:thread<span class="w"> </span>...other<span class="w"> </span>args...
+</pre></div>
+</div>
+<p>Some shortcuts are available:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-gdb</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">-wrapper</span> <span class="pre">&quot;gdb</span> <span class="pre">--args&quot;</span> <span class="pre">-keep-temps</span></code>, to run within gdb debugger</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-lldb</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">-wrapper</span> <span class="pre">&quot;lldb</span> <span class="pre">--&quot;</span> <span class="pre">-keep-temps</span></code>, to run within lldb debugger</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-vgdb</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">-wrapper</span> <span class="pre">&quot;valgrind</span> <span class="pre">--vgdb=yes</span> <span class="pre">--vgdb-error=0&quot;</span> <span class="pre">-keep-temps</span></code>,
+to run within valgrind and allow to attach a debugger</p></li>
+</ul>
+<p>To help locate bottlenecks and largest allocations in the simulated application,
+the -analyze flag can be passed to smpirun. It will activate
+<a class="reference internal" href="Configuring_SimGrid.html#cfg-smpi-display-timing"><span class="std std-ref">smpi/display-timing</span></a> and
+<a class="reference internal" href="Configuring_SimGrid.html#cfg-smpi-display-allocs"><span class="std std-ref">smpi/display-allocs</span></a> options and provide hints
+at the end of execution.</p>
+<p>SMPI will also report MPI handle (Comm, Request, Op, Datatype…) leaks
+at the end of execution. This can help identify memory leaks that can trigger
+crashes and slowdowns.
+By default it only displays the number of leaked items detected.
+Option <a class="reference internal" href="Configuring_SimGrid.html#cfg-smpi-list-leaks"><span class="std std-ref">smpi/list-leaks:n</span></a> can be used to display the
+n first leaks encountered and their type. To get more information, running smpirun
+with <code class="docutils literal notranslate"><span class="pre">-wrapper</span> <span class="pre">&quot;valgrind</span> <span class="pre">--leak-check=full</span> <span class="pre">--track-origins=yes&quot;</span></code> should show
+the exact origin of leaked handles.
+Known issue : MPI_Cancel may trigger internal leaks within SMPI.</p>
+</section>
+<section id="simulating-collective-operations">
+<span id="smpi-use-colls"></span><h3>Simulating Collective Operations<a class="headerlink" href="#simulating-collective-operations" title="Permalink to this heading"></a></h3>
+<p>MPI collective operations are crucial to the performance of MPI
+applications and must be carefully optimized according to many
+parameters. Every existing implementation provides several algorithms
+for each collective operation, and selects by default the best suited
+one, depending on the sizes sent, the number of nodes, the
+communicator, or the communication library being used.  These
+decisions are based on empirical results and theoretical complexity
+estimation, and are very different between MPI implementations. In
+most cases, the users can also manually tune the algorithm used for
+each collective operation.</p>
+<p>SMPI can simulate the behavior of several MPI implementations:
+OpenMPI, MPICH, <a class="reference external" href="http://star-mpi.sourceforge.net/">STAR-MPI</a>, and
+MVAPICH2. For that, it provides 115 collective algorithms and several
+selector algorithms, that were collected directly in the source code
+of the targeted MPI implementations.</p>
+<p>You can switch the automatic selector through the
+<code class="docutils literal notranslate"><span class="pre">smpi/coll-selector</span></code> configuration item. Possible values:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>ompi:</strong> default selection logic of OpenMPI (version 4.1.2)</p></li>
+<li><p><strong>mpich</strong>: default selection logic of MPICH (version 3.3b)</p></li>
+<li><p><strong>mvapich2</strong>: selection logic of MVAPICH2 (version 1.9) tuned
+on the Stampede cluster</p></li>
+<li><p><strong>impi</strong>: preliminary version of an Intel MPI selector (version
+4.1.3, also tuned for the Stampede cluster). Due the closed source
+nature of Intel MPI, some of the algorithms described in the
+documentation are not available, and are replaced by mvapich ones.</p></li>
+<li><p><strong>default</strong>: legacy algorithms used in the earlier days of
+SimGrid. Do not use for serious perform performance studies.</p></li>
+</ul>
+</div></blockquote>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>default should not even exist.</p>
+</div>
+</section>
+<section id="available-algorithms">
+<h3>Available Algorithms<a class="headerlink" href="#available-algorithms" title="Permalink to this heading"></a></h3>
+<p>You can also pick the algorithm used for each collective with the
+corresponding configuration item. For example, to use the pairwise
+alltoall algorithm, one should add <code class="docutils literal notranslate"><span class="pre">--cfg=smpi/alltoall:pair</span></code> to the
+line. This will override the selector (if any) for this algorithm.  It
+means that the selected algorithm will be used</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Some collective may require specific conditions to be
+executed correctly (for instance having a communicator with a power
+of two number of nodes only), which are currently not enforced by
+SimGrid. Some crashes can be expected while trying these algorithms
+with unusual sizes/parameters</p>
+</div>
+<p>To retrieve the full list of implemented algorithms in your version of SimGrid, simply use <code class="docutils literal notranslate"><span class="pre">smpirun</span> <span class="pre">--help-coll</span></code>.</p>
+<section id="mpi-alltoall">
+<h4>MPI_Alltoall<a class="headerlink" href="#mpi-alltoall" title="Permalink to this heading"></a></h4>
+<p>Most of these are best described in <a class="reference external" href="https://doi.org/10.1145/1183401.1183431">STAR-MPI’s white paper</a>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">default</span></code>: naive one, by default. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi</span></code>: use openmpi selector for the alltoall operations. <br />
+<code class="docutils literal notranslate"><span class="pre">mpich</span></code>: use mpich selector for the alltoall operations. <br />
+<code class="docutils literal notranslate"><span class="pre">mvapich2</span></code>: use mvapich2 selector for the alltoall operations. <br />
+<code class="docutils literal notranslate"><span class="pre">impi</span></code>: use intel mpi selector for the alltoall operations. <br />
+<code class="docutils literal notranslate"><span class="pre">automatic</span> <span class="pre">(experimental)</span></code>: use an automatic self-benchmarking algorithm. <br />
+<code class="docutils literal notranslate"><span class="pre">bruck</span></code>: Described by Bruck et. al. in <a class="reference external" href="http://ieeexplore.ieee.org/xpl/articleDetails.jsp?arnumber=642949">this paper</a>. <br />
+<code class="docutils literal notranslate"><span class="pre">2dmesh</span></code>: organizes the nodes as a two dimensional mesh, and perform allgather along the dimensions. <br />
+<code class="docutils literal notranslate"><span class="pre">3dmesh</span></code>: adds a third dimension to the previous algorithm. <br />
+<code class="docutils literal notranslate"><span class="pre">rdb</span></code>: recursive doubling``: extends the mesh to a nth dimension, each one containing two nodes. <br />
+<code class="docutils literal notranslate"><span class="pre">pair</span></code>: pairwise exchange, only works for power of 2 procs, size-1 steps, each process sends and receives from the same process at each step. <br />
+<code class="docutils literal notranslate"><span class="pre">pair_light_barrier</span></code>: same, with small barriers between steps to avoid contention. <br />
+<code class="docutils literal notranslate"><span class="pre">pair_mpi_barrier</span></code>: same, with MPI_Barrier used. <br />
+<code class="docutils literal notranslate"><span class="pre">pair_one_barrier</span></code>: only one barrier at the beginning. <br />
+<code class="docutils literal notranslate"><span class="pre">ring</span></code>: size-1 steps, at each step a process send to process (n+i)%size, and receives from (n-i)%size. <br />
+<code class="docutils literal notranslate"><span class="pre">ring_light_barrier</span></code>: same, with small barriers between some phases to avoid contention. <br />
+<code class="docutils literal notranslate"><span class="pre">ring_mpi_barrier</span></code>: same, with MPI_Barrier used. <br />
+<code class="docutils literal notranslate"><span class="pre">ring_one_barrier</span></code>: only one barrier at the beginning. <br />
+<code class="docutils literal notranslate"><span class="pre">basic_linear</span></code>: posts all receives and all sends, starts the communications, and waits for all communication to finish. <br />
+<code class="docutils literal notranslate"><span class="pre">mvapich2_scatter_dest</span></code>: isend/irecv with scattered destinations, posting only a few messages at the same time. <br /></p>
+</section>
+<section id="mpi-alltoallv">
+<h4>MPI_Alltoallv<a class="headerlink" href="#mpi-alltoallv" title="Permalink to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">default</span></code>: naive one, by default. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi</span></code>: use openmpi selector for the alltoallv operations. <br />
+<code class="docutils literal notranslate"><span class="pre">mpich</span></code>: use mpich selector for the alltoallv operations. <br />
+<code class="docutils literal notranslate"><span class="pre">mvapich2</span></code>: use mvapich2 selector for the alltoallv operations. <br />
+<code class="docutils literal notranslate"><span class="pre">impi</span></code>: use intel mpi selector for the alltoallv operations. <br />
+<code class="docutils literal notranslate"><span class="pre">automatic</span> <span class="pre">(experimental)</span></code>: use an automatic self-benchmarking algorithm. <br />
+<code class="docutils literal notranslate"><span class="pre">bruck</span></code>: same as alltoall. <br />
+<code class="docutils literal notranslate"><span class="pre">pair</span></code>: same as alltoall. <br />
+<code class="docutils literal notranslate"><span class="pre">pair_light_barrier</span></code>: same as alltoall. <br />
+<code class="docutils literal notranslate"><span class="pre">pair_mpi_barrier</span></code>: same as alltoall. <br />
+<code class="docutils literal notranslate"><span class="pre">pair_one_barrier</span></code>: same as alltoall. <br />
+<code class="docutils literal notranslate"><span class="pre">ring</span></code>: same as alltoall. <br />
+<code class="docutils literal notranslate"><span class="pre">ring_light_barrier</span></code>: same as alltoall. <br />
+<code class="docutils literal notranslate"><span class="pre">ring_mpi_barrier</span></code>: same as alltoall. <br />
+<code class="docutils literal notranslate"><span class="pre">ring_one_barrier</span></code>: same as alltoall. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_basic_linear</span></code>: same as alltoall. <br /></p>
+</section>
+<section id="mpi-gather">
+<h4>MPI_Gather<a class="headerlink" href="#mpi-gather" title="Permalink to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">default</span></code>: naive one, by default. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi</span></code>: use openmpi selector for the gather operations. <br />
+<code class="docutils literal notranslate"><span class="pre">mpich</span></code>: use mpich selector for the gather operations. <br />
+<code class="docutils literal notranslate"><span class="pre">mvapich2</span></code>: use mvapich2 selector for the gather operations. <br />
+<code class="docutils literal notranslate"><span class="pre">impi</span></code>: use intel mpi selector for the gather operations. <br />
+<code class="docutils literal notranslate"><span class="pre">automatic</span> <span class="pre">(experimental)</span></code>: use an automatic self-benchmarking algorithm which will iterate over all implemented versions and output the best. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_basic_linear</span></code>: basic linear algorithm from openmpi, each process sends to the root. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_binomial</span></code>: binomial tree algorithm. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_linear_sync</span></code>: same as basic linear, but with a synchronization at the beginning and message cut into two segments. <br />
+<code class="docutils literal notranslate"><span class="pre">mvapich2_two_level</span></code>: SMP-aware version from MVAPICH. Gather first intra-node (defaults to mpich’s gather), and then exchange with only one process/node. Use mvapich2 selector to change these to tuned algorithms for Stampede cluster. <br /></p>
+</section>
+<section id="mpi-barrier">
+<h4>MPI_Barrier<a class="headerlink" href="#mpi-barrier" title="Permalink to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">default</span></code>: naive one, by default. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi</span></code>: use openmpi selector for the barrier operations. <br />
+<code class="docutils literal notranslate"><span class="pre">mpich</span></code>: use mpich selector for the barrier operations. <br />
+<code class="docutils literal notranslate"><span class="pre">mvapich2</span></code>: use mvapich2 selector for the barrier operations. <br />
+<code class="docutils literal notranslate"><span class="pre">impi</span></code>: use intel mpi selector for the barrier operations. <br />
+<code class="docutils literal notranslate"><span class="pre">automatic</span> <span class="pre">(experimental)</span></code>: use an automatic self-benchmarking algorithm. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_basic_linear</span></code>: all processes send to root. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_two_procs</span></code>: special case for two processes. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_bruck</span></code>: nsteps = sqrt(size), at each step, exchange data with rank-2^k and rank+2^k. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_recursivedoubling</span></code>: recursive doubling algorithm. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_tree</span></code>: recursive doubling type algorithm, with tree structure. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_doublering</span></code>: double ring algorithm. <br />
+<code class="docutils literal notranslate"><span class="pre">mvapich2_pair</span></code>: pairwise algorithm. <br />
+<code class="docutils literal notranslate"><span class="pre">mpich_smp</span></code>: barrier intra-node, then inter-node. <br /></p>
+</section>
+<section id="mpi-scatter">
+<h4>MPI_Scatter<a class="headerlink" href="#mpi-scatter" title="Permalink to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">default</span></code>: naive one, by default. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi</span></code>: use openmpi selector for the scatter operations. <br />
+<code class="docutils literal notranslate"><span class="pre">mpich</span></code>: use mpich selector for the scatter operations. <br />
+<code class="docutils literal notranslate"><span class="pre">mvapich2</span></code>: use mvapich2 selector for the scatter operations. <br />
+<code class="docutils literal notranslate"><span class="pre">impi</span></code>: use intel mpi selector for the scatter operations. <br />
+<code class="docutils literal notranslate"><span class="pre">automatic</span> <span class="pre">(experimental)</span></code>: use an automatic self-benchmarking algorithm. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_basic_linear</span></code>: basic linear scatter. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_linear_nb</span></code>: linear scatter, non blocking sends. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_binomial</span></code>: binomial tree scatter. <br />
+<code class="docutils literal notranslate"><span class="pre">mvapich2_two_level_direct</span></code>: SMP aware algorithm, with an intra-node stage (default set to mpich selector), and then a basic linear inter node stage. Use mvapich2 selector to change these to tuned algorithms for Stampede cluster. <br />
+<code class="docutils literal notranslate"><span class="pre">mvapich2_two_level_binomial</span></code>: SMP aware algorithm, with an intra-node stage (default set to mpich selector), and then a binomial phase. Use mvapich2 selector to change these to tuned algorithms for Stampede cluster. <br /></p>
+</section>
+<section id="mpi-reduce">
+<h4>MPI_Reduce<a class="headerlink" href="#mpi-reduce" title="Permalink to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">default</span></code>: naive one, by default. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi</span></code>: use openmpi selector for the reduce operations. <br />
+<code class="docutils literal notranslate"><span class="pre">mpich</span></code>: use mpich selector for the reduce operations. <br />
+<code class="docutils literal notranslate"><span class="pre">mvapich2</span></code>: use mvapich2 selector for the reduce operations. <br />
+<code class="docutils literal notranslate"><span class="pre">impi</span></code>: use intel mpi selector for the reduce operations. <br />
+<code class="docutils literal notranslate"><span class="pre">automatic</span> <span class="pre">(experimental)</span></code>: use an automatic self-benchmarking algorithm. <br />
+<code class="docutils literal notranslate"><span class="pre">arrival_pattern_aware</span></code>: root exchanges with the first process to arrive. <br />
+<code class="docutils literal notranslate"><span class="pre">binomial</span></code>: uses a binomial tree. <br />
+<code class="docutils literal notranslate"><span class="pre">flat_tree</span></code>: uses a flat tree. <br />
+<code class="docutils literal notranslate"><span class="pre">NTSL</span></code>: Non-topology-specific pipelined linear-bcast function. <br /> 0-&gt;1, 1-&gt;2 ,2-&gt;3, ….., -&gt;last node: in a pipeline fashion, with segments of 8192 bytes. <br />
+<code class="docutils literal notranslate"><span class="pre">scatter_gather</span></code>: scatter then gather. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_chain</span></code>: openmpi reduce algorithms are built on the same basis, but the topology is generated differently for each flavor. chain = chain with spacing of size/2, and segment size of 64KB. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_pipeline</span></code>: same with pipeline (chain with spacing of 1), segment size depends on the communicator size and the message size. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_binary</span></code>: same with binary tree, segment size of 32KB. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_in_order_binary</span></code>: same with binary tree, enforcing order on the operations. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_binomial</span></code>: same with binomial algo (redundant with default binomial one in most cases). <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_basic_linear</span></code>: basic algorithm, each process sends to root. <br />
+<code class="docutils literal notranslate"><span class="pre">mvapich2_knomial</span></code>: k-nomial algorithm. Default factor is 4 (mvapich2 selector adapts it through tuning). <br />
+<code class="docutils literal notranslate"><span class="pre">mvapich2_two_level</span></code>: SMP-aware reduce, with default set to mpich both for intra and inter communicators. Use mvapich2 selector to change these to tuned algorithms for Stampede cluster. <br />
+<code class="docutils literal notranslate"><span class="pre">rab</span></code>: <a class="reference external" href="https://fs.hlrs.de/projects/par/mpi//myreduce.html">Rabenseifner</a>’s reduce algorithm. <br /></p>
+</section>
+<section id="mpi-allreduce">
+<h4>MPI_Allreduce<a class="headerlink" href="#mpi-allreduce" title="Permalink to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">default</span></code>: naive one, by defautl. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi</span></code>: use openmpi selector for the allreduce operations. <br />
+<code class="docutils literal notranslate"><span class="pre">mpich</span></code>: use mpich selector for the allreduce operations. <br />
+<code class="docutils literal notranslate"><span class="pre">mvapich2</span></code>: use mvapich2 selector for the allreduce operations. <br />
+<code class="docutils literal notranslate"><span class="pre">impi</span></code>: use intel mpi selector for the allreduce operations. <br />
+<code class="docutils literal notranslate"><span class="pre">automatic</span> <span class="pre">(experimental)</span></code>: use an automatic self-benchmarking algorithm. <br />
+<code class="docutils literal notranslate"><span class="pre">lr</span></code>: logical ring reduce-scatter then logical ring allgather. <br />
+<code class="docutils literal notranslate"><span class="pre">rab1</span></code>: variations of the  <a class="reference external" href="https://fs.hlrs.de/projects/par/mpi//myreduce.html">Rabenseifner</a> algorithm: reduce_scatter then allgather. <br />
+<code class="docutils literal notranslate"><span class="pre">rab2</span></code>: variations of the  <a class="reference external" href="https://fs.hlrs.de/projects/par/mpi//myreduce.html">Rabenseifner</a> algorithm: alltoall then allgather. <br />
+<code class="docutils literal notranslate"><span class="pre">rab_rsag</span></code>: variation of the  <a class="reference external" href="https://fs.hlrs.de/projects/par/mpi//myreduce.html">Rabenseifner</a> algorithm: recursive doubling reduce_scatter then recursive doubling allgather. <br />
+<code class="docutils literal notranslate"><span class="pre">rdb</span></code>: recursive doubling. <br />
+<code class="docutils literal notranslate"><span class="pre">smp_binomial</span></code>: binomial tree with smp: binomial intra. <br /> SMP reduce, inter reduce, inter broadcast then intra broadcast. <br />
+<code class="docutils literal notranslate"><span class="pre">smp_binomial_pipeline</span></code>: same with segment size = 4096 bytes. <br />
+<code class="docutils literal notranslate"><span class="pre">smp_rdb</span></code>: intra``: binomial allreduce, inter: Recursive doubling allreduce, intra``: binomial broadcast. <br />
+<code class="docutils literal notranslate"><span class="pre">smp_rsag</span></code>: intra: binomial allreduce, inter: reduce-scatter, inter:allgather, intra: binomial broadcast. <br />
+<code class="docutils literal notranslate"><span class="pre">smp_rsag_lr</span></code>: intra: binomial allreduce, inter: logical ring reduce-scatter, logical ring inter:allgather, intra: binomial broadcast. <br />
+<code class="docutils literal notranslate"><span class="pre">smp_rsag_rab</span></code>: intra: binomial allreduce, inter: rab reduce-scatter, rab inter:allgather, intra: binomial broadcast. <br />
+<code class="docutils literal notranslate"><span class="pre">redbcast</span></code>: reduce then broadcast, using default or tuned algorithms if specified. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_ring_segmented</span></code>: ring algorithm used by OpenMPI. <br />
+<code class="docutils literal notranslate"><span class="pre">mvapich2_rs</span></code>: rdb for small messages, reduce-scatter then allgather else. <br />
+<code class="docutils literal notranslate"><span class="pre">mvapich2_two_level</span></code>: SMP-aware algorithm, with mpich as intra algorithm, and rdb as inter (Change this behavior by using mvapich2 selector to use tuned values). <br />
+<code class="docutils literal notranslate"><span class="pre">rab</span></code>: default <a class="reference external" href="https://fs.hlrs.de/projects/par/mpi//myreduce.html">Rabenseifner</a> implementation. <br /></p>
+</section>
+<section id="mpi-reduce-scatter">
+<h4>MPI_Reduce_scatter<a class="headerlink" href="#mpi-reduce-scatter" title="Permalink to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">default</span></code>: naive one, by default. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi</span></code>: use openmpi selector for the reduce_scatter operations. <br />
+<code class="docutils literal notranslate"><span class="pre">mpich</span></code>: use mpich selector for the reduce_scatter operations. <br />
+<code class="docutils literal notranslate"><span class="pre">mvapich2</span></code>: use mvapich2 selector for the reduce_scatter operations. <br />
+<code class="docutils literal notranslate"><span class="pre">impi</span></code>: use intel mpi selector for the reduce_scatter operations. <br />
+<code class="docutils literal notranslate"><span class="pre">automatic</span> <span class="pre">(experimental)</span></code>: use an automatic self-benchmarking algorithm. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_basic_recursivehalving</span></code>: recursive halving version from OpenMPI. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_ring</span></code>: ring version from OpenMPI. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_butterfly</span></code>: butterfly version from OpenMPI. <br />
+<code class="docutils literal notranslate"><span class="pre">mpich_pair</span></code>: pairwise exchange version from MPICH. <br />
+<code class="docutils literal notranslate"><span class="pre">mpich_rdb</span></code>: recursive doubling version from MPICH. <br />
+<code class="docutils literal notranslate"><span class="pre">mpich_noncomm</span></code>: only works for power of 2 procs, recursive doubling for noncommutative ops. <br /></p>
+</section>
+<section id="mpi-allgather">
+<h4>MPI_Allgather<a class="headerlink" href="#mpi-allgather" title="Permalink to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">default</span></code>: naive one, by default. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi</span></code>: use openmpi selector for the allgather operations. <br />
+<code class="docutils literal notranslate"><span class="pre">mpich</span></code>: use mpich selector for the allgather operations. <br />
+<code class="docutils literal notranslate"><span class="pre">mvapich2</span></code>: use mvapich2 selector for the allgather operations. <br />
+<code class="docutils literal notranslate"><span class="pre">impi</span></code>: use intel mpi selector for the allgather operations. <br />
+<code class="docutils literal notranslate"><span class="pre">automatic</span> <span class="pre">(experimental)</span></code>: use an automatic self-benchmarking algorithm. <br />
+<code class="docutils literal notranslate"><span class="pre">2dmesh</span></code>: see alltoall. <br />
+<code class="docutils literal notranslate"><span class="pre">3dmesh</span></code>: see alltoall. <br />
+<code class="docutils literal notranslate"><span class="pre">bruck</span></code>: Described by Bruck et.al. in &lt;a href=”<a class="reference external" href="http://ieeexplore.ieee.org/xpl/articleDetails.jsp?arnumber=642949">http://ieeexplore.ieee.org/xpl/articleDetails.jsp?arnumber=642949</a>”&gt; Efficient algorithms for all-to-all communications in multiport message-passing systems&lt;/a&gt;. <br />
+<code class="docutils literal notranslate"><span class="pre">GB</span></code>: Gather - Broadcast (uses tuned version if specified). <br />
+<code class="docutils literal notranslate"><span class="pre">loosely_lr</span></code>: Logical Ring with grouping by core (hardcoded, default processes/node: 4). <br />
+<code class="docutils literal notranslate"><span class="pre">NTSLR</span></code>: Non Topology Specific Logical Ring. <br />
+<code class="docutils literal notranslate"><span class="pre">NTSLR_NB</span></code>: Non Topology Specific Logical Ring, Non Blocking operations. <br />
+<code class="docutils literal notranslate"><span class="pre">pair</span></code>: see alltoall. <br />
+<code class="docutils literal notranslate"><span class="pre">rdb</span></code>: see alltoall. <br />
+<code class="docutils literal notranslate"><span class="pre">rhv</span></code>: only power of 2 number of processes. <br />
+<code class="docutils literal notranslate"><span class="pre">ring</span></code>: see alltoall. <br />
+<code class="docutils literal notranslate"><span class="pre">SMP_NTS</span></code>: gather to root of each SMP, then every root of each SMP node. post INTER-SMP Sendrecv, then do INTRA-SMP Bcast for each receiving message, using logical ring algorithm (hardcoded, default processes/SMP: 8). <br />
+<code class="docutils literal notranslate"><span class="pre">smp_simple</span></code>: gather to root of each SMP, then every root of each SMP node post INTER-SMP Sendrecv, then do INTRA-SMP Bcast for each receiving message, using simple algorithm (hardcoded, default processes/SMP: 8). <br />
+<code class="docutils literal notranslate"><span class="pre">spreading_simple</span></code>: from node i, order of communications is i -&gt; i + 1, i -&gt; i + 2, …, i -&gt; (i + p -1) % P. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_neighborexchange</span></code>: Neighbor Exchange algorithm for allgather. Described by Chen et.al. in  <a class="reference external" href="http://ieeexplore.ieee.org/xpl/articleDetails.jsp?tp=&amp;arnumber=1592302">Performance Evaluation of Allgather Algorithms on Terascale Linux Cluster with Fast Ethernet</a>. <br />
+<code class="docutils literal notranslate"><span class="pre">mvapich2_smp</span></code>: SMP aware algorithm, performing intra-node gather, inter-node allgather with one process/node, and bcast intra-node</p>
+</section>
+<section id="mpi-allgatherv">
+<h4>MPI_Allgatherv<a class="headerlink" href="#mpi-allgatherv" title="Permalink to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">default</span></code>: naive one, by default. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi</span></code>: use openmpi selector for the allgatherv operations. <br />
+<code class="docutils literal notranslate"><span class="pre">mpich</span></code>: use mpich selector for the allgatherv operations. <br />
+<code class="docutils literal notranslate"><span class="pre">mvapich2</span></code>: use mvapich2 selector for the allgatherv operations. <br />
+<code class="docutils literal notranslate"><span class="pre">impi</span></code>: use intel mpi selector for the allgatherv operations. <br />
+<code class="docutils literal notranslate"><span class="pre">automatic</span> <span class="pre">(experimental)</span></code>: use an automatic self-benchmarking algorithm. <br />
+<code class="docutils literal notranslate"><span class="pre">GB</span></code>: Gatherv - Broadcast (uses tuned version if specified, but only for Bcast, gatherv is not tuned). <br />
+<code class="docutils literal notranslate"><span class="pre">pair</span></code>: see alltoall. <br />
+<code class="docutils literal notranslate"><span class="pre">ring</span></code>: see alltoall. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_neighborexchange</span></code>: see allgather. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_bruck</span></code>: see allgather. <br />
+<code class="docutils literal notranslate"><span class="pre">mpich_rdb</span></code>: recursive doubling algorithm from MPICH. <br />
+<code class="docutils literal notranslate"><span class="pre">mpich_ring</span></code>: ring algorithm from MPICh - performs differently from the  one from STAR-MPI.</p>
+</section>
+<section id="mpi-bcast">
+<h4>MPI_Bcast<a class="headerlink" href="#mpi-bcast" title="Permalink to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">default</span></code>: naive one, by default. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi</span></code>: use openmpi selector for the bcast operations. <br />
+<code class="docutils literal notranslate"><span class="pre">mpich</span></code>: use mpich selector for the bcast operations. <br />
+<code class="docutils literal notranslate"><span class="pre">mvapich2</span></code>: use mvapich2 selector for the bcast operations. <br />
+<code class="docutils literal notranslate"><span class="pre">impi</span></code>: use intel mpi selector for the bcast operations. <br />
+<code class="docutils literal notranslate"><span class="pre">automatic</span> <span class="pre">(experimental)</span></code>: use an automatic self-benchmarking algorithm. <br />
+<code class="docutils literal notranslate"><span class="pre">arrival_pattern_aware</span></code>: root exchanges with the first process to arrive. <br />
+<code class="docutils literal notranslate"><span class="pre">arrival_pattern_aware_wait</span></code>: same with slight variation. <br />
+<code class="docutils literal notranslate"><span class="pre">binomial_tree</span></code>: binomial tree exchange. <br />
+<code class="docutils literal notranslate"><span class="pre">flattree</span></code>: flat tree exchange. <br />
+<code class="docutils literal notranslate"><span class="pre">flattree_pipeline</span></code>: flat tree exchange, message split into 8192 bytes pieces. <br />
+<code class="docutils literal notranslate"><span class="pre">NTSB</span></code>: Non-topology-specific pipelined binary tree with 8192 bytes pieces. <br />
+<code class="docutils literal notranslate"><span class="pre">NTSL</span></code>: Non-topology-specific pipelined linear with 8192 bytes pieces. <br />
+<code class="docutils literal notranslate"><span class="pre">NTSL_Isend</span></code>: Non-topology-specific pipelined linear with 8192 bytes pieces, asynchronous communications. <br />
+<code class="docutils literal notranslate"><span class="pre">scatter_LR_allgather</span></code>: scatter followed by logical ring allgather. <br />
+<code class="docutils literal notranslate"><span class="pre">scatter_rdb_allgather</span></code>: scatter followed by recursive doubling allgather. <br />
+<code class="docutils literal notranslate"><span class="pre">arrival_scatter</span></code>: arrival pattern aware scatter-allgather. <br />
+<code class="docutils literal notranslate"><span class="pre">SMP_binary</span></code>: binary tree algorithm with 8 cores/SMP. <br />
+<code class="docutils literal notranslate"><span class="pre">SMP_binomial</span></code>: binomial tree algorithm with 8 cores/SMP. <br />
+<code class="docutils literal notranslate"><span class="pre">SMP_linear</span></code>: linear algorithm with 8 cores/SMP. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_split_bintree</span></code>: binary tree algorithm from OpenMPI, with message split in 8192 bytes pieces. <br />
+<code class="docutils literal notranslate"><span class="pre">ompi_pipeline</span></code>: pipeline algorithm from OpenMPI, with message split in 128KB pieces. <br />
+<code class="docutils literal notranslate"><span class="pre">mvapich2_inter_node</span></code>: Inter node default mvapich worker. <br />
+<code class="docutils literal notranslate"><span class="pre">mvapich2_intra_node</span></code>: Intra node default mvapich worker. <br />
+<code class="docutils literal notranslate"><span class="pre">mvapich2_knomial_intra_node</span></code>:  k-nomial intra node default mvapich worker. default factor is 4.</p>
+</section>
+<section id="automatic-evaluation">
+<h4>Automatic Evaluation<a class="headerlink" href="#automatic-evaluation" title="Permalink to this heading"></a></h4>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This is still very experimental.</p>
+</div>
+<p>An automatic version is available for each collective (or even as a selector). This specific
+version will loop over all other implemented algorithm for this particular collective, and apply
+them while benchmarking the time taken for each process. It will then output the quickest for
+each process, and the global quickest. This is still unstable, and a few algorithms which need
+specific number of nodes may crash.</p>
+</section>
+<section id="adding-an-algorithm">
+<h4>Adding an algorithm<a class="headerlink" href="#adding-an-algorithm" title="Permalink to this heading"></a></h4>
+<p>To add a new algorithm, one should check in the src/smpi/colls folder
+how other algorithms are coded. Using plain MPI code inside SimGrid
+can’t be done, so algorithms have to be changed to use smpi version of
+the calls instead (MPI_Send will become smpi_mpi_send). Some functions
+may have different signatures than their MPI counterpart, please check
+the other algorithms or contact us using the <a class="reference external" href="https://sympa.inria.fr/sympa/info/simgrid-community">&gt;SimGrid
+user mailing list</a>,
+or on <a class="reference external" href="https://framateam.org/simgrid/channels/town-square">&gt;Mattermost</a>.</p>
+<p>Example: adding a “pair” version of the Alltoall collective.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Implement it in a file called alltoall-pair.c in the src/smpi/colls folder. This file should include colls_private.hpp.</p></li>
+<li><p>The name of the new algorithm function should be smpi_coll_tuned_alltoall_pair, with the same signature as MPI_Alltoall.</p></li>
+<li><p>Once the adaptation to SMPI code is done, add a reference to the file (“src/smpi/colls/alltoall-pair.c”) in the SMPI_SRC part of the DefinePackages.cmake file inside buildtools/cmake, to allow the file to be built and distributed.</p></li>
+<li><p>To register the new version of the algorithm, simply add a line to the corresponding macro in src/smpi/colls/cools.h ( add a “COLL_APPLY(action, COLL_ALLTOALL_SIG, pair)” to the COLL_ALLTOALLS macro ). The algorithm should now be compiled and be selected when using –cfg=smpi/alltoall:pair at runtime.</p></li>
+<li><p>To add a test for the algorithm inside SimGrid’s test suite, juste add the new algorithm name in the ALLTOALL_COLL list found inside teshsuite/smpi/CMakeLists.txt . When running ctest, a test for the new algorithm should be generated and executed. If it does not pass, please check your code or contact us.</p></li>
+<li><p>Please submit your patch for inclusion in SMPI, for example through a pull request on GitHub or directly per email.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="tracing-of-internal-communications">
+<h4>Tracing of Internal Communications<a class="headerlink" href="#tracing-of-internal-communications" title="Permalink to this heading"></a></h4>
+<p>By default, the collective operations are traced as a unique operation
+because tracing all point-to-point communications composing them could
+result in overloaded, hard to interpret traces. If you want to debug
+and compare collective algorithms, you should set the
+<code class="docutils literal notranslate"><span class="pre">tracing/smpi/internals</span></code> configuration item to 1 instead of 0.</p>
+<p>Here are examples of two alltoall collective algorithms runs on 16 nodes,
+the first one with a ring algorithm, the second with a pairwise one.</p>
+<img alt="_images/smpi_simgrid_alltoall_ring_16.png" class="align-center" src="_images/smpi_simgrid_alltoall_ring_16.png" />
+<p>Alltoall on 16 Nodes with the Ring Algorithm.</p>
+<img alt="_images/smpi_simgrid_alltoall_pair_16.png" class="align-center" src="_images/smpi_simgrid_alltoall_pair_16.png" />
+<p>Alltoall on 16 Nodes with the Pairwise Algorithm.</p>
+</section>
+</section>
+<section id="adapting-your-mpi-code-for-further-scalability">
+<h3>Adapting your MPI code for further scalability<a class="headerlink" href="#adapting-your-mpi-code-for-further-scalability" title="Permalink to this heading"></a></h3>
+<p>As detailed in the <a class="reference external" href="http://hal.inria.fr/hal-01415484">reference article</a>, you may want to adapt your code
+to improve the simulation performance. But these tricks may seriously
+hinder the result quality (or even prevent the app to run) if used
+wrongly. We assume that if you want to simulate an HPC application,
+you know what you are doing. Don’t prove us wrong!</p>
+<section id="reducing-your-memory-footprint">
+<h4>Reducing your memory footprint<a class="headerlink" href="#reducing-your-memory-footprint" title="Permalink to this heading"></a></h4>
+<p>If you get short on memory (the whole app is executed on a single node when
+simulated), you should have a look at the SMPI_SHARED_MALLOC and
+SMPI_SHARED_FREE macros. It allows one to share memory areas between processes: The
+purpose of these macro is that the same line malloc on each process will point
+to the exact same memory area. So if you have a malloc of 2M and you have 16
+processes, this macro will change your memory consumption from 2M*16 to 2M
+only. Only one block for all processes.</p>
+<p>If your program is ok with a block containing garbage value because all
+processes write and read to the same place without any kind of coordination,
+then this macro can dramatically shrink your memory consumption. For example,
+that will be very beneficial to a matrix multiplication code, as all blocks will
+be stored on the same area. Of course, the resulting computations will useless,
+but you can still study the application behavior this way.</p>
+<p>Naturally, this won’t work if your code is data-dependent. For example, a Jacobi
+iterative computation depends on the result computed by the code to detect
+convergence conditions, so turning them into garbage by sharing the same memory
+area between processes does not seem very wise. You cannot use the
+SMPI_SHARED_MALLOC macro in this case, sorry.</p>
+<p>This feature is demoed by the example file
+<a class="reference external" href="https://framagit.org/simgrid/simgrid/tree/master/examples/smpi/NAS/dt.c">examples/smpi/NAS/dt.c</a></p>
+</section>
+<section id="toward-faster-simulations">
+<span id="smpi-use-faster"></span><h4>Toward Faster Simulations<a class="headerlink" href="#toward-faster-simulations" title="Permalink to this heading"></a></h4>
+<p>If your application is too slow, try using SMPI_SAMPLE_LOCAL,
+SMPI_SAMPLE_GLOBAL and friends to indicate which computation loops can
+be sampled. Some of the loop iterations will be executed to measure
+their duration, and this duration will be used for the subsequent
+iterations. These samples are done per processor with
+SMPI_SAMPLE_LOCAL, and shared between all processors with
+SMPI_SAMPLE_GLOBAL. Of course, none of this will work if the execution
+time of your loop iteration are not stable. If some parameters have an
+incidence on the timing of a kernel, and if they are reused often
+(same kernel launched with a few different sizes during the run, for example),
+SMPI_SAMPLE_LOCAL_TAG and SMPI_SAMPLE_GLOBAL_TAG can be used, with a tag
+as last parameter, to differentiate between calls. The tag is a character
+chain crafted by the user, with a maximum size of 128, and should include
+what is necessary to group calls of a given size together.</p>
+<p>This feature is demoed by the example file
+<a class="reference external" href="https://framagit.org/simgrid/simgrid/tree/master/examples/smpi/NAS/ep.c">examples/smpi/NAS/ep.c</a></p>
+</section>
+<section id="ensuring-accurate-simulations">
+<h4>Ensuring Accurate Simulations<a class="headerlink" href="#ensuring-accurate-simulations" title="Permalink to this heading"></a></h4>
+<p>Out of the box, SimGrid may give you fairly accurate results, but
+there is a plenty of factors that could go wrong and make your results
+inaccurate or even plainly wrong. Actually, you can only get accurate
+results of a nicely built model, including both the system hardware
+and your application. Such models are hard to pass over and reuse in
+other settings, because elements that are not relevant to an
+application (say, the latency of point-to-point communications,
+collective operation implementation details or CPU-network
+interaction) may be irrelevant to another application. The dream of
+the perfect model, encompassing every aspects is only a chimera, as
+the only perfect model of the reality is the reality. If you go for
+simulation, then you have to ignore some irrelevant aspects of the
+reality, but which aspects are irrelevant is actually
+application-dependent…</p>
+<p>The only way to assess whether your settings provide accurate results
+is to double-check these results. If possible, you should first run
+the same experiment in simulation and in real life, gathering as much
+information as you can. Try to understand the discrepancies in the
+results that you observe between both settings (visualization can be
+precious for that). Then, try to modify your model (of the platform,
+of the collective operations) to reduce the most preeminent differences.</p>
+<p>If the discrepancies come from the computing time, try adapting the
+<code class="docutils literal notranslate"><span class="pre">smpi/host-speed</span></code>: reduce it if your simulation runs faster than in
+reality. If the error come from the communication, then you need to
+fiddle with your platform file.</p>
+<p>Be inventive in your modeling. Don’t be afraid if the names given by
+SimGrid does not match the real names: we got very good results by
+modeling multicore/GPU machines with a set of separate hosts
+interconnected with very fast networks (but don’t trust your model
+because it has the right names in the right place either).</p>
+<p>Finally, you may want to check <a class="reference external" href="https://hal.inria.fr/hal-00907887">this article</a> on the classical pitfalls in
+modeling distributed systems.</p>
+</section>
+</section>
+<section id="examples-of-smpi-usage">
+<span id="smpi-proxy-apps"></span><h3>Examples of SMPI Usage<a class="headerlink" href="#examples-of-smpi-usage" title="Permalink to this heading"></a></h3>
+<p>A small amount of examples can be found directly in the SimGrid
+archive, under <a class="reference external" href="https://framagit.org/simgrid/simgrid/-/tree/master/examples/smpi">examples/smpi</a>.
+Some show how to simply run MPI code in SimGrid, how to use the
+tracing/replay mechanism or how to use plugins written in S4U to
+extend the simulator abilities.</p>
+<p>Another source of examples lay in the SimGrid archive, under
+<a class="reference external" href="https://framagit.org/simgrid/simgrid/-/tree/master/examples/smpi">teshsuite/smpi</a>.
+They are not in the <code class="docutils literal notranslate"><span class="pre">examples</span></code> directory because they probably don’t
+constitute pedagogical examples. Instead, they are intended to stress
+our implementation during the tests. Some of you may be interested
+anyway.</p>
+<p>But the best source of SMPI examples is certainly the <a class="reference external" href="https://framagit.org/simgrid/SMPI-proxy-apps">proxy app</a> external project.
+Proxy apps are scale models of real, massive HPC applications: each of
+them exhibits the same communication and computation patterns than the
+massive application that it stands for. But they last only a few
+thousands lines instead of some millions of lines. These proxy apps
+are usually provided for educational purpose, and also to ensure that
+the represented large HPC applications will correctly work with the
+next generation of runtimes and hardware. <a class="reference external" href="https://framagit.org/simgrid/SMPI-proxy-apps">This project</a> gathers proxy apps
+from different sources, along with the patches needed (if any) to run
+them on top of SMPI.</p>
+</section>
+</section>
+<section id="offline-smpi-trace-replay">
+<span id="smpi-offline"></span><h2>Offline SMPI: Trace Replay<a class="headerlink" href="#offline-smpi-trace-replay" title="Permalink to this heading"></a></h2>
+<p>Although SMPI is often used for <a class="reference internal" href="#smpi-online"><span class="std std-ref">online simulation</span></a>, where the application is executed for real, you can
+also go for offline simulation through trace replay.</p>
+<p>SimGrid uses time-independent traces, in which each actor is given a
+script of the actions to do sequentially. These trace files can
+actually be captured with the online version of SMPI, as follows:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>smpirun<span class="w"> </span>-trace-ti<span class="w"> </span>--cfg<span class="o">=</span>tracing/filename:LU.A.32<span class="w"> </span>-np<span class="w"> </span><span class="m">32</span><span class="w"> </span>-platform<span class="w"> </span>../cluster_backbone.xml<span class="w"> </span>bin/lu.A.32
+</pre></div>
+</div>
+<p>The produced trace is composed of a file <code class="docutils literal notranslate"><span class="pre">LU.A.32</span></code> and a folder
+<code class="docutils literal notranslate"><span class="pre">LU.A.32_files</span></code>. The file names don’t match with the MPI ranks, but
+that’s expected.</p>
+<p>To replay this with SMPI, you need to first compile the provided
+<code class="docutils literal notranslate"><span class="pre">smpi_replay.cpp</span></code> file, that comes from
+<a class="reference external" href="https://framagit.org/simgrid/simgrid/tree/master/examples/smpi/replay">simgrid/examples/smpi/replay</a>.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>smpicxx<span class="w"> </span>../replay.cpp<span class="w"> </span>-O3<span class="w"> </span>-o<span class="w"> </span>../smpi_replay
+</pre></div>
+</div>
+<p>Afterward, you can replay your trace in SMPI as follows:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>smpirun<span class="w"> </span>-np<span class="w"> </span><span class="m">32</span><span class="w"> </span>-platform<span class="w"> </span>../cluster_torus.xml<span class="w"> </span>-ext<span class="w"> </span>smpi_replay<span class="w"> </span>../smpi_replay<span class="w"> </span>LU.A.32
+</pre></div>
+</div>
+<p>All the outputs are gone, as the application is not really simulated
+here. Its trace is simply replayed. But if you visualize the live
+simulation and the replay, you will see that the behavior is
+unchanged. The simulation does not run much faster on this very
+example, but this becomes very interesting when your application
+is computationally hungry.</p>
+</section>
+<section id="mixing-s4u-and-mpi-simulation">
+<span id="smpi-mix-s4u"></span><h2>Mixing S4U and MPI simulation<a class="headerlink" href="#mixing-s4u-and-mpi-simulation" title="Permalink to this heading"></a></h2>
+<p>Mixing both interfaces is very easy. This can be useful to easily implement a service in S4U that is provided by your
+infrastructure in some way, and test how your MPI application interacts with this service. Or you can use it to start more than
+one MPI application in your simulation, and study their interactions.</p>
+<p>To that extend, it is possible to define a <a class="reference internal" href="Plugins.html#plugins"><span class="std std-ref">plugin</span></a> and load it in your SMPI simulation, but that may not be the
+easiest approach for newcomers. It is probably easier to simply start your MPI application within a regular S4U program using
+<span class="xref std std-ref">SMPI_app_instance_register</span>, as shown in the example below. Compile it as usual (with gcc or g++, <strong>not</strong> smpicc) and
+execute it directly (<strong>not</strong> with smpirun).</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>doxygenfunction: Cannot find function “template&lt;class F&gt; SMPI_app_instance_start” in doxygen xml output for project “simgrid” from directory: ../build/xml</p>
+</div>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv423SMPI_app_instance_startPKcRKNSt8functionIFvvEEERKNSt6vectorIPN7simgrid3s4u4HostEEE">
+<span id="_CPPv323SMPI_app_instance_startPKcRKNSt8functionIFvvEEERKNSt6vectorIPN7simgrid3s4u4HostEEE"></span><span id="_CPPv223SMPI_app_instance_startPKcRKNSt8functionIFvvEEERKNSt6vectorIPN7simgrid3s4u4HostEEE"></span><span class="target" id="smpi_8h_1a5fd66a2593a760bc7037d6585ebcd07e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SMPI_app_instance_start</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">name</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">code</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">simgrid</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">s4u</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="app_s4u.html#_CPPv4N7simgrid3s4u4HostE" title="simgrid::s4u::Host"><span class="n"><span class="pre">Host</span></span></a><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">hosts</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423SMPI_app_instance_startPKcRKNSt8functionIFvvEEERKNSt6vectorIPN7simgrid3s4u4HostEEE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-RXhhbXBsZQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-RXhhbXBsZQ==" name="RXhhbXBsZQ==" role="tab" tabindex="0">Example</button><button aria-controls="panel-0-RGVwbG95bWVudCBmaWxl" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-RGVwbG95bWVudCBmaWxl" name="RGVwbG95bWVudCBmaWxl" role="tab" tabindex="-1">Deployment file</button></div><div aria-labelledby="tab-0-RXhhbXBsZQ==" class="sphinx-tabs-panel group-tab" id="panel-0-RXhhbXBsZQ==" name="RXhhbXBsZQ==" role="tabpanel" tabindex="0"><p>Here is a simple example of use, which starts the function <code class="docutils literal notranslate"><span class="pre">alltoall_mpi</span></code> as a MPI instance on 4 hosts, along several
+S4U actors doing a master/workers.</p>
+<div class="toggle-header docutils container">
+<p>View examples/smpi/smpi_s4u_masterworker/masterworker_mailbox_smpi.cpp</p>
+</div>
+<div class="toggle-content hidden-content docutils container">
+<p><a class="reference external" href="https://framagit.org/simgrid/simgrid/tree/master/examples/smpi/smpi_s4u_masterworker/masterworker_mailbox_smpi.cpp">Download masterworker_mailbox_smpi.cpp</a></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright (c) 2010-2025. The SimGrid Team. All rights reserved.          */</span>
+
+<span class="cm">/* This program is free software; you can redistribute it and/or modify it</span>
+<span class="cm"> * under the terms of the license (GNU LGPL) which comes with this package. */</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;mpi.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;simgrid/s4u.hpp&quot;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;array&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;cstdio&gt;</span><span class="c1"> /* snprintf */</span>
+
+<span class="n">XBT_LOG_NEW_DEFAULT_CATEGORY</span><span class="p">(</span><span class="n">smpi_masterworkers</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Messages specific for this example&quot;</span><span class="p">);</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">master</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">args</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">xbt_assert</span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;The master function expects at least 3 arguments&quot;</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">long</span><span class="w"> </span><span class="n">tasks_count</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">stol</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">compute_cost</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">stod</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+<span class="w">  </span><span class="kt">long</span><span class="w"> </span><span class="n">communication_cost</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">stol</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Mailbox</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">workers</span><span class="p">;</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">args</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">    </span><span class="n">workers</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Mailbox</span><span class="o">::</span><span class="n">by_name</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
+
+<span class="w">  </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;Got %zu workers and %ld tasks to process&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">workers</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="w"> </span><span class="n">tasks_count</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">tasks_count</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* For each task to be executed: */</span>
+<span class="w">    </span><span class="cm">/* - Select a worker in a round-robin way */</span>
+<span class="w">    </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Mailbox</span><span class="o">*</span><span class="w"> </span><span class="n">mailbox</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">workers</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">workers</span><span class="p">.</span><span class="n">size</span><span class="p">()];</span>
+
+<span class="w">    </span><span class="cm">/* - Send the computation cost to that worker */</span>
+<span class="w">    </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;Sending task %d of %ld to mailbox &#39;%s&#39;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">tasks_count</span><span class="p">,</span><span class="w"> </span><span class="n">mailbox</span><span class="o">-&gt;</span><span class="n">get_cname</span><span class="p">());</span>
+<span class="w">    </span><span class="n">mailbox</span><span class="o">-&gt;</span><span class="n">put</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">double</span><span class="p">(</span><span class="n">compute_cost</span><span class="p">),</span><span class="w"> </span><span class="n">communication_cost</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;All tasks have been dispatched. Request all workers to stop.&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">workers</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* The workers stop when receiving a negative compute_cost */</span>
+<span class="w">    </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Mailbox</span><span class="o">*</span><span class="w"> </span><span class="n">mailbox</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">workers</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">workers</span><span class="p">.</span><span class="n">size</span><span class="p">()];</span>
+
+<span class="w">    </span><span class="n">mailbox</span><span class="o">-&gt;</span><span class="n">put</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">double</span><span class="p">(</span><span class="mf">-1.0</span><span class="p">),</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">worker</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">args</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">xbt_assert</span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;The worker expects no argument&quot;</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Host</span><span class="o">*</span><span class="w"> </span><span class="n">my_host</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">this_actor</span><span class="o">::</span><span class="n">get_host</span><span class="p">();</span>
+<span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Mailbox</span><span class="o">*</span><span class="w"> </span><span class="n">mailbox</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Mailbox</span><span class="o">::</span><span class="n">by_name</span><span class="p">(</span><span class="n">my_host</span><span class="o">-&gt;</span><span class="n">get_name</span><span class="p">());</span>
+
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">compute_cost</span><span class="p">;</span>
+<span class="w">  </span><span class="k">do</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">msg</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">mailbox</span><span class="o">-&gt;</span><span class="n">get_unique</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="n">compute_cost</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">msg</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">compute_cost</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="cm">/* If compute_cost is valid, execute a computation of that cost */</span>
+<span class="w">      </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">this_actor</span><span class="o">::</span><span class="n">execute</span><span class="p">(</span><span class="n">compute_cost</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">compute_cost</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"> </span><span class="cm">/* Stop when receiving an invalid compute_cost */</span>
+
+<span class="w">  </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;Exiting now.&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">master_mpi</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">rank</span><span class="p">;</span>
+<span class="w">  </span><span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rank</span><span class="p">);</span>
+<span class="w">  </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;here for rank %d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rank</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="mi">1000</span><span class="o">&gt;</span><span class="w"> </span><span class="n">test</span><span class="p">{{</span><span class="n">rank</span><span class="p">}};</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">    </span><span class="n">MPI_Send</span><span class="p">(</span><span class="n">test</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_INT</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+<span class="w">  </span><span class="k">else</span>
+<span class="w">    </span><span class="n">MPI_Recv</span><span class="p">(</span><span class="n">test</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_INT</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_STATUSES_IGNORE</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;After comm %d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rank</span><span class="p">);</span>
+<span class="w">  </span><span class="n">MPI_Finalize</span><span class="p">();</span>
+
+<span class="w">  </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;After finalize %d %d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="n">test</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">alltoall_mpi</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">MPI_Init</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">rank</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="w">  </span><span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rank</span><span class="p">);</span>
+<span class="w">  </span><span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">size</span><span class="p">);</span>
+<span class="w">  </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;alltoall for rank %d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rank</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">out</span><span class="p">(</span><span class="mi">1000</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">size</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">in</span><span class="p">(</span><span class="mi">1000</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">size</span><span class="p">);</span>
+<span class="w">  </span><span class="n">MPI_Alltoall</span><span class="p">(</span><span class="n">out</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_INT</span><span class="p">,</span><span class="w"> </span><span class="n">in</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_INT</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;after alltoall %d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rank</span><span class="p">);</span>
+<span class="w">  </span><span class="n">MPI_Finalize</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">Engine</span><span class="w"> </span><span class="n">e</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="n">argv</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">SMPI_init</span><span class="p">();</span>
+
+<span class="w">  </span><span class="n">xbt_assert</span><span class="p">(</span><span class="n">argc</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">             </span><span class="s">&quot;Usage: %s platform_file deployment_file</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="w">             </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">example: %s platform.xml deployment.xml</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+<span class="w">             </span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+
+<span class="w">  </span><span class="n">e</span><span class="p">.</span><span class="n">load_platform</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+
+<span class="w">  </span><span class="n">e</span><span class="p">.</span><span class="n">register_function</span><span class="p">(</span><span class="s">&quot;master&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">master</span><span class="p">);</span>
+<span class="w">  </span><span class="n">e</span><span class="p">.</span><span class="n">register_function</span><span class="p">(</span><span class="s">&quot;worker&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">worker</span><span class="p">);</span>
+<span class="w">  </span><span class="c1">// launch two MPI applications as well, one using master_mpi function as main on 2 nodes</span>
+<span class="w">  </span><span class="n">SMPI_app_instance_register</span><span class="p">(</span><span class="s">&quot;master_mpi&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">master_mpi</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+<span class="w">  </span><span class="n">e</span><span class="p">.</span><span class="n">load_deployment</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+<span class="w">  </span><span class="c1">// the second performing an alltoall on 4 nodes, started directly, not from the deployment file</span>
+<span class="w">  </span><span class="n">SMPI_app_instance_start</span><span class="p">(</span><span class="s">&quot;alltoall_mpi&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">alltoall_mpi</span><span class="p">,</span>
+<span class="w">                          </span><span class="p">{</span><span class="n">e</span><span class="p">.</span><span class="n">host_by_name_or_null</span><span class="p">(</span><span class="s">&quot;Ginette&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">host_by_name_or_null</span><span class="p">(</span><span class="s">&quot;Bourassa&quot;</span><span class="p">),</span>
+<span class="w">                           </span><span class="n">e</span><span class="p">.</span><span class="n">host_by_name_or_null</span><span class="p">(</span><span class="s">&quot;Jupiter&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">host_by_name_or_null</span><span class="p">(</span><span class="s">&quot;Fafard&quot;</span><span class="p">)});</span>
+
+<span class="w">  </span><span class="c1">// Start a third MPI application, from a S4U actor after a delay of 10 sec</span>
+<span class="w">  </span><span class="n">e</span><span class="p">.</span><span class="n">host_by_name_or_null</span><span class="p">(</span><span class="s">&quot;Ginette&quot;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">add_actor</span><span class="p">(</span><span class="s">&quot;launcher&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="n">e</span><span class="p">]()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">simgrid</span><span class="o">::</span><span class="n">s4u</span><span class="o">::</span><span class="n">this_actor</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="w">    </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;Start another alltoall_mpi instance&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">SMPI_app_instance_start</span><span class="p">(</span><span class="s">&quot;alltoall_mpi&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">alltoall_mpi</span><span class="p">,</span>
+<span class="w">                            </span><span class="p">{</span><span class="n">e</span><span class="p">.</span><span class="n">host_by_name_or_null</span><span class="p">(</span><span class="s">&quot;Ginette&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">host_by_name_or_null</span><span class="p">(</span><span class="s">&quot;Bourassa&quot;</span><span class="p">),</span>
+<span class="w">                             </span><span class="n">e</span><span class="p">.</span><span class="n">host_by_name_or_null</span><span class="p">(</span><span class="s">&quot;Jupiter&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">host_by_name_or_null</span><span class="p">(</span><span class="s">&quot;Fafard&quot;</span><span class="p">)});</span>
+<span class="w">    </span><span class="n">SMPI_app_instance_join</span><span class="p">(</span><span class="s">&quot;alltoall_mpi&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;This other alltoall_mpi instance terminated.&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
+
+<span class="w">  </span><span class="n">e</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
+
+<span class="w">  </span><span class="n">XBT_INFO</span><span class="p">(</span><span class="s">&quot;Simulation time %g&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">get_clock</span><span class="p">());</span>
+
+<span class="w">  </span><span class="n">SMPI_finalize</span><span class="p">();</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div><div aria-labelledby="tab-0-RGVwbG95bWVudCBmaWxl" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-RGVwbG95bWVudCBmaWxl" name="RGVwbG95bWVudCBmaWxl" role="tabpanel" tabindex="0"><div class="toggle-header docutils container">
+<p>View examples/smpi/smpi_s4u_masterworker/deployment_masterworker_mailbox_smpi.xml</p>
+</div>
+<div class="toggle-content hidden-content docutils container">
+<p><a class="reference external" href="https://framagit.org/simgrid/simgrid/tree/master/examples/smpi/smpi_s4u_masterworker/deployment_masterworker_mailbox_smpi.xml">Download deployment_masterworker_mailbox_smpi.xml</a></p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&#39;1.0&#39;?&gt;</span>
+<span class="cp">&lt;!DOCTYPE platform SYSTEM &quot;https://simgrid.org/simgrid.dtd&quot;&gt;</span>
+<span class="nt">&lt;platform</span><span class="w"> </span><span class="na">version=</span><span class="s">&quot;4.1&quot;</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="cm">&lt;!-- The master actor (with some arguments) --&gt;</span>
+<span class="w">  </span><span class="nt">&lt;actor</span><span class="w"> </span><span class="na">host=</span><span class="s">&quot;Tremblay&quot;</span><span class="w"> </span><span class="na">function=</span><span class="s">&quot;master&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;20&quot;</span><span class="nt">/&gt;</span><span class="w">       </span><span class="cm">&lt;!-- Number of tasks --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;50000000&quot;</span><span class="nt">/&gt;</span><span class="w">  </span><span class="cm">&lt;!-- Computation size of tasks --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;1000000&quot;</span><span class="nt">/&gt;</span><span class="w">   </span><span class="cm">&lt;!-- Communication size of tasks --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;Ginette&quot;</span><span class="nt">/&gt;</span><span class="w">  </span><span class="cm">&lt;!-- Hostname of the first worker --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;Jupiter&quot;</span><span class="nt">/&gt;</span><span class="w">  </span><span class="cm">&lt;!-- Hostname of the second worker --&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/actor&gt;</span>
+<span class="w">  </span><span class="cm">&lt;!-- The worker actors (with mailbox to listen on as argument) --&gt;</span>
+<span class="w">  </span><span class="nt">&lt;actor</span><span class="w"> </span><span class="na">host=</span><span class="s">&quot;Ginette&quot;</span><span class="w"> </span><span class="na">function=</span><span class="s">&quot;worker&quot;</span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;actor</span><span class="w"> </span><span class="na">host=</span><span class="s">&quot;Jupiter&quot;</span><span class="w"> </span><span class="na">function=</span><span class="s">&quot;worker&quot;</span><span class="nt">/&gt;</span>
+
+<span class="w">  </span><span class="nt">&lt;actor</span><span class="w"> </span><span class="na">host=</span><span class="s">&quot;Ginette&quot;</span><span class="w"> </span><span class="na">function=</span><span class="s">&quot;master_mpi&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;prop</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;instance_id&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;master_mpi&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;prop</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;rank&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;0&quot;</span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/actor&gt;</span>
+<span class="w">  </span><span class="nt">&lt;actor</span><span class="w"> </span><span class="na">host=</span><span class="s">&quot;Bourassa&quot;</span><span class="w"> </span><span class="na">function=</span><span class="s">&quot;master_mpi&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;prop</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;instance_id&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;master_mpi&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;prop</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;rank&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;1&quot;</span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/actor&gt;</span>
+<span class="nt">&lt;/platform&gt;</span>
+</pre></div>
+</div>
+</div>
+</div></div>
+</section>
+<section id="troubleshooting-with-smpi">
+<h2>Troubleshooting with SMPI<a class="headerlink" href="#troubleshooting-with-smpi" title="Permalink to this heading"></a></h2>
+<section id="configure-or-cmake-refuse-to-use-smpicc">
+<h3>./configure or cmake refuse to use smpicc<a class="headerlink" href="#configure-or-cmake-refuse-to-use-smpicc" title="Permalink to this heading"></a></h3>
+<p>If your configuration script (such as <code class="docutils literal notranslate"><span class="pre">./configure</span></code> or <code class="docutils literal notranslate"><span class="pre">cmake</span></code>) reports that the compiler is not
+functional or that you are cross-compiling, try to define the
+<code class="docutils literal notranslate"><span class="pre">SMPI_PRETEND_CC</span></code> environment variable before running the
+configuration.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nv">SMPI_PRETEND_CC</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>./configure<span class="w"> </span><span class="c1"># here come the configure parameters</span>
+<span class="gp">$ </span>make
+</pre></div>
+</div>
+<p>Indeed, the programs compiled with <code class="docutils literal notranslate"><span class="pre">smpicc</span></code> cannot be executed
+without <code class="docutils literal notranslate"><span class="pre">smpirun</span></code> (they are shared libraries and do weird things on
+startup), while configure wants to test them directly.  With
+<code class="docutils literal notranslate"><span class="pre">SMPI_PRETEND_CC</span></code> smpicc does not compile as shared, and the SMPI
+initialization stops and returns 0 before doing anything that would
+fail without <code class="docutils literal notranslate"><span class="pre">smpirun</span></code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Make sure that SMPI_PRETEND_CC is only set when calling the configuration script but
+not during the actual execution, or any program compiled with smpicc
+will stop before starting.</p>
+</div>
+</section>
+<section id="configure-or-cmake-do-not-pick-smpicc-as-a-compiler">
+<h3>./configure or cmake do not pick smpicc as a compiler<a class="headerlink" href="#configure-or-cmake-do-not-pick-smpicc-as-a-compiler" title="Permalink to this heading"></a></h3>
+<p>In addition to the previous answers, some projects also need to be
+explicitly told what compiler to use, as follows:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nv">SMPI_PRETEND_CC</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>cmake<span class="w"> </span><span class="nv">CC</span><span class="o">=</span>smpicc<span class="w"> </span><span class="c1"># here come the other configure parameters</span>
+<span class="gp">$ </span>make
+</pre></div>
+</div>
+<p>Maybe your configure is using another variable, such as <code class="docutils literal notranslate"><span class="pre">cc</span></code> (in
+lower case) or similar. Just check the logs.</p>
+</section>
+<section id="error-unknown-type-name-useconds-t">
+<h3>error: unknown type name ‘useconds_t’<a class="headerlink" href="#error-unknown-type-name-useconds-t" title="Permalink to this heading"></a></h3>
+<p>Try to add <code class="docutils literal notranslate"><span class="pre">-D_GNU_SOURCE</span></code> to your compilation line to get rid
+of that error.</p>
+<p>The reason is that SMPI provides its own version of <code class="docutils literal notranslate"><span class="pre">usleep(3)</span></code>
+to override it and to block in the simulation world, not in the real
+one. It needs the <code class="docutils literal notranslate"><span class="pre">useconds_t</span></code> type for that, which is declared
+only if you declare <code class="docutils literal notranslate"><span class="pre">_GNU_SOURCE</span></code> before including
+<code class="docutils literal notranslate"><span class="pre">unistd.h</span></code>. If your project includes that header file before
+SMPI, then you need to ensure that you pass the right configuration
+defines as advised above.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Examples.html" class="btn btn-neutral float-left" title="S4U Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="The_XBT_toolbox.html" class="btn btn-neutral float-right" title="The XBT toolbox" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2002-2025, The SimGrid Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

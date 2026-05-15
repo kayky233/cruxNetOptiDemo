@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Modern Age of Computer Systems Simulation &mdash; SimGrid  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="_static/tabs.css" type="text/css" />
+      <link rel="stylesheet" href="_static/showfile.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
+        <script src="_static/showfile.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Simulating Algorithms" href="Tutorial_Algorithms.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            SimGrid
+          </a>
+              <div class="version">
+                4.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Algorithms.html">     Simulating distributed algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_MPI_Applications.html">     Simulating MPI applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_Model-checking.html">     Model-checking algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial_DAG.html">Simulating DAG</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Manual:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">   Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installing_SimGrid.html">      Installing SimGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Start_your_own_project.html">      Start your own project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="community.html">      The SimGrid community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Release_Notes.html">      Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="application.html">   Describing your application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_s4u.html">      The S4U interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">      S4U examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_smpi.html">      The SMPI interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="The_XBT_toolbox.html">      The XBT toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform.html">   Describing the simulated platform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_examples.html">      Network topology examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_routing.html">      Advanced routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="XML_reference.html">      XML reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform_cpp.html">      C++ platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Models.html">   The SimGrid models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Modeling_howtos.html">      Modeling hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Calibrating_the_models.html">      Calibrating the models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plugins.html">      SimGrid plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Experimental_setup.html">   Running an experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Configuring_SimGrid.html">      Configuring SimGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Deploying_your_application.html">      Deploying your application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Outcomes.html">      Simulation outcomes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">SimGrid's Internals:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Design_goals.html">   Design goals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Contributors_Documentation.html">   Contributor's documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">SimGrid</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">The Modern Age of Computer Systems Simulation</li>
+  <li class="wy-breadcrumbs-aside">
+    
+
+      <a href="" class="fa fa-bitbucket"> Edit on FramaGit</a>
+    
+  </li>
+
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="the-modern-age-of-computer-systems-simulation">
+<span id="index"></span><h1>The Modern Age of Computer Systems Simulation<a class="headerlink" href="#the-modern-age-of-computer-systems-simulation" title="Permalink to this heading"></a></h1>
+<p>SimGrid is a framework to simulate distributed computer systems. It can be used to either <a class="reference internal" href="Tutorial_Algorithms.html#usecase-simalgo"><span class="std std-ref">assess the performance of
+abstract algorithms</span></a>, to <a class="reference internal" href="Tutorial_MPI_Applications.html#usecase-smpi"><span class="std std-ref">debug and profile real MPI applications</span></a>. To some extend, it can
+also be used to <a class="reference internal" href="Tutorial_Model-checking.html#usecase-modelchecking"><span class="std std-ref">formally assess the correctness of simple algorithms and applications</span></a>.</p>
+<p>SimGrid is routinely used in studies on (data-)Grids,
+IaaS Clouds (<a class="reference internal" href="app_s4u.html#api-s4u-virtualmachine"><span class="std std-ref">API</span></a>, <a class="reference internal" href="Examples.html#s4u-ex-clouds"><span class="std std-ref">examples</span></a>),
+Clusters, High-Performance Computing (<a class="reference external" href="http://hal.inria.fr/hal-01415484">🖹</a>),
+Peer-to-Peer systems,
+Volunteer Computing (<a class="reference external" href="http://www.sciencedirect.com/science/article/pii/S1569190X17301028">🖹</a>)
+Fog Computing (<a class="reference external" href="http://ieeexplore.ieee.org/document/7946412/">🖹</a>),
+MapReduce (<a class="reference external" href="http://www.sciencedirect.com/science/article/pii/S0167819113000215">🖹</a>) and
+<a class="reference external" href="https://simgrid.org/usages.html">much more</a>.</p>
+<p>The simulation models are <strong>fast</strong> (<a class="reference external" href="http://hal.inria.fr/hal-00650233">🖹</a>) and
+<strong>highly scalable</strong> (<a class="reference external" href="http://hal.inria.fr/inria-00602216/">🖹</a>) while
+<strong>theoretically sound and experimentally assessed</strong> (<a class="reference external" href="http://doi.acm.org/10.1145/2517448">🖹</a>).
+Most of the time, SimGrid is used to predict the performance (time and energy) of a
+given IT infrastructure, and it includes a prototypical model checker to formally
+assess these systems.</p>
+<p>Technically speaking, SimGrid is a library. It is neither a graphical
+interface nor a command-line simulator running user scripts. The
+interaction with SimGrid is done by writing programs with the exposed
+functions to build your own simulator. This can be done in C/C++ or Python,
+on Linux, Mac OSX or Windows (using the WSL).</p>
+<p>SimGrid is a Free Software distributed under the LGPL-2.1-only license. You are
+welcome to use, study, share and improve it, provided that your version is as
+free as ours. SimGrid is developed for 20 years by a lively community of users
+and researchers from several groups, initially in France and the U.S.A. It
+is steadily funded by several research bodies. We hope that you will
+come and join us!</p>
+<p>SimGrid is a powerful tool, and this documentation will help you to make good use
+of it. Check its contents on the left. Each tutorial presents a classical use
+case, in a fast and practical manner. The user manual contains more
+thorough information. In each part, the important concepts are concisely
+introduced, before the reference manual. SimGrid is also described in several
+<a class="reference external" href="https://simgrid.org/usages.html">scientific papers</a>.</p>
+<p>Please report any documentation issues, including typos or unclear elements. You
+can even propose changes by clicking on the “Edit on FramaGit” button at the top
+of every page. Bugs in the code should be reported
+<a class="reference external" href="https://framagit.org/simgrid/simgrid/issues">on FramaGit</a></p>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Tutorial_Algorithms.html" class="btn btn-neutral float-right" title="Simulating Algorithms" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2002-2025, The SimGrid Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

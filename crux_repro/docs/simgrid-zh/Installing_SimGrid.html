@@ -1,0 +1,440 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>安装 SimGrid - SimGrid 中文手册</title><style>
+:root{--bg:#f7f8fb;--sbg:#17182c;--stx:#d6d7e7;--muted:#8d90a8;--accent:#e94560;--txt:#272838;--hd:#16213e;--code:#f1f4f8;--bd:#dfe3ea;--note:#fff8e6}
+*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC",Arial,sans-serif;background:var(--bg);color:var(--txt);line-height:1.7;display:flex}
+nav{width:330px;min-width:330px;height:100vh;position:sticky;top:0;background:var(--sbg);color:var(--stx);overflow:auto;padding:18px 0;font-size:14px} nav h2{font-size:18px;padding:0 20px 12px;margin:0 0 6px;border-bottom:1px solid rgba(255,255,255,.12)} nav h2 a{color:#fff;text-decoration:none} nav h2 small{display:block;color:var(--muted);font-size:11px;font-weight:400;margin-top:2px}.sec{display:block;color:#56b6e8;font-weight:700;text-transform:uppercase;font-size:12px;padding:16px 20px 6px}nav a{display:block;color:var(--stx);text-decoration:none;padding:5px 20px 5px 30px}nav a:hover,nav a.active{background:rgba(233,69,96,.13);color:#ff6b86}main{width:min(1040px,calc(100vw - 330px));padding:34px 52px 90px}h1{font-size:34px;line-height:1.2;color:var(--hd);margin:0 0 18px}h2{font-size:25px;color:var(--hd);margin:42px 0 12px;padding-bottom:7px;border-bottom:2px solid var(--bd)}h3{font-size:20px;color:var(--hd);margin:30px 0 10px}h4{font-size:16px;color:#4b4f63;margin:22px 0 8px}p{margin:9px 0}a{color:#0f5e9c}pre{background:var(--code);border:1px solid var(--bd);border-radius:6px;padding:12px 15px;overflow:auto;line-height:1.45;font-size:12.5px}code{font-family:"SF Mono",Menlo,Consolas,monospace;background:var(--code);padding:1px 4px;border-radius:3px}pre code{background:transparent;padding:0}img{max-width:100%;height:auto;display:block;margin:16px auto}table{border-collapse:collapse;width:100%;margin:14px 0}td,th{border:1px solid var(--bd);padding:7px 9px}th{background:var(--code)}blockquote,.admonition{border-left:4px solid #f0c040;background:var(--note);padding:8px 14px;margin:14px 0}.meta{color:#687085;font-size:13px;margin-bottom:18px}.raw-note{background:#eef7ff;border:1px solid #cbe7ff;border-radius:6px;padding:10px 12px;margin-bottom:18px;font-size:13px}@media(max-width:900px){body{display:block}nav{position:relative;width:100%;min-width:0;height:auto}main{width:100%;padding:20px}}
+</style></head><body>
+<nav><h2><a href="index.html">SimGrid 4.1</a><small>中文本地化镜像</small></h2>
+<span class="sec">教程</span>
+<a href="Tutorial_Algorithms.html">模拟分布式算法</a>
+<a href="Tutorial_MPI_Applications.html">模拟 MPI 应用</a>
+<a href="Tutorial_Model-checking.html">模型检验算法</a>
+<a href="Tutorial_DAG.html">模拟 DAG</a>
+<span class="sec">用户手册</span>
+<a href="Introduction.html">简介</a>
+<a class="active" href="Installing_SimGrid.html">安装 SimGrid</a>
+<a href="Start_your_own_project.html">创建自己的项目</a>
+<a href="community.html">SimGrid 社区</a>
+<a href="Release_Notes.html">发布说明</a>
+<a href="application.html">描述应用程序</a>
+<a href="app_s4u.html">S4U 接口</a>
+<a href="Examples.html">S4U 示例</a>
+<a href="app_smpi.html">SMPI 接口</a>
+<a href="The_XBT_toolbox.html">XBT 工具箱</a>
+<a href="Platform.html">描述模拟平台</a>
+<a href="Platform_examples.html">网络拓扑示例</a>
+<a href="Platform_routing.html">高级路由</a>
+<a href="XML_reference.html">XML 参考</a>
+<a href="Platform_cpp.html">C++ 平台</a>
+<a href="Models.html">SimGrid 模型</a>
+<a href="Modeling_howtos.html">建模提示</a>
+<a href="Calibrating_the_models.html">校准模型</a>
+<a href="Plugins.html">SimGrid 插件</a>
+<a href="Experimental_setup.html">运行实验</a>
+<a href="Configuring_SimGrid.html">配置 SimGrid</a>
+<a href="Deploying_your_application.html">部署应用程序</a>
+<a href="Outcomes.html">模拟输出</a>
+<span class="sec">SimGrid 内部文档</span>
+<a href="Design_goals.html">设计目标</a>
+<a href="Contributors_Documentation.html">贡献者文档</a>
+</nav>
+<main><div class="meta">来源：<a href="https://simgrid.org/doc/latest/Installing_SimGrid.html">https://simgrid.org/doc/latest/Installing_SimGrid.html</a> · 本地化镜像生成，代码块与图片保留官方内容</div>
+<div class="raw-note">说明：本页采用镜像式本地化，导航和主要标题已中文化；代码块、命令输出和图片按官方页面原样保留，便于逐项核对。</div>
+
+             
+  <section id="installing-simgrid">
+<span id="install"></span><h1>安装 SimGrid</h1>
+<p>SimGrid should work out of the box on Linux, macOS, FreeBSD, and
+Windows (with WSL).</p>
+<section id="pre-compiled-packages">
+<h2>Pre-compiled Packages</h2>
+<section id="binaries-for-linux">
+<h3>Binaries for Linux</h3>
+<p>To get all of SimGrid on Debian or Ubuntu, simply type one of the
+following lines, or several lines if you need several languages.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>apt<span class="w"> </span>install<span class="w"> </span>libsimgrid-dev<span class="w">  </span><span class="c1"># if you want to develop in C or C++</span>
+<span class="gp">$ </span>apt<span class="w"> </span>install<span class="w"> </span>python3-simgrid<span class="w"> </span><span class="c1"># if you want to develop in Python</span>
+<span class="gp">$ </span>apt<span class="w"> </span>install<span class="w"> </span>simgrid-java<span class="w">    </span><span class="c1"># if you want to develop in Java</span>
+</pre></div>
+</div>
+<p>If you use the <a class="reference external" href="https://nixos.org/">Nix</a> package manager, the latest SimGrid release is packaged as <code class="docutils literal notranslate"><span class="pre">simgrid</span></code> in <a class="reference external" href="https://github.com/NixOS/nixpkgs">Nixpkgs</a>.
+Previous SimGrid versions are maintained in <a class="reference external" href="https://github.com/oar-team/nur-kapack">NUR-Kapack</a> and are available
+pre-compiled in release and debug modes on the <a class="reference external" href="https://app.cachix.org/cache/capack">capack cachix binary cache</a>
+— refer to <a class="reference external" href="https://github.com/oar-team/nur-kapack">NUR-Kapack’s documentation</a> for usage instructions.</p>
+<p>If you use a pacman-based system (<em>e.g.</em>, Arch Linux and derived distributions),
+the latest SimGrid is available in the <a class="reference external" href="https://aur.archlinux.org/packages/simgrid/">simgrid AUR package</a>
+— refer to <a class="reference external" href="https://wiki.archlinux.org/title/Arch_User_Repository">AUR official documentation</a> for installation instructions.</p>
+<p>If you build pre-compiled packages for other distributions, drop us an
+email.</p>
+</section>
+<section id="binaries-from-macos">
+<h3>Binaries from macOS</h3>
+<p>SimGrid can be found in the Homebrew package manager. Troubleshooting:</p>
+<dl>
+<dt>warning: dylib (libsimgrid.dylib) was built for newer macOS version (14.0) than being linked (13.3)</dt><dd><p>This was reported with the SimGrid version from Homebrew on a Mac book air M1 (ARM).
+The solution is simply to export this variable before the compilation of your binaries:</p>
+<p><code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">MACOSX_DEPLOYMENT_TARGET=14.0</span></code></p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="version-numbering-and-deprecation">
+<span id="deprecation-policy"></span><h2>Version numbering and deprecation</h2>
+<p>SimGrid tries to be both a research instrument that you can trust, and
+a vivid project targeting the future issues. We have 4 stable versions
+per year, numbered 3.24 or 3.25. Backward compatibility is ensured for
+one year: Code compiling without warning on 3.24 will still compile
+with 3.28, but maybe with some deprecation warnings. You should update
+your SimGrid installation at least once a year and fix those
+deprecation warnings: the compatibility wrappers are usually removed
+after 4 versions. Another approach is to never update your SimGrid
+installation, but we don’t provide any support to old versions.</p>
+<p>Interim versions (also called pre-versions) may be released between
+stable releases. They are numbered 3.X.Y, with even Y (for example,
+3.23.2 was released on July 8. 2019 as a pre-version of 3.24). These
+versions should be as usable as regular stable releases, even if they
+may be somewhat less tested and documented. They play no role in our
+deprecation handling, and they are not really announced to not spam
+our users.</p>
+<p>Version numbered 3.X.Y with odd Y are git versions. They often work,
+but no guarantee is given whatsoever (all releases are given “as is”,
+but that’s even more so for these unreleased versions).</p>
+</section>
+<section id="installing-from-source">
+<span id="install-src"></span><h2>Installing from Source</h2>
+<section id="getting-the-dependencies">
+<span id="install-src-deps"></span><h3>Getting the Dependencies</h3>
+<dl class="simple">
+<dt>C++ compiler (either g++, clang, or icc).</dt><dd><p>We use the C++17 standard, and older compilers tend to fail on
+us. It seems that g++ 7.0 or higher is required nowadays (because of
+boost).  SimGrid compiles well with <cite>clang</cite> or <cite>icc</cite> too.</p>
+</dd>
+<dt>Python 3.</dt><dd><p>SimGrid should build without Python. That is only needed by our regression test suite.</p>
+</dd>
+<dt>cmake (v3.12).</dt><dd><p><code class="docutils literal notranslate"><span class="pre">ccmake</span></code> provides a nicer graphical interface compared to <code class="docutils literal notranslate"><span class="pre">cmake</span></code>.
+Press <code class="docutils literal notranslate"><span class="pre">t</span></code> in <code class="docutils literal notranslate"><span class="pre">ccmake</span></code> if you need to see absolutely all
+configuration options (e.g., if your Python installation is not standard).</p>
+</dd>
+<dt>boost mandatory components (at least v1.48, v1.59 recommended)</dt><dd><ul class="simple">
+<li><p>On Debian / Ubuntu: <code class="docutils literal notranslate"><span class="pre">apt</span> <span class="pre">install</span> <span class="pre">libboost-dev</span></code></p></li>
+<li><p>On CentOS / Fedora: <code class="docutils literal notranslate"><span class="pre">dnf</span> <span class="pre">install</span> <span class="pre">boost-devel</span></code></p></li>
+<li><p>On macOS with homebrew: <code class="docutils literal notranslate"><span class="pre">brew</span> <span class="pre">install</span> <span class="pre">boost</span></code></p></li>
+</ul>
+</dd>
+<dt>boost recommended components (optional).</dt><dd><ul class="simple">
+<li><p>boost-context may be used instead of our own fast context switching code which only works on amd64.</p></li>
+<li><p>boost-stacktrace is used to get nice stacktraces on errors in SimGrid.</p></li>
+<li><p>On Debian / Ubuntu: <code class="docutils literal notranslate"><span class="pre">apt</span> <span class="pre">install</span> <span class="pre">libboost-context-dev</span> <span class="pre">libboost-stacktrace-dev</span></code></p></li>
+</ul>
+</dd>
+<dt>python bindings (optional):</dt><dd><ul class="simple">
+<li><p>On Debian / Ubuntu: <code class="docutils literal notranslate"><span class="pre">apt</span> <span class="pre">install</span> <span class="pre">pybind11-dev</span> <span class="pre">python3-dev</span></code></p></li>
+</ul>
+</dd>
+<dt>Java bindings (optional):</dt><dd><ul class="simple">
+<li><p>On Debian / Ubuntu: <code class="docutils literal notranslate"><span class="pre">apt</span> <span class="pre">install</span> <span class="pre">default-jdk-headless</span> <span class="pre">javahelper</span></code></p></li>
+</ul>
+</dd>
+<dt>Eigen3 (optional)</dt><dd><ul class="simple">
+<li><p>On Debian / Ubuntu: <code class="docutils literal notranslate"><span class="pre">apt</span> <span class="pre">install</span> <span class="pre">libeigen3-dev</span></code></p></li>
+<li><p>On CentOS / Fedora: <code class="docutils literal notranslate"><span class="pre">dnf</span> <span class="pre">install</span> <span class="pre">eigen3-devel</span></code></p></li>
+<li><p>On macOS with homebrew: <code class="docutils literal notranslate"><span class="pre">brew</span> <span class="pre">install</span> <span class="pre">eigen</span></code></p></li>
+<li><p>Use EIGEN3_HINT to specify where it’s installed if cmake doesn’t find it automatically. Set EIGEN3_HINT=OFF to disable detection even if it could be found.</p></li>
+</ul>
+</dd>
+<dt>JSON (optional, for the DAG wfcommons loader)</dt><dd><ul class="simple">
+<li><p>On Debian / Ubuntu: <code class="docutils literal notranslate"><span class="pre">apt</span> <span class="pre">install</span> <span class="pre">nlohmann-json3-dev</span></code></p></li>
+<li><p>Use nlohmann_json_HINT to specify where it’s installed if cmake doesn’t find it automatically.</p></li>
+</ul>
+</dd>
+</dl>
+<p>For platform-specific details, please see below.</p>
+</section>
+<section id="getting-the-sources">
+<h3>Getting the Sources</h3>
+<p>Grab the last <strong>stable release</strong> from <a class="reference external" href="https://framagit.org/simgrid/simgrid/-/releases">FramaGit</a>, and compile it as follows:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>tar<span class="w"> </span>xf<span class="w"> </span>simgrid-4-XX.tar.gz
+<span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>simgrid-*
+<span class="gp">$ </span>cmake<span class="w"> </span>-DCMAKE_INSTALL_PREFIX<span class="o">=</span>/opt/simgrid<span class="w"> </span>-GNinja<span class="w"> </span>.
+<span class="gp">$ </span>ninja<span class="w">                     </span><span class="c1"># or &#39;make&#39; if you remove the &#39;-GNinja&#39; above</span>
+<span class="gp">$ </span>sudo<span class="w"> </span>ninja<span class="w"> </span>install
+</pre></div>
+</div>
+<p>If you want to stay on the <strong>bleeding edge</strong>, get the current git version,
+and recompile it as with stable archives. You may need some extra
+dependencies.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>git<span class="w"> </span>clone<span class="w"> </span>https://framagit.org/simgrid/simgrid.git
+<span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>simgrid
+<span class="gp">$ </span>cmake<span class="w"> </span>-DCMAKE_INSTALL_PREFIX<span class="o">=</span>/opt/simgrid<span class="w"> </span>-GNinja<span class="w"> </span>.
+<span class="gp">$ </span>ninja<span class="w">                     </span><span class="c1"># or &#39;make&#39; if you remove the &#39;-GNinja&#39; above</span>
+<span class="gp">$ </span>ninja<span class="w"> </span>install
+</pre></div>
+</div>
+</section>
+<section id="build-configuration">
+<span id="install-src-config"></span><h3>Build Configuration</h3>
+<p>This section is about <strong>compile-time options</strong>, which are very
+different from <a class="reference internal" href="Configuring_SimGrid.html#options"><span class="std std-ref">run-time options</span></a>. Compile-time options
+fall into two categories. <strong>SimGrid-specific options</strong> define which part
+of the framework to compile while <strong>Generic options</strong> are provided by
+cmake itself.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Our build system often gets mixed up if you change something on
+your machine after the build configuration.  For example, if
+SimGrid fails to detect your fortran compiler, it is not enough to
+install a fortran compiler. You also need to delete all Cmake
+files, such as <code class="docutils literal notranslate"><span class="pre">CMakeCache.txt</span></code>. Since Cmake also generates some
+files in the tree, you may need to wipe out your complete tree and
+start with a fresh one when you install new dependencies.</p>
+<p>A better solution is to <a class="reference internal" href="#install-cmake-outsrc"><span class="std std-ref">build out of the source tree</span></a>.</p>
+</div>
+<section id="generic-build-time-options">
+<h4>Generic build-time options</h4>
+<p>These options specify, for example, the path to various system elements (Python
+path, compiler to use, etc). In most case, CMake automatically discovers the
+right value for these elements, but you can set them manually as needed.
+Notably, such variables include <code class="docutils literal notranslate"><span class="pre">CC</span></code> and <code class="docutils literal notranslate"><span class="pre">CXX</span></code>, defining the paths to the C
+and C++ compilers; <code class="docutils literal notranslate"><span class="pre">CFLAGS</span></code> and <code class="docutils literal notranslate"><span class="pre">CXXFLAGS</span></code> specifying extra options to pass
+to the C and C++ compilers; and <code class="docutils literal notranslate"><span class="pre">PYTHON_EXECUTABLE</span></code> specifying the path to the
+Python executable.</p>
+<p>The best way to discover the exact name of the option that you need to
+change is to press <code class="docutils literal notranslate"><span class="pre">t</span></code> in the <code class="docutils literal notranslate"><span class="pre">ccmake</span></code> graphical interface, as all
+options are shown (and documented) in the advanced mode.</p>
+<p>Once you know their name, there are several ways to change the values of
+build-time options. You can naturally use the ccmake graphical
+interface for that, or you can use environment variables, or you can
+prefer the <code class="docutils literal notranslate"><span class="pre">-D</span></code> flag of <code class="docutils literal notranslate"><span class="pre">cmake</span></code>.</p>
+<p>For example, you can change the compilers by issuing these commands to set some
+environment variables before launching cmake:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nb">export</span><span class="w"> </span><span class="nv">CC</span><span class="o">=</span>gcc-5.1
+<span class="gp">$ </span><span class="nb">export</span><span class="w"> </span><span class="nv">CXX</span><span class="o">=</span>g++-5.1
+</pre></div>
+</div>
+<p>The same can be done by passing <code class="docutils literal notranslate"><span class="pre">-D</span></code> parameters to cmake, as follows.
+Note that the dot at the end is mandatory (see <a class="reference internal" href="#install-cmake-outsrc"><span class="std std-ref">Out of Tree Compilation</span></a>).</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cmake<span class="w"> </span>-DCMAKE_C_COMPILER<span class="o">=</span>clang<span class="w"> </span>-DCMAKE_CXX_COMPILER<span class="o">=</span>clang++<span class="w"> </span>.
+</pre></div>
+</div>
+</section>
+<section id="simgrid-compilation-options">
+<h4>SimGrid compilation options</h4>
+<p>Here is the list of all SimGrid-specific compile-time options (the
+default choice is in upper case).</p>
+<dl class="simple">
+<dt>CMAKE_INSTALL_PREFIX (path)</dt><dd><p>Where to install SimGrid (/opt/simgrid, /usr/local, or elsewhere).</p>
+</dd>
+<dt>enable_compile_optimizations (ON/off)</dt><dd><p>Ask the compiler to produce efficient code. You probably want to
+leave this option activated, unless you plan to modify SimGrid itself:
+efficient code takes more time to compile, and appears mangled to some debuggers.</p>
+</dd>
+<dt>enable_compile_warnings (on/OFF)</dt><dd><p>Ask the compiler to issue error messages whenever the source
+code is not perfectly clean. If you are a SimGrid developer, you
+have to activate this option to enforce the code quality. As a
+regular user, this option is of little use.</p>
+</dd>
+<dt>enable_debug (ON/off)</dt><dd><p>Disabling this option discards all log messages of severity
+debug or below at compile time (see <a class="reference internal" href="Outcomes.html#outcome-logs"><span class="std std-ref">Textual logging</span></a>). The resulting
+code is marginaly faster than if you discard these messages at
+runtime, but it obviously becomes impossible to get any debug
+info from SimGrid when things go wrong.</p>
+</dd>
+<dt>enable_documentation (on/OFF)</dt><dd><p>Generates the documentation pages. Building the documentation is not
+as easy as it used to be, and you should probably use the online
+version for now.</p>
+</dd>
+<dt>enable_java (enabled by default if installable)</dt><dd><p>Enable the Java bindings. This option is not visible by default
+(e.g. in ccmake), but gets enabled by default if you have all
+dependencies. You can use <code class="docutils literal notranslate"><span class="pre">-Denable_java=ON</span></code> to force its
+selection (the build fails if it cannot be enabled) or
+<code class="docutils literal notranslate"><span class="pre">-Denable_java=ON</span></code> to forbid its selection (it won’t be built even
+if the dependencies are installed).
+Note that the <code class="docutils literal notranslate"><span class="pre">minimal-bindings</span></code> config option is recommanded if
+you only plan to use SimGrid in Java.</p>
+</dd>
+<dt>enable_lto (ON/off)</dt><dd><p>Enables the <em>Link Time Optimization</em> in the C++ compiler.
+This feature really speeds up the code produced, but it is fragile
+with older gcc versions.</p>
+</dd>
+<dt>enable_maintainer_mode (on/OFF)</dt><dd><p>(dev only) Regenerates the XML parsers whenever the DTD is modified (requires flex and flexml).</p>
+</dd>
+<dt>enable_mallocators (ON/off)</dt><dd><p>Activates our internal memory caching mechanism. This produces faster
+code, but it may fool the debuggers.</p>
+</dd>
+<dt>enable_model-checking (ON/off)</dt><dd><p>Activates the verification mode. This should not impact the performance of your simulations if you build it but don’t use it,
+but you can still disable it to save some compilation time.</p>
+</dd>
+<dt>enable_ns3 (on/OFF)</dt><dd><p>Activates the ns-3 bindings. See section <a class="reference internal" href="Models.html#models-ns3"><span class="std std-ref">ns-3 as a SimGrid model</span></a>.</p>
+</dd>
+<dt>enable_python (enabled by default if installable)</dt><dd><p>Enable the Java bindings. This option is not visible by default
+(e.g. in ccmake), but gets enabled by default if you have all
+dependencies. You can use <code class="docutils literal notranslate"><span class="pre">-Denable_python=ON</span></code> to force its
+selection (the build fails if it cannot be enabled) or
+<code class="docutils literal notranslate"><span class="pre">-Denable_python=ON</span></code> to forbid its selection (it won’t be built even
+if the dependencies are installed).
+Note that the <code class="docutils literal notranslate"><span class="pre">minimal-bindings</span></code> config option is recommanded if
+you only plan to use SimGrid in Python.</p>
+</dd>
+<dt>enable_smpi (ON/off)</dt><dd><p>Allows one to run MPI code on top of SimGrid.</p>
+</dd>
+<dt>enable_sthead (ON/off)</dt><dd><p>Build the sthread module, in charge of intercepting the pthread actions at runtime, so that unmodified applications can run on top of the simulator, or on top of the model checker.
+It is Linux-only, so it’s ON by default on this system while OFF by default on other systems (in particular Mac and FreeBSD).</p>
+</dd>
+<dt>enable_testsuite_McMini (on/OFF)</dt><dd><p>Adds several extra tests for the model checker module (targeting threaded applications).</p>
+</dd>
+<dt>enable_testsuite_smpi_MBI (on/OFF)</dt><dd><p>Adds many extra tests for the model checker module (targeting MPI applications).</p>
+</dd>
+<dt>enable_testsuite_smpi_MPICH3 (on/OFF)</dt><dd><p>Adds many extra tests for the MPI module.</p>
+</dd>
+<dt>minimal-bindings (on/OFF)</dt><dd><p>Take as few optional dependencies as possible, to get minimal
+library bindings in Python or Java.</p>
+</dd>
+<dt>NS3_HINT (empty by default)</dt><dd><p>Alternative path into which ns-3 should be searched for.</p>
+</dd>
+<dt>EIGEN3_HINT (empty by default)</dt><dd><p>Alternative path into which Eigen3 should be searched for.
+Providing the value OFF as an hint will disable the detection alltogether.</p>
+</dd>
+<dt>SIMGRID_PYTHON_LIBDIR (auto-detected)</dt><dd><p>Where to install the Python module library. By default, it is set to the cmake Python3_SITEARCH variable if installing to /usr,
+and a modified version of that variable if installing to another path. Just force another value if the auto-detected default
+does not fit your setup.</p>
+</dd>
+<dt>SMPI_C_FLAGS, SMPI_CXX_FLAGS, SMPI_Fortran_FLAGS (string)</dt><dd><p>Default compiler options to use in smpicc, smpicxx, or smpiff.
+This can be useful to set options like “-m32” or “-m64”.</p>
+</dd>
+</dl>
+</section>
+<section id="reset-the-build-configuration">
+<h4>Reset the build configuration</h4>
+<p>To empty the CMake cache (either when you add a new library or when
+things go seriously wrong), simply delete your <code class="docutils literal notranslate"><span class="pre">CMakeCache.txt</span></code>. You
+may also want to directly edit this file in some circumstances.</p>
+</section>
+</section>
+<section id="out-of-tree-compilation">
+<span id="install-cmake-outsrc"></span><h3>Out of Tree Compilation</h3>
+<p>By default, the files produced during the compilation are placed in
+the source directory. It is however often better to put them all in a
+separate directory: cleaning the tree becomes as easy as removing this
+directory, and you can have several such directories to test different
+parameter sets or architectures.</p>
+<p>For that, go to the directory where the files should be produced, and
+invoke cmake (or ccmake) with the full path to the SimGrid source as
+last argument.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mkdir<span class="w"> </span>build
+<span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>build
+<span class="gp">$ </span>cmake<span class="w"> </span><span class="o">[</span>options<span class="o">]</span><span class="w"> </span>..
+<span class="gp">$ </span>make
+</pre></div>
+</div>
+</section>
+<section id="existing-compilation-targets">
+<h3>Existing Compilation Targets</h3>
+<p>In most cases, compiling and installing SimGrid is enough:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>make
+<span class="gp">$ </span>make<span class="w"> </span>install<span class="w"> </span><span class="c1"># try &quot;sudo make install&quot; if you don&#39;t have the permission to write</span>
+</pre></div>
+</div>
+<p>In addition, several compilation targets are provided in SimGrid. If
+your system is well configured, the full list of targets is available
+for completion when using the <code class="docutils literal notranslate"><span class="pre">Tab</span></code> key. Note that some of the
+existing targets are not really for public consumption so don’t worry
+if some do not work for you.</p>
+<ul class="simple">
+<li><p><strong>make</strong>: Build the core of SimGrid that gets installed, but not any example.</p></li>
+<li><p><strong>make examples</strong>: Build the examples, which are needed by the tests.</p></li>
+<li><p><strong>make simgrid</strong>: Build only the SimGrid library. Not any example nor the helper tools.</p></li>
+<li><p><strong>make s4u-comm-pingpong</strong>: Build only this example (works for any example)</p></li>
+<li><p><strong>make python-bindings</strong>: Build the Python bindings</p></li>
+<li><p><strong>make java-bindings</strong>: Build the Java bindings</p></li>
+<li><p><strong>make tests-java</strong>: Build the Java bindings and the associated tests</p></li>
+<li><p><strong>make clean</strong>: Clean the results of a previous compilation</p></li>
+<li><p><strong>make install</strong>: Install the project (doc/ bin/ lib/ include/)</p></li>
+<li><p><strong>make dist</strong>: Build a distribution archive (tar.gz)</p></li>
+<li><p><strong>make distcheck</strong>: Check the dist (make + make dist + tests on the distribution)</p></li>
+<li><p><strong>make documentation</strong>: Create SimGrid documentation</p></li>
+</ul>
+<p>If you want to see what is really happening, try adding <code class="docutils literal notranslate"><span class="pre">VERBOSE=1</span></code> to
+your compilation requests:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>make<span class="w"> </span><span class="nv">VERBOSE</span><span class="o">=</span><span class="m">1</span>
+</pre></div>
+</div>
+</section>
+<section id="testing-your-build">
+<span id="install-src-test"></span><h3>Testing your build</h3>
+<p>Once everything is built, you may want to test the result. SimGrid
+comes with an extensive set of regression tests (as described in the
+&#64;ref inside_tests “insider manual”). The tests are not built by
+default, so you first have to build them with <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">tests</span></code>. You can
+then run them with <code class="docutils literal notranslate"><span class="pre">ctest</span></code>, that comes with CMake.  We run them
+every commit and the results are on <a class="reference external" href="https://ci.inria.fr/simgrid/">our Jenkins</a>.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>make<span class="w"> </span>tests<span class="w">                </span><span class="c1"># Build the tests</span>
+<span class="gp">$ </span>ctest<span class="w">                     </span><span class="c1"># Launch all tests</span>
+<span class="gp">$ </span>ctest<span class="w"> </span>-R<span class="w"> </span>s4u<span class="w">              </span><span class="c1"># Launch only the tests whose names match the string &quot;s4u&quot;</span>
+<span class="gp">$ </span>ctest<span class="w"> </span>-j4<span class="w">                 </span><span class="c1"># Launch all tests in parallel, at most 4 concurrent jobs</span>
+<span class="gp">$ </span>ctest<span class="w"> </span>--verbose<span class="w">           </span><span class="c1"># Display all details on what&#39;s going on</span>
+<span class="gp">$ </span>ctest<span class="w"> </span>--output-on-failure<span class="w"> </span><span class="c1"># Only get verbose for the tests that fail</span>
+
+<span class="gp">$ </span>ctest<span class="w"> </span>-R<span class="w"> </span>s4u<span class="w"> </span>-j4<span class="w"> </span>--output-on-failure<span class="w"> </span><span class="c1"># You changed S4U and want to check that you  \</span>
+<span class="gp">                                       # </span>didn<span class="s1">&#39;t break anything, huh?                 \</span>
+<span class="gp">                                       # </span><span class="s1">That&#39;</span>s<span class="w"> </span>fine,<span class="w"> </span>I<span class="w"> </span><span class="k">do</span><span class="w"> </span>so<span class="w"> </span>all<span class="w"> </span>the<span class="w"> </span><span class="nb">time</span><span class="w"> </span>myself.
+</pre></div>
+</div>
+</section>
+<section id="macos-specific-instructions">
+<span id="install-cmake-mac"></span><h3>macOS-specific instructions</h3>
+<p>SimGrid compiles like a charm with clang (version 3.0 or higher) on macOS:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cmake<span class="w"> </span>-DCMAKE_C_COMPILER<span class="o">=</span>/path/to/clang<span class="w"> </span>-DCMAKE_CXX_COMPILER<span class="o">=</span>/path/to/clang++<span class="w"> </span>.
+<span class="gp">$ </span>make
+</pre></div>
+</div>
+<p>Troubleshooting your macOS build.</p>
+<dl>
+<dt>CMake Error: Parse error in cache file build_dir/CMakeCache.txt. Offending entry: /SDKs/MacOSX10.8.sdk</dt><dd><p>This was reported with the XCode version of clang 4.1. The work
+around is to edit the <code class="docutils literal notranslate"><span class="pre">CMakeCache.txt</span></code> file directly, to change
+the following entry:</p>
+<p><code class="docutils literal notranslate"><span class="pre">CMAKE_OSX_SYSROOT:PATH=/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform/Developer</span></code></p>
+<p>You can safely ignore the warning about “-pthread” not being used, if it appears.</p>
+</dd>
+<dt>/usr/include does not seem to exist</dt><dd><p>This directory does not exist by default on modern macOS versions,
+and you may need to create it with <code class="docutils literal notranslate"><span class="pre">xcode-select</span> <span class="pre">-install</span></code></p>
+</dd>
+</dl>
+</section>
+<section id="windows-specific-instructions">
+<span id="install-cmake-windows"></span><h3>Windows-specific instructions</h3>
+<p>The best solution to get SimGrid working on windows is to install the
+Ubuntu subsystem of Windows 10. All of SimGrid
+works in this setting. Native builds never really worked, and they are
+disabled starting with SimGrid v3.33.</p>
+</section>
+<section id="python-specific-instructions">
+<h3>Python-specific instructions</h3>
+<p>Once you have the Python development headers installed as well as a
+recent version of the <a class="reference external" href="https://pybind11.readthedocs.io/en/stable/">pybind11</a>
+module (version at least 2.4), recompiling the Python bindings from
+the source should be as easy as:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span><span class="nb">cd</span><span class="w"> </span>simgrid-source-tree
+<span class="gp">$ </span>python<span class="w"> </span>setup.py<span class="w"> </span>build<span class="w"> </span>install
+</pre></div>
+</div>
+<p>Starting with SimGrid 3.13, it should even be possible to install
+simgrid without downloading the source with pip:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>simgrid
+</pre></div>
+</div>
+<p>If you installed SimGrid to a non-standard directory (such as <code class="docutils literal notranslate"><span class="pre">/opt/simgrid</span></code> as advised earlier), you should tell python where
+to find the libraries as follows (notice the elements suffixed to the configured prefix).</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="s2">&quot;/opt/simgrid/lib/python3/dist-packages&quot;</span><span class="w"> </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;/opt/simgrid/lib&quot;</span><span class="w"> </span>python<span class="w"> </span>your_script.py
+</pre></div>
+</div>
+<p>You can add those variables to your bash profile to not specify it each time by adding these lines to your <code class="docutils literal notranslate"><span class="pre">~/.profile</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">export PYTHONPATH=&quot;$PYTHONPATH:/opt/simgrid/lib/python3/dist-packages&quot;</span>
+<span class="go">export LD_LIBRARY_PATH=&quot;$LD_LIBRARY_PATH:/opt/simgrid/lib&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           
+</main></body></html>
