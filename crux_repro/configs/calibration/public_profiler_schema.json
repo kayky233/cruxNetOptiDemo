@@ -1,0 +1,240 @@
+{
+  "schema_version": "public-profiler-record/v1",
+  "description": "Schema-like contract for Greyhound or hook-based benchmark records used to calibrate the simulator network model.",
+  "required_sections": [
+    "source",
+    "hardware",
+    "topology_scope",
+    "job",
+    "communicator",
+    "collective",
+    "timing",
+    "quality",
+    "provenance"
+  ],
+  "source": {
+    "profiler": {
+      "type": "string",
+      "examples": [
+        "greyhound",
+        "nccl_hook",
+        "hccl_hook",
+        "manual_microbenchmark"
+      ]
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "captured_at": {
+      "type": "string",
+      "format": "iso8601"
+    }
+  },
+  "hardware": {
+    "gpu_model": {
+      "type": "string"
+    },
+    "gpu_count": {
+      "type": "integer",
+      "unit": "gpus"
+    },
+    "host_count": {
+      "type": "integer",
+      "unit": "hosts"
+    },
+    "nic_model": {
+      "type": "string"
+    },
+    "nic_count_per_host": {
+      "type": "integer",
+      "unit": "nics"
+    },
+    "host_gpu_interconnect": {
+      "type": "string",
+      "examples": [
+        "pcie",
+        "nvlink",
+        "unknown"
+      ]
+    }
+  },
+  "topology_scope": {
+    "host_ids": {
+      "type": "array",
+      "items": "string"
+    },
+    "asw_ids": {
+      "type": "array",
+      "items": "string"
+    },
+    "psw_ids": {
+      "type": "array",
+      "items": "string"
+    },
+    "dsw_ids": {
+      "type": "array",
+      "items": "string"
+    },
+    "placement_span": {
+      "hosts": "integer",
+      "asw": "integer",
+      "psw": "integer",
+      "dsw": "integer"
+    }
+  },
+  "job": {
+    "job_name": {
+      "type": "string"
+    },
+    "model": {
+      "type": "string"
+    },
+    "global_batch_size": {
+      "type": "integer",
+      "nullable": true
+    },
+    "seq_len": {
+      "type": "integer",
+      "nullable": true
+    },
+    "parallelism": {
+      "dp": "integer",
+      "tp": "integer",
+      "pp": "integer",
+      "ep": "integer"
+    }
+  },
+  "communicator": {
+    "backend": {
+      "type": "string",
+      "enum": [
+        "nccl",
+        "hccl",
+        "mpi",
+        "gloo",
+        "unknown"
+      ]
+    },
+    "world_size": {
+      "type": "integer"
+    },
+    "rank_count_per_host": {
+      "type": "integer"
+    },
+    "comm_plan": {
+      "type": "string",
+      "enum": [
+        "data_parallel",
+        "tensor_parallel",
+        "pipeline_parallel",
+        "expert_parallel",
+        "hybrid",
+        "unknown"
+      ]
+    }
+  },
+  "collective": {
+    "op": {
+      "type": "string",
+      "enum": [
+        "all_reduce",
+        "all_gather",
+        "reduce_scatter",
+        "broadcast",
+        "send_recv",
+        "barrier",
+        "unknown"
+      ]
+    },
+    "dtype": {
+      "type": "string",
+      "examples": [
+        "fp32",
+        "fp16",
+        "bf16",
+        "int8"
+      ]
+    },
+    "message_bytes": {
+      "type": "number",
+      "unit": "bytes"
+    },
+    "algorithm": {
+      "type": "string",
+      "examples": [
+        "ring",
+        "tree",
+        "collnet",
+        "auto",
+        "unknown"
+      ]
+    }
+  },
+  "timing": {
+    "samples": {
+      "type": "integer"
+    },
+    "duration_ms": {
+      "unit": "milliseconds",
+      "fields": [
+        "min",
+        "p50",
+        "p90",
+        "p95",
+        "p99",
+        "max",
+        "mean"
+      ]
+    },
+    "compute_ms": {
+      "type": "number",
+      "unit": "milliseconds",
+      "nullable": true
+    },
+    "iteration_ms": {
+      "type": "number",
+      "unit": "milliseconds",
+      "nullable": true
+    },
+    "effective_bandwidth_gbps": {
+      "type": "number",
+      "unit": "Gbps",
+      "nullable": true
+    }
+  },
+  "quality": {
+    "warmup_samples": {
+      "type": "integer"
+    },
+    "outlier_policy": {
+      "type": "string"
+    },
+    "confidence": {
+      "type": "string",
+      "enum": [
+        "measured",
+        "partial",
+        "estimated",
+        "unknown"
+      ]
+    },
+    "notes": {
+      "type": "array",
+      "items": "string"
+    }
+  },
+  "provenance": {
+    "raw_log_path": {
+      "type": "string"
+    },
+    "parser_commit": {
+      "type": "string"
+    },
+    "sim_config_ref": {
+      "type": "string"
+    }
+  }
+}

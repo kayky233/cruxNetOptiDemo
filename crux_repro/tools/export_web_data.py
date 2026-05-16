@@ -11,6 +11,7 @@ import argparse
 import csv
 import json
 import random
+import re
 from collections import defaultdict
 from pathlib import Path
 
@@ -79,6 +80,8 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--out", type=Path, default=Path("results/web_dashboard/data.json"))
     parser.add_argument("--merge-html", type=Path, default=None, help="Path to dashboard.html template; if set, produce self-contained merged HTML")
+    parser.add_argument("--calibration-profile", type=Path, default=Path("results/calibration/lingjun_trace_profile.json"),
+                        help="Optional public-data calibration profile to embed in the dashboard")
     args = parser.parse_args()
 
     rows = read_csv(args.jobs)
@@ -241,6 +244,41 @@ def main() -> None:
                 metadata["avg_comm_s"] = float(rr["avg_comm_s"])
                 break
 
+    calibration = None
+    if args.calibration_profile and Path(args.calibration_profile).exists():
+        with Path(args.calibration_profile).open(encoding="utf-8") as f:
+            profile = json.load(f)
+        dataset = profile.get("dataset", {})
+        topology_profile = profile.get("topology", {})
+        boundary = profile.get("calibration_boundary", {})
+        calibration = {
+            "source": profile.get("source", {}),
+            "dataset": {
+                "job_rows": dataset.get("job_rows"),
+                "worker_rows": dataset.get("worker_rows"),
+                "topology_rows": dataset.get("topology_rows"),
+                "jobs_with_gpu_workers": dataset.get("jobs_with_gpu_workers"),
+                "worker_topology_coverage": dataset.get("worker_topology_coverage"),
+            },
+            "topology": {
+                "unique_hosts": topology_profile.get("unique_hosts"),
+                "unique_dsw": topology_profile.get("unique_dsw"),
+                "unique_psw": topology_profile.get("unique_psw"),
+                "unique_asw": topology_profile.get("unique_asw"),
+            },
+            "boundary": {
+                "strong": boundary.get("strong", []),
+                "medium": boundary.get("medium", []),
+                "weak": boundary.get("weak", []),
+                "not_supported": boundary.get("not_supported", []),
+            },
+            "dashboard_interpretation": {
+                "replay": "真实 trace 校准",
+                "placement": "真实 host/ASW/PSW/DSW 层级校准",
+                "network": "估算模型，等待 Greyhound/hook benchmark 半实测校准",
+            },
+        }
+
     # --- Assemble ---
     output = {
         "metadata": metadata,
@@ -249,6 +287,7 @@ def main() -> None:
         "gpu_occupancy": gpu_occupancy,
         "link_timeline": {k: v for k, v in sorted(link_timeline.items())},
         "link_aggregate": link_agg,
+        "calibration": calibration,
     }
 
     args.out.parent.mkdir(parents=True, exist_ok=True)
@@ -275,7 +314,18 @@ def main() -> None:
   DATA = EMBEDDED_DATA;
   init();
 }}"""
-        merged = template.replace(old_load, new_load)
+        if old_load in template:
+            merged = template.replace(old_load, new_load)
+        else:
+            merged, replacements = re.subn(
+                r"function loadData\(\) \{\n  const EMBEDDED_DATA = .*?;\n  DATA = EMBEDDED_DATA;\n  init\(\);\n\}",
+                new_load,
+                template,
+                count=1,
+                flags=re.S,
+            )
+            if replacements == 0:
+                raise ValueError(f"Could not find loadData() placeholder in {args.merge_html}")
         merged_path = args.out.parent / "dashboard.html"
         merged_path.write_text(merged, encoding="utf-8")
         print(f"  Merged HTML: {merged_path} ({merged_path.stat().st_size / 1024:.0f} KB)")

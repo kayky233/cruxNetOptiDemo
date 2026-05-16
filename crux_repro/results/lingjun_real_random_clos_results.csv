@@ -1,0 +1,2 @@
+scheduler,topology,comm_plan,workload,placement_mode,placement_objective,overlap_ratio,makespan_s,avg_jct_s,avg_comm_s,avg_compute_wait_s,useful_gpu_fraction,jobs,ranks,rounds,hosts,gpus_per_host
+random_same,three_tier_clos,ring,trace,optimize,balanced,0.000000,298.982524,19.104585,12.696984,0.000000,0.126078,48,8,3,8,8

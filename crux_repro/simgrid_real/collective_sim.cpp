@@ -339,9 +339,9 @@ int main(int argc,char** argv){try{auto o=parse_args(argc,argv);validate(o);auto
         <<","<<jb.id<<","<<jb.model<<","<<jb.ranks<<","<<jb.start_s<<","<<s<<","<<f<<","<<(f-s)<<","
         <<c<<","<<w<<","<<jb.compute_s<<","<<(jb.tensor_bytes/1073741824.0)<<","<<jb.intensity<<","<<pstr(jb)<<"\n";}}
   // Write link aggregate utilization
-  if(!o.link_out.empty()){std::ofstream lf(o.link_out);
-    lf<<"link_name,bandwidth_bps,total_bytes,utilization,makespan_s\n";
-    for(auto&kv:g_link_usage)lf<<kv.first<<","<<std::fixed<<std::setprecision(1)<<kv.second.bandwidth_bps<<","
+  if(!o.link_out.empty()){std::ofstream lf(o.link_out,std::ios::app);
+    if(lf.tellp()==0)lf<<"scheduler,link_name,bandwidth_bps,total_bytes,utilization,makespan_s\n";
+    for(auto&kv:g_link_usage)lf<<o.scheduler<<","<<kv.first<<","<<std::fixed<<std::setprecision(1)<<kv.second.bandwidth_bps<<","
       <<kv.second.total_bytes<<","<<std::setprecision(6)<<kv.second.utilization()<<","<<ms<<"\n";}
   // Write link timeline
   if(g_link_timeline_enabled){

@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SimGrid 集群调度动态回放</title>
+<style>
+:root{
+  --bg:#101418;
+  --panel:#171d22;
+  --panel-2:#1f272e;
+  --ink:#edf3f7;
+  --muted:#8b9aa5;
+  --line:#31404a;
+  --line-soft:#25313a;
+  --green:#73d13d;
+  --amber:#ffbd4a;
+  --red:#ff5c5c;
+  --cyan:#31c7d6;
+  --blue:#5aa7ff;
+  --violet:#a78bfa;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:"Avenir Next","Trebuchet MS",Verdana,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  overflow:hidden;
+}
+button,select,input{font:inherit}
+#app{
+  height:100vh;
+  display:grid;
+  grid-template-rows:auto 1fr auto;
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px) 0 0/40px 40px,
+    linear-gradient(0deg,rgba(255,255,255,.025) 1px,transparent 1px) 0 0/40px 40px,
+    radial-gradient(circle at 82% 18%,rgba(49,199,214,.12),transparent 26%),
+    var(--bg);
+}
+
+#toolbar{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:14px;
+  align-items:center;
+  padding:12px 16px;
+  border-bottom:1px solid var(--line);
+  background:rgba(16,20,24,.92);
+}
+.brand{display:flex;align-items:baseline;gap:10px;white-space:nowrap}
+.brand b{font-size:18px;letter-spacing:.4px}
+.brand span{font-size:12px;color:var(--muted)}
+.controls{display:flex;align-items:center;gap:8px;min-width:0}
+.controls button,.right-tools button{
+  height:32px;
+  min-width:34px;
+  border:1px solid var(--line);
+  color:var(--ink);
+  background:var(--panel-2);
+  border-radius:6px;
+  cursor:pointer;
+}
+.controls button:hover,.right-tools button:hover{border-color:#526675;background:#26323b}
+#btn-play{min-width:82px;background:#e8f0f3;color:#101418;border-color:#e8f0f3;font-weight:700}
+#btn-play.active{background:var(--green);border-color:var(--green)}
+#time-display{
+  min-width:82px;
+  color:var(--cyan);
+  text-align:center;
+  font-variant-numeric:tabular-nums;
+  font-weight:700;
+}
+#scrubber{
+  flex:1;
+  min-width:160px;
+  accent-color:var(--cyan);
+}
+.right-tools{display:flex;align-items:center;gap:8px}
+.right-tools label{font-size:12px;color:var(--muted)}
+.right-tools select{
+  height:32px;
+  border:1px solid var(--line);
+  background:var(--panel-2);
+  color:var(--ink);
+  border-radius:6px;
+  padding:0 8px;
+}
+
+#main{
+  min-height:0;
+  display:grid;
+  grid-template-columns:300px minmax(520px,1fr) 330px;
+  gap:12px;
+  padding:12px;
+}
+.panel{
+  min-height:0;
+  background:rgba(23,29,34,.94);
+  border:1px solid var(--line);
+  border-radius:8px;
+  overflow:hidden;
+}
+.panel-head{
+  height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:0 12px;
+  border-bottom:1px solid var(--line-soft);
+  color:#dce6eb;
+  font-size:13px;
+  font-weight:700;
+}
+.hint{font-size:11px;color:var(--muted);font-weight:500}
+
+#left-stack,#right-stack{display:grid;gap:12px;min-height:0}
+#left-stack{grid-template-rows:auto auto 1fr}
+#right-stack{grid-template-rows:auto 1fr}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px}
+.metric{
+  min-width:0;
+  padding:10px;
+  background:#111820;
+  border:1px solid var(--line-soft);
+  border-radius:7px;
+}
+.metric .label{font-size:11px;color:var(--muted)}
+.metric .value{margin-top:4px;font-size:24px;line-height:1;font-weight:800;font-variant-numeric:tabular-nums}
+.metric .value.small{font-size:18px}
+.metric .sub{margin-top:5px;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.calibration-body{padding:10px;display:grid;gap:8px}
+.calibration-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.calib-card{min-width:0;padding:9px;background:#111820;border:1px solid var(--line-soft);border-radius:7px}
+.calib-card .label{font-size:10px;color:var(--muted)}
+.calib-card .value{margin-top:4px;font-size:18px;line-height:1;font-weight:800;font-variant-numeric:tabular-nums}
+.calib-card .sub{margin-top:5px;font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.calib-boundary{display:grid;gap:5px}
+.calib-row{display:grid;grid-template-columns:58px 1fr;gap:7px;align-items:start;font-size:10px;line-height:1.35;color:#c7d3da}
+.calib-tag{display:inline-flex;align-items:center;justify-content:center;height:18px;border-radius:999px;color:#101418;font-weight:800}
+.calib-tag.strong{background:var(--green)}
+.calib-tag.medium{background:var(--amber)}
+.calib-tag.weak{background:#a78bfa}
+.calib-tag.none{background:var(--red)}
+
+#job-panel{display:grid;grid-template-rows:auto 1fr}
+#job-list{overflow:auto;padding:8px}
+.job-item{
+  display:grid;
+  grid-template-columns:8px 1fr auto;
+  gap:8px;
+  align-items:center;
+  min-height:42px;
+  padding:7px 8px;
+  margin-bottom:6px;
+  background:#111820;
+  border:1px solid var(--line-soft);
+  border-radius:7px;
+  color:var(--ink);
+  text-align:left;
+  opacity:.72;
+  width:100%;
+  cursor:pointer;
+}
+.job-item.running{opacity:1;border-color:rgba(49,199,214,.75);background:#13242a}
+.job-item.completed{opacity:.44}
+.job-item.queued{opacity:.62}
+.job-stripe{height:26px;border-radius:3px}
+.job-title{font-size:12px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.job-meta{display:flex;gap:7px;margin-top:3px;font-size:10px;color:var(--muted);white-space:nowrap}
+.intensity-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:2px 5px;
+  border-radius:999px;
+  color:#101418;
+  font-weight:800;
+}
+.intensity-chip i{display:block;width:18px;height:5px;border-radius:999px;background:rgba(16,20,24,.45)}
+.job-pill{
+  font-size:10px;
+  color:#101418;
+  background:#dce6eb;
+  padding:3px 6px;
+  border-radius:999px;
+  font-weight:800;
+}
+
+#story-panel{display:grid;grid-template-rows:42px minmax(260px,1fr) 240px;min-height:0}
+#timeline-wrap{position:relative;min-height:0;background:#0e1317}
+#timeline-canvas{position:absolute;inset:0}
+#topology-wrap{position:relative;border-top:1px solid var(--line-soft);background:#131a20}
+#topo-svg{width:100%;height:100%;display:block}
+.legend{
+  position:absolute;
+  left:12px;
+  top:10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  font-size:10px;
+  color:var(--muted);
+  pointer-events:none;
+  max-width:520px;
+}
+.legend span{display:flex;align-items:center;gap:4px}
+.legend i{display:block;width:16px;height:6px;border-radius:99px}
+.legend .plain{color:#c7d3da}
+
+#focus-panel{display:grid;grid-template-rows:auto 1fr}
+#focus-body{padding:12px;overflow:auto}
+.focus-title{font-size:16px;font-weight:800}
+.focus-sub{margin-top:5px;font-size:12px;color:var(--muted)}
+.route-card{
+  margin-top:12px;
+  padding:10px;
+  background:#111820;
+  border:1px solid var(--line-soft);
+  border-radius:7px;
+}
+.route-card h4{font-size:12px;margin-bottom:8px;color:#dce6eb}
+.rank-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.rank-cell{
+  min-height:34px;
+  padding:6px;
+  border-radius:6px;
+  background:#172129;
+  border:1px solid #283641;
+  font-size:11px;
+  text-align:center;
+}
+.rank-cell b{display:block;color:var(--cyan);font-size:12px}
+.path-list{display:flex;flex-wrap:wrap;gap:5px}
+.path-list span{
+  font-size:10px;
+  padding:4px 6px;
+  border-radius:999px;
+  background:#202b33;
+  color:#c7d3da;
+}
+
+#heat-panel{display:grid;grid-template-rows:42px 1fr}
+#heatmap-canvas{width:100%;height:100%}
+#link-bars{overflow:auto;padding:10px}
+.bar-row{display:grid;grid-template-columns:76px 1fr 44px;gap:7px;align-items:center;margin-bottom:7px;font-size:10px}
+.bar-name{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right}
+.bar-track{height:10px;background:#111820;border:1px solid var(--line-soft);border-radius:999px;overflow:hidden}
+.bar-fill{height:100%;border-radius:999px}
+.bar-val{text-align:right;font-variant-numeric:tabular-nums}
+
+#status-bar{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  height:30px;
+  padding:0 16px;
+  border-top:1px solid var(--line);
+  background:#101418;
+  color:var(--muted);
+  font-size:11px;
+}
+#status-bar .val{color:#edf3f7;font-weight:800;font-variant-numeric:tabular-nums}
+.tooltip{
+  position:fixed;
+  z-index:50;
+  display:none;
+  max-width:280px;
+  padding:9px 10px;
+  border:1px solid #526675;
+  border-radius:7px;
+  background:#0d1216;
+  color:#edf3f7;
+  font-size:11px;
+  box-shadow:0 12px 32px rgba(0,0,0,.38);
+  pointer-events:none;
+}
+@media (max-width:1100px){
+  #main{grid-template-columns:250px minmax(420px,1fr);grid-template-rows:1fr 260px}
+  #right-stack{grid-column:1 / -1;grid-template-columns:1fr 1fr;grid-template-rows:1fr}
+  #story-panel{grid-template-rows:42px minmax(240px,1fr) 220px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="toolbar">
+    <div class="brand">
+      <b>SimGrid 调度回放</b>
+      <span id="run-label">等待数据</span>
+    </div>
+    <div class="controls">
+      <button id="btn-play" onclick="togglePlay()">播放</button>
+      <button title="减速" onclick="changeSpeed(0.5)">-</button>
+      <span id="time-display">0.0s</span>
+      <button title="加速" onclick="changeSpeed(2)">+</button>
+      <input type="range" id="scrubber" min="0" max="1000" value="0" oninput="scrub(this.value)">
+    </div>
+    <div class="right-tools">
+      <label>速度</label>
+      <select id="speed-select" onchange="setSpeed(this.value)">
+        <option value="0.5">0.5x</option>
+        <option value="1" selected>1x</option>
+        <option value="2">2x</option>
+        <option value="5">5x</option>
+        <option value="10">10x</option>
+        <option value="30">30x</option>
+      </select>
+      <button onclick="fitView()">归零</button>
+    </div>
+  </div>
+
+  <div id="main">
+    <div id="left-stack">
+      <section class="panel">
+        <div class="panel-head"><span>当前态势</span><span class="hint" id="phase-label">排队</span></div>
+        <div class="metrics">
+          <div class="metric"><div class="label">活跃 Job</div><div class="value" id="metric-active">0</div><div class="sub" id="metric-active-sub">等待开始</div></div>
+          <div class="metric"><div class="label">GPU 占用</div><div class="value" id="metric-gpu">0%</div><div class="sub" id="metric-gpu-sub">0 / 0</div></div>
+          <div class="metric"><div class="label">已完成</div><div class="value" id="metric-done">0</div><div class="sub" id="metric-done-sub">0%</div></div>
+          <div class="metric"><div class="label">关键 Job</div><div class="value small" id="metric-focus">-</div><div class="sub" id="metric-focus-sub">即将开始</div></div>
+        </div>
+      </section>
+
+      <section class="panel" id="calibration-panel">
+        <div class="panel-head"><span>校准可信度</span><span class="hint" id="calib-source">公开 trace</span></div>
+        <div class="calibration-body" id="calibration-body"></div>
+      </section>
+
+      <section class="panel" id="job-panel">
+        <div class="panel-head"><span>Job 队列</span><span class="hint">按开始时间排序</span></div>
+        <div id="job-list"></div>
+      </section>
+    </div>
+
+    <section class="panel" id="story-panel">
+      <div class="panel-head">
+        <span>全局时间线</span>
+        <span class="hint">横向是时间，纵向按 Job，宽度是 JCT</span>
+      </div>
+      <div id="timeline-wrap"><canvas id="timeline-canvas"></canvas></div>
+      <div id="topology-wrap">
+        <svg id="topo-svg"></svg>
+        <div class="legend">
+          <span class="plain">H0-H7 = Host；每台 8 卡</span>
+          <span><i style="background:var(--green)"></i>空闲</span>
+          <span><i style="background:var(--cyan)"></i>活跃</span>
+          <span><i style="background:var(--red)"></i>拥塞</span>
+        </div>
+      </div>
+    </section>
+
+    <div id="right-stack">
+      <section class="panel" id="focus-panel">
+        <div class="panel-head"><span>聚焦 Job</span><span class="hint" id="focus-state">-</span></div>
+        <div id="focus-body"></div>
+      </section>
+      <section class="panel" id="heat-panel">
+        <div class="panel-head"><span>链路热度</span><span class="hint" id="heat-hint">当前路径估算</span></div>
+        <div id="link-bars"></div>
+      </section>
+    </div>
+  </div>
+
+  <div id="status-bar">
+    <span>当前 <span class="val" id="status-time">0.0s</span></span>
+    <span>排队 <span class="val" id="status-queued">0</span></span>
+    <span>运行 <span class="val" id="status-active">0</span></span>
+    <span>完成 <span class="val" id="status-done">0</span></span>
+    <span>makespan <span class="val" id="status-ms">-</span></span>
+  </div>
+</div>
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+let DATA = null;
+const JOB_COLORS = ["#ff5c5c","#ffbd4a","#73d13d","#31c7d6","#5aa7ff","#a78bfa","#f472b6","#fb923c","#22d3ee","#c084fc","#a3e635","#f43f5e","#38bdf8","#e879f9","#34d399","#818cf8"];
+const scrubberMax = 1000;
+let currentTime = 0;
+let playing = false;
+let speed = 1;
+let lastFrame = 0;
+let selectedJobId = null;
+let cachedStatus = null;
+let intensityMin = 0;
+let intensityMax = 1;
+
+async function loadData() {
+  try {
+    const resp = await fetch('data.json');
+    DATA = await resp.json();
+    init();
+  } catch(e) {
+    document.body.innerHTML = `<div style="padding:40px;text-align:center"><h2>数据加载失败</h2><p>${e.message}</p><p>请确保 data.json 与本文件在同一目录</p></div>`;
+  }
+}
+
+function init() {
+  DATA.jobs.sort((a,b) => a.arrival_s - b.arrival_s || a.id - b.id);
+  const intensities = DATA.jobs.map(j => j.intensity || 0);
+  intensityMin = Math.min(...intensities);
+  intensityMax = Math.max(...intensities, intensityMin + 1);
+  DATA.jobs.forEach(j => j.intensity_rank = [...DATA.jobs].sort((a,b) => (b.intensity || 0) - (a.intensity || 0)).findIndex(x => x.id === j.id) + 1);
+  selectedJobId = DATA.jobs[0]?.id ?? null;
+  document.title = `SimGrid 回放 - ${DATA.topology.name} | ${DATA.metadata.total_jobs} jobs | ${DATA.metadata.total_gpus} GPUs`;
+  document.getElementById('run-label').textContent = `${DATA.metadata.scheduler} / ${DATA.topology.name} / ${DATA.metadata.total_gpus} GPUs`;
+  document.getElementById('status-ms').textContent = `${DATA.metadata.makespan_s.toFixed(1)}s`;
+  currentTime = 0;
+  updateAll();
+  setTimeout(() => { if (!playing) togglePlay(); }, 600);
+  window.addEventListener('resize', updateAll);
+}
+
+function togglePlay() {
+  playing = !playing;
+  const btn = document.getElementById('btn-play');
+  btn.textContent = playing ? '暂停' : (currentTime >= DATA.metadata.makespan_s ? '重播' : '播放');
+  btn.classList.toggle('active', playing);
+  if (playing && currentTime >= DATA.metadata.makespan_s) currentTime = 0;
+  if (playing) { lastFrame = performance.now(); requestAnimationFrame(tick); }
+}
+
+function changeSpeed(factor) {
+  const next = Math.max(0.25, Math.min(30, speed * factor));
+  setSpeed(next);
+}
+function setSpeed(v) {
+  speed = parseFloat(v);
+  const select = document.getElementById('speed-select');
+  if ([...select.options].some(o => parseFloat(o.value) === speed)) select.value = String(speed);
+}
+function scrub(val) {
+  if (!DATA) return;
+  currentTime = (val / scrubberMax) * DATA.metadata.makespan_s;
+  updateAll();
+}
+function fitView() {
+  currentTime = 0;
+  playing = false;
+  document.getElementById('btn-play').textContent = '播放';
+  document.getElementById('btn-play').classList.remove('active');
+  updateAll();
+}
+function tick(now) {
+  if (!playing || !DATA) return;
+  currentTime = Math.min(DATA.metadata.makespan_s, currentTime + (now - lastFrame) / 1000 * speed);
+  lastFrame = now;
+  if (currentTime >= DATA.metadata.makespan_s) {
+    playing = false;
+    document.getElementById('btn-play').textContent = '重播';
+    document.getElementById('btn-play').classList.remove('active');
+  }
+  updateAll();
+  if (playing) requestAnimationFrame(tick);
+}
+
+function setupCanvas(canvas, container) {
+  const dpr = window.devicePixelRatio || 1;
+  const rect = container.getBoundingClientRect();
+  canvas.width = Math.max(1, rect.width * dpr);
+  canvas.height = Math.max(1, rect.height * dpr);
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return {ctx,w:rect.width,h:rect.height};
+}
+
+function jobStatus(job) {
+  if (currentTime < job.arrival_s) return 'queued';
+  if (currentTime > job.finish_s) return 'completed';
+  return 'running';
+}
+function statusSnapshot() {
+  let active = 0, done = 0, queued = 0, occupied = 0;
+  const runningJobs = [];
+  for (const job of DATA.jobs) {
+    const state = jobStatus(job);
+    if (state === 'running') { active++; runningJobs.push(job); }
+    else if (state === 'completed') done++;
+    else queued++;
+  }
+  for (const gid in DATA.gpu_occupancy) {
+    if ((DATA.gpu_occupancy[gid] || []).some(([t0,t1]) => t0 <= currentTime && currentTime <= t1)) occupied++;
+  }
+  const focus = selectedJobId == null
+    ? (runningJobs[0] || DATA.jobs.find(j => jobStatus(j) === 'queued') || DATA.jobs[DATA.jobs.length - 1])
+    : DATA.jobs.find(j => j.id === selectedJobId);
+  return {active,done,queued,occupied,total:DATA.metadata.total_gpus,runningJobs,focus};
+}
+
+function updateAll() {
+  cachedStatus = statusSnapshot();
+  updateMetrics();
+  updateCalibration();
+  updateJobList();
+  drawTimeline();
+  drawTopology();
+  drawLinkBars();
+  updateFocus();
+  updateStatus();
+  document.getElementById('scrubber').value = Math.round((currentTime / DATA.metadata.makespan_s) * scrubberMax);
+  document.getElementById('time-display').textContent = `${currentTime.toFixed(1)}s`;
+}
+
+function updateMetrics() {
+  const s = cachedStatus;
+  const gpuPct = s.total ? Math.round(s.occupied / s.total * 100) : 0;
+  const donePct = DATA.jobs.length ? Math.round(s.done / DATA.jobs.length * 100) : 0;
+  document.getElementById('metric-active').textContent = s.active;
+  document.getElementById('metric-active-sub').textContent = s.active ? s.runningJobs.map(j => `J${j.id}`).join(', ') : '无运行任务';
+  document.getElementById('metric-gpu').textContent = `${gpuPct}%`;
+  document.getElementById('metric-gpu-sub').textContent = `${s.occupied} / ${s.total} GPU`;
+  document.getElementById('metric-done').textContent = s.done;
+  document.getElementById('metric-done-sub').textContent = `${donePct}% 完成`;
+  document.getElementById('metric-focus').textContent = s.focus ? `J${s.focus.id}` : '-';
+  document.getElementById('metric-focus-sub').textContent = s.focus ? `${s.focus.model} / ${s.focus.ranks}GPU` : '无任务';
+  const phase = s.active ? '运行中' : s.queued ? '等待下一批' : '全部完成';
+  document.getElementById('phase-label').textContent = phase;
+}
+
+function updateCalibration() {
+  const box = document.getElementById('calibration-body');
+  const c = DATA.calibration;
+  if (!c) {
+    box.innerHTML = '<div class="hint">未嵌入校准 profile；当前仅展示本次模拟数据。</div>';
+    document.getElementById('calib-source').textContent = '未嵌入';
+    return;
+  }
+  const coverage = c.dataset?.worker_topology_coverage || {};
+  const ratio = coverage.ratio == null ? '-' : `${Math.round(coverage.ratio * 100)}%`;
+  document.getElementById('calib-source').textContent = 'Alibaba trace + Greyhound schema';
+  const strong = (c.boundary?.strong || []).slice(0, 2).join('；');
+  const weak = (c.boundary?.weak || []).slice(0, 2).join('；');
+  const none = (c.boundary?.not_supported || []).slice(0, 2).join('；');
+  box.innerHTML = `
+    <div class="calibration-grid">
+      <div class="calib-card"><div class="label">真实 Job</div><div class="value">${fmtInt(c.dataset?.job_rows)}</div><div class="sub">GPU job ${fmtInt(c.dataset?.jobs_with_gpu_workers)}</div></div>
+      <div class="calib-card"><div class="label">拓扑覆盖</div><div class="value">${ratio}</div><div class="sub">${fmtInt(coverage.matched_rows)} / ${fmtInt(coverage.total_worker_rows)} workers</div></div>
+      <div class="calib-card"><div class="label">真实 Host</div><div class="value">${fmtInt(c.topology?.unique_hosts)}</div><div class="sub">ASW ${fmtInt(c.topology?.unique_asw)} / PSW ${fmtInt(c.topology?.unique_psw)}</div></div>
+      <div class="calib-card"><div class="label">HTML 网络</div><div class="value">估算</div><div class="sub">等待 hook benchmark</div></div>
+    </div>
+    <div class="calib-boundary">
+      <div class="calib-row"><span class="calib-tag strong">强</span><span>${strong || '真实 replay / GPU demand / 拓扑跨度'}</span></div>
+      <div class="calib-row"><span class="calib-tag weak">弱</span><span>${weak || '通信强度和带宽延迟仍需校准'}</span></div>
+      <div class="calib-row"><span class="calib-tag none">不支持</span><span>${none || '真实链路 counter / ECMP / PFC / ECN'}</span></div>
+    </div>`;
+}
+
+function fmtInt(value) {
+  if (value == null || value === '') return '-';
+  return Number(value).toLocaleString('en-US');
+}
+
+function updateJobList() {
+  const container = document.getElementById('job-list');
+  container.innerHTML = DATA.jobs.map(j => {
+    const state = jobStatus(j);
+    const label = state === 'running' ? '运行' : state === 'completed' ? '完成' : '排队';
+    const color = JOB_COLORS[j.id % JOB_COLORS.length];
+    const intensity = intensityInfo(j);
+    const isSelected = j.id === selectedJobId ? 'style="outline:1px solid #edf3f7"' : '';
+    return `<button class="job-item ${state}" ${isSelected} onclick="selectJob(${j.id})">
+      <span class="job-stripe" style="background:${color}"></span>
+      <span>
+        <span class="job-title">Job ${j.id} · ${j.model}</span>
+        <span class="job-meta"><span>${j.ranks}GPU</span><span>${j.jct_s.toFixed(0)}s</span><span class="intensity-chip" style="background:${intensity.color}"><i style="width:${10 + intensity.ratio * 18}px"></i>${intensity.label}</span></span>
+      </span>
+      <span class="job-pill">${label}</span>
+    </button>`;
+  }).join('');
+}
+function selectJob(id) {
+  selectedJobId = id;
+  updateAll();
+}
+
+function drawTimeline() {
+  const wrap = document.getElementById('timeline-wrap');
+  const canvas = document.getElementById('timeline-canvas');
+  const {ctx,w,h} = setupCanvas(canvas, wrap);
+  const makespan = DATA.metadata.makespan_s || 1;
+  const padL = 78, padR = 22, padT = 34, padB = 22;
+  const plotW = Math.max(1, w - padL - padR);
+  const rowH = Math.max(20, (h - padT - padB) / Math.max(1, DATA.jobs.length));
+
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle = '#0e1317';
+  ctx.fillRect(0,0,w,h);
+
+  ctx.strokeStyle = '#25313a';
+  ctx.lineWidth = 1;
+  ctx.font = '11px "Avenir Next", Verdana';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  for (let i = 0; i <= 8; i++) {
+    const x = padL + plotW * i / 8;
+    ctx.beginPath();
+    ctx.moveTo(x,padT - 16);
+    ctx.lineTo(x,h - padB);
+    ctx.stroke();
+    ctx.fillStyle = '#8b9aa5';
+    ctx.fillText(`${(makespan * i / 8).toFixed(0)}s`, x, 16);
+  }
+
+  for (let i = 0; i < DATA.jobs.length; i++) {
+    const j = DATA.jobs[i];
+    const y = padT + i * rowH + rowH / 2;
+    const x0 = padL + (j.arrival_s / makespan) * plotW;
+    const x1 = padL + (j.finish_s / makespan) * plotW;
+    const xs = padL + (j.start_s / makespan) * plotW;
+    const color = JOB_COLORS[j.id % JOB_COLORS.length];
+    const intensity = intensityInfo(j);
+    const state = jobStatus(j);
+    const isSelected = j.id === selectedJobId;
+
+    ctx.fillStyle = i % 2 ? 'rgba(255,255,255,.018)' : 'rgba(255,255,255,.032)';
+    ctx.fillRect(0, y - rowH / 2, w, rowH);
+    ctx.fillStyle = state === 'running' ? '#edf3f7' : '#8b9aa5';
+    ctx.textAlign = 'right';
+    ctx.font = isSelected ? '700 10px "Avenir Next", Verdana' : '10px "Avenir Next", Verdana';
+    ctx.fillText(`J${j.id}`, padL - 12, y);
+
+    if (xs > x0 + 1) {
+      ctx.strokeStyle = '#465661';
+      ctx.setLineDash([3,3]);
+      ctx.beginPath();
+      ctx.moveTo(x0, y);
+      ctx.lineTo(xs, y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    ctx.fillStyle = color;
+    ctx.globalAlpha = state === 'completed' ? .38 : state === 'queued' ? .55 : 1;
+    const barH = Math.max(10, Math.min(16, rowH - 6));
+    roundRect(ctx, xs, y - barH / 2, Math.max(2, x1 - xs), barH, barH / 2, true);
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = intensity.color;
+    ctx.lineWidth = 1 + intensity.ratio * 3;
+    roundRect(ctx, xs, y - barH / 2, Math.max(2, x1 - xs), barH, barH / 2, false);
+    if (isSelected) {
+      ctx.strokeStyle = '#edf3f7';
+      ctx.lineWidth = 2;
+      roundRect(ctx, xs - 2, y - barH / 2 - 2, Math.max(6, x1 - xs + 4), barH + 4, (barH + 4) / 2, false);
+    }
+    if (x1 - xs > 54 && rowH >= 18) {
+      ctx.fillStyle = '#101418';
+      ctx.textAlign = 'center';
+      ctx.font = '700 10px "Avenir Next", Verdana';
+      ctx.fillText(`${intensity.label}`, (xs + x1) / 2, y + .5);
+    }
+  }
+
+  const tx = padL + (currentTime / makespan) * plotW;
+  ctx.strokeStyle = '#ff5c5c';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(tx, 0);
+  ctx.lineTo(tx, h);
+  ctx.stroke();
+  ctx.fillStyle = '#ff5c5c';
+  ctx.beginPath();
+  ctx.arc(tx, 17, 5, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawTopology() {
+  const svg = document.getElementById('topo-svg');
+  const box = svg.getBoundingClientRect();
+  const w = Math.max(520, box.width || 700);
+  const h = Math.max(220, box.height || 240);
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  const topo = DATA.topology;
+  const hosts = topo.hosts;
+  const gph = topo.gpus_per_host;
+  const activeLinks = currentLinkLoad();
+  const maxLoad = Math.max(1, ...Object.values(activeLinks));
+  const focus = cachedStatus.focus;
+  const focusHostSet = new Set((focus?.placement || []).map(p => p[0]));
+
+  const hostGap = 16;
+  const marginX = 32;
+  const hostW = Math.min(72, (w - marginX * 2 - hostGap * (hosts - 1)) / hosts);
+  const startX = (w - (hostW * hosts + hostGap * (hosts - 1))) / 2;
+  const hostY = h - 86;
+  const switchLevels = topo.switch_levels || [];
+  const switchTop = 44;
+  const switchBottom = Math.max(switchTop + 28, hostY - 54);
+  const levelGap = switchLevels.length > 1 ? (switchBottom - switchTop) / (switchLevels.length - 1) : 40;
+  const nodes = [];
+  const lines = [];
+
+  for (let hh = 0; hh < hosts; hh++) {
+    const cx = startX + hh * (hostW + hostGap) + hostW / 2;
+    const nic = `nic${hh}_0`;
+    const load = activeLinks[nic] || 0;
+    lines.push(line(cx, hostY - 8, cx, hostY - 26, linkColor(load/maxLoad), 1 + 4 * load/maxLoad, .75));
+  }
+
+  switchLevels.forEach((level, li) => {
+    const y = switchTop + li * levelGap;
+    for (let si = 0; si < level.count; si++) {
+      const x = marginX + (w - marginX * 2) * (si + .5) / level.count;
+      const key = `sw${li}_${si}`;
+      const load = activeLinks[key] || 0;
+      nodes.push(`<rect x="${x-22}" y="${y-10}" width="44" height="20" rx="5" fill="${load ? linkColor(load/maxLoad) : '#26323b'}" stroke="#465661"/>`);
+      nodes.push(`<text x="${x}" y="${y+4}" text-anchor="middle" font-size="9" fill="#edf3f7">${level.label[0]}${si}</text>`);
+      if (li === 0) {
+        for (let hh = 0; hh < hosts; hh++) {
+          const hx = startX + hh * (hostW + hostGap) + hostW / 2;
+          const load2 = activeLinks[key] || 0;
+          lines.push(line(hx, hostY - 26, x, y + 10, linkColor(load2/maxLoad), .4 + 3.5 * load2/maxLoad, load2 ? .65 : .17));
+        }
+      }
+      if (li > 0) {
+        const prev = switchLevels[li-1];
+        for (let pi = 0; pi < prev.count; pi++) {
+          const px = marginX + (w - marginX * 2) * (pi + .5) / prev.count;
+          const py = switchTop + (li - 1) * levelGap;
+          lines.push(line(px, py + 10, x, y - 10, '#31404a', .6, .16));
+        }
+      }
+    }
+  });
+
+  for (let hh = 0; hh < hosts; hh++) {
+    const x = startX + hh * (hostW + hostGap);
+    const activeCount = hostActiveGpuCount(hh);
+    const isFocus = focusHostSet.has(hh);
+    const fill = activeCount ? '#16323a' : '#151d24';
+    nodes.push(`<rect x="${x}" y="${hostY}" width="${hostW}" height="48" rx="7" fill="${fill}" stroke="${isFocus ? '#edf3f7' : '#31404a'}" stroke-width="${isFocus ? 2 : 1}"/>`);
+    for (let gg = 0; gg < gph; gg++) {
+      const cols = gph > 4 ? 4 : gph;
+      const col = gg % cols;
+      const row = Math.floor(gg / cols);
+      const gx = x + 10 + col * ((hostW - 20) / Math.max(1, cols - 1));
+      const gy = hostY + 14 + row * 13;
+      const active = gpuActiveJob(hh, gg);
+      const c = active >= 0 ? JOB_COLORS[active % JOB_COLORS.length] : '#31404a';
+      nodes.push(`<circle cx="${gx}" cy="${gy}" r="4.2" fill="${c}"/>`);
+    }
+    nodes.push(`<text x="${x+hostW/2}" y="${hostY+42}" text-anchor="middle" font-size="9" fill="#8b9aa5">H${hh} · ${gph}卡</text>`);
+  }
+
+  svg.innerHTML = `<rect width="100%" height="100%" fill="#131a20"/>${lines.join('')}${nodes.join('')}`;
+}
+
+function currentLinkLoad() {
+  const loads = {};
+  for (const j of DATA.jobs) {
+    if (jobStatus(j) !== 'running') continue;
+    const weight = Math.max(1, j.intensity || j.comm_s || j.ranks);
+    for (const path of j.ring_paths || []) {
+      for (const linkName of path) loads[linkName] = (loads[linkName] || 0) + weight;
+    }
+  }
+  return loads;
+}
+function linkColor(t) {
+  if (t > .72) return '#ff5c5c';
+  if (t > .38) return '#ffbd4a';
+  if (t > .08) return '#31c7d6';
+  return '#31404a';
+}
+function line(x1,y1,x2,y2,color,width,opacity) {
+  return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${color}" stroke-width="${width.toFixed(1)}" opacity="${opacity}" stroke-linecap="round"/>`;
+}
+function hostActiveGpuCount(host) {
+  let count = 0;
+  for (let g = 0; g < DATA.topology.gpus_per_host; g++) if (gpuActiveJob(host,g) >= 0) count++;
+  return count;
+}
+function gpuActiveJob(host,gpu) {
+  const intervals = DATA.gpu_occupancy[`h${host}g${gpu}`] || [];
+  const hit = intervals.find(([t0,t1]) => t0 <= currentTime && currentTime <= t1);
+  return hit ? hit[2] : -1;
+}
+
+function drawLinkBars() {
+  const loads = currentLinkLoad();
+  const entries = Object.entries(loads).sort((a,b) => b[1] - a[1]).slice(0,18);
+  const box = document.getElementById('link-bars');
+  if (!entries.length) {
+    box.innerHTML = '<div class="hint">当前没有活跃通信链路。拖动时间线或点击播放后可看到路径热度。</div>';
+    return;
+  }
+  const max = Math.max(1, entries[0][1]);
+  box.innerHTML = entries.map(([name,value]) => {
+    const ratio = value / max;
+    const color = linkColor(ratio);
+    return `<div class="bar-row">
+      <span class="bar-name">${name}</span>
+      <span class="bar-track"><span class="bar-fill" style="display:block;width:${Math.max(6,ratio*100)}%;background:${color}"></span></span>
+      <span class="bar-val" style="color:${color}">${Math.round(ratio*100)}%</span>
+    </div>`;
+  }).join('');
+}
+
+function updateFocus() {
+  const j = cachedStatus.focus;
+  const body = document.getElementById('focus-body');
+  if (!j) { body.innerHTML = '<div class="hint">没有可显示的 Job</div>'; return; }
+  const state = jobStatus(j);
+  document.getElementById('focus-state').textContent = state === 'running' ? '运行中' : state === 'completed' ? '已完成' : '未开始';
+  const progress = state === 'queued' ? 0 : state === 'completed' ? 100 : Math.max(0, Math.min(100, (currentTime - j.start_s) / Math.max(.001, j.finish_s - j.start_s) * 100));
+  const intensity = intensityInfo(j);
+  const ranks = (j.placement || []).map((p,i) => `<div class="rank-cell"><b>R${i}</b>H${p[0]} / G${p[1]}</div>`).join('');
+  const path = ((j.ring_paths || [])[0] || []).map(x => `<span>${x}</span>`).join('');
+  body.innerHTML = `
+    <div class="focus-title">Job ${j.id} · ${j.model}</div>
+    <div class="focus-sub">${j.ranks} GPU · JCT ${j.jct_s.toFixed(1)}s · 通信 ${j.comm_s.toFixed(1)}s · 跨主机 ${j.cross_host_hops ?? 0}</div>
+    <div class="route-card">
+      <h4>Job 强度</h4>
+      <div class="bar-track" style="height:14px"><span class="bar-fill" style="display:block;width:${Math.max(4,intensity.ratio*100)}%;background:${intensity.color}"></span></div>
+      <div class="focus-sub">${formatIntensity(j.intensity)} · ${intensity.label} · 全局第 ${j.intensity_rank}/${DATA.jobs.length}</div>
+    </div>
+    <div class="route-card">
+      <h4>生命周期</h4>
+      <div class="bar-track" style="height:14px"><span class="bar-fill" style="display:block;width:${progress}%;background:${JOB_COLORS[j.id % JOB_COLORS.length]}"></span></div>
+      <div class="focus-sub">arrival ${j.arrival_s.toFixed(1)}s / finish ${j.finish_s.toFixed(1)}s / progress ${progress.toFixed(0)}%</div>
+    </div>
+    <div class="route-card">
+      <h4>GPU 放置</h4>
+      <div class="rank-grid">${ranks}</div>
+    </div>
+    <div class="route-card">
+      <h4>第一段 ring 路径</h4>
+      <div class="path-list">${path || '<span>无路径</span>'}</div>
+    </div>`;
+}
+
+function updateStatus() {
+  const s = cachedStatus;
+  document.getElementById('status-time').textContent = `${currentTime.toFixed(1)}s`;
+  document.getElementById('status-active').textContent = s.active;
+  document.getElementById('status-done').textContent = s.done;
+  document.getElementById('status-queued').textContent = s.queued;
+}
+
+function intensityInfo(job) {
+  const raw = job.intensity || 0;
+  const ratio = Math.max(0, Math.min(1, (raw - intensityMin) / Math.max(1, intensityMax - intensityMin)));
+  const label = ratio >= .66 ? '高强度' : ratio >= .28 ? '中强度' : '低强度';
+  const color = ratio >= .66 ? '#ff5c5c' : ratio >= .28 ? '#ffbd4a' : '#73d13d';
+  return {raw, ratio, label, color};
+}
+
+function formatIntensity(value) {
+  const v = value || 0;
+  if (v >= 1e9) return `${(v / 1e9).toFixed(1)}B/s`;
+  if (v >= 1e6) return `${(v / 1e6).toFixed(1)}M/s`;
+  return `${v.toFixed(0)}/s`;
+}
+
+function roundRect(ctx,x,y,w,h,r,fill) {
+  const rr = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + rr, y);
+  ctx.arcTo(x + w, y, x + w, y + h, rr);
+  ctx.arcTo(x + w, y + h, x, y + h, rr);
+  ctx.arcTo(x, y + h, x, y, rr);
+  ctx.arcTo(x, y, x + w, y, rr);
+  ctx.closePath();
+  if (fill) ctx.fill(); else ctx.stroke();
+}
+
+window.addEventListener('DOMContentLoaded', loadData);
+</script>
+</body>
+</html>

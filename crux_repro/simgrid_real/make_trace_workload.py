@@ -123,7 +123,7 @@ def read_trace(data_dir: Path) -> list[TraceJob]:
     return trace_jobs
 
 
-def choose_window(trace_jobs: list[TraceJob], count: int, seed: int) -> tuple[float, list[TraceJob]]:
+def choose_active_window(trace_jobs: list[TraceJob], count: int, seed: int) -> tuple[float, list[TraceJob]]:
     rng = random.Random(seed)
     starts = sorted({j.start_ts for j in trace_jobs})
     candidates: list[tuple[int, float, list[TraceJob]]] = []
@@ -139,7 +139,30 @@ def choose_window(trace_jobs: list[TraceJob], count: int, seed: int) -> tuple[fl
     return ts, sorted(active, key=lambda j: (j.start_ts, j.job_name))
 
 
-def write_workload(jobs: list[TraceJob], window_ts: float, out: Path, hosts: int, max_ranks: int, seed: int) -> None:
+def choose_arrival_window(trace_jobs: list[TraceJob], count: int) -> tuple[float, list[TraceJob]]:
+    ordered = sorted(trace_jobs, key=lambda j: (j.start_ts, j.job_name))
+    if len(ordered) <= count:
+        return ordered[0].start_ts, ordered
+    best: tuple[float, int] | None = None
+    for i in range(0, len(ordered) - count + 1):
+        span = ordered[i + count - 1].start_ts - ordered[i].start_ts
+        if best is None or span < best[0]:
+            best = (span, i)
+    assert best is not None
+    _, idx = best
+    window = ordered[idx:idx + count]
+    return window[0].start_ts, window
+
+
+def write_workload(
+    jobs: list[TraceJob],
+    window_ts: float,
+    out: Path,
+    hosts: int,
+    max_ranks: int,
+    seed: int,
+    arrival_time_scale: float,
+) -> None:
     rng = random.Random(seed)
     out.parent.mkdir(parents=True, exist_ok=True)
     with out.open("w", newline="") as f:
@@ -158,7 +181,7 @@ def write_workload(jobs: list[TraceJob], window_ts: float, out: Path, hosts: int
                     jid,
                     job.job_name,
                     model,
-                    round(max(0.0, job.start_ts - window_ts), 6),
+                    round(max(0.0, job.start_ts - window_ts) / max(1e-9, arrival_time_scale), 6),
                     round(job.end_ts - job.start_ts, 6),
                     ranks,
                     round(compute_s * (0.85 + 0.15 * gpu_factor) * duration_factor * rng.uniform(0.95, 1.05), 6),
@@ -176,13 +199,20 @@ def main() -> None:
     parser.add_argument("--hosts", type=int, default=8)
     parser.add_argument("--max-ranks", type=int, default=8)
     parser.add_argument("--seed", type=int, default=7)
+    parser.add_argument("--window-mode", choices=("active", "arrival"), default="active",
+                        help="active keeps the old concurrent-running window; arrival keeps real job start ordering")
+    parser.add_argument("--arrival-time-scale", type=float, default=1.0,
+                        help="Divide real inter-arrival seconds by this factor for replay visualization/runtime")
     args = parser.parse_args()
 
     trace_jobs = read_trace(args.trace_data_dir)
     if not trace_jobs:
         raise ValueError(f"no usable GPU jobs found in {args.trace_data_dir}")
-    window_ts, jobs = choose_window(trace_jobs, args.jobs, args.seed)
-    write_workload(jobs, window_ts, args.out, args.hosts, args.max_ranks, args.seed)
+    if args.window_mode == "arrival":
+        window_ts, jobs = choose_arrival_window(trace_jobs, args.jobs)
+    else:
+        window_ts, jobs = choose_active_window(trace_jobs, args.jobs, args.seed)
+    write_workload(jobs, window_ts, args.out, args.hosts, args.max_ranks, args.seed, args.arrival_time_scale)
     print(f"wrote {len(jobs)} jobs to {args.out}")
 
 
